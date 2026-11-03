@@ -45,7 +45,7 @@ Alternatíva: „Hogy maradjon valami a mai estéből. — [név]”. Rövid, k�
 
 ## 17:20–18:15 — Örs, egyedül
 
-- SPAR: 0,5 l szénsavmentes víz neki. Brunch & Brew: egy pillantás (ülőhely, zaj, növényi tej) — csak B-terv, ha átfagyva érkezik.
+- SPAR: 0,5 l szénsavmentes víz neki (a hajóra saját italt nem lehet felvinni — a buszon igya meg, vagy maradjon a táskában). Brunch & Brew: egy pillantás (ülőhely, zaj, növényi tej) — csak B-terv, ha átfagyva érkezik.
 - 10 perccel előbb legyél a Libriben. Nézz körül az útikönyveknél (Párizs, Róma, Görögország), hogy a „Libri-játékhoz” tudd, hol vannak.
 - **Idegesség ellen:** 4 mp belégzés, 6 mp kilégzés, ötször. A pulzus lemegy, a hangod mélyebb és nyugodtabb lesz.
 - Emlékeztető: ő is izgul. Az első 2 percben a te nyugalmad megnyugtatja őt is.
@@ -82,7 +82,7 @@ Alternatíva: „Hogy maradjon valami a mai estéből. — [név]”. Rövid, k�
 
 - A Március 15. téren: „Sétálunk egy kicsit a Duna-parton.” Lassan, a kikötő felé.
 - A Dock 11-nél állj meg, fordulj felé, mosolyogj: **„Ez a miénk.”** Ennyi. Ne magyarázd meg, miért pont hajó, ne mondd, hogy az Insta miatt. Ha megkérdezi, miért pont ez: „Arra gondoltam, éjjel a vízről a legszebb ez a város.” (Ő magától össze fogja kötni a Szajnával. Ha kimondja, mosolyogj: „Lehet.”)
-- A voucher legyen előkészítve a telefonon, ne ott keresd.
+- **19:15-ig** legyetek a Dock 11-nél. A visszaigazoló e-mail (#1892035) maga a jegy — legyen előkészítve a telefonon, ne ott keresd.
 
 ---
 
