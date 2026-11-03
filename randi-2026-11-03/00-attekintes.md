@@ -10,6 +10,8 @@
 ## Profil (Insta alapján, [következtetett])
 - Párizs-rajongó: Eiffel-torony, Dior-galéria (haute couture), Louvre (aranyozott termek), Mona Lisa, Montmartre-i bisztró. Felirat: „You had me at bonjour".
 - → klasszikus művészet, divat/esztétika, francia hangulat, történelmi pompa. Korábban: múzeumok, görög szigetek (Santorini).
+- 2. adag: Moulin Rouge éjjel (neon-glamúr); kivilágított Eiffel a Szajna felett éjjel + szelfi ott → **csúcsélmény: kivilágított ikon a folyó felett éjjel**. Profilkép: fekete csipke, elegáns konty → elegáns, nőies, vintage/sötét-romantikus. Rodosz-sztori.
+- **Budapesti megfelelő:** Duna éjjel — kivilágított Parlament / Lánchíd / Vár.
 - Alkohol: oké, szereti, sosem rúg be.
 
 ## Részek
