@@ -37,3 +37,8 @@ Források: 1-bemelegites/v2, 2-fohely/v2, 3-zaro-hely/v2, 4-ajandek/v2–v3, 5-a
 3. 10:00 ajándékbolt hívása (a 4. rész v3 szerint).
 4. Reggel: BudapestGO 10-es gyűjtőjegy.
 5. Napközben egy üzenet neki: „Tesi után egyél valamit, mert lesz egy kis program, és vacsora nem lesz benne 🙂” — gondoskodó, a meglepetést nem lövi le, és kezeli az üres gyomor + alkohol kockázatát.
+
+## Frissítés — ajándék eldöntve
+- **Jellycat Bartholomew Junior** (Ministudio, 11 900 Ft). A megbízó nem akarja, hogy a munkahelyén lássák.
+- Átvétel: (A) Uber Futár → Párisi Udvar Hotel recepció, ha vállalják; (B) Uber Futár → Örs (Árkád főbejárat) 17:20–17:40; (C) Uber Futár → munkahely, átvétel az utcán, átlátszatlan csomagolásban.
+- Személyes elmenés ma nem fér bele (Óbuda, ~60–75 perc egy irányba metró nélkül [becsült]; bolt 10–18).
