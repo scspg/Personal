@@ -4,6 +4,11 @@
 - Találkozó: Örs vezér tere, Sugár, Libri — ~18:00–18:30. Indulás haza Örsről legkésőbb ~23:00.
 - Közlekedés (végleges): **taxi nincs, metró nincs**. Busz elsődleges (kettes ülés egymás mellett = tudatos közelítő elem); villamos/troli/HÉV rendben, hazafelé is.
 - Mindketten fázósak → kültéri szakasz max. 15–20 perc egyben.
+- **Nem eszünk**: a lány sok mindenre allergiás, tejre is (megbeszélték). Ital: tejmentes; ehető ajándék kizárva.
+- **Keret**: az este max. 50 000 Ft; az ajándék külön, nagyon minőségi.
+- Férfi: XVI. ker., Ottó utca → beszerzés: ma reggel, vagy 17:20–18:00 Árkád (nem Sugár).
+- Férfi öltözete: bőrdzseki, fekete Polo Bear hoodie, vajbarna chino, narancs Jordan Spizike → smart-casual, dress code-os hely kizárva.
+- **Halászbástya kizárva** („szokványos, hideg"). Elv: semmi „mindenki ezt csinálja"; minden pillanat felejthetetlen.
 - Megbízói irányelv: ne csak múzeum; legyen akció és több variáns; minden elem megkérdőjelezve (kell-e?), ha kell → **mikor** (időzítés a legfontosabb). Új: `5-alternativak/` (ördög ügyvédje + teljes esti variánsok).
 - Végig sötét (napnyugta ~16:25), november: hideg, esőkockázat.
 - A lány tesi óráról jön → valószínűleg éhes; öltözet: tisztázandó.
