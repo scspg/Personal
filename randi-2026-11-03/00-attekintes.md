@@ -2,7 +2,9 @@
 
 ## Keretek
 - Találkozó: Örs vezér tere, Sugár, Libri — ~18:00–18:30. Indulás haza Örsről legkésőbb ~23:00.
-- Közlekedés: busz (metró kizárva). Villamos / troli / taxi: tisztázandó.
+- Közlekedés (végleges): **taxi nincs, metró nincs**. Busz elsődleges (kettes ülés egymás mellett = tudatos közelítő elem); villamos/troli/HÉV rendben, hazafelé is.
+- Mindketten fázósak → kültéri szakasz max. 15–20 perc egyben.
+- Megbízói irányelv: ne csak múzeum; legyen akció és több variáns; minden elem megkérdőjelezve (kell-e?), ha kell → **mikor** (időzítés a legfontosabb). Új: `5-alternativak/` (ördög ügyvédje + teljes esti variánsok).
 - Végig sötét (napnyugta ~16:25), november: hideg, esőkockázat.
 - A lány tesi óráról jön → valószínűleg éhes; öltözet: tisztázandó.
 - Minden költséget a férfi fizet.
