@@ -12,6 +12,8 @@
 - → klasszikus művészet, divat/esztétika, francia hangulat, történelmi pompa. Korábban: múzeumok, görög szigetek (Santorini).
 - 2. adag: Moulin Rouge éjjel (neon-glamúr); kivilágított Eiffel a Szajna felett éjjel + szelfi ott → **csúcsélmény: kivilágított ikon a folyó felett éjjel**. Profilkép: fekete csipke, elegáns konty → elegáns, nőies, vintage/sötét-romantikus. Rodosz-sztori.
 - **Budapesti megfelelő:** Duna éjjel — kivilágított Parlament / Lánchíd / Vár.
+- 3–4. adag: Santorini 2025 (éjszakai sziklaperem-panoráma, kivilágított utcák, naplementés vitorlázás, „Exploring new horizons"); Róma 2026 (aranyozott barokk belső terek, Trevi, Pantheon; olasz dalok); görög nyár barátnőkkel (quad, neonbár, „Crazy days, core memories" → játékos, kalandos oldal); Varsó (vízparti palota, tetőkert, óváros, mókus). Állatokat szívesen fotóz (mókus, maki). Insta: 1 poszt, ~200 követő → visszafogott, nem önreklámozó.
+- **Szintézis:** európai utazó-esztéta; csúcsmotívum = **éjszakai kivilágított panoráma víz felett**; aranyozott történelmi terek; klasszikus elegáns öltözködés; laza és játékos is; emlékgyűjtő (kollázsok).
 - Alkohol: oké, szereti, sosem rúg be.
 
 ## Részek
