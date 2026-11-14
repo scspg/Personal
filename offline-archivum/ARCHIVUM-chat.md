@@ -102,6 +102,53 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 
 
 
+## 4c. Tárolók: mit vegyél, és hogyan oszd szét, hogy soha ne vesszen el
+
+> **Kutatás dátuma:** 2026-11-14. **Árak:** ipon.hu, pcx.hu, aqua.hu, senetic.hu, alternate.de, amazon.de – „mért” = a bolt oldalán látott ár, „becsült” = keresőtalálat vagy számítás. Az arukereso.hu, az alza.hu, az emag.hu, az edigital.hu és a mediamarkt.hu az ellenőrzéskor blokkolta az automatikus lekérést – vásárlás előtt ott is nézd meg az árat. Árfolyam: 1 EUR = 365,60 Ft (EKB, 2026-11-13).
+> **Piaci helyzet:** 2025 vége óta az AI-adatközpontok miatt hiány van; az SSD-k a 2025-ös ár 2–4-szeresébe, a HDD-k kb. +50%-ba kerülnek. Az árak gyorsan változnak.
+
+### A lényeg – egy mondatban
+
+**A teljes archívum (22,5 TB) egyetlen 24–32 TB-os HDD-re ráfér – ez a „minden egyben” fizikai minimum. De egyetlen példány 10 év alatt kb. 13–22% eséllyel elvész; egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3%-ra csökken (~70×). Ezért a logikus, legkompaktabb megoldás: 2 nagy HDD (egy használatban, egy Faraday-tasakban, lőszerládában, másik helyen) + egy kicsi, strapabíró SSD a létfontosságú maggal.**
+
+### Mi hova kerüljön – rétegek
+
+| Réteg | Mi kerül rá | Méret (32 TB-os terv) | Ajánlott eszköz | Miért |
+|---|---|---|---|---|
+| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~1,5 TB | strapabíró SSD 2–4 TB (IP65, 3 m esés) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |
+| **2. Munka** (gyors, a gépben) | az LLM-modellek + amit naponta használsz | ~0,6 TB + tartalék | NVMe PCIe 5.0 SSD 4–8 TB a gamer PC-ben | a modell betöltése 8 TB-os Gen5-ről ~50 s; ez NEM archívum, mindenről van másolat |
+| **3. Teljes archívum** (A példány, használatban) | minden: 2–5. szint, nagy tükrök, térképek, lexikonok | ~22,5 TB | 1 db 24–32 TB HDD (CMR) dokkolóban, ZFS-sel | a legolcsóbb TB-ár, havi ellenőrzéssel önjavító |
+| **4. Offline másolat** (B példány) | ugyanaz, mint a 3. | ~22,5 TB | 1 db 24–32 TB HDD, **más gyártótól**, antisztatikus tasak + Faraday-tasak + tömített acél lőszerláda + szilikagél, **másik épületben** | tűz, víz, lopás, villám, EMP, zsarolóvírus, rossz parancs ellen; félévente be kell kapcsolni és végigolvasni |
+| **5. (opcionális) 30 éves réteg** | a teljes archívum harmadik példánya | 22–128 TB | LTO-9 szalag (kazetta ~2 000 Ft/TB) | csak ~260 TB felett vagy 3+ másolatnál éri meg a ~4 M Ft-os meghajtó miatt; a meghajtót is meg kell őrizni |
+
+### Ajánlott összeállítások árszintenként
+
+| Keret | Összeállítás | Kapacitás | Ár | Mit bír ki |
+|---|---|---|---|---|
+| **~150-170e Ft – 'mag-archívum' ≤5 TB** | 1. példány: meglévő PC-lemez (vagy a mag egy belső SSD-n)<br>2. példány: LaCie Rugged USB-C 5TB – amazon.de 81 309 Ft (mért)<br>3. példány (offsite, más médium): 5x Verbatim M-DISC BDXL 100GB – 24 111 Ft (mért) + Verbatim Slimline BD-író 65 689 Ft (ipon, mért), rajta a legfontosabb ~500 GB par2-vel | – | 171 109 Ft | 2x LaCie Rugged 5TB (162 618 Ft): két offline HDD két helyen, M-DISC nélkül |
+| **~400e Ft – 8 TB teljes redundanciával** | 2x Seagate IronWolf Pro 8TB – pcx 2x157 390 = 314 780 Ft (mért)<br>ICY BOX IB-RD3621U3 dokkoló – 21 040 Ft (amazon.de, mért)<br>Faraday Defense NEST-Z – 27 797 Ft (mért) + MFH .50 cal lőszerláda ~11 570 Ft (becsült)<br>3. példány: a meglévő PC/laptop, vagy később M-DISC mag | – | ~375 187 Ft | A 2026-os HDD-árakon 400e Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül. |
+| **~1M Ft – 22-24 TB, két gyártó, M-DISC mag** | 1. (online): Toshiba MG10AFA22TE 22TB – pcx 376 290 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS<br>2. (offline, offsite): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)<br>3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5x M-DISC BDXL (24 111 Ft) | – | ~975 287 Ft | 3-2-1: lemezhiba, és ha a másolat máshol van: tűz, víz, lopás |
+| **~3-3,6M Ft – 64-66 TB, NAS + offline szett** | 1. (online, ZFS RAIDZ1): UGREEN DXP4800 Plus (262 691 Ft) + 4x Toshiba MG10 22TB (1 505 160 Ft) = 66 TB hasznos, TrueNAS SCALE, havi scrub<br>2. (offline, offsite): 3x Seagate Exos M 28TB (3x578 590 = 1 735 770 Ft) = 84 TB, SnapRAID nélkül JBOD-ként, ZFS/lemez + SHA256 manifest, 2 lőszerládában, Faraday-tasakban (2x(27 797 + 11 570) = 78 734 Ft)<br>3. (mag): M-DISC BDXL 10 db (48 222 Ft) + BD-író (65 689 Ft) | – | ~3 696 266 Ft | 3-2-1: lemezhiba, és ha a másolat máshol van: tűz, víz, lopás |
+| **Extrém 128 TB (~6-8M Ft)** | 1. Synology DS1825+ + 8x Toshiba MG10 22TB RAID6 = 132 TB hasznos – 3 631 110 Ft<br>2a. Offline HDD-szett: 6x MG10 22TB = 132 TB, 2 lőszerládában – 2 257 740 Ft (összesen ~5,9M Ft), VAGY<br>2b. LTO-9: Quantum TC-L93CN-AR (3 967 890 Ft) + SAS HBA (becsült ~50-100e Ft) + másolatonként 8 kazetta (8x36 690 = 293 520 Ft). 2 szalagmásolattal ~8,3M Ft; minden további 128 TB-os másolat csak ~294e Ft (HDD-n ~2,26M Ft). | – |  | A szalag 3+ másolatnál, vagy ha a 30 éves, bekapcsolás nélküli tárolás a cél, előzi meg a HDD-t. Ilyenkor a meghajtót is őrizd meg tartaléknak. |
+
+### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre)
+
+| Változat | 1. eszköz | 2. eszköz (offline) | Védelem | Összesen |
+|---|---|---|---|---|
+| **22_TB_valtozat (ajánlott ár/érték)** | Toshiba MG10AFA22TE 22TB (pcx, 376 290 Ft) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS single-disk pool, havi scrub | Seagate IronWolf Pro 24TB (pcx, 448 790 Ft) – MÁS GYÁRTÓ. Antisztatikus tasakba, habba, majd Faraday Defense NEST-Z-be (27 797 Ft) és MFH .50 cal acél lőszer­ládába (~11 570 Ft, becsült) teszed, szilikagéllel, másik épületben/rokonnál tárolva. | A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen. | 885 487 Ft (M-DISC nélkül); 975 287 Ft M-DISC maggal |
+| **32_TB_valtozat (legkisebb térfogat a teljes 32 TB-hoz)** | Seagate Exos M 32TB (ipon, 784 390 Ft) | Seagate IronWolf Pro 32TB (alza snapshot 575 890 Ft, becsült) – azonos gyártó, de más termékcsalád és gyártási sorozat (32 TB-ban ma nincs WD/Toshiba) | ugyanaz: NEST-Z + lőszerláda + szilikagél + külön helyszín | ~1 420 000 Ft (becsült, az IronWolf Pro ára nem ellenőrzött); csak ipon-ról: 2x Exos M 32TB = 1 568 780 Ft + kb. 60e Ft tartozék |
+| **5_TB_mag_valtozat (zsebméret, víz és ütés)** | LaCie Rugged USB-C 5TB (81 309 Ft) | ADATA HD710 Pro 4-5TB IP68 (119 741 Ft, 4 TB) – vagy egy második LaCie Rugged |  | ~201 000 Ft |
+
+*Miért nem egy RAID1-es doboz?* A RAID1 egy dobozban a lemezhibát túléli, de a tűzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.
+
+### A leggyorsabb, legprofibb (SSD) ág
+
+- **gaming pc munkameghajto llm:** *profi:* Samsung 9100 PRO 8TB (hűtőbordás MZ-VAP8T0CW), ipon 868 089 Ft (mért); vagy alternate.de ajánlatkéréssel kb. 706 600 Ft + UPS (becsült, magyar áfával). A CPU-ra kötött Gen5 M.2_1 slotba kerüljön. Egy 700GB-os modell kb. 50 s alatt töltődik be. A meglévő Kingston 4TB marad második meghajtónak. *kozep:* Crucial T705 4TB, ipon 301 890 Ft (75 473 Ft/TB, mért), vagy Samsung 9100 PRO 4TB hűtőbordás 319 990 Ft. A meglévő Kingston 4TB-tal együtt 8TB Gen5, két különböző gyártótól. *megjegyzes:* A modellek olvasás-túlsúlyosak, így a TBW mellékes. A munkameghajtó NEM archívum, mindenről legyen külső másolat.
+- **gyors hordozhato masolat:** *profi:* 8TB M.2 (pl. 9100 PRO 8TB) + OWC Express 1M2 USB4: kb. 924 700 Ft (ipon, mért), kb. 3.8 GB/s a PC és a ZBook USB4 portján. Strapabíró alternatíva: SanDisk Extreme PRO V2 4TB, 426 890 Ft (IP65, 2 GB/s). *kozep olcso:* SanDisk Extreme 8TB, ipon 565 589 Ft (70 699 Ft/TB, IP65, 3 m). A telefonokhoz elég (iPhone 15 Pro 10 Gbps, kb. 1 GB/s; S24 Ultra 5 Gbps, kb. 450 MB/s). Vásárlás után azonnal firmware-frissítés. Legolcsóbb kis tétel: Kingston XS2000 2TB, 109 090 Ft.
+- **enterprise 30 120tb all flash:** *olcsobb qlc:* Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 -> U.2 kártya (64.90 EUR) / M.2 -> U.2 adapter (74.90 EUR), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (193.90 EUR). *profi tlc:* Kioxia CD8-P 15.36TB (ipon, rendelhető, 4 137 890 Ft/db, mért): 2 db = 30.72TB, kb. 8.3 M Ft; 8 db = 122.88TB, kb. 33.1 M Ft. TLC + PLP + Gen5, de ZFS RAIDZ/tükör és ventilátoros ház kell. *oszinte ertekeles:* 2026 novemberében az all-flash 30TB fölött TB-onként a fogyasztói Gen5 2.5-szerese, a HDD-nek pedig a sokszorosa. Ajánlás: 8TB Gen5 forró réteg + HDD tömegtár + második offline másolat. All-flash csak akkor, ha a költségvetés ezt indokolja.
+
+*A teljes terméktábla linkekkel és az adatmegőrzési gyakorlat: `ARCHIVUM.md` 4c fejezet.*
+
 ## 5b. Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)
 
 > Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.

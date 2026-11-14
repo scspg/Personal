@@ -168,7 +168,8 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models th button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #models td.date{white-space:nowrap}
 .soft td{vertical-align:top}.soft .sd{font-size:.86em;color:var(--muted);max-width:420px}.soft td:first-child{min-width:160px}
-#models,#soft{max-height:80vh;overflow:auto}
+#models,#soft,#stor{max-height:80vh;overflow:auto}
+.stortab{width:max-content;min-width:100%}.stortab td{max-width:280px}.stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:220px}.stortab td:nth-child(3){min-width:200px}.stortab td:last-child{min-width:300px}.stortab td:nth-child(9){min-width:120px}
 .soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){max-width:110px;overflow-wrap:anywhere}
 #ssd td:first-child{white-space:nowrap}
 .tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
@@ -356,6 +357,17 @@ function softTable(){const q=F('sq').value.toLowerCase(), c=F('scat').value;
   F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Szint</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
   F('scount').textContent=L.length+' tétel';}
 (()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
+/* ---------- tárolók ---------- */
+const ST=__STOR__;
+function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=F('stq').value.toLowerCase();
+  const L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||(x.n+' '+x.d+' '+x.pro+' '+x.con).toLowerCase().includes(q)));
+  const lv={olcso:'olcsó',kozep:'közép',profi:'profi',extrem:'extrém'};
+  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small></td><td class="num" data-l="TB">${x.tb??'–'}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
+    <td class="num" data-l="Ár">${x.ar?Math.round(x.ar).toLocaleString('hu-HU')+' Ft':'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
+    <td data-l="Hol">${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join('<br>')}</td><td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="10" class="empty">Nincs találat.</td></tr>';
+  F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Hol kapható</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
+  F('stcount').textContent=L.length+' termék';}
+(()=>{const sel=F('stcat'); [...new Set(ST.map(x=>x.k))].forEach(c=>sel.add(new Option(c,c))); ['stcat','stlvl','stq'].forEach(id=>F(id).addEventListener('input',storTable)); storTable();})();
 /* ---------- indítás ---------- */
 if('IntersectionObserver' in window){const navA=[...document.querySelectorAll('nav.tabs a')];const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navA.forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-45% 0px -50% 0px'});navA.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t);});}
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-copy]'); if(!b) return; const t=b.dataset.copy;
@@ -455,12 +467,17 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
   <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
   <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil, T2-es LLM-gép ~300 GB memóriával, alap + cenzúrázatlan modellekkel). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
-  <details><summary>Melyik meghajtót vedd</summary><div class="body"><ul>
-    <li><b>A gépben:</b> NVMe SSD (TLC, DRAM-cache, magas TBW). A modellek <b>betöltését</b> gyorsítja, a futásukat nem.</li>
-    <li><b>Archív példány:</b> az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (becslés). Hosszú távra HDD (CMR) vagy M-DISC kell; a HDD-t évente kapcsold be és ellenőrizd.</li>
-    <li><b>3-2-1:</b> 3 példány, 2 különböző adathordozón, 1 máshol tárolva. Az életmentő anyag legyen kinyomtatva is.</li>
-    <li><b>Fájlrendszer:</b> exFAT vagy ext4, <b>nem FAT32</b> (4 GB-os fájlméret-korlát).</li>
-  </ul></div></details>
+  <h3>Tárolók – mit vegyél, hogy soha ne vesszen el</h3>
+  __STORAGE__
+  <div class="filters">
+    <label>Kategória<select id="stcat"><option value="">mind</option></select></label>
+    <label>Szint<select id="stlvl"><option value="">mind</option><option value="olcso">olcsó</option><option value="kozep">közép</option><option value="profi">profi</option><option value="extrem">extrém</option></select></label>
+    <label>Keresés<input id="stq" type="search" placeholder="pl. IP65, 32TB, Toshiba"></label>
+    <span class="hint" id="stcount"></span>
+  </div>
+  <div class="tablebox" id="stor"></div>
+  <ul class="hint"><li><b>Fájlrendszer:</b> ZFS vagy Btrfs (önjavító ellenőrzőösszeg); cserélhető meghajtón exFAT vagy ext4, <b>nem FAT32</b> (4 GB-os fájlméret-korlát).</li>
+  <li>Részletek (kockázatszámítás, SMART, scrub, par2, tárolási klíma): ARCHIVUM.md, 4c fejezet.</li></ul>
 </section>
 
 <section id="modszertan">
@@ -521,6 +538,34 @@ def software():
     return out
 
 
+def storage_data():
+    import gen_storage as G
+    d, prods = G.load()
+    out = []
+    for p in prods:
+        if p.get("kategoria") == "other" and not p.get("ar_huf"):
+            continue
+        out.append({"n": p.get("nev"), "k": G.KAT.get(p.get("kategoria"), p.get("kategoria")), "tb": p.get("kapacitas_tb"), "d": G.dur(p.get("tartossag")).replace("\\|", "|"),
+                    "s": G.speed(p.get("sebesseg_mb_s")), "ar": p.get("ar_huf"), "pt": p.get("ar_per_tb") or "", "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
+                    "l": [[x.get("bolt"), x.get("url")] for x in (p.get("linkek") or [])[:3] if x.get("url")],
+                    "pro": "; ".join((p.get("elonyok") or [])[:2]), "con": "; ".join((p.get("hatranyok") or [])[:2])})
+    return out
+
+
+def storage_html():
+    """rétegek + ajánlott kompakt összeállítás (a 4c fejezet lényege) HTML-ben."""
+    rows = [("1. Mag – mindig nálad", "0–1. szintű életmentő tudás + 1 kis LLM (~1,5 TB)", "strapabíró SSD 2–4 TB (IP65) + a legfontosabb ~0,5 TB M-DISC lemezen"),
+            ("2. Munka – a gépben", "LLM-modellek, napi anyag (~0,6 TB + tartalék)", "NVMe PCIe 5.0 SSD 4–8 TB (pl. Samsung 9100 PRO 8TB)"),
+            ("3. Teljes archívum – A példány", "minden (~22,5 TB)", "1× 24–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
+            ("4. Offline másolat – B példány", "ugyanaz", "1× 24–32 TB HDD MÁS gyártótól, Faraday-tasak + tömített lőszerláda, másik épületben, félévente ellenőrizve"),
+            ("5. 30 éves réteg (opcionális)", "harmadik példány", "LTO-9 szalag – csak ~260 TB felett vagy 3+ másolatnál éri meg")]
+    t = "".join(f"<tr><td><b>{a}</b></td><td>{b}</td><td>{c}</td></tr>" for a, b, c in rows)
+    return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 24–32 TB-os HDD-re ráfér, de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
+            'Egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3% (becslés a Backblaze Q2 2026 adataiból). '
+            '<b>Legkompaktabb ajánlás:</b> 2 nagy HDD + 1 kis strapabíró SSD a maggal. Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
+            f'<div class="tablebox"><table><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>')
+
+
 def ssd_html():
     import html as H
     P = json.load(open(os.path.join(HERE, "ssd_plans.json"), encoding="utf-8"))
@@ -569,10 +614,11 @@ def main():
     js = (JS.replace("__OPUS__", str(OPUS)).replace("__VARIANTS__", json.dumps(vs, ensure_ascii=False, separators=(",", ":")))
           .replace("__MODELS__", json.dumps(ms, ensure_ascii=False, separators=(",", ":"), default=str))
           .replace("__PRESETS__", json.dumps(presets, ensure_ascii=False, separators=(",", ":")))
+          .replace("__STOR__", json.dumps(storage_data(), ensure_ascii=False, separators=(",", ":")))
           .replace("__SOFT__", json.dumps(software(), ensure_ascii=False, separators=(",", ":")))
           .replace("__START__", "gamer-pc-128" if "gamer-pc-128" in presets else next(iter(presets))))
     date = datetime.date.today().isoformat()
-    frag = BODY.replace("__SSD__", ssd_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
+    frag = BODY.replace("__SSD__", ssd_html()).replace("__STORAGE__", storage_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
     open(os.path.join(HERE, "..", "ARCHIVUM-LLM.fragment.html"), "w", encoding="utf-8").write(frag)
     full = ('<!doctype html>\n<html lang="hu">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +

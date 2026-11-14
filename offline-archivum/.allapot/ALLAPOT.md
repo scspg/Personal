@@ -50,7 +50,8 @@ A kompaktálás után ELŐSZÖR ezt a fájlt kell elolvasni.
 
 ## Folyamatban / következő lépések
 
-0. SSD-kutatás KÉSZ: src/research/storage_ssd.yaml (38 termék, PyYAML-lel olvasható, 2 dokumentum). HDD-kutatás még fut.
+0. TÁROLÓ-FEJEZET KÉSZ: 4c (src/gen_storage.py, adat: src/research/storage.json ← storage_hdd.yaml + storage_ssd.yaml, 71 termék); HTML SSD-fülön rétegtábla + szűrhető terméktábla. Kulcs: teljes archívum 22,5 TB → 2× 24–32 TB HDD (más gyártó, egyik offline Faraday+lőszerláda) + mag strapabíró SSD + M-DISC. Ellenőrzések: séma OK, paritás 22/22, mobil 400, horgonyok 0 hiba (rv3/slug.py).
+   KÖVETKEZŐ: 4. újrapontozó kör (3 független átnéző) → javítás → végső több szemszögű átnézés → ZIP.
 
 1. **Két tároló-kutató ágens fut** (HDD/archív, illetve SSD).
    - Kimenet: `scratchpad/storage_hdd.yaml`, `storage_ssd.yaml`.

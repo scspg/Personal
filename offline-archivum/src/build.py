@@ -284,7 +284,7 @@ def main():
             if l.strip():
                 items.append(json.loads(l))
     sys.path.insert(0, HERE)
-    import fixes
+    import fixes, gen_storage
     items = fixes.apply(items)
     ids = [i["id"] for i in items]
     dup = {i for i in ids if ids.count(i) > 1}
@@ -365,7 +365,7 @@ def main():
     plans = ssd_plans(cat_path, tmp)
     json.dump([[b, [{k: i.get(k) for k in ("id", "name", "cat", "tier", "bytes", "bytes_est", "score", "desc_hu")} for i in p["items"]], p["used_bytes"]] for b, p in plans],
               open(os.path.join(HERE, "ssd_plans.json"), "w", encoding="utf-8"), ensure_ascii=False)
-    parts = [head, sec["02_prompt.md"], sec["03_rules.md"], sec["04_scoring.md"], "\n".join(preset_md), ssd_section(plans), "\n".join(cat_md), oss_section(items), llm_md,
+    parts = [head, sec["02_prompt.md"], sec["03_rules.md"], sec["04_scoring.md"], "\n".join(preset_md), ssd_section(plans), gen_storage.section(plans), "\n".join(cat_md), oss_section(items), llm_md,
              sec["07_recipes.md"], sec.get("08_manual.md", ""), sec.get("09_web.md", ""),
              "---\n\n## 10. Gépi katalógus\n\nSoronként egy JSON-objektum. Mezők: `id`, `name`, `cat`, `tier` (0–5), `group` (egymást kizáró változatok), "
              "`variant_rank`, `variant_role` (`pref` = ajánlott, `luxury`), `desc_hu`, `lang`, `access` (free | free-registration | donation | paid | gray | physical), `price`, "
@@ -423,7 +423,8 @@ def main():
             "- **Interaktív kalkulátor, modelltábla, szoftverkönyvtár és SSD-tervező:** `ARCHIVUM-LLM.html` (böngészőben, internet nélkül).\n"
             "- **Kérdezz rá bátran:** pl. „mi férjen fel egy 2 TB-os SSD-re, ha az orvoslás és a mezőgazdaság a fontos?” vagy „melyik cenzúrázatlan modell fut a 128 GB RAM-os gamer PC-men?”",
             grab(full, r"## 3\. Pontozási rendszer", r"\n\*\*Kiválasztási algoritmus"),
-            _re.sub(r"(?s)<details>.*?</details>\n?", "", grab(full, r"## 4b\. ", r"\n---\n\n## 5\. ")),
+            _re.sub(r"(?s)<details>.*?</details>\n?", "", grab(full, r"## 4b\. ", r"\n---\n\n## 4c\. ")),
+            grab(full, r"## 4c\. ", r"### Egyetlen eszköz méretenként") + "\n\n*A teljes terméktábla linkekkel és az adatmegőrzési gyakorlat: `ARCHIVUM.md` 4c fejezet.*",
             oss_digest(items),
             "## 6. Helyi LLM-ek (offline AI)",
             grab(full, r"### 6\.1 ", r"### 6\.3 "),

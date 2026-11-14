@@ -1,0 +1,733 @@
+# Offline "civilizáció-újraépítő" archívum – HDD / archív média / rugged / NAS / szalag
+# Kutatás dátuma: 2026-11-14. Árfolyam: 1 EUR = 365,60 Ft (EKB referencia, 2026-11-13) – az EUR<->HUF átszámítások ezzel készültek.
+# Jelölés: "mért" = az árat ma a bolt oldalán / a bolt saját keresőjének adataiban láttam;
+#          "becsült" = keresési találat snapshotja, gyártói/US ár, vagy számított érték (a bolt oldala nem volt lekérhető).
+# Blokkolt oldalak (2026-11-14): arukereso.hu (403), geizhals.eu/.de (403), alza.hu (403), mediamarkt.hu (403),
+#   emag.hu és edigital.hu (511). Ezért az ellenőrzött árak főleg az ipon.hu-ról, a pcx.hu-ról és az amazon.de-ről származnak.
+# Piaci háttér: 2025 vége óta az AI-adatközpontok miatt erős HDD-hiány van, az árak 2025-höz képest ~+50%-osak (több forrás szerint).
+
+meta:
+  datum: "2026-11-14"
+  eur_huf: 365.60
+  ellenorzott_boltok: [ipon.hu, pcx.hu, amazon.de]
+  blokkolt: {arukereso.hu: 403, geizhals: 403, alza.hu: 403, mediamarkt.hu: 403, emag.hu: 511, edigital.hu: 511}
+
+termekek:
+
+# ---------------------------------------------------------------- 1. BELSŐ HDD (CMR, enterprise/NAS)
+- id: hdd-toshiba-mg10afa22te
+  kategoria: hdd_internal
+  nev: "Toshiba MG10F 22TB SATA (MG10AFA22TE)"
+  kapacitas_tb: 22
+  tipus: "3,5\" SATA 6Gb/s, 7200 rpm, 512 MB cache, CMR, héliumos, FC-MAMR"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "60 hónap (pcx.hu)", ure: "10 hiba / 10^16 bit (= 1/10^15, Toshiba MG10F overview)", backblaze: "testvérmodell MG10ACA20TE: élettartam-AFR 0,79% (Q2 2026)"}
+  sebesseg_mb_s: "~270-284 (viszonteladói adat, becsült)"
+  ar_huf: 376290
+  ar_eur: 1029.2
+  ar_per_tb: "17 104 Ft/TB (46,8 €/TB)"
+  ar_forras: "pcx.hu, 2026-11-14, mért (kosárba tehető, átvétel nov. 17-18.)"
+  linkek:
+    - {bolt: pcx.hu, url: "https://www.pcx.hu/toshiba-22tb-7200rpm-sata-600-512mb-mg-series-mg10afa22te-203943"}
+  elonyok: ["A legolcsóbb ellenőrzött Ft/TB ár ma Magyarországon", "A Toshiba MG család a Backblaze statisztikában az egyik legmegbízhatóbb", "Enterprise: 550 TB/év, 2,5M óra MTTF"]
+  hatranyok: ["Csak egy ellenőrzött magyar bolt", "Hangos, sokat fogyaszt (enterprise)"]
+  ajanlas_szint: kozep
+
+- id: hdd-seagate-ironwolfpro-24
+  kategoria: hdd_internal
+  nev: "Seagate IronWolf Pro 24TB (ST24000NT002)"
+  kapacitas_tb: 24
+  tipus: "3,5\" SATA, 7200 rpm, 512 MB, CMR (NAS)"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "5 év + 3 év Rescue adatmentés (Seagate datasheet), pcx: 60 hónap", ure: "1 / 10^15 bit"}
+  sebesseg_mb_s: 285
+  ar_huf: 448790
+  ar_eur: 1227.5
+  ar_per_tb: "18 700 Ft/TB (51,1 €/TB)"
+  ar_forras: "pcx.hu, 2026-11-14, mért (átvétel nov. 17-18.)"
+  linkek:
+    - {bolt: pcx.hu, url: "https://www.pcx.hu/seagate-3-5-hdd-sata-iii-24tb-7200rpm-512mb-cache-ironwolf-pro-st24000nt002-216061"}
+    - {bolt: "Seagate datasheet (specifikáció)", url: "https://www.seagate.com/content/dam/seagate/en/content-fragments/products/datasheets/ironwolf-pro-z-skus/ironwolf-pro-z-skus-DS16-1-2501US-en_US.pdf"}
+  elonyok: ["Az ingyenes Rescue adatmentés baleseti adatvesztésnél is segít", "Jó Ft/TB ár", "Halkabb, mint az Exos"]
+  hatranyok: ["A rokon Exos X24 24TB a Backblaze-nél gyengén teljesít (lásd lent)"]
+  ajanlas_szint: kozep
+
+- id: hdd-seagate-exosm-28
+  kategoria: hdd_internal
+  nev: "Seagate Exos M 28TB (ST28000NM003K) – HAMR / Mozaic 3+"
+  kapacitas_tb: 28
+  tipus: "3,5\" SATA, 7200 rpm, 512 MB, CMR, HAMR"
+  tartossag: {mtbf_ora: 2500000, afr_gyartoi: "0,35%", workload_tb_ev: "a datasheet nem tünteti fel (az Exos családnál jellemzően 550)", garancia: "5 év", ure: "1 szektor / 10^15 bit", utes: "200 G kikapcsolva, 30 G üzem közben"}
+  sebesseg_mb_s: 270
+  ar_huf: 578590
+  ar_eur: 1582.6
+  ar_per_tb: "20 664 Ft/TB (56,5 €/TB)"
+  ar_forras: "ipon.hu, 2026-11-14, mért (előrendelés, házhozszállítás 2026-11-27); alza.hu keresési snapshot 364 490 Ft = becsült, az oldal 403-at adott"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/seagate-exos-m-28tb-35-7200rpm-512mb-sata-st28000nm003k/2397452"}
+    - {bolt: "alza.hu (nem ellenőrizhető)", url: "https://www.alza.hu/seagate-exos-m-28tb-sata-d13013339.htm"}
+    - {bolt: "Seagate datasheet", url: "https://www.seagate.com/content/dam/seagate/en/content-fragments/products/datasheets/exos-m-v1-2/exos-v1-2-DS2045-4-2511-en_US.pdf"}
+  elonyok: ["Ma ez a legjobb ár/kapacitás arány a 28 TB feletti kategóriában", "HAMR: 3 TB/tányér, kevesebb meghajtó kell ugyanakkora archívumhoz"]
+  hatranyok: ["A HAMR új technológia, és még nincs róla hosszú távú, nyilvános megbízhatósági adat (a Backblaze még nem közöl róla)", "Az ipon nem tart készletet (előrendelés)"]
+  ajanlas_szint: profi
+
+- id: hdd-seagate-exosm-32
+  kategoria: hdd_internal
+  nev: "Seagate Exos M 32TB (ST32000NM004K) – HAMR"
+  kapacitas_tb: 32
+  tipus: "3,5\" SATA, 7200 rpm, 512 MB, CMR (a Seagate DS2045.4 datasheet szerint), HAMR"
+  tartossag: {mtbf_ora: 2500000, afr_gyartoi: "0,35%", garancia: "5 év", ure: "1 szektor / 10^15 bit", utes: "200 G kikapcsolva"}
+  sebesseg_mb_s: 285
+  ar_huf: 784390
+  ar_eur: 2145.5
+  ar_per_tb: "24 512 Ft/TB (67,0 €/TB)"
+  ar_forras: "ipon.hu, 2026-11-14, mért (előrendelés, szállítás 2026-11-27); alza.hu snapshot 682 390 Ft = becsült"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/seagate-exos-m-32tb-35-7200rpm-512mb-sata-st32000nm004k/2469374"}
+    - {bolt: "alza.hu (nem ellenőrizhető)", url: "https://www.alza.hu/EN/seagate-exos-m-32tb-sata-d13224160.htm"}
+  elonyok: ["A legnagyobb kiskereskedelemben kapható CMR HDD (2026 nov.)", "Ezzel a legkompaktabb az egylemezes 32 TB-os másolat"]
+  hatranyok: ["Drága/TB", "Nincs még hosszú távú terepadat róla", "A 36 TB-os Exos M a források szerint csak hyperscaler ügyfeleknek érhető el, kiskerben nem"]
+  ajanlas_szint: extrem
+
+- id: hdd-seagate-ironwolfpro-32
+  kategoria: hdd_internal
+  nev: "Seagate IronWolf Pro 32TB (ST32000NTZ00)"
+  kapacitas_tb: 32
+  tipus: "3,5\" SATA, 7200 rpm, CMR (az alza adatlap és a StorageReview szerint), Mozaic/HAMR generáció"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "5 év + Rescue", ure: "1 / 10^15 (családi adat)"}
+  sebesseg_mb_s: 285
+  ar_huf: 575890
+  ar_eur: 1575.2
+  ar_per_tb: "17 997 Ft/TB (becsült)"
+  ar_forras: "alza.hu keresési snapshot, 2026-11-14, becsült (az oldal 403-at adott); amazon.de 1 993,26 € (mért, a harmadik feles eladó nem ellenőrzött, túlárazott)"
+  linkek:
+    - {bolt: "alza.hu (nem ellenőrizhető)", url: "https://www.alza.hu/seagate-ironwolf-pro-32tb-d13213768.htm"}
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B0FY75NDYC"}
+  elonyok: ["32 TB egy lemezen, ráadásul Rescue szolgáltatással", "Ha az alza ára él, ez a legolcsóbb nagy kapacitás"]
+  hatranyok: ["Az ár nem ellenőrzött", "Az amazon.de-s ár irreális"]
+  ajanlas_szint: profi
+
+- id: hdd-seagate-exosx24-24
+  kategoria: hdd_internal
+  nev: "Seagate Exos X24 24TB (ST24000NM002H)"
+  kapacitas_tb: 24
+  tipus: "3,5\" SATA, 7200 rpm, 512 MB, CMR"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "5 év", ure: "1 / 10^15", backblaze: "élettartam-AFR 3,24% 9 631 db-on (Q2 2026) – a 20 TB+ modellek közül a LEGROSSZABB"}
+  sebesseg_mb_s: 285
+  ar_huf: 663790
+  ar_eur: 1815.6
+  ar_per_tb: "27 658 Ft/TB (ipon); 16 716 Ft/TB az alza snapshot szerint (becsült)"
+  ar_forras: "ipon.hu, 2026-11-14, mért; alza.hu snapshot 401 190 Ft, becsült"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/seagate-exos-x24-24tb-35-7200rpm-512mb-sata-st24000nm002h/2235025"}
+    - {bolt: "alza.hu (nem ellenőrizhető)", url: "https://www.alza.hu/seagate-exos-x24-24tb-sata-standard-ise-d10837286.htm"}
+    - {bolt: "Backblaze Q2 2026", url: "https://www.backblaze.com/blog/backblaze-drive-stats-for-q2-2026/"}
+  elonyok: ["Széles körben kapható"]
+  hatranyok: ["A Backblaze mért AFR-je ~4-6x rosszabb, mint a Toshiba MG11 vagy a WD HC580 modelleké", "Az iponon drága"]
+  ajanlas_szint: kozep
+
+- id: hdd-toshiba-mg11aca24te
+  kategoria: hdd_internal
+  nev: "Toshiba MG11 24TB (MG11ACA24TE)"
+  kapacitas_tb: 24
+  tipus: "3,5\" SATA, 7200 rpm, 1 GB cache, CMR, 10 tányér, FC-MAMR"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "5 év (becsült, a Toshiba MG szokásos értéke)", backblaze: "élettartam-AFR 0,50% 9 620 db-on (Q2 2026) – a legjobb 20 TB+ modell"}
+  sebesseg_mb_s: "~295 (Galaxus adat)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "n/a – ma nem találtam magyar boltban (az iponon csak 14/16 TB-os MG11 és 22 TB-os S300 van)"
+  ar_forras: "nincs ellenőrzött ár (2026-11-14)"
+  linkek:
+    - {bolt: "galaxus.at (ár nem ellenőrzött)", url: "https://www.galaxus.at/en/s1/product/toshiba-mg11-series-24-tb-hard-drives-53695102"}
+    - {bolt: "ipon.hu – MG11 16TB alternatíva (301 790 Ft, mért)", url: "https://ipon.hu/shop/termek/toshiba-16tb-72k-sata-mg11aca16te/2517465"}
+  elonyok: ["A Backblaze adatai alapján a legmegbízhatóbb nagy kapacitású modell"]
+  hatranyok: ["Magyarországon ma nem elérhető"]
+  ajanlas_szint: profi
+
+- id: hdd-wd-redpro-22
+  kategoria: hdd_internal
+  nev: "WD Red Pro 22TB (WD221KFGX) – a 26TB-os WD260KFGX-et magyar boltban nem találtam"
+  kapacitas_tb: 22
+  tipus: "3,5\" SATA, 7200 rpm, 512 MB, CMR, OptiNAND"
+  tartossag: {mtbf_ora: 2500000, workload_tb_ev: 550, garancia: "5 év (pcx: 60 hónap)", ure: "a WD nem közöl a kivonatban"}
+  sebesseg_mb_s: "~265-272"
+  ar_huf: 587790
+  ar_eur: 1607.7
+  ar_per_tb: "26 718 Ft/TB (73,1 €/TB)"
+  ar_forras: "pcx.hu, 2026-11-14, mért"
+  linkek:
+    - {bolt: pcx.hu, url: "https://www.pcx.hu/hdd-22tb-wd-red-pro-3-5-22tb-7200rpm-512mb-wd221kfgx-359826"}
+    - {bolt: "WD (26TB specifikáció)", url: "https://www.westerndigital.com/products/internal-drives/wd-red-pro-sata-hdd?sku=WD260KFGX"}
+  elonyok: ["A WD HC5xx/HC580 platform a Backblaze-nél kiváló (WUH722222: 0,58%)", "Másik gyártó, ezért jó diverzifikáció a Seagate/Toshiba mellé"]
+  hatranyok: ["Ma Magyarországon drága/TB"]
+  ajanlas_szint: kozep
+
+- id: hdd-wd-ultrastar-hc590-24-sas
+  kategoria: hdd_internal
+  nev: "WD Ultrastar DC HC590 24TB SAS (0F59373)"
+  kapacitas_tb: 24
+  tipus: "3,5\" SAS 12Gb/s, 7200 rpm, CMR – SAS HBA kell hozzá!"
+  tartossag: {mtbf_ora: "2 500 000 (becsült, HC5xx család)", workload_tb_ev: "550 (becsült)", garancia: "5 év (becsült)", backblaze: "WUH722626 (26TB HC590 SATA): 0,84% élettartam-AFR"}
+  sebesseg_mb_s: "~290 (becsült)"
+  ar_huf: 527889
+  ar_eur: 1443.9
+  ar_per_tb: "21 995 Ft/TB"
+  ar_forras: "ipon.hu, 2026-11-14, mért (az ipon keresőadataiból)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/wd-24tb-ultrastar-dc-hc590-72k-sas-0f59373/2337854"}
+  elonyok: ["A legjobb Backblaze-családok egyike", "A SAS megbízható hibakezelést ad"]
+  hatranyok: ["USB/NAS dobozba nem tehető; SAS HBA vagy SAS backplane kell (TrueNAS DIY)"]
+  ajanlas_szint: profi
+
+# ---------------------------------------------------------------- 2. RUGGED / HORDOZHATÓ HDD
+- id: rug-lacie-rugged-usbc-5
+  kategoria: hdd_rugged
+  nev: "LaCie Rugged USB-C 5TB (STFR5000800)"
+  kapacitas_tb: 5
+  tipus: "2,5\" HDD (5 TB-on valószínűleg SMR), USB-C 5 Gb/s, gumiborítás"
+  tartossag: {ip: "nincs formális IP-besorolás, a gyártó esőállónak mondja", drop: "1,2 m (Seagate support)", nyomas: "a forrásokban csonka adat", garancia: "2-3 év (a források ellentmondanak) + Rescue adatmentés", mtbf: "nincs publikálva"}
+  sebesseg_mb_s: 130
+  ar_huf: 81309
+  ar_eur: 222.40
+  ar_per_tb: "16 262 Ft/TB (44,5 €/TB)"
+  ar_forras: "amazon.de, 2026-11-14, mért (az eladó nem ellenőrzött)"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B079H7JVL3"}
+  elonyok: ["Olcsó/TB", "Ütésálló, a Rescue adatmentés benne van az árban", "Ideális a 'mag-archívum' offsite példányának"]
+  hatranyok: ["Nem vízálló, csak esőálló", "Lassú, az SMR miatt a nagy írások lassulnak", "Legfeljebb 5 TB"]
+  ajanlas_szint: olcso
+
+- id: rug-lacie-rugged-mini-5
+  kategoria: hdd_rugged
+  nev: "LaCie Rugged Mini 5TB (STJJ5000400)"
+  kapacitas_tb: 5
+  tipus: "2,5\" HDD, USB 3.0"
+  tartossag: {ip: "nincs", drop: "~1,2 m (gyártói, becsült)", garancia: "2 év + Rescue (becsült)"}
+  sebesseg_mb_s: "~130 (becsült)"
+  ar_huf: 75529
+  ar_eur: 206.59
+  ar_per_tb: "15 106 Ft/TB"
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B07WW1RJ9R"}
+  elonyok: ["A legolcsóbb rugged opció/TB"]
+  hatranyok: ["Nincs víz- és porvédelme", "Az ipon 2 TB-os Rugged Mini ára (287 890 Ft) irreális, onnan ne vedd"]
+  ajanlas_szint: olcso
+
+- id: rug-adata-hd710pro
+  kategoria: hdd_rugged
+  nev: "ADATA HD710 Pro 4TB (IP68)"
+  kapacitas_tb: 4
+  tipus: "2,5\" HDD, USB 3.2 Gen1, háromrétegű ház"
+  tartossag: {ip: "IP68 – 2 m / 60 perc (csak zárt portfedéllel)", drop: "MIL-STD-810G 516.6, ~1,5 m", garancia: "3 év"}
+  sebesseg_mb_s: "~120 (becsült)"
+  ar_huf: 119741
+  ar_eur: 327.52
+  ar_per_tb: "29 935 Ft/TB"
+  ar_forras: "amazon.de, 2026-11-14, mért (valószínűleg harmadik feles eladó, túlárazott); magyar boltban nem találtam"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B0744JNZHS"}
+  elonyok: ["Valódi IP68: elmerülést, sarat, port is túlél", "Terepen, bunkerben, autóban is jó"]
+  hatranyok: ["Drága/TB", "Kis kapacitás", "Az 5 TB-os változat a legtöbb helyen hiánycikk"]
+  ajanlas_szint: kozep
+
+- id: rug-adata-hd830
+  kategoria: hdd_rugged
+  nev: "ADATA HD830 5TB (IP68, AHD830-5TU31-CBK)"
+  kapacitas_tb: 5
+  tipus: "2,5\" HDD, USB 3.1, alumínium ház"
+  tartossag: {ip: "IP68 – 2 m / 120 perc", drop: "MIL-STD-810G 516.6", nyomas: "3000 kg (gyártói)", garancia: "3 év"}
+  sebesseg_mb_s: "~120 (becsült)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "n/a – sem magyar boltban, sem az amazon.de-n nem találtam ma (2018-as modell, valószínűleg kifutó)"
+  ar_forras: "nincs ellenőrzött ár (2026-11-14)"
+  linkek:
+    - {bolt: "gyártói datasheet (specifikáció)", url: "https://avang.ir/wp-content/uploads/2019/11/Datasheet-HD830_20190627.pdf"}
+  elonyok: ["A legstrapabíróbb 2,5\"-es HDD a piacon"]
+  hatranyok: ["Gyakorlatilag nem kapható"]
+  ajanlas_szint: kozep
+
+- id: rug-transcend-25m3-4
+  kategoria: hdd_rugged
+  nev: "Transcend StoreJet 25M3 4TB"
+  kapacitas_tb: 4
+  tipus: "2,5\" HDD, USB 3.1 Gen1, háromszintű ütésvédelem"
+  tartossag: {ip: "nincs", drop: "MIL-STD-810G 516.6 (gyártói)", garancia: "3 év (becsült)"}
+  sebesseg_mb_s: "~120 (becsült)"
+  ar_huf: 118209
+  ar_eur: 323.33
+  ar_per_tb: "29 552 Ft/TB"
+  ar_forras: "amazon.de, 2026-11-14, mért (az eladó nem ellenőrzött)"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B08FT3RPNX"}
+  elonyok: ["Ütésálló"]
+  hatranyok: ["Nem vízálló", "A LaCie 5TB-nál drágább és kisebb, ezért nem éri meg"]
+  ajanlas_szint: olcso
+
+- id: rug-iosafe-solo-g3
+  kategoria: hdd_rugged
+  nev: "ioSafe Solo G3 4TB / 8TB (tűz- és vízálló asztali HDD)"
+  kapacitas_tb: 8
+  tipus: "3,5\" HDD tűzálló/vízálló házban, USB 3.2 Gen1"
+  tartossag: {tuz: "843 °C (1550 °F) 30 percig, ASTM E-119", viz: "IP68 – 3 m (10 ft), édes- és sósvízben 72 óráig", drop: "nincs megadva", garancia: "2 év + 2 év Data Recovery Service"}
+  sebesseg_mb_s: "~5 Gb/s interfész, a lemez korlátoz (becsült ~200)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "362 USD-tól (4 TB) – becsült, az EU-ba szállítás és a vám még hozzáadódik"
+  ar_forras: "shop.digistor.com (CDSG, az ioSafe tulajdonosa), 2026-11-14, a 'From $362' ár mért; HUF-ár nincs (USA-beli bolt, a szállítás és a vám még hozzáadódik)"
+  linkek:
+    - {bolt: "shop.digistor.com (gyártói bolt)", url: "https://shop.digistor.com/products/solo-g3"}
+  elonyok: ["Az egyetlen kapható fogyasztói HDD, amely tüzet ÉS elárasztást is túlél", "Az adatmentés benne van az árban"]
+  hatranyok: ["Legfeljebb 8 TB", "Lassú", "Rendelésre gyártják, a szállítási idő változó", "Nem véd lopás, túlfeszültség, EMP és felhasználói hiba ellen", "Nehéz (~3-4 kg, becsült)"]
+  ajanlas_szint: profi
+
+- id: rug-iosafe-224plus-225plus
+  kategoria: nas
+  nev: "ioSafe 224+ / 225+ (2 lemezes, tűz- és vízálló Synology-alapú NAS)"
+  kapacitas_tb: 28
+  tipus: "2 lemezes NAS, RAID1, Synology DSM"
+  tartossag: {tuz: "843 °C 30 percig (ASTM E-119)", viz: "IP68 – 3 m, 72 óra", garancia: "2 év + 2 év DRS (5 éves DRS opcionális)", megjegyzes: "a gyártó oldala szerint max. 28 TB összesen (2 lemez), RAID1-ben ez ~14 TB hasznos"}
+  sebesseg_mb_s: "~110-220 (1-2.5 GbE, becsült)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "224+ lemez nélkül 990 USD-tól (CDSG); 225+ 8 TB-os konfiguráció 1 663,88 USD (Aztek) – becsült"
+  ar_forras: "keresési találatok + shop.digistor.com/products/224plus (EOL, az utóda a 225+), 2026-11-14, becsült"
+  linkek:
+    - {bolt: "shop.digistor.com", url: "https://shop.digistor.com/products/224plus"}
+    - {bolt: "aztekcomputers.com (225+)", url: "https://www.aztekcomputers.com/225-series-storage-system-8tb-2drs-iosafe/p"}
+  elonyok: ["Egy dobozban van a lemezhiba-tűrés, a tűz- és a vízállóság"]
+  hatranyok: ["Kis kapacitás", "Drága", "Az EU-ban gyakorlatilag csak importból kapható", "Ugyanaz a doboz: lopás, zsarolóvírus vagy túlfeszültség esetén mindkét lemez elveszhet"]
+  ajanlas_szint: extrem
+
+# ---------------------------------------------------------------- 3. ARCHÍV OPTIKAI
+- id: opt-verbatim-mdisc-bdxl-100
+  kategoria: optical
+  nev: "Verbatim M-DISC BD-R XL 100GB (5 db, B01E0CUU1C)"
+  kapacitas_tb: 0.5
+  tipus: "BDXL 3 rétegű, egyszer írható, 4x"
+  tartossag: {ip: "n/a", gyartoi_elettartam: "korábban '1000 év'; a Verbatim Japan ma '100+ év' (ISO/IEC 16963)", bizonyitek: "China Lake (US DoD, 2009): az M-DISC jobb volt a szerves festékes lemezeknél; francia LNE (2010-12, 90 °C / 85% RH): az M-DISC <250 óra, a Syylex üveglemez >1000 óra", kritika: "2022 elején a Verbatim megváltoztatta a BD M-DISC összetételét (6x írás, más szín és jelölés); a Wikipédia szerint ma ugyanazt a MABL réteget használja, mint a sima Verbatim BD-R. A Verbatim szerint 'továbbfejlesztés, azonos élettartammal', de független laborteszt nincs, és a Redditen/HN-en azt állítják, hogy már nem 'valódi' M-DISC. Az 1000 éves állítást a Verbatim elhagyta."}
+  sebesseg_mb_s: "~18 (4x BD, becsült)"
+  ar_huf: 24111
+  ar_eur: 65.95
+  ar_per_tb: "48 223 Ft/TB (131,9 €/TB)"
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B01E0CUU1C"}
+    - {bolt: "amazon.de (1 db)", url: "https://www.amazon.de/dp/B07DXKWV5K"}
+    - {bolt: "Wikipedia – M-DISC (kritika, tesztek)", url: "https://en.wikipedia.org/wiki/M-DISC"}
+  elonyok: ["Szervetlen réteg, nem mágneses: EMP-, víz- (rövid ideig) és mágnesesség-álló", "Írás után nem módosítható (zsarolóvírus ellen is véd)", "Évtizedekig bekapcsolás nélkül tárolható"]
+  hatranyok: ["~2,6x drágább/TB, mint a HDD; 128 TB = 1280 lemez (~6,2M Ft)", "A 2022-es összetétel-váltás bizonytalanná teszi a hosszú élettartamot", "Lassú írás"]
+  ajanlas_szint: kozep
+  javaslat: "Csak a 'mag' (pl. 0,5-2 TB: Wikipedia ZIM, orvosi/mezőgazdasági PDF-ek, térképek) kerüljön rá, par2 +10-20% paritással és SHA256 listával."
+
+- id: opt-verbatim-mdisc-bdr-25
+  kategoria: optical
+  nev: "Verbatim M-DISC BD-R 25GB 4x (43823)"
+  kapacitas_tb: 0.025
+  tipus: "BD-R SL, egyszer írható"
+  tartossag: {gyartoi_elettartam: "lásd fent", kritika: "ugyanaz az összetétel-vita"}
+  sebesseg_mb_s: "~18"
+  ar_huf: 2891
+  ar_eur: 7.9
+  ar_per_tb: "115 640 Ft/TB (pcx 1 db) – drága; amazon.de 10 db 35,35 € = 141 €/TB"
+  ar_forras: "pcx.hu 2 891 Ft és ipon.hu 2 990 Ft (2026-11-14, mért); amazon.de 10 db 35,35 € (mért)"
+  linkek:
+    - {bolt: pcx.hu, url: "https://www.pcx.hu/bd-r-bluray-lemez-archivalo-nyomtathato-m-disc-25gb-4x-1-db-normal-tok-verbatim-43823-188843"}
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/verbatim-bd-r-bluray-lemez-25gb-4x-archivalo-nyomtathato-m-disc-normal-tok-1db/1534211"}
+    - {bolt: "amazon.de (10 db)", url: "https://www.amazon.de/dp/B00UVHS76G"}
+  elonyok: ["Bármely BD-író írja, bárhol olvasható"]
+  hatranyok: ["A legdrágább/TB", "Sok lemez kell"]
+  ajanlas_szint: olcso
+
+- id: opt-verbatim-slimline-bd-writer-43890
+  kategoria: optical
+  nev: "Verbatim External Slimline Blu-ray Writer USB 3.0 (43890) – M-DISC és BDXL támogatással"
+  kapacitas_tb: null
+  tipus: "külső, USB-ről táplált BD/DVD/CD író"
+  tartossag: {megjegyzes: "a Verbatim adatlapja szerint: BDXL 100 GB, M-DISC BD-R/BD-R DL/BDXL/DVD-R"}
+  sebesseg_mb_s: "BD 6x (viszonteladói adat)"
+  ar_huf: 65689
+  ar_eur: 179.7
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért (szállítás 2026-11-27); USB-C változat: 83 190 Ft (mért)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/verbatim-external-slimline-usb-30-blu-ray-writer-fekete/1530529"}
+    - {bolt: "ipon.hu (USB-C)", url: "https://ipon.hu/shop/termek/verbatim-external-slimline-blu-ray-writer-with-usb-c-connection/1797508"}
+    - {bolt: "Verbatim adatlap", url: "https://www.verbatim-europe.com/en/blu-ray-writers/products/external-slimline-blu-ray-writer-43890"}
+  elonyok: ["Hivatalosan írja az M-DISC BDXL-t", "Hordozható, egy USB-kábel elég"]
+  hatranyok: ["Slim meghajtó: lassabb, és kevésbé tartós sorozatírásra", "Érdemes 2 db-ot venni (egyet az archívum mellé, olvasónak)"]
+  ajanlas_szint: kozep
+
+# ---------------------------------------------------------------- 4. LTO SZALAG
+- id: tape-lto9-cartridge
+  kategoria: tape
+  nev: "LTO-9 adatkazetta 18 TB natív / 45 TB tömörítve (HP Q2079A / Quantum MR-L9MQN-01)"
+  kapacitas_tb: 18
+  tipus: "LTO-9 RW kazetta (WORM változat is van: HP Q2079W, 62 191 Ft az iponon)"
+  tartossag: {elettartam: "~30 év archív tárolás (az LTO szokásos gyártói állítása, ideális klímán: 16-25 °C, 20-50% RH)", megjegyzes: "BaFe szalag; a kazetta nem tartalmaz elektronikát a motorhoz, ezért offline EMP-állósága kiváló"}
+  sebesseg_mb_s: "400 natív (LTO-9 spec)"
+  ar_huf: 36690
+  ar_eur: 100.4
+  ar_per_tb: "2 038 Ft/TB (5,6 €/TB) – ~8x olcsóbb/TB, mint a HDD"
+  ar_forras: "pcx.hu HP Q2079A 36 690 Ft; ipon.hu Quantum 36 990 Ft, HP 39 889 Ft (2026-11-14, mért)"
+  linkek:
+    - {bolt: pcx.hu, url: "https://www.pcx.hu/hp-adatkazetta-ultrium-lto-9-45tb-rw-q2079a-819400"}
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/quantum-lto-9-medium-45-tb-mr-l9mqn-0/2258506"}
+    - {bolt: "ipon.hu (HP)", url: "https://ipon.hu/shop/termek/hp-lto-9-ultrium-45tb-rw-data-cartridge-q2079a/1959636"}
+  elonyok: ["A legolcsóbb média/TB", "30 év archív élettartam", "Ütésre, EMP-re, mágnesességre kevésbé érzékeny, mint a HDD (távol tartva erős mágnesektől)"]
+  hatranyok: ["A meghajtó nagyon drága", "A meghajtó maga is meghibásodhat, és 'civilizáció-újraépítés' után talán nem lesz LTO-9 olvasó – a meghajtót is meg kell őrizni"]
+  ajanlas_szint: profi
+
+- id: tape-lto9-drive-quantum
+  kategoria: tape
+  nev: "Quantum LTO-9 Tape Drive TC-L93CN-AR (fél magas, SAS, 1U rack)"
+  kapacitas_tb: 18
+  tipus: "LTO-9 HH SAS 12 Gb/s, titkosítás, WORM – SAS HBA kell hozzá (becsült +40-100e Ft)"
+  tartossag: {megjegyzes: "LTO-8 kazettát is olvas/ír (LTO-9 drive spec)"}
+  sebesseg_mb_s: 400
+  ar_huf: 3967890
+  ar_eur: 10853
+  ar_per_tb: "Megtérülés a HDD-hez képest (17 104 vs 2 038 Ft/TB): ~263 TB tárolt adat felett"
+  ar_forras: "ipon.hu, 2026-11-14, mért (30 napos min. 3 931 590 Ft); US piaci ár: LTO-9 külső 9 199-15 225 USD (tapebackup.org, 2026-10-23)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/quantum-lto-9-tape-drive-tc-l93cn-ar/2235783"}
+    - {bolt: "tapebackup.org árkövető", url: "https://tapebackup.org/why-tape/lto-tape-drive"}
+  elonyok: ["Professzionális, 30 éves archiválás", "3 vagy több másolat esetén 128 TB-tól már olcsóbb a HDD-nél"]
+  hatranyok: ["~4M Ft belépő", "SAS kártya és Linux (LTFS) tudás kell hozzá", "Magánszemélynek 128 TB alatt nem éri meg"]
+  ajanlas_szint: extrem
+
+- id: tape-lto10-status
+  kategoria: tape
+  nev: "LTO-10 (30 TB natív, 2026-ban 40 TB-os kazetta is) – piaci helyzet"
+  kapacitas_tb: 30
+  tipus: "csak teljes magas (FH) meghajtók, főleg könyvtárakba; HH LTO-10 2026 októberéig nincs"
+  tartossag: {elettartam: "~30 év (becsült, LTO szokásos)"}
+  sebesseg_mb_s: "~400 (becsült)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "Kazetta 259-300 USD / 30 TB (~8,6-10 USD/TB); a 40 TB-os Fujifilm 535 USD (1 eladó); a meghajtó 22-25 ezer USD"
+  ar_forras: "tapebackup.org, 2026-10, becsült; Magyarországon nem találtam LTO-10-et"
+  linkek:
+    - {bolt: "tapebackup.org LTO-10", url: "https://tapebackup.org/lto-tape-price-trend/lto10-price"}
+    - {bolt: "ltoworld.com (MagStor LTO-10 FH SAS, 23 999,99 USD)", url: "https://ltoworld.com/products/magstor-lto-10-30tb-full-height-sas-desktop-tape-drive-max-taa"}
+  elonyok: ["Nagyobb kazetta"]
+  hatranyok: ["Magánszemélynek 2026-ban irreálisan drága; az LTO-9 a racionális választás"]
+  ajanlas_szint: extrem
+
+# ---------------------------------------------------------------- 5. NAS / DAS
+- id: nas-ugreen-dxp4800plus
+  kategoria: nas
+  nev: "UGREEN NASync DXP4800 Plus (4 lemezes)"
+  kapacitas_tb: 128
+  tipus: "4x3,5\" NAS, x86 (Intel), 10GbE + 2.5GbE; TrueNAS SCALE/ZFS telepíthető rá"
+  tartossag: {garancia: "2 év (EU, becsült)"}
+  sebesseg_mb_s: "~1000 (10GbE, becsült)"
+  ar_huf: 262691
+  ar_eur: 718.5
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért (szállítás nov. 17.)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/ugreen-nasync-dxp4800-plus/2402913"}
+  elonyok: ["A legjobb ár/teljesítmény ZFS-hez (TrueNAS)", "4x32 TB = 128 TB nyers, RAIDZ1-ben 96 TB hasznos"]
+  hatranyok: ["Nem ECC RAM", "A gyári UGOS szoftver kevésbé kiforrott, mint a Synology"]
+  ajanlas_szint: kozep
+
+- id: nas-synology-ds925plus
+  kategoria: nas
+  nev: "Synology DiskStation DS925+ (4 lemezes)"
+  kapacitas_tb: 128
+  tipus: "4x3,5\" NAS, AMD Ryzen, Btrfs (checksum + scrub), 2.5GbE"
+  tartossag: {garancia: "3 év (becsült)", megjegyzes: "A DSM 7.3 (2025-10-08) óta a 2025-ös Plus modellek ismét elfogadják a harmadik féltől származó HDD-ket (M.2 tárolókészletre továbbra sem)"}
+  sebesseg_mb_s: "~280 (2.5GbE, becsült)"
+  ar_huf: 357690
+  ar_eur: 978.4
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/synology-diskstation-ds925/2368739"}
+    - {bolt: "NASCompares – DSM 7.3 HDD-szabály", url: "https://nascompares.com/2025/10/07/synology-support-seagate-wd-again-too-little-too-late/"}
+  elonyok: ["A legkiforrottabb szoftver", "Btrfs önjavítás SHR/RAID mellett", "Hyper Backup, Snapshot"]
+  hatranyok: ["Drágább", "A meghajtó-kompatibilitási politikája ingadozott"]
+  ajanlas_szint: profi
+
+- id: nas-synology-ds1825plus
+  kategoria: nas
+  nev: "Synology DiskStation DS1825+ 8GB (8 lemezes)"
+  kapacitas_tb: 256
+  tipus: "8x3,5\" NAS, Btrfs, RAID6/SHR-2"
+  tartossag: {garancia: "3 év (becsült)"}
+  sebesseg_mb_s: "~500+ (becsült)"
+  ar_huf: 620790
+  ar_eur: 1698.0
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért (szállítás nov. 27.)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/synology-diskstation-ds1825-8gb/2393648"}
+  elonyok: ["8x22 TB RAID6-ban = 132 TB hasznos, 2 lemez kiesését is túléli – egyetlen dobozban elfér a teljes 128 TB"]
+  hatranyok: ["Nagy, nehéz, sokat fogyaszt"]
+  ajanlas_szint: extrem
+
+- id: nas-terramaster-f4-425plus
+  kategoria: nas
+  nev: "TerraMaster F4-425 Plus 8GB (4 lemezes)"
+  kapacitas_tb: 128
+  tipus: "4x3,5\" NAS, x86, TOS vagy TrueNAS"
+  tartossag: {garancia: "2 év (becsült)"}
+  sebesseg_mb_s: "~280-500 (becsült)"
+  ar_huf: 232590
+  ar_eur: 636.2
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/terramaster-f4-425-plus-8gb-4xhdd/2541186"}
+  elonyok: ["A legolcsóbb 4 lemezes x86 NAS"]
+  hatranyok: ["A TOS szoftver gyengébb; TrueNAS ajánlott rá"]
+  ajanlas_szint: olcso
+
+- id: das-qnap-tr004
+  kategoria: das
+  nev: "QNAP TR-004 (4 lemezes USB 3.2 Gen1 DAS, hardveres RAID)"
+  kapacitas_tb: 128
+  tipus: "4x3,5\" USB DAS, JBOD/RAID0/1/5/10"
+  tartossag: {garancia: "2 év (becsült)"}
+  sebesseg_mb_s: "~400 (USB 5 Gb/s, becsült)"
+  ar_huf: 112191
+  ar_eur: 306.9
+  ar_per_tb: null
+  ar_forras: "ipon.hu, 2026-11-14, mért (szállítás nov. 27.)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/qnap-tr-004/1720441"}
+  elonyok: ["JBOD módban ideális SnapRAID-hez vagy ZFS-hez (a hardveres RAID helyett)", "Csak a mentés idejére kell bekapcsolni (air-gap)"]
+  hatranyok: ["Ne használd a hardveres RAID5-öt: a vezérlő meghibásodása után a tömb csak QNAP-pal olvasható"]
+  ajanlas_szint: olcso
+
+- id: das-icybox-ib3740
+  kategoria: das
+  nev: "ICY BOX IB-3740-C31 (4 lemezes USB 3.1 Type-C JBOD ház)"
+  kapacitas_tb: 128
+  tipus: "4x3,5\" USB-C DAS, JBOD (minden lemez külön látszik)"
+  tartossag: {garancia: "2 év (becsült)"}
+  sebesseg_mb_s: "~500-900 összesen (10 Gb/s, becsült)"
+  ar_huf: 57801
+  ar_eur: 158.10
+  ar_per_tb: null
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B07G6X524P"}
+  elonyok: ["Olcsó, egyszerű JBOD: ZFS/SnapRAID a gépen fut, nincs saját RAID-formátum"]
+  hatranyok: ["USB-n a ZFS kevésbé robusztus, mint SATA/SAS-on (UAS-reset gondok előfordulhatnak)"]
+  ajanlas_szint: olcso
+
+- id: das-icybox-ib-rd3621u3
+  kategoria: das
+  nev: "ICY BOX IB-RD3621U3 (2 lemezes USB 3.2 Gen1 ház / dokkoló)"
+  kapacitas_tb: 64
+  tipus: "2x3,5\" USB DAS (RAID0/1/JBOD)"
+  tartossag: {garancia: "2 év (becsült)"}
+  sebesseg_mb_s: "~250 (becsült)"
+  ar_huf: 21040
+  ar_eur: 57.55
+  ar_per_tb: null
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B01N6AJUEI"}
+  elonyok: ["Olcsó 'mentő állomás' az offline lemezek időszakos ellenőrzéséhez"]
+  hatranyok: ["Az egyszerű RAID1 nem ellenőriz checksumot – JBOD + ZFS ajánlott"]
+  ajanlas_szint: olcso
+
+- id: das-terramaster-d8-hybrid
+  kategoria: das
+  nev: "TerraMaster D8 Hybrid (8 lemezes USB 3.2 Gen2 DAS, HDD+NVMe)"
+  kapacitas_tb: 256
+  tipus: "USB-C 10 Gb/s DAS"
+  tartossag: {garancia: "2 év (becsült)"}
+  sebesseg_mb_s: "~1000 (becsült)"
+  ar_huf: 138226
+  ar_eur: 378.08
+  ar_per_tb: null
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B0D3YZSK95"}
+  elonyok: ["Egyetlen dobozban akár 8 lemezes offline másolat, SnapRAID-del 2 paritással"]
+  hatranyok: ["Nagy", "USB"]
+  ajanlas_szint: kozep
+
+- id: nas-diy-truenas
+  kategoria: nas
+  nev: "DIY TrueNAS SCALE (ZFS) szerver – ECC RAM + SAS HBA"
+  kapacitas_tb: 256
+  tipus: "Saját építés: pl. AMD Ryzen/EPYC vagy Xeon ECC-vel, LSI 9300/9400 HBA IT módban, 6-12 lemez RAIDZ2"
+  tartossag: {megjegyzes: "ZFS end-to-end checksum, ECC RAM, rendszeres scrub; SAS lemezt (HC590, Exos SAS) is fogad"}
+  sebesseg_mb_s: "1000+ (becsült)"
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: "alap (lemezek nélkül) kb. 300-600e Ft – becsült, nincs konkrét termékár-ellenőrzés"
+  ar_forras: "becsült"
+  linkek: []
+  elonyok: ["A 'legprofibb' integritás magáncélra (ECC + ZFS + RAIDZ2)", "Olcsóbb SAS lemezeket is használhat"]
+  hatranyok: ["Tudás és idő kell hozzá", "Nagyobb fogyasztás"]
+  ajanlas_szint: profi
+
+# ---------------------------------------------------------------- 5b. FARADAY / EMP / FIZIKAI VÉDELEM
+- id: far-faraday-defense-nestz
+  kategoria: faraday
+  nev: "Faraday Defense NEST-Z Faraday-tasak (EMP / napkitörés, vastag, többrétegű)"
+  kapacitas_tb: null
+  tipus: "többrétegű árnyékoló tasak (offline HDD-khez, antisztatikus tasakban)"
+  tartossag: {megjegyzes: "A lezárásnál 2-3-szor hajtsd vissza, és telefonnal teszteld (benne nincs térerő)"}
+  sebesseg_mb_s: null
+  ar_huf: 27797
+  ar_eur: 76.03
+  ar_per_tb: null
+  ar_forras: "amazon.de, 2026-11-14, mért"
+  linkek:
+    - {bolt: amazon.de, url: "https://www.amazon.de/dp/B07QXDDYTQ"}
+    - {bolt: "amazon.de (Mission Darkness Dry Shield T10 – vízálló, nagy méret, 333,64 €)", url: "https://www.amazon.de/dp/B0DHQYY9W9"}
+  elonyok: ["Olcsó réteg az EMP/villám okozta indukció ellen", "A Dry Shield változat vízálló is"]
+  hatranyok: ["Kikapcsolt, kábel nélküli HDD-nél az EMP-kockázat eleve alacsony (a fő veszély a csatlakoztatott elektronikát fenyegeti); ez inkább olcsó biztosítás"]
+  ajanlas_szint: olcso
+
+- id: far-mfh-ammo-box-50cal
+  kategoria: faraday
+  nev: "MFH US Ammo Box M2A1 .50 cal acél lőszeresláda (tömítéssel)"
+  kapacitas_tb: null
+  tipus: "acél doboz gumitömítéssel, külső méret 300x155x190 mm, 2,6 kg (a listázás szerint)"
+  tartossag: {megjegyzes: "Por- és nedvességálló, ütésvédő. Faraday-ketrecnek csak akkor jó, ha a fedél és a doboz fémesen érintkezik (a gumitömítés szigetel) – ezért a Faraday-tasakot TESZD BELE. Szilikagélt is tegyél be, a lemezeket pedig habba csomagold. 3,5\"-es HDD-ből 2-3 db fér bele (vásárlás előtt mérd le)."}
+  sebesseg_mb_s: null
+  ar_huf: 11570
+  ar_eur: 31.6
+  ar_per_tb: null
+  ar_forras: "military.eu/hu keresési találat, 2026-11-14, becsült (az oldal 403-at adott); a PA60 változat 13 220 Ft (becsült)"
+  linkek:
+    - {bolt: "military.eu (HU)", url: "https://military.eu/hu/p/mfh/mfh-us-ammo-box-m2a1-50-cal-loszeres-doboz-black-1247366"}
+    - {bolt: "military.eu (PA60 OD green)", url: "https://military.eu/hu/p/mfh/mfh-us-ammo-box-pa60-cal-50-loszeres-doboz-od-green-1247369"}
+  elonyok: ["Olcsó, strapabíró, rágcsáló- és ütésálló külső héj"]
+  hatranyok: ["Nem IP68 és nem tűzálló"]
+  ajanlas_szint: olcso
+
+# =====================================================================================
+egyeszkozos_opciok:   # (a) A legsűrűbb egyeszközös megoldások
+  "8_TB":
+    - "ioSafe Solo G3 8TB – tűz (843 °C/30 perc) és víz (3 m/72 óra) ellen véd, ~362 USD-tól (becsült). Egyetlen lemez, tehát egy lemezhibát NEM él túl."
+    - "Alternatíva: 1x Toshiba MG10 22TB (376 290 Ft) – a legolcsóbb/TB, és bőven marad hely."
+    - "2,5\"-es rugged HDD legfeljebb 5 TB, ezért 8 TB-ra nincs egylemezes rugged HDD."
+  "16_TB":
+    - "1x Toshiba MG10AFA22TE 22TB (pcx, 376 290 Ft) USB-dokkolóban vagy -házban, offline."
+    - "Ha a tűz- és vízállóság kell: ioSafe 225+ 2 lemezes NAS RAID1-ben (a gyártó szerint max. ~28 TB nyers, ~14 TB hasznos), ezért 16 TB-hoz kevés."
+  "32_TB":
+    - "1x Seagate Exos M 32TB (ipon, 784 390 Ft) vagy IronWolf Pro 32TB (alza snapshot 575 890 Ft, becsült). Ma ez a fizikai minimum: 1 db 3,5\"-es lemez."
+  "64_TB":
+    - "1 doboz, 1 lemezhibát túlél: UGREEN DXP4800 Plus + 3x Exos M 32TB RAIDZ1 = 64 TB hasznos (262 691 + 3x784 390 = 2 615 861 Ft)."
+    - "Olcsóbban: DXP4800 Plus + 4x Toshiba MG10 22TB RAIDZ1 = 66 TB hasznos (262 691 + 4x376 290 = 1 767 851 Ft)."
+  "128_TB":
+    - "1 doboz, 2 lemezhibát túlél: Synology DS1825+ + 8x Toshiba MG10 22TB RAID6/SHR-2 = ~132 TB hasznos (620 790 + 8x376 290 = 3 631 110 Ft)."
+    - "Kompaktabban: 6x Exos M 32TB RAID6 = 128 TB hasznos, 6 lemezes dobozban (6x784 390 = 4 706 340 Ft + doboz)."
+    - "A tűzálló ioSafe 1525+ (5 lemezes) a keresési találatok szerint létezik, de a gyártói konfigurációk ~70-80 TB-ig mennek, és az EU-ban nehezen kapható (becsült)."
+  kovetkeztetes: "Egyetlen eszköz 128 TB-ig megoldható, de minden 'egy doboz' közös ponton hibázik: tápegység/túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs (rm -rf, rossz zpool), vezérlőhiba. A RAID nem mentés."
+
+kockazat_elemzes:   # (b) Egy eszköz vs. 1 elsődleges + 1 offline másolat
+  backblaze_q2_2026:
+    flotta_elettartam_afr: "1,41% (353 041 lemez)"
+    flotta_negyedeves_afr: "1,73% (354 415 lemez, évek óta a legmagasabb)"
+    modellek_elettartam_afr: {Seagate_ST24000NM002H_Exos_X24_24TB: "3,24%", Toshiba_MG10ACA20TE_20TB: "0,79%", Toshiba_MG11ACA24TE_24TB: "0,50%", WDC_WUH722222ALE6L4_22TB: "0,58%", WDC_WUH722626ALE6L4_26TB: "0,84%"}
+    forras: "https://www.backblaze.com/blog/backblaze-drive-stats-for-q2-2026/"
+  szamitas_10_ev:
+    modszer: "P(1 lemez 10 év alatt meghibásodik) = 1-(1-AFR)^10. Két független másolatnál, ha félévente ellenőrzöd és cseréled a hibásat: P(adatvesztés) ≈ 10 év x AFR1 x AFR2 x 0,5 év (az az ablak, amíg egy hiba észrevétlen marad)."
+    egy_masolat:
+      "AFR 0,5% (MG11)": "4,9%"
+      "AFR 1,41% (flotta)": "13,2%"
+      "AFR 2,41% (flotta + ~1%/év egyéb: tűz, víz, lopás, túlfeszültség, felhasználói hiba – becsült)": "21,7%"
+      "AFR 3,24% (Exos X24)": "28,1%"
+    ket_masolat_felevente_ellenorizve:
+      "AFR 1,41%": "~0,10% (kb. 1:1000)"
+      "AFR 2,41%": "~0,29% (kb. 1:350)"
+      "AFR 3,24%": "~0,53%"
+    ket_masolat_karbantartas_nelkul_10_evig: "AFR 2,41% mellett ~4,7%"
+    bit_rot_ure: "Egy 32 TB-os lemez teljes kiolvasása = 2,56x10^14 bit. 1/10^15 URE-specifikáció mellett ez ~0,26 várható olvashatatlan szektor, vagyis ~23% esély legalább egy hibára teljes olvasásonként (a spec felső korlát, a valóság jellemzően jobb). Egy másolattal a hibás fájl elveszik; ZFS + második másolattal automatikusan javítható."
+  konkluzio: "Az 1 elsődleges + 1 offline (más helyen, más gyártótól) másolat ~20%-ról ~0,3%-ra viszi le a 10 éves adatvesztési kockázatot (~70x javulás), és csak +1 lemezbe kerül. Ez a minimum logikus kompromisszum. A korrelált hibák (azonos gyártási sorozat, közös lakás, közös villám) ezt rontják, ezért: két különböző gyártó, két helyszín, az offline lemez Faraday-tasakban."
+
+kompakt_2_eszkoz:   # (c) A legkompaktabb 2 eszközös felállás: 1 lemezhibát, vizet, ütést és EMP-t is túlél
+  "22_TB_valtozat (ajánlott ár/érték)":
+    eszkoz_1_elsodleges: "Toshiba MG10AFA22TE 22TB (pcx, 376 290 Ft) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS single-disk pool, havi scrub"
+    eszkoz_2_offline: "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft) – MÁS GYÁRTÓ. Antisztatikus tasakba, habba, majd Faraday Defense NEST-Z-be (27 797 Ft) és MFH .50 cal acél lőszer­ládába (~11 570 Ft, becsült) teszed, szilikagéllel, másik épületben/rokonnál tárolva."
+    plusz_opcionalis_mag: "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen."
+    osszesen: "885 487 Ft (M-DISC nélkül); 975 287 Ft M-DISC maggal"
+  "32_TB_valtozat (legkisebb térfogat a teljes 32 TB-hoz)":
+    eszkoz_1: "Seagate Exos M 32TB (ipon, 784 390 Ft)"
+    eszkoz_2: "Seagate IronWolf Pro 32TB (alza snapshot 575 890 Ft, becsült) – azonos gyártó, de más termékcsalád és gyártási sorozat (32 TB-ban ma nincs WD/Toshiba)"
+    vedelem: "ugyanaz: NEST-Z + lőszerláda + szilikagél + külön helyszín"
+    osszesen: "~1 420 000 Ft (becsült, az IronWolf Pro ára nem ellenőrzött); csak ipon-ról: 2x Exos M 32TB = 1 568 780 Ft + kb. 60e Ft tartozék"
+  "5_TB_mag_valtozat (zsebméret, víz és ütés)":
+    eszkoz_1: "LaCie Rugged USB-C 5TB (81 309 Ft)"
+    eszkoz_2: "ADATA HD710 Pro 4-5TB IP68 (119 741 Ft, 4 TB) – vagy egy második LaCie Rugged"
+    osszesen: "~201 000 Ft"
+  miert_nem_raid1_egy_dobozban: "A RAID1 egy dobozban a lemezhibát túléli, de a tűzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi."
+
+adatintegritas:   # 6. HDD adat-integritási stratégia (rövid, konkrét)
+  zfs_btrfs:
+    - "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetre: zfs set copies=2 (bit-rot ellen, NEM lemezhiba ellen)."
+    - "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B; egylemezes Btrfs-en '-m dup -d dup' a kritikus részre."
+    - "Ellenőrzött szinkron: zfs send/recv snapshotokkal (a checksumok átmennek), vagy rsync --checksum + SHA256 manifest (hashdeep / sha256sum) minden másolaton."
+  snapraid_par2:
+    - "Sok, eltérő méretű lemeznél (JBOD a QNAP TR-004 / ICY BOX / D8 házban): SnapRAID, 4-6 adatlemezre 1 paritás, 7+ lemeznél 2 paritás. Utána: snapraid sync, snapraid scrub -p 10 -o 30 (minden ellenőrzéskor), a 'content' fájl legalább 3 lemezen legyen."
+    - "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): par2 create -r15 mag.par2 *. Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify."
+  offline_bekapcsolas:
+    - "Félévente (legalább évente) kapcsold be: SMART-ellenőrzés + teljes scrub/olvasás + a hibák javítása a másik másolatból."
+    - "5-7 évente migrálj új lemezre (ez a technológiaváltás miatt is fontos), és a régi lemezt tartsd meg harmadik példánynak, amíg működik."
+  tarolasi_klima:
+    - "Hőmérséklet 10-25 °C, ideálisan stabil 15-20 °C, ingadozás nélkül. Páratartalom 20-50% RH, kondenzáció nélkül (szilikagél a dobozba, színváltós, és cseréld)."
+    - "Hidegből behozva 24 órát várj bekapcsolás előtt (páralecsapódás). Habba csomagolva, vízszintesen tárold, mágnesektől és hangszóróktól távol."
+    - "LTO-nál: 16-25 °C, 20-50% RH, függőlegesen, gyári tokban."
+  smart:
+    - "smartctl -a /dev/sdX minden bekapcsoláskor; új lemeznél beégetés: smartctl -t long, majd badblocks -wsv (destruktív, csak üres lemezen) → a korai meghibásodások kiszűrésére."
+    - "Figyeld ezeket: 5 Reallocated, 187 Reported Uncorrectable, 188 Command Timeout, 197 Current Pending, 198 Offline Uncorrectable, 199 UDMA CRC (kábel). Ha a 197/198 > 0 vagy az 5 nő, cseréld a lemezt."
+    - "Online gépen: smartd (napi short, heti long teszt) + ZFS ZED e-mail/ntfy értesítés."
+  diverzifikacio: "Két másolat = két gyártó (pl. Toshiba + Seagate vagy WD), két vásárlási sorozat, két helyszín. A Backblaze szerint ugyanazon a kapacitáson belül is 6x különbség lehet a modellek AFR-je között."
+
+javaslat:   # 3-2-1 felállások (3 példány, 2 médiatípus, 1 külső helyszínen)
+  "~150-170e Ft – 'mag-archívum' ≤5 TB":
+    elemek:
+      - "1. példány: meglévő PC-lemez (vagy a mag egy belső SSD-n)"
+      - "2. példány: LaCie Rugged USB-C 5TB – amazon.de 81 309 Ft (mért)"
+      - "3. példány (offsite, más médium): 5x Verbatim M-DISC BDXL 100GB – 24 111 Ft (mért) + Verbatim Slimline BD-író 65 689 Ft (ipon, mért), rajta a legfontosabb ~500 GB par2-vel"
+    osszesen: "171 109 Ft"
+    alternativa: "2x LaCie Rugged 5TB (162 618 Ft): két offline HDD két helyen, M-DISC nélkül"
+  "~400e Ft – 8 TB teljes redundanciával":
+    elemek:
+      - "2x Seagate IronWolf Pro 8TB – pcx 2x157 390 = 314 780 Ft (mért)"
+      - "ICY BOX IB-RD3621U3 dokkoló – 21 040 Ft (amazon.de, mért)"
+      - "Faraday Defense NEST-Z – 27 797 Ft (mért) + MFH .50 cal lőszerláda ~11 570 Ft (becsült)"
+      - "3. példány: a meglévő PC/laptop, vagy később M-DISC mag"
+    osszesen: "~375 187 Ft"
+    megjegyzes: "A 2026-os HDD-árakon 400e Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül."
+  "~1M Ft – 22-24 TB, két gyártó, M-DISC mag":
+    elemek:
+      - "1. (online): Toshiba MG10AFA22TE 22TB – pcx 376 290 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS"
+      - "2. (offline, offsite): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)"
+      - "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5x M-DISC BDXL (24 111 Ft)"
+    osszesen: "~975 287 Ft"
+  "~3-3,6M Ft – 64-66 TB, NAS + offline szett":
+    elemek:
+      - "1. (online, ZFS RAIDZ1): UGREEN DXP4800 Plus (262 691 Ft) + 4x Toshiba MG10 22TB (1 505 160 Ft) = 66 TB hasznos, TrueNAS SCALE, havi scrub"
+      - "2. (offline, offsite): 3x Seagate Exos M 28TB (3x578 590 = 1 735 770 Ft) = 84 TB, SnapRAID nélkül JBOD-ként, ZFS/lemez + SHA256 manifest, 2 lőszerládában, Faraday-tasakban (2x(27 797 + 11 570) = 78 734 Ft)"
+      - "3. (mag): M-DISC BDXL 10 db (48 222 Ft) + BD-író (65 689 Ft)"
+    osszesen: "~3 696 266 Ft"
+  "Extrém 128 TB (~6-8M Ft)":
+    elemek:
+      - "1. Synology DS1825+ + 8x Toshiba MG10 22TB RAID6 = 132 TB hasznos – 3 631 110 Ft"
+      - "2a. Offline HDD-szett: 6x MG10 22TB = 132 TB, 2 lőszerládában – 2 257 740 Ft (összesen ~5,9M Ft), VAGY"
+      - "2b. LTO-9: Quantum TC-L93CN-AR (3 967 890 Ft) + SAS HBA (becsült ~50-100e Ft) + másolatonként 8 kazetta (8x36 690 = 293 520 Ft). 2 szalagmásolattal ~8,3M Ft; minden további 128 TB-os másolat csak ~294e Ft (HDD-n ~2,26M Ft)."
+    megjegyzes: "A szalag 3+ másolatnál, vagy ha a 30 éves, bekapcsolás nélküli tárolás a cél, előzi meg a HDD-t. Ilyenkor a meghajtót is őrizd meg tartaléknak."
+
+forrasok:
+  - "https://www.seagate.com/content/dam/seagate/en/content-fragments/products/datasheets/exos-m-v1-2/exos-v1-2-DS2045-4-2511-en_US.pdf"
+  - "https://www.seagate.com/content/dam/seagate/en/content-fragments/products/datasheets/ironwolf-pro-z-skus/ironwolf-pro-z-skus-DS16-1-2501US-en_US.pdf"
+  - "https://www.backblaze.com/blog/backblaze-drive-stats-for-q2-2026/"
+  - "https://en.wikipedia.org/wiki/M-DISC"
+  - "https://tapebackup.org/why-tape/lto-tape-drive"
+  - "https://tapebackup.org/lto-tape-price-trend/lto10-price"
+  - "https://shop.digistor.com/products/solo-g3"
+  - "https://shop.digistor.com/products/224plus"
+  - "https://www.westerndigital.com/products/internal-drives/wd-red-pro-sata-hdd?sku=WD260KFGX"
+  - "https://nascompares.com/2025/10/07/synology-support-seagate-wd-again-too-little-too-late/"
+  - "https://www.verbatim-europe.com/en/blu-ray-writers/products/external-slimline-blu-ray-writer-43890"
+  - "https://winbuzzer.com/2026/02/18/wd-seagate-2026-hard-drive-shortage-ai-data-centers-xcxwbn/"
