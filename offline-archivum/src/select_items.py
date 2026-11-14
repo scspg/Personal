@@ -322,6 +322,9 @@ def write_sh(plan, path, dest):
                 n = u.rstrip("/").split("/")[-1]
                 L.append(f'[ -d "{sub}/{n}.git" ] || git clone --mirror {q(u)} "{sub}/{n}.git"; '
                          f'git -C "{sub}/{n}.git" remote update && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all && ok {q(v["id"])} || fail {q(v["id"])}')
+            if d.get("release_url"):
+                L.append(f'# Telepítők/binárisok (AI-feladat): a {d["release_url"]} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
+                L.append(f'echo "TODO {v["id"]} – telepítők: {d["release_url"]}" | tee -a "$LOG"')
         elif m == "hf":
             inc = " ".join(f"--include {q(p)}" for p in (d.get("include") or []))
             rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""

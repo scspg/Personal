@@ -15,7 +15,17 @@ CAT_HU = {
  "hungarian": "Magyar források", "humanities": "Bölcsészet", "computing": "Számítástechnika",
  "os_mirror": "Operációs rendszerek, csomagtükrök", "source_code": "Forráskód", "ai_models": "LLM / AI modellek",
  "ai_tools": "AI futtatók és eszközök", "maps_geo": "Térképek, geoadatok", "knowledge_dump": "Nagy adathalmazok",
- "ai_models_uncensored": "LLM-ek (cenzúrázatlan)", "server_bundle": "Offline szerver-csomagok", "civil_defense": "Polgári védelem", "governance": "Közösség, jog, kormányzás", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
+ "ai_models_uncensored": "LLM-ek (cenzúrázatlan)", "server_bundle": "Offline szerver-csomagok",
+ "oss_system": "Szoftver: operációs rendszer, rendszereszközök", "oss_office": "Szoftver: iroda, dokumentumok", "oss_knowledge": "Szoftver: tudásszerverek, wiki",
+ "oss_media": "Szoftver: média, grafika", "oss_comms": "Szoftver: kommunikáció, mesh", "oss_radio": "Szoftver: rádió, SDR", "oss_network": "Szoftver: hálózat",
+ "oss_storage": "Szoftver: tárolás, mentés", "oss_security": "Szoftver: biztonság, titkosítás", "oss_server": "Szoftver: szerver, virtualizáció",
+ "oss_engineering": "Szoftver: CAD/CAM, mérnöki", "oss_3dprint": "Szoftver: 3D-nyomtatás", "oss_embedded": "Szoftver: elektronika, beágyazott",
+ "oss_automation": "Szoftver: automatizálás, energia", "oss_agri": "Szoftver: mezőgazdaság", "oss_health": "Szoftver: egészségügy",
+ "oss_science": "Szoftver: tudomány, adat", "oss_dev": "Szoftver: fejlesztés", "oss_business": "Szoftver: üzlet, közösség",
+ "oss_language": "Szoftver: fordítás, OCR, beszéd, keresés", "oss_maps": "Szoftver: térkép, navigáció", "oss_education": "Szoftver: oktatás",
+ "hub_speech": "Modellek: beszéd (STT/TTS)", "hub_translation": "Modellek: fordítás", "hub_ocr": "Modellek: OCR, dokumentum", "hub_vision": "Modellek: képfelismerés",
+ "hub_medical_ai": "Modellek: orvosi képelemzés", "hub_imagegen": "Modellek: képgenerálás", "hub_embedding": "Modellek: embedding, RAG", "hub_audio": "Modellek: hang",
+ "hub_dataset": "Adathalmazok", "hub_platform": "Platformok, gyűjtőhelyek", "hub_3dprint": "3D-nyomtatható tárgyak", "hub_index": "Gyűjtőlisták (awesome)", "civil_defense": "Polgári védelem", "governance": "Közösség, jog, kormányzás", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
  "reference_book": "Kézikönyvek (könyv)", "gray_library": "Szürke zónás könyvtárak",
 }
 PRESETS = [("32GB", None, "pendrive / telefon"), ("128GB", "T5", "telefon + kis SSD"), ("512GB", "T4", "laptop SSD"),
@@ -95,6 +105,11 @@ CAT_GROUP = {  # kategória → összevont csoport az SSD-bontáshoz
  "knowledge_dump": "Szoftver, OS, forráskód", "server_bundle": "Szoftver, OS, forráskód", "tools": "Olvasók, futtatók", "ai_tools": "Olvasók, futtatók", "gpu_unlock": "Olvasók, futtatók",
  "ai_models": "LLM-ek (alap)", "ai_models_uncensored": "LLM-ek (cenzúrázatlan)",
 }
+for _c in ("system", "office", "knowledge", "media", "comms", "radio", "network", "storage", "security", "server", "engineering", "3dprint",
+           "embedded", "automation", "agri", "health", "science", "dev", "business", "language", "maps", "education"):
+    CAT_GROUP["oss_" + _c] = "Nyílt forráskódú szoftverek"
+for _c in ("speech", "translation", "ocr", "vision", "medical_ai", "imagegen", "embedding", "audio", "dataset", "platform", "3dprint", "index"):
+    CAT_GROUP["hub_" + _c] = "AI-modellek, adathalmazok, platformok"
 
 
 def ssd_plans(cat_path, tmp):
@@ -115,8 +130,8 @@ def ssd_section(plans):
           "LLM-ek: **T2-es gép alsó határa, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. "
           "A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.", "",
           "### Összefoglaló", "",
-          "| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Olvasók, eszközök |",
-          "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+          "| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     def grp(items):
         g = {}
         for i in items:
@@ -128,7 +143,7 @@ def ssd_section(plans):
         llm = g.get("LLM-ek (alap)", 0) + g.get("LLM-ek (cenzúrázatlan)", 0)
         cols = ["Életmentő: orvoslás, víz, élelem, túlélés", "Mezőgazdaság, megfelelő technológia, energia", "Lexikonok, szótárak",
                 "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak", "Magyar források", "Térképek, geoadatok",
-                "Szoftver, OS, forráskód", "Olvasók, futtatók"]
+                "Szoftver, OS, forráskód", "Nyílt forráskódú szoftverek", "AI-modellek, adathalmazok, platformok", "Olvasók, futtatók"]
         md.append(f"| **{b}** | {human(p['used_bytes'])} | {len(p['items'])} | {human(llm)} | " + " | ".join(human(g.get(c, 0)) for c in cols) + " |")
     md += ["", "### Melyik méret mire elég – mi jön be az előző mérethez képest", ""]
     prev_items = []

@@ -67,7 +67,7 @@ CSS = r"""
   --accent:#b4581a; --accent-ink:#ffffff; --accent-soft:#f6e3d4;
   --good:#2f7d4f; --warn:#a86b00; --bad:#b03a2e; --unc:#6b3fa0; --unc-soft:#ece3f6; --base:#22607a; --base-soft:#dcebf1;
   --bar:#22607a; --bar-bg:#e2e6e2;
-  --c1:#b03a2e; --c2:#2f7d4f; --c3:#22607a; --c4:#b4581a; --c5:#7a7d22; --c6:#4a5fa8; --c7:#2a8a8a; --c8:#7a6a55; --c9:#c2185b; --c10:#6b3fa0; --c11:#8a8a8a;
+  --c1:#b03a2e; --c2:#2f7d4f; --c3:#22607a; --c4:#b4581a; --c5:#7a7d22; --c6:#4a5fa8; --c7:#2a8a8a; --c8:#7a6a55; --c9:#c2185b; --c10:#6b3fa0; --c11:#8a8a8a; --c12:#00796b; --c13:#9e6b00;
   --f-display:"Bahnschrift","DIN Alternate","DIN 2014","Barlow Semi Condensed","Arial Narrow",ui-sans-serif,system-ui,sans-serif;
   --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --f-mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
@@ -77,14 +77,14 @@ CSS = r"""
   --accent:#e08a4c; --accent-ink:#1a1206; --accent-soft:#3a2617;
   --good:#5fbf86; --warn:#e0a83e; --bad:#ec7b6e; --unc:#b48cf0; --unc-soft:#2c2340; --base:#6cb6d4; --base-soft:#173039;
   --bar:#6cb6d4; --bar-bg:#2a322e;
-  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd;
+  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd; --c12:#4fd1b8; --c13:#e8c15a;
   color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#141816; --surface:#1c211f; --sunk:#232926; --ink:#e6ebe7; --muted:#9aa5a0; --line:#323a36;
   --accent:#e08a4c; --accent-ink:#1a1206; --accent-soft:#3a2617;
   --good:#5fbf86; --warn:#e0a83e; --bad:#ec7b6e; --unc:#b48cf0; --unc-soft:#2c2340; --base:#6cb6d4; --base-soft:#173039;
   --bar:#6cb6d4; --bar-bg:#2a322e;
-  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd;
+  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd; --c12:#4fd1b8; --c13:#e8c15a;
   color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
@@ -461,8 +461,9 @@ def ssd_html():
         return t.replace(".", ",")
     groups = ["Életmentő: orvoslás, víz, élelem, túlélés", "Mezőgazdaság, megfelelő technológia, energia", "Lexikonok, szótárak", "Magyar források",
               "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak", "Térképek, geoadatok", "Szoftver, OS, forráskód",
+              "Nyílt forráskódú szoftverek", "AI-modellek, adathalmazok, platformok",
               "LLM-ek (alap)", "LLM-ek (cenzúrázatlan)", "Olvasók, futtatók"]
-    colors = [f"var(--c{i})" for i in range(1, 12)]
+    colors = [f"var(--c{i})" for i in range(1, 14)]
     rows, cards = [], []
     prev, prevg = set(), set()
     for b, items, used in P:

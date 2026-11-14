@@ -143,6 +143,8 @@ def convert(x, ov):
             dl = {"method": "http", "urls": [dl_url]} if dl_url else {"method": "manual"}
     elif method == "git":
         dl["repos"] = [u for u in re.split(r"[\s,]+", str(dl_url or x.get("url_info") or "")) if u.startswith("http")]
+        if x.get("release_url") and str(x["release_url"]).startswith("http"):
+            dl["release_url"] = str(x["release_url"]).split()[0]
     elif method in ("archive.org", "ia-cli"):
         dl["method"] = "archive.org"
         ids = re.findall(r"archive\.org/details/([\w.\-]+)", f"{dl_url} {x.get('url_info')} {notes}")
