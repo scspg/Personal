@@ -45,7 +45,7 @@ def llm_tables(items):
         est = "~" if any(v.get("llm_aa_est") for v in g) else ""
         plats = ", ".join(sorted({v["platform"] for v in g}))
         tiers = sorted({t for v in g for t in v["hw_tiers"]}, key=lambda t: -int(t[1]))
-        kind = "cenz.-mentes" if h["cat"] == "ai_models_uncensored" else "alap"
+        kind = "cenzúrázatlan" if h["cat"] == "ai_models_uncensored" else "alap"
         rows.append(f"| {esc(name)} | {kind} | {esc(h.get('released'))[:10]} | {est}{aa} | {est}{pct(aa)} | {esc(h.get('license'))[:24]} | "
                     f"{gb(g[0]['bytes'])} – {gb(g[-1]['bytes'])} | {len(g)} | {plats} | {tiers[0]}–{tiers[-1]} | `{h['group']}` |")
         det = [f"<details><summary><b>{esc(name)}</b> – {len(g)} változat</summary>\n",
@@ -86,8 +86,21 @@ LLM_TEXT = """---
 
 ## 6. Helyi LLM-ek
 
+**A fejezet tartalma:**
+[6.1 Rangsor és kiadási idővonal](#61-kiadási-idővonal-mi-a-legújabb-gyártónként) ·
+[6.2 Hardverszintek](#62-melyik-gépre-mi-kerüljön-hardverszintek) ·
+[6.3 Az összes modell](#63-az-összes-modell-alap-és-cenzúrázatlan) ·
+[6.4 Kvantok linkkel](#64-minden-kvantált-változat-linkkel-és-letöltési-paranccsal) ·
+[6.5 Cenzúrázatlan modellek, rangsor, gépigény](#65-cenzúrázatlan-uncensored-változatok-mi-ez-és-mennyit-veszít) ·
+[6.6 Futtatók](#66-futtatókörnyezetek-runtime-ok) ·
+[6.7 Nulláról a chatig](#67-nulláról-a-chatig-szintenként) ·
+[6.8 RAG](#68-offline-tudásbázis--llm-rag-hogy-az-llm-ne-találjon-ki-dolgokat) ·
+[6.9 Kihagyott modellek](#69-kihagyott-régi-vagy-gyenge-modellek) ·
+[6.10 Eszköz-kalkulátor](#610-eszköz-kalkulátor-mi-a-legokosabb-ami-elfér-és-elfut-4-változat) ·
+[6.11 GeForce-feloldás](#611-geforce-ai-korlátozások-és-feloldásuk-rtx-30--60)
+
 **Állapot:** 2026-11-14.
-- **Csak a legújabb generáció:** gyártónként a legfrissebb nyílt súlyú kiadás van bent. A régi és felváltott modellek (Kimi K2/K3, DeepSeek V3/V4-Pro, Qwen3.5/3.6 nagyok, GLM-5.2, Llama 4, gpt-oss stb.) nem kerültek a katalógusba (lista a 6.9 pontban).
+- **Csak a legújabb generáció:** gyártónként a legfrissebb nyílt súlyú kiadás van bent. A régi és felváltott modellek (Kimi K2/K3, DeepSeek V3/V4-Pro, Qwen3.5/3.6 nagyok, GLM-5.2, Llama 4, gpt-oss stb.) nem kerültek a katalógusba. Kivétel néhány cenzúrázatlan változat (Kimi-K3 abliterated, gpt-oss heretic, Qwen3.6-35B heretic), ahol újabb alapból még nincs ilyen. A teljes lista a 6.9 pontban van.
 - **Forrás:** a repók, a dátumok és a méretek a Hugging Face API-ból és az Ollama registry-ből jönnek (mért adat).
 - **Intelligencia:** Artificial Analysis Intelligence Index v5.0.1 (2026-11-12). A `~` jelű értékek becslések.
 
@@ -142,7 +155,7 @@ Az alapmodellek pontjai (csak alap, mért):
 | Szint | Hardver | Legokosabb, ami elfér | Alternatíva / tartalék |
 |---|---|---|---|
 | **T1** | 8×H100/H200/B200 vagy ≥1,5 TB RAM | Kimi K3.1 Pro natív INT4 (1,56 TB) vagy MXFP4_MOE GGUF (1,51 TB) | DeepSeek-V4.1-Flash natív (510 GB, vLLM/SGLang, stabil); GLM-5.3 FP8 |
-| **T2** | 400–1000 GB unified/RAM (Mac Studio 512 GB, 2× Mac exo, EPYC 768 GB + GPU, DGX Station) | 512 GB Mac: DeepSeek-V4.1-Flash MLX oQ4e (432 GB). 2× Mac / 768 GB+: Kimi K3.1 Pro KLX-IQ2_XXS (710 GB) | GLM-5.3 MLX 4bit (418 GB); MiniMax-M3.1-Flash oQ4e (249 GB) |
+| **T2** | 256–1000 GB unified/RAM/VRAM (2× Strix Halo / MS-S1, Mac Studio 512 GB, 2× Mac exo, EPYC 768 GB + GPU, DGX Station, 6090 + RTX Pro) | 512 GB Mac: DeepSeek-V4.1-Flash MLX oQ4e (432 GB). 2× Mac / 768 GB+: Kimi K3.1 Pro KLX-IQ2_XXS (710 GB) | GLM-5.3 MLX 4bit (418 GB); MiniMax-M3.1-Flash oQ4e (249 GB) |
 | **T3** | Gamer PC 24–32 GB VRAM + 64–192 GB RAM | 128–192 GB RAM: Qwen3.8-Flash-Next UD-Q4_K_XL (111 GB) MoE-offloaddal. Csak GPU: Qwen3.8-27B Q4/Q5 (17–20 GB) | GLM-5.3-Flash UD-Q3_K_XL (148 GB); Gemma-4-31B QAT (17,7 GB) |
 | **T4** | Laptop: MacBook 36–128 GB, vagy Windows 8–16 GB VRAM | 64 GB Mac: Qwen3.8-27B MLX 8bit (29,5 GB). 16 GB VRAM: Qwen3.8-27B UD-Q3_K_XL (13 GB) | Gemma-4-26B-A4B (gyors MoE), Gemma-4-12B QAT (7 GB) |
 | **T5** | Telefon 8–16 GB RAM | 12–16 GB: Gemma-4-12B QAT q4_0 (7 GB). 8 GB: Gemma-4-E4B / E2B QAT (5,2 / 3,4 GB) | Qwen3.5-4B Q4_K_M (2,7 GB), LFM3-1.7B (1,1 GB) |
@@ -165,7 +178,7 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 
 ### 6.5 Cenzúrázatlan („uncensored”) változatok: mi ez és mennyit veszít
 
-- **Abliteration:** a modell aktivációiból kiszámolt „elutasítási irányt” kivetítik a súlyokból. Gyors, nem kell hozzá tanítás. Fő gyártók: huihui-ai, mrfakename.
+- **Abliteration:** a modell aktivációiból kiszámolt „elutasítási irányt” kivetítik a súlyokból. Gyors, nem kell hozzá tanítás. Fő készítők: huihui-ai, mrfakename.
 - **Heretic** (`p-e-w/heretic`, PyPI `heretic-llm`): automatikusan hangolt abliteration (ARA). Úgy minimalizálja az elutasítást, hogy közben az eredeti viselkedéstől való eltérés (KL) kicsi maradjon. **Offline is futtatható bármely modellen**, így egy új alapmodellből magad is készíthetsz cenzúrázatlant. Az ehhez kellő adathalmazok (`mlabonne/harmful_behaviors`, `mlabonne/harmless_alpaca`) kicsik, töltsd le őket előre.
 - **Intelligenciaveszteség** (UGI NatInt mérések): nagy modellen (gemma-4-26B/31B, gpt-oss-120b, Qwen3.6-35B) ~0–2 pont, kicsin (9B–20B) akár 5–11 pont. Kis gépre ezért legyen meg az eredeti modell is.
 - **Ajánlott párosítás:** egy alapmodell + egy cenzúrázatlan változat ugyanabból a családból. A szkript alapból ezt választja (`--uncensored also`). Csak cenzúrázatlan: `only`. Kihagyás: `no`.
@@ -245,7 +258,7 @@ git clone --mirror https://github.com/ggml-org/llama.cpp && git clone --mirror h
 ### 6.9 Kihagyott (régi vagy gyenge) modellek
 
 - **Felváltott generációk:** Kimi-K3 és K2.x, DeepSeek-V4-Pro-0813 és V3.x, GLM-5.2 és korábbiak, MiniMax-M3 és M2.x, Qwen3.6/3.5 nagy modellek, Step-3.7, MiMo-V2.5, Ling-3.0, Hy3, Llama 4.
-- **Gyenge az AA v5-ön:** gpt-oss-120b/20b (3,8), Nemotron-3-Ultra, Command A+, Granite 4.2, Phi-4. Az ERNIE-5.5-ből csak base modell van.
+- **Gyenge az AA v5-ön:** gpt-oss-120b/20b (az alapmodell AA-pontja 3,8), Nemotron-3-Ultra, Command A+, Granite 4.2, Phi-4. Az ERNIE-5.5-ből csak base modell van.
 - **Archívumcélra maradt bent:** a gpt-oss heretic-változata, mert kicsi, Apache-licencű és gyors.
 """
 
@@ -305,7 +318,7 @@ def uncensored_ranking(items):
            "- **UGI NatInt:** a természetes intelligencia mérése az Uncensored General Intelligence ranglistán, az alap → cenzúrázatlan változás.",
            "- **„Leggyengébb gép”:** az a legkisebb hardverszint, amelyen még fut GGUF-változat.",
            "- **Méretek:** a Hugging Face API-ból (2026-11-14).", "",
-           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenz.-mentes (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
+           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenzúrázatlan (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
            "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for n, r in enumerate(rows, 1):
         m, vs = r["m"], r["vs"]
@@ -321,7 +334,7 @@ def uncensored_ranking(items):
     out += ["",
             "**Hogyan olvasd:**",
             "- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.",
-            "- **Gamer PC:** a legjobb választás a 4. (Qwen3.8-Flash-Next abliterated v2, 94–111 GB) és a 6. (Qwen3.8-27B abliterated, 14–29 GB). Egyetlen videokártyán a 6. fut.",
+            "- **Gamer PC:** a legjobb választás a Qwen3.8-Flash-Next abliterated v2 (94–111 GB) és a Qwen3.8-27B abliterated (14–29 GB). Egyetlen videokártyán a Qwen3.8-27B abliterated fut.",
             "- **Laptop, telefon:** a Gemma-4 heretic változatai mért veszteség nélkül érhetők el.",
             "- **Arete-27B:** nem általános cenzúramentesítés, csak a propaganda-keretezést távolítja el.",
             "- **Kimi K3.1 Pro-ból nincs cenzúrázatlan változat.** A Kimi-K3 abliterated régebbi és gyengébb alapra épül (AA 17,4), a minősége nem ellenőrzött.",
@@ -393,7 +406,7 @@ def hardware_table(items):
            "- **Hibrid MoE:** a figyelmi rétegek és a KV cache a videokártyán, a szakértők a RAM-ban (`--n-cpu-moe`).",
            "- **Sebesség (generálás, 1 felhasználó):** tokenenként az aktív paraméterek bájtjait kell beolvasni. Képlet: tok/s ≈ 1 / (aktív bájt / (0,6 × sávszélesség) + fix többletidő). A többletidő GPU-n 5–6 ms, Macen 9, CPU-n 12, telefonon 25 ms.",
            "- **Sávszélességek:** RTX 4090 1008 GB/s, RTX 5090 1792, M3 Ultra 819, EPYC 12 csatornás DDR5 460, otthoni PC DDR5 kétcsatornás 90, telefon LPDDR5X 70.",
-           "- **Mért adat:** nem mértem. A valós érték prompt-feldolgozáskor és hosszú kontextusnál alacsonyabb, MTP/speculative decodinggal magasabb lehet.",
+           "- **Mért adat:** nincs, ezek számolt értékek. A valós érték prompt-feldolgozáskor és hosszú kontextusnál alacsonyabb, MTP/speculative decodinggal magasabb lehet.",
            "- **Mac:** a macOS alapból a unified memória kb. 75%-át adja a GPU-nak. Ez emelhető: `sudo sysctl iogpu.wired_limit_mb=<MB>`.", "",
            "| # | Modell | Ajánlott GGUF-kvant (méret) | Archit. (aktív) | Csak GPU | Hibrid MoE (GPU+RAM) | Mac | Csak CPU | tok/s GPU | tok/s hibrid (DDR5 PC) | tok/s M3 Ultra | tok/s EPYC | tok/s telefon | Legkisebb kvant → min. memória | Egyéb formátum |",
            "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -455,7 +468,7 @@ def web_section():
     out = ["---", "", "## 9. Webes hozzáférés az AI-nak: captcha- és blokkmentes keresés és letöltés", "",
            "Egyes forrásoldalak (pl. ECHO, Peace Corps, Sphere, RepRap-wiki) Cloudflare-rel blokkolják a sima `curl`-t. "
            "Az alábbi eszközökkel az AI-ágens ezeket is le tudja tölteni, és API-n keres, nem Google-scrape-pel. "
-           "A verziókat és a dátumokat a PyPI és az npm registry, valamint `git ls-remote` alapján ellenőriztem (2026-11-14).", "",
+           "A verziókat és a dátumokat a PyPI és az npm registry, valamint `git ls-remote` alapján ellenőrzött (2026-11-14).", "",
            "### 9.1 Lépcsőzetes stratégia: mindig a legolcsóbb működő réteggel kezdj", "",
            "1. **Diagnózis:**\n"
            "   - Ha nincs `cf-mitigated: challenge` header, a gond a TLS-ujjlenyomat: **curl_cffi** `impersonate=\"chrome\"`.\n"
@@ -505,7 +518,7 @@ def web_section():
             "r = requests.get(\"http://localhost:8888/search\", params={\"q\": \"sphere handbook filetype:pdf\", \"format\": \"json\"}, timeout=30)\n"
             "urls = [x[\"url\"] for x in r.json()[\"results\"]]\n\nfrom ddgs import DDGS          # pip install -U ddgs\n"
             "hits = DDGS(timeout=10).text(\"peace corps manual filetype:pdf\", max_results=20)\n```", "",
-            "A kódmintákat a projektek README-je és forráskódja alapján írtam, élesben nem futtattam őket. Verzióváltáskor ellenőrizd az API-t.", ""]
+            "A kódminták a projektek README-je és forráskódja alapján készültek, élesben nem futtak. Verzióváltáskor ellenőrizd az API-t.", ""]
     return "\n".join(out)
 
 
@@ -520,7 +533,7 @@ def device_section():
               ("Gamer PC – FELOLDVA (memória-OC; két kártyánál P2P + tensor parallel) – lásd 6.11", ["gamer-pc-128-unl", "gamer-pc-256-unl", "gamer-2gpu-pro96-unl", "gamer-2gpu-pro128-unl", "gamer-2gpu-pro192-unl"]),
               ("Linux szerverek", ["srv-epyc", "srv-8xh200"])]
     out = ["### 6.10 Eszköz-kalkulátor: mi a legokosabb, ami elfér és elfut (4 változat)", "",
-           "A `llm_calc.py` (11. fejezet után, a **12. fejezetben**) bármely eszközre kiszámolja a négy változatot:",
+           "A `llm_calc.py` (**12. fejezet**) bármely eszközre kiszámolja a négy változatot:",
            "- **V1:** a legokosabb **cenzúrázatlan** modell, ami épp elfér és elfut.",
            "- **V2:** a legokosabb **alap (cenzúrázott)** modell, ami épp elfér és elfut.",
            "- **V3 – csapat alap modellekből:** egy nagy fő modell és egy kicsi, gyors segéd egyszerre a memóriában. A segéd routerként, gyors válaszolóként vagy draftként dolgozik. Mellettük egy RAG-embedding is fut (bge-m3).",
@@ -584,7 +597,7 @@ def combined_ranking():
             rows.append((AA[mid], mid in AA_EST, m["name"], "alap", "mért AA v5" if mid not in AA_EST else "becslés"))
     for m in un:
         a, base, r, why, e = unc_estimate(slug(m["name"]))
-        rows.append((a, e, m["name"].split(" (")[0] + " (cenz.-mentes)", "**cenzúrázatlan**", f"alap {base} × {r:.3g} – {why}"))
+        rows.append((a, e, m["name"].split(" (")[0], "**cenzúrázatlan**", f"alap {base} × {r:.3g} – {why}"))
     rows.sort(key=lambda x: -x[0])
     out = ["| # | Modell | Típus | AA v5 | % Opus 5.5 | Forrás / számítás |", "|---|---|---|---|---|---|",
            f"| – | *Claude Fable 5.2 (zárt, viszonyítás)* | zárt | 64.6 | 109% | mért |",
@@ -598,7 +611,7 @@ def main():
     items = all_items()
     table, details = llm_tables(items)
     txt = LLM_TEXT.replace("{COMBINED}", combined_ranking()).replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items) + "\n\n" + hardware_table(items))
-    txt = txt.replace("### 6.9 Kihagyott", device_section() + "\n### 6.9 Kihagyott")
+    txt = txt.rstrip() + "\n\n" + device_section()   # 6.10 a 6.9 után
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
     open("sections/09_web.md", "w", encoding="utf-8").write(web_section())

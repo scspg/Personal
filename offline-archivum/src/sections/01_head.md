@@ -1,6 +1,6 @@
 # ARCHIVUM – Offline tudásarchívum blackout és összeomlás esetére
 
-> **Verzió:** {{BUILD_DATE}} · **Elemek:** {{N_ITEMS}} · **Minden ellenőrizhető méretet mértem** (Kiwix OPDS, HTTP Content-Length, Hugging Face API, Ollama registry). A státuszt minden elem `size_status` / `url_status` mezője mutatja.
+> **Verzió:** {{BUILD_DATE}} · **Elemek:** {{N_ITEMS}} · **Minden ellenőrizhető méret mért adat** (Kiwix OPDS, HTTP Content-Length, Hugging Face API, Ollama registry). A státuszt minden elem `size_status` / `url_status` mezője mutatja.
 > **Cél:** ezt az egy fájlt egy eszközhasználó AI-ágensnek (Claude Code, Codex, Open Interpreter, aider stb.) beadva az ágens kiválasztja a tárhelyhez illő csomagot, és letölti, ellenőrzi és rendszerezi.
 
 ## Tartalom

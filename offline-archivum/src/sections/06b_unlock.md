@@ -1,7 +1,7 @@
 ### 6.11 GeForce AI-korlátozások és feloldásuk (RTX 30 → 60)
 
 > **Kutatás:** 2026-11-14.
-> - **Források:** a repókat `git ls-remote` paranccsal ellenőriztem, a whitepaper-számokat az NVIDIA PDF-ekből vettem.
+> - **Források:** a repók `git ls-remote` paranccsal ellenőrzöttek, a whitepaper-számok az NVIDIA PDF-ekből valók.
 > - **Jelölések:** **[B]** = becslés, **[NE]** = nem ellenőrzött vagy pletyka.
 > - **Kalkulátor:** a feloldott profilok neve „… FELOLDVA”.
 

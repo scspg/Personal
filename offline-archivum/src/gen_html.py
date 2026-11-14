@@ -10,6 +10,7 @@ from llm_parse import load_blocks
 from llm_to_items import slug, unc_estimate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+from build import cut
 OPUS, FABLE = 59.1, 64.6
 
 
@@ -24,7 +25,8 @@ def variants():
                     "act": v.get("active_b"), "moe": v.get("moe", True), "plat": v.get("platform", "any"), "hw": v.get("hw_tiers", []),
                     "dl": (f"hf download {d['repo']}" + "".join(f' --include "{p}"' for p in d.get("include") or []))
                           if d["method"] == "hf" else f"ollama pull {d.get('tag')}",
-                    "repo": d.get("repo"), "rel": str(v.get("released") or "")[:10], "lic": str(v.get("license") or "")[:24]})
+                    "repo": d.get("repo"), "rel": (re.search(r"\d{4}-\d{2}-\d{2}", str(v.get("released") or "")) or [""])[0],
+                    "lic": cut(str(v.get("license") or ""), 28)})
     return out
 
 
@@ -65,6 +67,7 @@ CSS = r"""
   --accent:#b4581a; --accent-ink:#ffffff; --accent-soft:#f6e3d4;
   --good:#2f7d4f; --warn:#a86b00; --bad:#b03a2e; --unc:#6b3fa0; --unc-soft:#ece3f6; --base:#22607a; --base-soft:#dcebf1;
   --bar:#22607a; --bar-bg:#e2e6e2;
+  --c1:#b03a2e; --c2:#2f7d4f; --c3:#22607a; --c4:#b4581a; --c5:#7a7d22; --c6:#4a5fa8; --c7:#2a8a8a; --c8:#7a6a55; --c9:#c2185b; --c10:#6b3fa0; --c11:#8a8a8a;
   --f-display:"Bahnschrift","DIN Alternate","DIN 2014","Barlow Semi Condensed","Arial Narrow",ui-sans-serif,system-ui,sans-serif;
   --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --f-mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
@@ -73,12 +76,16 @@ CSS = r"""
   --bg:#141816; --surface:#1c211f; --sunk:#232926; --ink:#e6ebe7; --muted:#9aa5a0; --line:#323a36;
   --accent:#e08a4c; --accent-ink:#1a1206; --accent-soft:#3a2617;
   --good:#5fbf86; --warn:#e0a83e; --bad:#ec7b6e; --unc:#b48cf0; --unc-soft:#2c2340; --base:#6cb6d4; --base-soft:#173039;
-  --bar:#6cb6d4; --bar-bg:#2a322e; color-scheme:dark }}
+  --bar:#6cb6d4; --bar-bg:#2a322e;
+  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd;
+  color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#141816; --surface:#1c211f; --sunk:#232926; --ink:#e6ebe7; --muted:#9aa5a0; --line:#323a36;
   --accent:#e08a4c; --accent-ink:#1a1206; --accent-soft:#3a2617;
   --good:#5fbf86; --warn:#e0a83e; --bad:#ec7b6e; --unc:#b48cf0; --unc-soft:#2c2340; --base:#6cb6d4; --base-soft:#173039;
-  --bar:#6cb6d4; --bar-bg:#2a322e; color-scheme:dark }
+  --bar:#6cb6d4; --bar-bg:#2a322e;
+  --c1:#ef7f72; --c2:#6fd096; --c3:#7cc4e2; --c4:#f0a066; --c5:#cfd36a; --c6:#9fb0f5; --c7:#5fd6d6; --c8:#c9b58f; --c9:#f48fb1; --c10:#c9a3f5; --c11:#bdbdbd;
+  color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
 .wrap{max-width:1320px;margin:0 auto;padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
@@ -98,7 +105,9 @@ header.top{display:grid;gap:10px}
 .chip.a{background:var(--base-soft);border-color:transparent;color:var(--base)}
 .chip.est{border-style:dashed}
 nav.tabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line)}
-nav.tabs a{font:600 13px var(--f-body);color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:6px}
+nav.tabs{scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{white-space:nowrap;flex:none;font:600 13px var(--f-body);color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:6px}
 nav.tabs a:hover,nav.tabs a:focus-visible{background:var(--sunk);outline:none}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 section{display:grid;gap:14px;scroll-margin-top:60px}
@@ -111,6 +120,10 @@ legend{font:600 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 label{display:grid;gap:3px;font-size:12.5px;color:var(--muted)}
+.row>label,.row3>label{align-content:end}
+details.adv{background:none;border:0;padding:0}
+details.adv>summary{font:600 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+details.adv>fieldset{margin-top:6px}
 input,select{font:14px var(--f-body);padding:7px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .checks{display:flex;flex-wrap:wrap;gap:10px 14px}
@@ -141,14 +154,19 @@ button.primary{background:var(--accent);color:var(--accent-ink);border-color:var
 .meter .fill{height:100%;background:var(--bar);border-radius:4px}
 .meter .fill.u{background:var(--unc)}
 .meter .val{font:700 13px var(--f-mono);font-variant-numeric:tabular-nums}
-code.cmd{display:block;font:12px/1.45 var(--f-mono);background:var(--sunk);padding:7px 9px;border-radius:6px;overflow-x:auto;white-space:pre;max-width:100%}
+code.cmd{display:block;font:12px/1.45 var(--f-mono);background:var(--sunk);padding:7px 9px;border-radius:6px;white-space:pre-wrap;word-break:break-all;max-width:100%}
 .cmdrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:start}
 .cmdrow button{padding:5px 8px;font-size:12px}
 .empty{color:var(--muted);font-size:13px}
 .tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);white-space:nowrap;cursor:pointer;user-select:none;z-index:1}
+th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);white-space:nowrap;z-index:1}
+#models th button{all:unset;cursor:pointer;display:inline-block}
+#models th button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#models td.date{white-space:nowrap}
+#models td.det{max-width:380px}
+#models td.det div{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 th[aria-sort="ascending"]::after{content:" ▲"} th[aria-sort="descending"]::after{content:" ▼"}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr:hover td{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
@@ -159,6 +177,14 @@ tr:hover td{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
 .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
 .filters label{min-width:140px}
 .matrix td{min-width:200px}
+@media (max-width:700px){
+  .matrix thead{display:none}
+  .matrix tr{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .matrix td{display:block;min-width:0;border:0;padding:2px 10px}
+  .matrix td[data-l]::before{content:attr(data-l);display:block;font:600 11px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  #ssd td.num:nth-child(n+4),#ssd th.num:nth-child(n+4){display:none}
+  #ssd td:nth-child(4){min-width:160px!important}
+}
 .matrix td.dev{min-width:180px;font-weight:600}
 .mcell{display:grid;gap:3px}
 .mcell small{color:var(--muted)}
@@ -169,7 +195,7 @@ ul{margin:0;padding-left:20px;display:grid;gap:4px}
 a{color:var(--base)}
 footer{font-size:12px;color:var(--muted)}
 .stack{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--bar-bg)}
-.stack span{display:block;height:100%}
+.stack span{display:block;height:100%;box-shadow:inset -1px 0 var(--surface)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
 .legend .lg{display:inline-flex;align-items:center;gap:5px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
@@ -252,7 +278,8 @@ function memberHTML([v,r,role]){return `<div class="member"><div class="mname">$
   <div class="kv"><span>AA v5 <b>${v.est?'~':''}${fmt(v.aa)}</b></span><span class="q">${esc(v.q)}</span><span><b>${fmt(v.bits,1)}</b> bit</span><span>fájl <b>${gb(v.b)}</b></span><span>memória <b>${fmt(r[2],0)} GB</b></span><span>~<b>${fmt(r[0],0)}</b> tok/s</span><span>${esc(r[1])}</span><span>${v.act?(v.moe!==false?'MoE, ':'dense, ')+fmt(v.act,1)+'B aktív':''}</span></div>
   <div class="cmdrow"><code class="cmd">${esc(v.dl)}</code><button type="button" data-copy="${esc(v.dl)}">Másolás</button></div></div>`;}
 function render(dev,res,el){const cap=dev.capacity();
-  el.innerHTML=`<div class="sum"><span>Eszköz: <b>${esc(dev.name)}</b></span><span>Modellnek jutó memória: <b>~${fmt(cap,0)} GB</b></span>${dev.vram?`<span>VRAM: <b>${fmt(dev.vram,0)} GB</b> @ <b>${fmt(dev.vram_bw,0)} GB/s</b>${dev.tp?' (P2P tensor parallel)':''}</span>`:''}${dev.uni?`<span>Unified: <b>${fmt(dev.uni,0)} GB</b> @ <b>${fmt(dev.uni_bw,0)} GB/s</b></span>`:''}${dev.ram&&!dev.uni?`<span>RAM: <b>${fmt(dev.ram,0)} GB</b> @ <b>${fmt(dev.ram_bw,0)} GB/s</b></span>`:''}<span>Min. sebesség: <b>${dev.min_tps} tok/s</b></span></div>
+  if(cap<=0){el.innerHTML='<p class="empty">Adj meg VRAM-ot, RAM-ot vagy unified memóriát (és a hozzá tartozó sávszélességet), vagy válassz egy eszközprofilt.</p>';return;}
+  el.innerHTML=`<div class="sum"><span>Eszköz: <b>${esc(dev.name)}</b></span><span>Modellnek jutó memória: <b>~${fmt(cap,cap<20?1:0)} GB</b></span>${dev.vram?`<span>VRAM: <b>${fmt(dev.vram,0)} GB</b> @ <b>${fmt(dev.vram_bw,0)} GB/s</b>${dev.tp?' (P2P tensor parallel)':''}</span>`:''}${dev.uni?`<span>Unified: <b>${fmt(dev.uni,dev.uni<20?1:0)} GB</b> @ <b>${fmt(dev.uni_bw,0)} GB/s</b></span>`:''}${dev.ram&&!dev.uni?`<span>RAM: <b>${fmt(dev.ram,0)} GB</b> @ <b>${fmt(dev.ram_bw,0)} GB/s</b></span>`:''}<span>Min. sebesség: <b>${dev.min_tps} tok/s</b></span></div>
   ${dev.note?`<p class="hint">${esc(dev.note)}</p>`:''}
   <div class="vcards">${['V1','V2','V3','V4'].map(k=>{const [t,label,u]=TITLES[k],r=res[k];
     const total=r&&r.length>1&&!String(r[0][2]).includes('váltva')?`<p class="hint">Együtt a memóriában: ~${fmt(r.reduce((s,m)=>s+m[1][2],0)+EMBED_GB,0)} GB (+ bge-m3 RAG-embedding 0,6 GB)</p>`:'';
@@ -268,17 +295,17 @@ function presetToForm(k){const p=PRESETS[k]; if(!p) return; const g=p.gpus||(p.v
   F('oc').value=Math.round(((p.vram_bw_mult??1)-1)*100); F('tp').checked=!!p.tensor_parallel; F('tpeff').value=Math.round((p.tp_eff??0.85)*100);
   for(const f of ['any','mac','server','android']) F('fmt_'+f).checked=(p.formats||'any').split(',').includes(f);
   F('dname').value=p.name;}
-function formToDevice(){const n=id=>parseFloat(F(id).value)||0; const gpus=[]; if(n('g1gb')&&n('g1bw')) gpus.push([n('g1gb'),n('g1bw')]); if(n('g2gb')&&n('g2bw')) gpus.push([n('g2gb'),n('g2bw')]);
+function formToDevice(){const n=(id,def=0,min=0,max=1e7)=>{const x=parseFloat(F(id).value);return Number.isFinite(x)?Math.min(max,Math.max(min,x)):def;}; const gpus=[]; if(n('g1gb')&&n('g1bw')) gpus.push([n('g1gb'),n('g1bw')]); if(n('g2gb')&&n('g2bw')) gpus.push([n('g2gb'),n('g2bw')]);
   const k=F('preset').value?PRESETS[F('preset').value]:{};
-  return new Device({name:F('dname').value||'Saját eszköz',note:k.note&&F('preset').dataset.dirty!=='1'?k.note:'',gpus,ram:n('ram'),ram_usable:n('ramu')/100,ram_bw:n('rambw'),
-    unified:n('uni'),unified_usable:n('uniu')/100,unified_bw:n('unibw'),nodes:Math.max(1,n('nodes')),hop_ms:n('hop'),
-    formats:['any','mac','server','android'].filter(f=>F('fmt_'+f).checked).join(',')||'any',min_tps:n('mintps')||5,fix_ms:n('fixms')||10,
-    vram_bw_mult:1+n('oc')/100,tensor_parallel:F('tp').checked,tp_eff:(n('tpeff')||85)/100});}
+  return new Device({name:F('dname').value||'Saját eszköz',note:k.note&&F('preset').dataset.dirty!=='1'?k.note:'',gpus,ram:n('ram'),ram_usable:n('ramu',85,10,100)/100,ram_bw:n('rambw'),
+    unified:n('uni'),unified_usable:n('uniu',80,10,100)/100,unified_bw:n('unibw'),nodes:n('nodes',1,1,16),hop_ms:n('hop',3,0,1000),
+    formats:['any','mac','server','android'].filter(f=>F('fmt_'+f).checked).join(',')||'any',min_tps:n('mintps',5,0.5,1000),fix_ms:n('fixms',10,0,1000),
+    vram_bw_mult:1+n('oc',0,0,30)/100,tensor_parallel:F('tp').checked,tp_eff:n('tpeff',85,30,100)/100});}
 function calc(){const d=formToDevice(); render(d,evaluate(d),F('out'));}
 /* ---------- eszközmátrix ---------- */
 function matrix(){const rows=Object.entries(PRESETS).map(([k,p])=>{const d=new Device(p),r=evaluate(d);
-  const cell=x=>x?x.filter(m=>!String(m[2]).includes('alternatíva')).map(([v,rr,role])=>`<div class="mcell"><span><span class="chip ${v.u?'u':'a'}">${v.est?'~':''}${pct(v.aa)}%</span> ${esc(v.m.replace(/\s*\(.*?\)/g,''))}</span><small>${fmt(v.bits,1)} bit · ${gb(v.b)} · ~${fmt(rr[0],0)} tok/s · ${esc(role)}</small></div>`).join(''):'<span class="empty">—</span>';
-  return `<tr><td class="dev">${esc(p.name)}<br><small class="muted">~${fmt(d.capacity(),0)} GB</small></td><td>${cell(r.V1)}</td><td>${cell(r.V2)}</td><td>${cell(r.V3)}</td><td>${cell(r.V4)}</td></tr>`;}).join('');
+  const cell=x=>x?x.filter(m=>!String(m[2]).includes('alternatíva')).map(([v,rr,role])=>`<div class="mcell"><span><span class="chip ${v.u?'u':'a'}">${v.est?'~':''}${pct(v.aa)}%</span> ${esc(v.m.replace(/\s*\(.*?\)/g,''))}</span><small>${esc((v.q.split(' · ')[0]||'').slice(0,40))} · ${fmt(v.bits,1)} bit · ${gb(v.b)} · ~${fmt(rr[0],0)} tok/s · ${esc(role)}</small></div>`).join(''):'<span class="empty">—</span>';
+  return `<tr><td class="dev">${esc(p.name)}<br><small class="muted">~${fmt(d.capacity(),d.capacity()<20?1:0)} GB</small></td><td data-l="V1 cenzúrázatlan">${cell(r.V1)}</td><td data-l="V2 alap">${cell(r.V2)}</td><td data-l="V3 csapat">${cell(r.V3)}</td><td data-l="V4 vegyes csapat">${cell(r.V4)}</td></tr>`;}).join('');
   F('matrix').innerHTML=`<table class="matrix"><thead><tr><th>Eszköz</th><th>V1 – cenzúrázatlan</th><th>V2 – alap</th><th>V3 – csapat (alap)</th><th>V4 – vegyes csapat</th></tr></thead><tbody>${rows}</tbody></table>`;}
 /* ---------- modelltábla ---------- */
 let sortKey='aa',sortDir=-1;
@@ -286,23 +313,24 @@ const COLS=[['m','Modell',0],['u','Típus',0],['aa','AA v5',1],['pct','% Opus 5.
 function modelTable(){const q=F('mq').value.toLowerCase(), typ=F('mtyp').value, minp=parseFloat(F('mpct').value)||0, maxs=parseFloat(F('msize').value)||1e9;
   let L=M.filter(m=>(!q||m.m.toLowerCase().includes(q)||(m.repo||'').toLowerCase().includes(q))&&(typ===''||(typ==='u')===m.u)&&pct(m.aa)>=minp&&m.minb/1e9<=maxs);
   L.sort((a,b)=>{const k=sortKey,x=k==='pct'?a.aa:a[k],y=k==='pct'?b.aa:b[k];return (x>y?1:x<y?-1:0)*sortDir;});
-  const th=COLS.map(([k,l,n])=>`<th class="${n?'num':''}" data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}">${l}</th>`).join('');
+  const th=COLS.map(([k,l,n])=>k==='info'?`<th>${l}</th>`:`<th class="${n?'num':''}" data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}"><button type="button">${l}</button></th>`).join('');
   const tr=L.map(m=>`<tr><td><b>${esc(m.m)}</b>${m.repo?`<br><a href="https://huggingface.co/${esc(m.repo)}" target="_blank" rel="noopener">${esc(m.repo)}</a>`:''}</td>
     <td><span class="chip ${m.u?'u':'a'}">${m.u?'cenzúrázatlan':'alap'}</span></td><td class="num">${m.est?'~':''}${fmt(m.aa)}</td>
     <td class="num"><div class="pctcell"><div class="track"><div class="fill${m.u?' u':''}" style="width:${Math.min(100,100*m.aa/OPUS)}%"></div></div><span>${m.est?'~':''}${pct(m.aa)}%</span></div></td>
-    <td>${esc(m.rel)}</td><td class="num">${m.act?fmt(m.act,1)+'B '+(m.moe!==false?'MoE':'dense'):'?'}</td><td class="num">${gb(m.minb)}</td><td class="num">${gb(m.maxb)}</td><td class="num">${m.n}</td>
+    <td class="date">${esc(m.rel)}</td><td class="num">${m.act?fmt(m.act,1)+'B '+(m.moe!==false?'MoE':'dense'):'?'}</td><td class="num">${gb(m.minb)}</td><td class="num">${gb(m.maxb)}</td><td class="num">${m.n}</td>
     <td>${m.plats.map(p=>({any:'GGUF',mac:'MLX',server:'vLLM',android:'LiteRT'}[p]||p)).join(', ')}</td><td>${esc(m.hw.join(' '))}</td><td>${esc(m.lic)}</td>
-    <td style="min-width:260px">${m.u?`alap: ${esc(m.base||'')} (AA ${m.base_aa}) × ${m.ratio} – ${esc(m.why||'')}`:esc(m.strength||'')}</td></tr>`).join('');
+    <td class="det" style="min-width:260px"><div title="${esc(m.u?(m.why||''):(m.strength||''))}">${m.u?`alap: ${esc(m.base||'')} (AA ${fmt(m.base_aa)}) × ${fmt(m.ratio,3)} – ${esc(m.why||'')}`:esc(m.strength||'')}</div></td></tr>`).join('')||'<tr><td colspan="13" class="empty">Nincs a szűrésnek megfelelő modell.</td></tr>';
   F('models').innerHTML=`<table><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`; F('mcount').textContent=L.length+' modell';
-  F('models').querySelectorAll('th').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable();}));}
+  F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable();}));}
 /* ---------- indítás ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-copy]'); if(!b) return; const t=b.dataset.copy;
   const done=()=>{b.textContent='Másolva';setTimeout(()=>b.textContent='Másolás',1500)};
-  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(t).then(done).catch(()=>{const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);});
-  else {const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);}});
+  const sel=()=>{const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Kijelölve – Ctrl+C';setTimeout(()=>b.textContent='Másolás',2500);};
+  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(t).then(done).catch(sel); else sel();});
 fillPresetSelect();
-F('preset').addEventListener('change',()=>{F('preset').dataset.dirty='0';presetToForm(F('preset').value);calc();});
-F('devform').addEventListener('input',e=>{if(e.target.id!=='preset'){F('preset').dataset.dirty='1';} calc();});
+F('preset').addEventListener('change',()=>{F('preset').dataset.dirty='0'; if(!F('preset').value){F('dname').value='Saját eszköz';} else presetToForm(F('preset').value); calc();});
+F('devform').addEventListener('input',e=>{if(e.target.id!=='preset'&&e.target.id!=='dname'&&F('preset').dataset.dirty!=='1'){F('preset').dataset.dirty='1'; if(F('preset').value&&!/módosítva\)$/.test(F('dname').value)) F('dname').value=F('dname').value+' (módosítva)';} calc();});
+if(window.matchMedia&&matchMedia('(max-width:900px)').matches) document.querySelectorAll('details.adv').forEach(d=>d.open=false);
 F('devform').addEventListener('submit',e=>{e.preventDefault();calc();});
 ['mq','mtyp','mpct','msize'].forEach(id=>F(id).addEventListener('input',modelTable));
 let start='__START__'; try{const s=localStorage.getItem('archivum-preset'); if(s&&PRESETS[s]) start=s;}catch(e){}
@@ -326,7 +354,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <span class="chip est">~ = becsült érték</span>
   </div>
 </header>
-<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a></nav>
+<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a><a href="#fogalmak">Fogalmak</a></nav>
 
 <section id="kalkulator">
   <h2>Kalkulátor</h2>
@@ -339,20 +367,20 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
         <div class="row"><label>GPU 2 VRAM (GB)<input id="g2gb" type="number" min="0" step="1"></label><label>GPU 2 sávszél. (GB/s)<input id="g2bw" type="number" min="0" step="10"></label></div>
       </fieldset>
       <fieldset><legend>Rendszer-RAM (hibrid / CPU)</legend>
-        <div class="row3"><label>RAM (GB)<input id="ram" type="number" min="0" step="1"></label><label>Felhasználható %<input id="ramu" type="number" min="10" max="100"></label><label>Sávszél. (GB/s)<input id="rambw" type="number" min="0" step="1"></label></div>
+        <div class="row3"><label>RAM (GB)<input id="ram" type="number" min="0" step="1"></label><label>Használható %<input id="ramu" type="number" min="10" max="100"></label><label>Sávszél. (GB/s)<input id="rambw" type="number" min="0" step="1"></label></div>
       </fieldset>
-      <fieldset><legend>Unified memória (Mac, Strix Halo, telefon)</legend>
+      <details class="adv" open><summary>Unified memória (Mac, Strix Halo, telefon)</summary><fieldset>
         <div class="row3"><label>Memória (GB)<input id="uni" type="number" min="0" step="1"></label><label>GPU-nak jut %<input id="uniu" type="number" min="10" max="100"></label><label>Sávszél. (GB/s)<input id="unibw" type="number" min="0" step="1"></label></div>
-        <div class="row"><label>Gépek száma (klaszter)<input id="nodes" type="number" min="1" max="16"></label><label>Késleltetés/ugrás (ms)<input id="hop" type="number" min="0" step="0.5"></label></div>
-      </fieldset>
-      <fieldset><legend>Feloldás / túlhajtás (GeForce)</legend>
+        <div class="row"><label>Gépek száma (klaszter)<input id="nodes" type="number" min="1" max="16"></label><label>Hálózati késleltetés gépenként (ms)<input id="hop" type="number" min="0" step="0.5"></label></div>
+      </fieldset></details>
+      <details class="adv" open><summary>Feloldás / túlhajtás (GeForce)</summary><fieldset>
         <div class="row"><label>Memória-túlhajtás (+%)<input id="oc" type="number" min="0" max="30"></label><label>TP hatásfok (%)<input id="tpeff" type="number" min="30" max="100"></label></div>
         <div class="checks"><label><input id="tp" type="checkbox"> P2P + tensor parallel (két kártya párhuzamosan)</label></div>
-      </fieldset>
-      <fieldset><legend>Formátumok és küszöb</legend>
+      </fieldset></details>
+      <details class="adv" open><summary>Formátumok és küszöb</summary><fieldset>
         <div class="checks"><label><input id="fmt_any" type="checkbox"> GGUF / Ollama</label><label><input id="fmt_mac" type="checkbox"> MLX (Mac/iPhone)</label><label><input id="fmt_server" type="checkbox"> vLLM / SGLang</label><label><input id="fmt_android" type="checkbox"> LiteRT</label></div>
         <div class="row"><label>Min. sebesség (tok/s)<input id="mintps" type="number" min="1" step="0.5"></label><label>Fix többletidő (ms/token)<input id="fixms" type="number" min="0" step="1"></label></div>
-      </fieldset>
+      </fieldset></details>
       <p class="hint">Sávszélesség-segítség: DDR4 2 csatorna ≈ 40–50, DDR5 2 csatorna ≈ 80–96, Apple M3 Ultra 819, Strix Halo ≈ 256–273, RTX 4090 1008, RTX 5090 1792 GB/s.</p>
     </form>
     <div class="results" id="out" aria-live="polite"></div>
@@ -391,6 +419,14 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 
 <section id="modszertan">
   <h2>Módszertan és feltételezések</h2>
+  <details open id="fogalmak"><summary>Fogalmak</summary><div class="body"><ul>
+    <li><b>V1</b> = legokosabb cenzúrázatlan modell · <b>V2</b> = legokosabb alap (cenzúrázott) modell · <b>V3</b> = alap fő modell + gyors segédmodell egyszerre · <b>V4</b> = alap + cenzúrázatlan modell együtt (+ segéd).</li>
+    <li><b>AA v5</b> = Artificial Analysis Intelligence Index v5.0.1 (nehéz, részben titkos feladatsor). <b>% Opus</b> = a modell pontja a Claude Opus 5.5 (legmagasabb gondolkodási beállítás) 59,1 pontjához képest. 50% nem azt jelenti, hogy „fele olyan okos”: nehéz feladatoknál kb. a felét hozza, hétköznapiaknál jóval közelebb van.</li>
+    <li><b>Gépszint:</b> T1 szerver (≥1 TB) · T2 workstation 256–1000 GB · T3 gamer PC 24–32 GB VRAM + RAM · T4 laptop · T5 telefon.</li>
+    <li><b>tok/s</b> = token másodpercenként (magyar szövegnél kb. 0,5–0,7 szó/token). 5 tok/s még olvasható, 20+ tok/s kényelmes.</li>
+    <li><b>Kvant</b> = tömörített modellváltozat; kevesebb bit → kisebb és gyorsabb, de butább (4–5 bit a jó kompromisszum). <b>GGUF</b> = mindenhol futó formátum (llama.cpp, Ollama), <b>MLX</b> = Apple, <b>vLLM</b> = NVIDIA-szerver formátum.</li>
+    <li><b>MoE</b> = sok „szakértőből” álló modell, tokenenként csak egy részük dolgozik (aktív paraméter) → gyors; <b>dense</b> = minden paraméter dolgozik.</li>
+  </ul></div></details>
   <details open><summary>Hogyan számol a kalkulátor</summary><div class="body"><ul>
     <li><b>Okosság:</b> Artificial Analysis Intelligence Index v5.0.1 (2026-11-12). Viszonyítás: Claude Opus 5.5 (max) 59,1 = 100%. Az AA a v5-ben megszüntette a külön Coding Indexet; a kódolás (FrontierCode 2.0 + Terminal-Bench 4.0) az összpont 25%-a.</li>
     <li><b>Cenzúrázatlan modellek:</b> alapmodell AA × (cenzúrázatlan / alap) arány. Az arány a UGI ranglista NatInt-méréséből jön, ahol van („M”), máshol becslés: nagy MoE 0,95–0,97, közösségi/nem ellenőrzött 0,93, kis dense 0,93.</li>
@@ -401,7 +437,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <li><b>Ez becslés, nem mérés.</b> A valós sebesség a futtatótól (llama.cpp, ik_llama.cpp, vLLM, MLX), a kontextushossztól és a prompt-feldolgozástól függ.</li>
   </ul></div></details>
   <details><summary>Hardver-feltételezések</summary><div class="body"><ul>
-    <li><b>RTX 6090:</b> nem bejelentett; pletyka: 32 GB GDDR7, ~1,79 TB/s.</li>
+    <li><b>RTX 6090:</b> nem bejelentett; pletyka: 32 GB GDDR7, ~1,79 TB/s. A „FELOLDVA” profilok: memória-túlhajtás ×1,06; két kártyánál P2P + tensor parallel (hatásfok 0,82). A 8× H200 profil a 8 GPU-t összevontan modellezi.</li>
     <li><b>Következő generációs RTX Pro:</b> nincs adat; három forgatókönyv: 96 / 128 / 192 GB.</li>
     <li><b>MS-S1 MAX-P495, ZBook Ultra G3a:</b> 192 GB LPDDR5X, a GPU-nak max. 160 GB; sávszélesség ~256–273 GB/s (számolt).</li>
     <li><b>HP Pavilion 15-bc504ur:</b> i5-9300H + GTX 1050 4 GB (a bc504TX testvérmodell adatlapja alapján).</li>
@@ -421,33 +457,35 @@ def ssd_html():
     from build import CAT_GROUP
     sz = lambda i: (i.get("bytes") or i.get("bytes_est") or 0)
     def hb(b):
-        return f"{b/1e12:.2f} TB" if b >= 1e12 else f"{b/1e9:.1f} GB"
+        t = f"{b/1e12:.2f} TB" if b >= 1e12 else (f"{b/1e9:.1f} GB" if b >= 1e9 else f"{b/1e6:.0f} MB")
+        return t.replace(".", ",")
     groups = ["Életmentő: orvoslás, víz, élelem, túlélés", "Mezőgazdaság, megfelelő technológia, energia", "Lexikonok, szótárak", "Magyar források",
               "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak", "Térképek, geoadatok", "Szoftver, OS, forráskód",
               "LLM-ek (alap)", "LLM-ek (cenzúrázatlan)", "Olvasók, futtatók"]
-    colors = ["#b03a2e", "#2f7d4f", "#22607a", "#b4581a", "#6b6f2a", "#4a5fa8", "#2a8a8a", "#7a6a55", "#3d6fa8", "#6b3fa0", "#8a8a8a"]
+    colors = [f"var(--c{i})" for i in range(1, 12)]
     rows, cards = [], []
-    prev = set()
+    prev, prevg = set(), set()
     for b, items, used in P:
         tot = {g: 0 for g in groups}
         for i in items:
             tot[CAT_GROUP.get(i["cat"], "Olvasók, futtatók")] = tot.get(CAT_GROUP.get(i["cat"], "Olvasók, futtatók"), 0) + sz(i)
         cap = float(b.replace("TB", "")) * 1e12
         bar = "".join(f'<span title="{H.escape(g)}: {hb(tot[g])}" style="width:{100*tot[g]/cap:.2f}%;background:{c}"></span>' for g, c in zip(groups, colors) if tot[g])
-        rows.append(f'<tr><td><b>{b}</b></td><td class="num">{hb(used)}</td><td class="num">{len(items)}</td><td style="min-width:260px"><div class="stack">{bar}</div></td>'
-                    + "".join(f'<td class="num">{hb(tot[g]) if tot[g] else "–"}</td>' for g in groups[:10]) + "</tr>")
-        new = sorted([i for i in items if i["id"] not in prev], key=lambda i: -sz(i))
+        rows.append(f'<tr><td><b>{b.replace("TB", " TB")}</b></td><td class="num">{hb(used)}</td><td class="num">{len(items)}</td><td style="min-width:260px"><div class="stack">{bar}</div></td>'
+                    + "".join(f'<td class="num">{hb(tot[g]) if tot[g] else "–"}</td>' for g in groups) + "</tr>")
+        new = sorted([i for i in items if i["id"] not in prev and (i.get("group") or i["id"]) not in prevg], key=lambda i: -sz(i))
         by = {}
         for i in items:
             by.setdefault(CAT_GROUP.get(i["cat"], "Olvasók, futtatók"), []).append(i)
         det = "".join(f'<p><b>{H.escape(g)}</b> – {hb(sum(sz(i) for i in by[g]))}: ' + "; ".join(
-            f'{H.escape((i.get("name") or i["id"])[:70])} <span class="muted">({hb(sz(i))})</span>' for i in sorted(by[g], key=lambda i: (i["tier"], -sz(i)))) + "</p>"
+            f'{H.escape(cut(i.get("name") or i["id"], 70))} <span class="muted">({hb(sz(i))})</span>' for i in sorted(by[g], key=lambda i: (i["tier"], -sz(i)))) + "</p>"
             for g in groups if g in by)
-        cards.append(f'<details><summary><b>{b} SSD</b> – {len(items)} elem, {hb(used)} · újdonság az előzőhöz képest: '
-                     + H.escape(", ".join((i.get("name") or i["id"])[:40] for i in new[:5])) + f'</summary><div class="body">{det}</div></details>')
-        prev = {i["id"] for i in items}
+        cards.append(f'<details><summary><b>{b.replace("TB", " TB")} SSD</b> – {len(items)} tétel, {hb(used)}'
+                     + (f' · új az előzőhöz képest: {H.escape("; ".join(cut(i.get("name") or i["id"], 45) for i in new[:4]))}' if new else '')
+                     + f'</summary><div class="body">{det}</div></details>')
+        prev = {i["id"] for i in items}; prevg = {i.get("group") or i["id"] for i in items}
     legend = "".join(f'<span class="lg"><i style="background:{c}"></i>{H.escape(g)}</span>' for g, c in zip(groups, colors))
-    head = "".join(f'<th class="num">{H.escape(g.split(":")[0].split(",")[0])}</th>' for g in groups[:10])
+    head = "".join(f'<th class="num">{H.escape(g.split(":")[0].split(",")[0])}</th>' for g in groups)
     return (f'<div class="legend">{legend}</div><div class="tablebox"><table><thead><tr><th>SSD</th><th class="num">Felhasználva</th><th class="num">Elem</th><th>Tartalom aránya</th>{head}</tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div>' + "".join(cards))
 

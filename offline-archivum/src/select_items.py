@@ -97,7 +97,7 @@ def main():
     ap.add_argument("--dest", default="/mnt/archivum", help="célkönyvtár a szkriptben")
     a = ap.parse_args()
 
-    items = load(a.catalog)
+    items = sorted(load(a.catalog), key=lambda i: i["id"])   # determinisztikus sorrend (holtversenynél is)
     w = PROFILES[a.profile]
     focus = {k: float(v) for k, v in (p.split("=") for p in a.focus.split(",") if p)}
     for it in items:

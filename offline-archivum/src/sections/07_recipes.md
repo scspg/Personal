@@ -25,7 +25,7 @@ A `download.method` mező szerint. Mindegyik újraindítható.
   - Kiwix Desktop (Windows/Linux AppImage/macOS): <https://download.kiwix.org/release/kiwix-desktop/>
   - Kiwix Android (F-Droid / APK): <https://download.kiwix.org/release/kiwix-android/>
   - `kiwix-serve` (kiwix-tools, egy Raspberry Pi kiszolgálja az egész LAN-t, böngészőből érhető el): <https://download.kiwix.org/release/kiwix-tools/>
-  - Indítás: `kiwix-serve --port 8080 /archivum/**/*.zim`, utána `http://<ip>:8080`.
+  - Indítás: `kiwix-serve --port 8888 /archivum/**/*.zim`, utána `http://<ip>:8888`.
 - **PDF / EPUB:** SumatraPDF (Windows), Okular/Evince (Linux), KOReader (e-ink, Android), Calibre (könyvtárkezelés).
 - **Videó:** VLC (minden platformra, a telepítőt is mentsd le).
 - **Térkép:** Organic Maps / OsmAnd APK + offline térképfájlok, QGIS a nyers OSM/DEM adatokhoz.

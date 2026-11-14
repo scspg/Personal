@@ -15,7 +15,7 @@ CAT_HU = {
  "hungarian": "Magyar források", "humanities": "Bölcsészet", "computing": "Számítástechnika",
  "os_mirror": "Operációs rendszerek, csomagtükrök", "source_code": "Forráskód", "ai_models": "LLM / AI modellek",
  "ai_tools": "AI futtatók és eszközök", "maps_geo": "Térképek, geoadatok", "knowledge_dump": "Nagy adathalmazok",
- "server_bundle": "Offline szerver-csomagok", "civil_defense": "Polgári védelem", "governance": "Közösség, jog, kormányzás", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
+ "ai_models_uncensored": "LLM-ek (cenzúrázatlan)", "server_bundle": "Offline szerver-csomagok", "civil_defense": "Polgári védelem", "governance": "Közösség, jog, kormányzás", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
  "reference_book": "Kézikönyvek (könyv)", "gray_library": "Szürke zónás könyvtárak",
 }
 PRESETS = [("32GB", None, "pendrive / telefon"), ("128GB", "T5", "telefon + kis SSD"), ("512GB", "T4", "laptop SSD"),
@@ -24,12 +24,42 @@ PRESETS = [("32GB", None, "pendrive / telefon"), ("128GB", "T5", "telefon + kis 
 
 
 def human(b):
+    """Ember-olvasható méret, magyar tizedesvesszővel."""
     if not b:
         return "?"
     for u, f in (("TB", 1e12), ("GB", 1e9), ("MB", 1e6), ("KB", 1e3)):
         if b >= f:
-            return f"{b / f:.2f} {u}".replace(".00 ", " ")
+            v = b / f
+            txt = f"{v:.2f}" if v < 10 else f"{v:.1f}" if v < 100 else f"{v:.0f}"
+            txt = txt.rstrip("0").rstrip(".") if "." in txt else txt
+            return f"{txt.replace('.', ',')} {u}"
     return f"{b} B"
+
+
+def cut(s, n):
+    """Rövidítés szóhatáron, kiegyensúlyozatlan zárójel nélkül, „…”-tal."""
+    s = str(s or "")
+    if len(s) <= n:
+        return s
+    t = s[:n - 1]
+    if " " in t[n // 2:]:
+        t = t[:t.rfind(" ")]
+    t = t.rstrip(" ,(·-/;:")
+    if t.count("(") > t.count(")"):
+        t = t[:t.rfind("(")].rstrip(" ,·-/")
+    return t + "…"
+
+
+HU_TERMS = [("unverified", "nem ellenőrzött"), ("Unverified", "Nem ellenőrzött"), ("unknown", "ismeretlen"), ("approx.", "kb."),
+            ("paperback", "puhatáblás"), (" pp.", " oldal"), ("estimated", "becsült"), ("measured", "mért"), ("official", "hivatalos"),
+            ("other retailers", "más kereskedők")]
+
+
+def hu(s):
+    s = str(s or "")
+    for a, b in HU_TERMS:
+        s = s.replace(a, b)
+    return s
 
 
 def score(it):
@@ -82,11 +112,11 @@ def ssd_plans(cat_path, tmp):
 def ssd_section(plans):
     md = ["---", "", "## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16 és 32 TB-ra", "",
           "A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. "
-          "LLM-ek: **T2-es gép, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. "
+          "LLM-ek: **T2-es gép alsó határa, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. "
           "A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.", "",
           "### Összefoglaló", "",
-          "| SSD | Felhasználva | Elemek | LLM | Életmentő | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS |",
-          "|---|---|---|---|---|---|---|---|---|---|---|"]
+          "| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Olvasók, eszközök |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     def grp(items):
         g = {}
         for i in items:
@@ -96,21 +126,27 @@ def ssd_section(plans):
     for b, p in plans:
         g = grp(p["items"])
         llm = g.get("LLM-ek (alap)", 0) + g.get("LLM-ek (cenzúrázatlan)", 0)
-        cols = ["Életmentő: orvoslás, víz, élelem, túlélés", "Lexikonok, szótárak", "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak",
-                "Magyar források", "Térképek, geoadatok", "Szoftver, OS, forráskód"]
+        cols = ["Életmentő: orvoslás, víz, élelem, túlélés", "Mezőgazdaság, megfelelő technológia, energia", "Lexikonok, szótárak",
+                "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak", "Magyar források", "Térképek, geoadatok",
+                "Szoftver, OS, forráskód", "Olvasók, futtatók"]
         md.append(f"| **{b}** | {human(p['used_bytes'])} | {len(p['items'])} | {human(llm)} | " + " | ".join(human(g.get(c, 0)) for c in cols) + " |")
     md += ["", "### Melyik méret mire elég – mi jön be az előző mérethez képest", ""]
-    prev = set()
+    prev_items = []
     for b, p in plans:
-        new_items = [i for i in p["items"] if i["id"] not in prev]
-        new_items.sort(key=lambda i: (i["tier"], -(i.get("bytes") or i.get("bytes_est") or 0)))
+        gid = lambda i: i.get("group") or i["id"]
+        prev_g = {gid(i) for i in prev_items}
+        new_items = [i for i in p["items"] if gid(i) not in prev_g]
+        upg = [i for i in p["items"] if gid(i) in prev_g and i["id"] not in {j["id"] for j in prev_items}]
         big = sorted(new_items, key=lambda i: -(i.get("bytes") or i.get("bytes_est") or 0))[:8]
-        t0 = [i for i in new_items if i["tier"] == 0]
-        line = f"- **{b}** (+{len(new_items)} elem): " + "; ".join(f"{esc(i.get('name') or i['id'])[:60]} ({human(i.get('bytes') or i.get('bytes_est'))})" for i in big)
+        t0 = [i for i in p["items"] if i["tier"] == 0]
+        line = (f"- **{b}** – összesen {len(p['items'])} tétel; **új: {len(new_items)}**" + (f", jobb változatra cserélt: {len(upg)}" if upg else "")
+                + (". Legnagyobb új tételek: " + "; ".join(f"{esc(cut(i.get('name') or i['id'], 60))} ({human(i.get('bytes') or i.get('bytes_est'))})" for i in big) if big else ""))
+        if upg:
+            line += ". Feljavítva: " + "; ".join(f"{esc(cut(i.get('name') or i['id'], 50))} ({human(i.get('bytes') or i.get('bytes_est'))})" for i in upg[:4])
         if t0:
-            line += f". Életmentő anyag: mind a {len(t0)} tétel bent van."
+            line += f". Életmentő (0. szintű) anyag: mind a {len(t0)} tétel bent van."
         md.append(line)
-        prev = {i["id"] for i in p["items"]}
+        prev_items = p["items"]
     md += ["",
            "**Ajánlás:**",
            "- **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.",
@@ -134,7 +170,7 @@ def ssd_section(plans):
         for k in sorted(g, key=lambda k: -sum((i.get('bytes') or i.get('bytes_est') or 0) for i in g[k])):
             L = sorted(g[k], key=lambda i: (i["tier"], -(i.get("score") or 0)))
             tot = sum((i.get("bytes") or i.get("bytes_est") or 0) for i in L)
-            md.append(f"**{k}** – {human(tot)}: " + "; ".join(f"{esc(i.get('name') or i['id'])[:70]} ({human(i.get('bytes') or i.get('bytes_est'))})" for i in L) + "\n")
+            md.append(f"**{k}** – {human(tot)}: " + "; ".join(f"{esc(cut(i.get('name') or i['id'], 70))} ({human(i.get('bytes') or i.get('bytes_est'))})" for i in L) + "\n")
         md.append("</details>\n")
     return "\n".join(md)
 
@@ -179,7 +215,7 @@ def main():
               "A teljes adat (letöltési mód, licenc, megjegyzések) a 10. fejezet JSONL-jében van. Az LLM-ek a 6. fejezetben.\n"]
     order = sorted(bycat, key=lambda c: (min(i["tier"] for i in bycat[c]), -max(score(i) for i in bycat[c])))
     for c in order:
-        if c == "ai_models":
+        if c.startswith("ai_models"):
             continue
         rows = sorted(bycat[c], key=lambda x: (x["tier"], -score(x)))
         cat_md.append(f"\n### {CAT_HU.get(c, c)} (`{c}`) – {len(rows)} elem\n")
@@ -187,10 +223,11 @@ def main():
         for it in rows:
             st = (it.get("size_status") or "")
             tag = "M" if st.startswith("measured") else "H" if st.startswith("official") else "B"
-            sz = it.get("size_human") or human(it.get("bytes") or it.get("bytes_est"))
-            acc = it["access"] + (f" ({it['price']})" if it.get("price") else "")
+            sz = human(it.get("bytes") or it.get("bytes_est")) if (it.get("bytes") or it.get("bytes_est")) else hu(it.get("size_human") or "ismeretlen")
+            acc = {"free": "ingyenes", "free-registration": "ingyenes, regisztrációval", "paid": "fizetős", "physical": "nyomtatott (vásárlás)",
+                   "donation": "adomány-alapú", "gray": "szürke zóna"}.get(it["access"], it["access"]) + (f" ({hu(cut(it['price'], 60))})" if it.get("price") else "")
             cat_md.append(f"| {it['tier']} | {score(it)} | `{it['id']}` | **{esc(it.get('name'))}** – {esc(it.get('desc_hu'))} | "
-                          f"{esc(sz)} {tag} | {esc(acc)} | {link(it)} |")
+                          f"{esc(cut(hu(sz), 40))} {tag} | {esc(acc)} | {link(it)} |")
 
     preset_md = ["---\n\n## 4. Előre számolt csomagok\n",
                  "`select_items.py --budget <X> --hw <T>`, `balanced` profil, nyelv: hu, en, multi, hozzáférés: free, free-registration, donation. "
@@ -252,9 +289,69 @@ def main():
                    "### 6.4 Kvantált változatok\n\nA kompakt változatban modellenként és platformonként bitszintenként egy változat szerepel a JSONL-ben. Az összes (609) változat linkkel a teljes ARCHIVUM.md-ben van.\n\n", comp)
     comp = _re.sub(r"(?s)```jsonl\n.*?```", lambda m: "```jsonl\n" + "\n".join(keep) + "\n```", comp, count=1)
     comp = comp.replace("# ARCHIVUM – Offline tudásarchívum", "# ARCHIVUM (kompakt) – Offline tudásarchívum", 1)
+    comp = _re.sub(r"\*\*Elemek:\*\* [^·]*·", f"**Elemek:** {len(keep)} (a teljes katalógus {len(items)}) · ", comp, count=1)
+    comp = _re.sub(r"(?<![\w-])ARCHIVUM\.md(?![\w])", "ARCHIVUM-kompakt.md", comp)
+    comp = comp.replace("teljes ARCHIVUM-kompakt.md", "teljes ARCHIVUM.md").replace("a teljes ARCHIVUM-kompakt.md-ben", "a teljes ARCHIVUM.md-ben")
+    comp = comp.replace("> **Cél:**", "> **Kompakt változat:** ~0,8 MB – hosszú kontextusú modellnek vagy eszközhasználó ágensnek való. Rövid, chatbe tölthető összefoglaló: `ARCHIVUM-chat.md`.\n> **Cél:**", 1)
     cp = os.path.join(HERE, "..", "ARCHIVUM-kompakt.md")
     open(cp, "w", encoding="utf-8").write(comp)
     print(f"OK: {cp}  JSONL-sorok={len(keep)}  méret={os.path.getsize(cp)/1e3:.0f} KB")
+    # --- chat-változat: csak a döntéshez kellő összefoglalók (nincs JSONL, nincs kód) ---
+    def grab(text, start, end):
+        m = _re.search(start + r".*?(?=" + end + r")", text, _re.S)
+        return m.group(0).strip() if m else ""
+    chat = ["# ARCHIVUM – chat-összefoglaló (" + datetime.date.today().isoformat() + ")", "",
+            f"> Ez a rövid változat chatbe tölthető. A teljes katalógus ({len(items)} tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben,"
+            " az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.", "",
+            grab(full, r"## 0\. Gyorsindítás", r"\n---\n\n## 1\. "),
+            grab(full, r"## 3\. Pontozási rendszer", r"\n\*\*Kiválasztási algoritmus"),
+            _re.sub(r"(?s)<details>.*?</details>\n?", "", grab(full, r"## 4b\. ", r"\n---\n\n## 5\. ")),
+            grab(full, r"### 6\.1 ", r"### 6\.3 "),
+            grab(full, r"#### Rangsor: cenzúrázatlan", r"\*\*Gyakorlati gépkonfigurációk"),
+            grab(full, r"### 6\.10 ", r"#### Telefonok").split("**Saját eszközre:**")[0],
+            grab(full, r"\*\*A lényeg:\*\*", r"#### Korlátozások generációnként"),
+            grab(full, r"### 9\.1 ", r"### 9\.2 ")]
+    chat_txt = "\n\n".join(c for c in chat if c) + "\n"
+    chp = os.path.join(HERE, "..", "ARCHIVUM-chat.md")
+    open(chp, "w", encoding="utf-8").write(chat_txt)
+    print(f"OK: {chp}  méret={os.path.getsize(chp)/1e3:.0f} KB")
+    # --- README / OLVASS-EL (mindig a valós számokkal) ---
+    mb = lambda f: f"{os.path.getsize(os.path.join(HERE, '..', f)) / 1e6:.1f}".replace(".", ",") + " MB"
+    n_llm = sum(1 for i in items if "llm_aa" in i)
+    readme = f"""# ARCHIVUM – offline tudásarchívum (olvass el)
+
+## Kezdd itt
+1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, SSD-tervező 1–32 TB-ra.
+2. **Letöltés a meghajtóra:** add oda az `ARCHIVUM.md`-t egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.), és másold be neki az 1. fejezet promptját kitöltve. Vagy kézzel:
+   ```bash
+   python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
+   less dl.sh && DEST=/media/usb/archivum bash dl.sh
+   ```
+3. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
+
+## Fájlok
+| Fájl | Méret | Mire való |
+|---|---|---|
+| `ARCHIVUM-LLM.html` | {mb('ARCHIVUM-LLM.html')} | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), SSD-tervező |
+| `ARCHIVUM.md` | {mb('ARCHIVUM.md')} | teljes katalógus: {len(items)} tétel (ebből {n_llm} LLM-kvant), prompt, szabályok, receptek, szkriptek |
+| `ARCHIVUM-kompakt.md` | {mb('ARCHIVUM-kompakt.md')} | ugyanez kevesebb LLM-kvanttal ({len(keep)} tétel) – hosszú kontextusú modellnek |
+| `ARCHIVUM-chat.md` | {mb('ARCHIVUM-chat.md')} | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások |
+| `eszkozok/select_items.py` | – | letöltési terv a tárhelyhez (`--budget 2TB --hw T2 --mem 300GB --emit-sh dl.sh`) |
+| `eszkozok/llm_calc.py` | – | LLM-kalkulátor (`--preset all`, vagy saját: `--gpu 32:1790 --ram 128 --ram-bw 96`) |
+| `forras/` | – | generátorok és a kutatási nyersanyag |
+
+## A katalógus fejezetei
+1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 5 katalógus kategóriánként ·
+6 LLM-ek (6.1 rangsor + % Opus · 6.5 cenzúrázatlanok és gépigény · 6.10 eszközönként 4 változat · 6.11 GeForce-feloldás) ·
+7 letöltési receptek · 8 fizetős/fizikai beszerzések · 9 captcha-mentes web · 10 gépi JSONL · 11–12 szkriptek
+
+## Újragenerálás
+```bash
+cd forras && python3 gen_sections.py && python3 build.py && python3 gen_html.py && python3 make_zip.py
+```
+(Python 3.9+, csak standard könyvtár; a `forras/` mappában a `make_zip.py` a ZIP szerkezetéből is működik.)
+"""
+    open(os.path.join(HERE, "..", "README.md"), "w", encoding="utf-8").write(readme)
 
 
 if __name__ == "__main__":

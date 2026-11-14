@@ -325,11 +325,17 @@ def evaluate(dev, vs):
     return res
 
 
+def hu(x, d=1):
+    """Szám magyar tizedesvesszővel."""
+    return f"{x:.{d}f}".replace(".", ",")
+
+
 def fmt_member(v, r, role):
     name, src = label(v)
     aa = v["llm_aa"]
-    return (f"{name} [AA v5 {'~' if v.get('llm_aa_est') else ''}{aa:.1f} = {'~' if v.get('llm_aa_est') else ''}{100 * aa / OPUS:.0f}% Opus 5.5 · "
-            f"{v['llm_bits']} bit, {v['bytes'] / 1e9:.1f} GB, ~{r[0]:.0f} tok/s, {r[1]}] – {role} – `{src}`")
+    e = '~' if v.get('llm_aa_est') else ''
+    return (f"{name} [AA v5 {e}{hu(aa)} = {e}{100 * aa / OPUS:.0f}% Opus 5.5 · "
+            f"{hu(v['llm_bits'])} bit, {hu(v['bytes'] / 1e9)} GB, ~{r[0]:.0f} tok/s, {r[1]}] – {role} – `{src}`")
 
 
 def report(dev, res, md=False):
@@ -337,17 +343,19 @@ def report(dev, res, md=False):
              "V3": "V3 csapat (alap modellek)", "V4": "V4 vegyes csapat (alap + cenzúrázatlan)"}
     out = []
     if md:
-        out.append(f"#### {dev.name}\n\n*Modellnek jutó memória: ~{dev.capacity():.0f} GB · {dev.note}*\n")
+        cap = dev.capacity()
+        out.append(f"#### {dev.name}\n\n*Modellnek jutó memória: ~{hu(cap, 1 if cap < 20 else 0)} GB · {dev.note}*\n")
         out.append("| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |\n|---|---|")
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
             cell = "<br>".join(fmt_member(*m) for m in r) if r else "nincs elég memória / túl lassú"
             if r and len(r) > 1:
-                cell += f"<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~{sum(m[1][2] for m in r) + EMBED_GB:.0f} GB"
+                cell += f"<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~{hu(sum(m[1][2] for m in r) + EMBED_GB, 0)} GB"
             out.append(f"| **{title[k]}** | {cell} |")
         out.append("")
     else:
-        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{dev.capacity():.0f} GB)\n    {dev.note}")
+        cap = dev.capacity()
+        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{hu(cap, 1 if cap < 20 else 0)} GB)\n    {dev.note}")
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
             out.append(f"  {title[k]}:")

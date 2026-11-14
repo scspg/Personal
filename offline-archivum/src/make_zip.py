@@ -3,8 +3,11 @@
 import os, zipfile, datetime
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.join(HERE, "..")
 OUT = os.path.join(ROOT, "ARCHIVUM.zip")
-FILES = [("ARCHIVUM.md", "ARCHIVUM.md"), ("ARCHIVUM-kompakt.md", "ARCHIVUM-kompakt.md"), ("ARCHIVUM-LLM.html", "ARCHIVUM-LLM.html"),
-         ("README.md", "OLVASS-EL.md"), ("src/select_items.py", "eszkozok/select_items.py"), ("src/llm_calc.py", "eszkozok/llm_calc.py")]
+RD = "README.md" if os.path.exists(os.path.join(ROOT, "README.md")) else "OLVASS-EL.md"   # a ZIP-ből újraépítve is működjön
+SRC = "src" if os.path.isdir(os.path.join(ROOT, "src")) else "forras"
+FILES = [("ARCHIVUM.md", "ARCHIVUM.md"), ("ARCHIVUM-kompakt.md", "ARCHIVUM-kompakt.md"), ("ARCHIVUM-chat.md", "ARCHIVUM-chat.md"),
+         ("ARCHIVUM-LLM.html", "ARCHIVUM-LLM.html"), (RD, "OLVASS-EL.md"),
+         (f"{SRC}/select_items.py", "eszkozok/select_items.py"), (f"{SRC}/llm_calc.py", "eszkozok/llm_calc.py")]
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for src, dst in FILES:
         z.write(os.path.join(ROOT, src), "ARCHIVUM/" + dst)

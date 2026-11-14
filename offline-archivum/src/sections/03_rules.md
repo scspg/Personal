@@ -9,7 +9,7 @@
 | 3 | **Változó fájlnevek** | A Kiwix havonta új snapshotot ad ki (`…_ÉÉÉÉ-HH.zim`). Mindig az OPDS-katalógusból kell feloldani (`kiwix_latest()` a szkriptben). A katalógusban szereplő URL csak tartalék. |
 | 4 | **A méret is változik** | A mért méret 2026-11-14-i. ±10% eltérés normális. Ha egy elem 25%-nál többet nőtt, jelezd. |
 | 5 | **Tükörszerverek** | A `lb.download.kiwix.org` automatikusan tükörre irányít. Lassúság vagy hiba esetén jobb a `.torrent` / `.meta4` (aria2c). Hugging Face-nél a `hf download` folytatja a megszakított letöltést. |
-| 6 | **Daraboló GGUF-ok** | A nagy modellek `-00001-of-0000N.gguf` darabokban jönnek. Mind kell. A llama.cpp az első darabbal elindul, összefűzni nem kell. Csak a régi eszközök igénylik a `llama-gguf-split --merge`-et. |
+| 6 | **Darabolt GGUF-ok** | A nagy modellek `-00001-of-0000N.gguf` darabokban jönnek. Mind kell. A llama.cpp az első darabbal elindul, összefűzni nem kell. Csak a régi eszközök igénylik a `llama-gguf-split --merge`-et. |
 | 7 | **Gated modellek** | Llama, Gemma és egyes Mistral modellekhez HF-fiók, licencelfogadás és token kell (`hf auth login`). Ez kézi teendő. |
 | 8 | **Licenc és jog** | A `gray` elemek (Anna's Archive, LibGen, Sci-Hub) letöltése és megosztása Magyarországon és az EU-ban szerzői jogi jogsértés lehet. Alapból ki vannak zárva, csak kifejezett kérésre. |
 | 9 | **Rate limit / robots** | `wget-mirror` esetén `--wait=1`. Archive.org-on maximum néhány párhuzamos kapcsolat. Fiók nélkül ne kérj túl sokat egyszerre. |
