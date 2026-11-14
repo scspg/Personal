@@ -114,7 +114,11 @@ class Device:
     def __init__(self, **k):
         self.name = k.get("name", "eszköz"); self.kind = k.get("kind", "")
         gpus = k.get("gpus") or ([(k["vram"], k["vram_bw"])] if k.get("vram") else [])
+        m = k.get("vram_bw_mult", 1.0)                     # memória-túlhajtás (feloldott változat), pl. 1,08
+        gpus = [(g, b * m) for g, b in gpus]
         self.gpus = gpus
+        self.tp = bool(k.get("tensor_parallel"))           # P2P-vel: kártyák párhuzamosan (sávszélesség összeadódik)
+        self.tp_eff = k.get("tp_eff", 0.85)
         self.vram = sum(g for g, _ in gpus)
         # több (eltérő) GPU rétegenkénti felosztással: a token sorban halad át a kártyákon → kapacitással súlyozott harmonikus sávszélesség
         self.vram_bw = self.vram / sum(g / b for g, b in gpus) if gpus else 0
@@ -143,7 +147,12 @@ class Device:
             t = act / (EFF * self.uni_bw * 1e9) + fix + (self.nodes - 1) * self.hop_ms / 1000
             opts.append((1 / t, f"unified{' ×' + str(self.nodes) if self.nodes > 1 else ''}"))
         if self.vram and need <= self.vram:
-            opts.append((1 / (act / (EFF * self.vram_bw * 1e9) + fix), "csak GPU"))
+            bw, how = self.vram_bw, "csak GPU"
+            if self.tp and len(self.gpus) > 1:
+                tot = sum(b for _, b in self.gpus)
+                if all(need * b / tot <= g for g, b in self.gpus):   # a sávszélességgel arányos felosztás belefér
+                    bw, how = tot * self.tp_eff, f"csak GPU, tensor parallel ×{len(self.gpus)} (P2P)"
+            opts.append((1 / (act / (EFF * bw * 1e9) + fix), how))
         if fmt != "server" and self.vram and self.ram and need <= self.vram + self.ram and need > self.vram:
             share = max(0.0, (self.vram - 2) / need)
             f = min(1.0, (0.3 + 0.7 * share) if v.get("moe") else share)
