@@ -54,6 +54,14 @@ def hu_key(s):
     return [HU_ORDER.get(ch, 100 + ord(ch)) for ch in str(s).lower()]
 
 
+def hf_cmd(d):
+    """másolható hf-parancs: pontos fájlnevek pozicionálisan (minden hf-verzióval megy), minták --include-dal (hf >= 1.0 kell több mintához)."""
+    inc = d.get("include") or []
+    if inc and all(not any(ch in p for ch in "*?[") for p in inc):
+        return f"hf download {d['repo']}" + (" --repo-type dataset" if d.get("repo_type") == "dataset" else "") + " " + " ".join(f'"{p}"' for p in inc)
+    return f"hf download {d['repo']}" + "".join(f' --include "{p}"' for p in inc)
+
+
 def cut(s, n):
     """Rövidítés szóhatáron, kiegyensúlyozatlan zárójel nélkül, „…”-tal."""
     s = str(s or "")
@@ -361,8 +369,10 @@ def main():
              "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n",
              "---\n\n## 12. llm_calc.py\n\nEszköz-kalkulátor (lásd 6.10). Kibontás: `sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py`\n\n```python llm_calc.py\n"
              + open(os.path.join(HERE, "llm_calc.py"), encoding="utf-8").read() + "```\n"]
-    text = "\n\n".join(p.strip("\n") + "\n" for p in parts if p)
-    text = impersonal(text).replace("__MB__", f"{len(text.encode()) / 1e6:.1f}".replace(".", ","))
+    code = parts[-2:]   # 11–12: szó szerinti forráskód – az impersonal() ne írja át
+    text = "\n\n".join(p.strip("\n") + "\n" for p in parts[:-2] if p)
+    text = impersonal(text) + "\n\n" + "\n\n".join(p.strip("\n") + "\n" for p in code)
+    text = text.replace("__MB__", f"{len(text.encode()) / 1e6:.1f}".replace(".", ","))
     open(OUT, "w", encoding="utf-8").write(text)
     print(f"OK: {OUT}  elemek={len(items)}  méret={os.path.getsize(OUT)/1e3:.0f} KB")
     # --- kompakt változat chatbe töltéshez ---

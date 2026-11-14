@@ -314,8 +314,9 @@ def team(dev, vs, mixed):
     if not pool:
         return None
     v2, r2 = pool[0]
-    return [(v1, r1, "fő modell (váltva)"), (v2, r2, ("partner, váltva" if mixed else "gyors segéd, váltva") +
-            " – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van")]
+    why = (" – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van" if r1[2] + r2[2] > cap
+           else " – együtt nem érnék el a minimális sebességet, ezért felváltva futnak")
+    return [(v1, r1, "fő modell (váltva)"), (v2, r2, ("partner, váltva" if mixed else "gyors segéd, váltva") + why)]
 
 
 def label(v):
@@ -378,22 +379,22 @@ def report(dev, res, md=False):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("catalog")
+    ap.add_argument("catalog", help="ARCHIVUM.md vagy .jsonl katalógus")
     ap.add_argument("--preset", help="profil neve vagy 'all' (" + ", ".join(PRESETS) + ")")
-    ap.add_argument("--name", default="Saját eszköz")
+    ap.add_argument("--name", default="Saját eszköz", help="az eszköz neve a jelentésben")
     ap.add_argument("--vram", type=float, help="dedikált GPU-memória GB"); ap.add_argument("--vram-bw", type=float, help="GPU sávszélesség GB/s")
     ap.add_argument("--gpu", action="append", default=[], help="több GPU: GB:GB/s, ismételhető (pl. --gpu 32:1790 --gpu 96:1800)")
-    ap.add_argument("--ram", type=float, help="rendszer-RAM GB"); ap.add_argument("--ram-usable", type=float, default=0.85)
+    ap.add_argument("--ram", type=float, help="rendszer-RAM GB"); ap.add_argument("--ram-usable", type=float, default=0.85, help="a RAM ekkora hányada jut a modellnek (alap 0.85)")
     ap.add_argument("--ram-bw", type=float, help="RAM sávszélesség GB/s (DDR5 2 csatorna ≈ 80-96, DDR4 2 csatorna ≈ 40-50)")
     ap.add_argument("--unified", type=float, help="unified memória GB (Mac, Strix Halo, telefon)")
-    ap.add_argument("--unified-usable", type=float, default=0.8); ap.add_argument("--unified-bw", type=float)
-    ap.add_argument("--nodes", type=int, default=1); ap.add_argument("--hop-ms", type=float, default=3)
+    ap.add_argument("--unified-usable", type=float, default=0.8, help="az egyesített memória ekkora hányada jut a modellnek (alap 0.8)"); ap.add_argument("--unified-bw", type=float, help="egyesített memória sávszélessége GB/s")
+    ap.add_argument("--nodes", type=int, default=1, help="ennyi azonos gép klaszterben (unified memóriával)"); ap.add_argument("--hop-ms", type=float, default=3, help="hálózati késleltetés gépenként, ms")
     ap.add_argument("--formats", default="any", help="any (GGUF/Ollama), mac (MLX), server (vLLM/SGLang safetensors), android (LiteRT)")
-    ap.add_argument("--min-tps", type=float, default=5); ap.add_argument("--fix-ms", type=float, default=10)
+    ap.add_argument("--min-tps", type=float, default=5, help="ennél lassabb modell nem számít elfutónak (tok/s, alap 5)"); ap.add_argument("--fix-ms", type=float, default=10, help="tokenenkénti fix többletidő, ms (alap 10)")
     ap.add_argument("--tensor-parallel", action="store_true", help="több GPU párhuzamosan (P2P), mint a HTML 'FELOLDVA' profiljai")
     ap.add_argument("--tp-eff", type=float, default=0.85, help="tensor parallel hatásfok (0,3–1,0; P2P-vel ~0,82)")
     ap.add_argument("--vram-bw-mult", type=float, default=1.0, help="memória-túlhajtás szorzója (pl. 1.06)")
-    ap.add_argument("--md", action="store_true")
+    ap.add_argument("--md", action="store_true", help="Markdown-táblás kimenet")
     a = ap.parse_args()
     vs = load(a.catalog)
     devs = []
@@ -402,6 +403,8 @@ def main():
         unknown = [k for k in keys if k not in PRESETS]
         if unknown:
             ap.error(f"ismeretlen profil: {', '.join(unknown)} – választható: {', '.join(PRESETS)}")
+        if a.vram or a.ram or a.unified or a.gpu:
+            ap.error("--preset mellett nem adható meg --vram/--ram/--unified/--gpu (a profil adatai érvényesek); saját géphez hagyd el a --preset-et")
         devs = [Device(**PRESETS[k]) for k in keys]
     else:
         try:
@@ -410,6 +413,10 @@ def main():
             ap.error("--gpu formátuma GB:GB/s, pl. --gpu 32:1790")
         if gpus and any(len(g) != 2 or g[0] <= 0 or g[1] <= 0 for g in gpus):
             ap.error("--gpu formátuma GB:GB/s, mindkettő pozitív, pl. --gpu 32:1790")
+        if gpus and a.vram:
+            ap.error("a --gpu és a --vram együtt nem adható meg: több kártyához csak --gpu GB:GB/s kell")
+        if a.nodes > 1 and not a.unified:
+            ap.error("--nodes csak --unified memóriával (pl. több MS-S1 / Mac klaszter) értelmes")
         if a.vram and not (a.vram_bw and a.vram_bw > 0):
             ap.error("--vram mellé --vram-bw (GB/s) is kell")
         if a.ram and not (a.ram_bw and a.ram_bw > 0):
@@ -420,6 +427,14 @@ def main():
             ap.error("adj meg legalább egy memóriát: --gpu / --vram, --ram vagy --unified (vagy használj --preset-et)")
         if a.min_tps <= 0 or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
             ap.error("--min-tps > 0, --tp-eff 0,3–1,0, --nodes >= 1 kell")
+        nums = [a.vram, a.vram_bw, a.ram, a.ram_bw, a.unified, a.unified_bw] + [x for g in (gpus or []) for x in g]
+        if any(x is not None and not (math.isfinite(x) and x >= 0) for x in nums):
+            ap.error("a memória- és sávszélesség-értékek véges, nemnegatív számok legyenek")
+        if not (0 < a.ram_usable <= 1 and 0 < a.unified_usable <= 1 and a.vram_bw_mult > 0 and a.fix_ms >= 0 and a.hop_ms >= 0):
+            ap.error("--ram-usable / --unified-usable 0–1 közötti hányad, --vram-bw-mult > 0, --fix-ms / --hop-ms >= 0 kell")
+        bad = set(a.formats.split(",")) - {"any", "mac", "server", "android"}
+        if bad:
+            ap.error(f"ismeretlen --formats érték: {', '.join(sorted(bad))} – választható: any, mac, server, android")
         devs = [Device(name=a.name, gpus=gpus, vram=a.vram, vram_bw=a.vram_bw, ram=a.ram, ram_usable=a.ram_usable, ram_bw=a.ram_bw,
                        unified=a.unified, unified_usable=a.unified_usable, unified_bw=a.unified_bw, nodes=a.nodes, hop_ms=a.hop_ms,
                        formats=a.formats, fix_ms=a.fix_ms, min_tps=a.min_tps, tensor_parallel=a.tensor_parallel, tp_eff=a.tp_eff,

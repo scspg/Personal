@@ -84,32 +84,39 @@ def size_of(it):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("catalog")
+    ap.add_argument("catalog", help="ARCHIVUM.md vagy .jsonl katalógus")
     ap.add_argument("--budget", help="pl. 64GB, 512GB, 2TB (decimális egység, mint a meghajtók címkéje)")
     ap.add_argument("--reserve", type=float, default=0.08, help="tartalék hányad a fájlrendszernek / checksumoknak (alap 0.08)")
     ap.add_argument("--profile", default="balanced", choices=PROFILES)
     ap.add_argument("--langs", default="hu,en,multi", help="engedett nyelvek, vesszővel")
     ap.add_argument("--access", default="free,free-registration,donation",
                     help="engedett hozzáférés: free,free-registration,donation,paid,gray,physical")
-    ap.add_argument("--hw", default=None, choices=["T1", "T2", "T3", "T4", "T5"], help="LLM hardverszint: T1..T5 (ha nincs megadva: nincs LLM, csak ha --llm-max>0 és --hw adott)")
+    ap.add_argument("--hw", default=None, choices=["T1", "T2", "T3", "T4", "T5"], help="LLM hardverszint T1..T5 (T1 szerver, T2 munkaállomás, T3 gamer PC, T4 laptop, T5 telefon); nélküle nem kerül be LLM")
     ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra")
     ap.add_argument("--platform", default="", help="LLM-formátumok a GGUF/Ollama mellé: mac (MLX), server (vLLM/SGLang: FP8/NVFP4/AWQ), android (LiteRT); vesszővel")
     ap.add_argument("--uncensored", choices=["no", "also", "only"], default="also", help="cenzúrázatlan LLM-változatok: no | also | only")
     ap.add_argument("--llm-models", type=int, default=3, help="legfeljebb ennyi különböző LLM-modell (group) kerüljön be")
     ap.add_argument("--mem", default=None, help="LLM-re használható memória (RAM+VRAM vagy unified), pl. 48GB / 512GB; a modell max. 85%%-a lehet")
     ap.add_argument("--focus", default="", help="kategória-szorzók, pl. medicine=2,agriculture=1.5")
-    ap.add_argument("--max-tier", type=int, default=5)
+    ap.add_argument("--max-tier", type=int, default=5, help="legfeljebb ennyi tier (0–5) kerüljön be, alap 5")
     ap.add_argument("--include", default="", help="kötelezően beveendő id-k (vesszővel)")
     ap.add_argument("--exclude", default="", help="kizárt id-k vagy kategóriák (cat:NAME)")
     ap.add_argument("--list", action="store_true", help="katalógus listázása pontszám szerint")
-    ap.add_argument("--out", default="plan.json")
+    ap.add_argument("--out", default="plan.json", help="a terv JSON-fájlja (alap plan.json)")
     ap.add_argument("--emit-sh", default=None, help="letöltő bash szkript írása ide")
     ap.add_argument("--dest", default="/mnt/archivum", help="célkönyvtár a szkriptben")
     a = ap.parse_args()
 
     items = sorted(load(a.catalog), key=lambda i: i["id"])   # determinisztikus sorrend (holtversenynél is)
     w = PROFILES[a.profile]
-    focus = {k: float(v) for k, v in (p.split("=") for p in a.focus.split(",") if p)}
+    try:
+        focus = {k: float(v) for k, v in (p.split("=") for p in a.focus.split(",") if p)}
+    except ValueError:
+        ap.error("--focus formátuma: kategória=szorzó, pl. medicine=2,agriculture=1.5")
+    if not 0 <= a.reserve < 1:
+        ap.error("--reserve 0 és 1 közötti hányad (pl. 0.08)")
+    if not a.hw and (a.mem or a.platform or a.uncensored != "also"):
+        print("FIGYELEM: --hw nélkül nem kerül be LLM; a --mem / --platform / --uncensored hatástalan", file=sys.stderr)
     for it in items:
         it["_score"] = composite(it, w, focus)
 
@@ -248,7 +255,8 @@ def main():
                 if fits(v):
                     choose(k, v)
                     return v
-        take(lambda v: v["id"] in incl)
+        while take(lambda v: v["id"] in incl):
+            pass
         take(lambda v: v["cat"] == "ai_models")
         if a.uncensored != "no":
             take(lambda v: v["cat"] == "ai_models_uncensored")
@@ -256,9 +264,10 @@ def main():
         while take(lambda v: True):
             pass
 
+    llm_done = False
     for t in tiers:
-        if t == 1:
-            llm_pass()
+        if t >= 1 and not llm_done:
+            llm_pass(); llm_done = True
         fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g))
     # 3) luxus-feljavítások (pl. képes Wikipedia) pontszám szerint
     for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
@@ -288,6 +297,11 @@ def main():
             used += size_of(t)
     plan = tools + plan
 
+    json.dump({"budget_bytes": budget, "used_bytes": used, "profile": a.profile,
+               "items": [{k: v[k] for k in v if not k.startswith("_")} | {"score": v["_score"]} for v in plan],
+               "manual": [v["id"] for v in manual]}, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    if a.emit_sh:
+        write_sh(plan, a.emit_sh, a.dest)
     print(f"Profil: {a.profile} | keret: {a.budget} (használható {human(budget)}) | felhasználva: {human(used)} "
           f"| elemek: {len(plan)} | LLM: {human(llm_used())} (max {human(llm_cap)})\n")
     print(f"{'#':>3} {'T':>2} {'pont':>5} {'méret':>10}  {'mód':<11} id")
@@ -316,18 +330,15 @@ def main():
     if skipped_unknown:
         print("\nIsmeretlen méret miatt kihagyva (ellenőrizd kézzel):", ", ".join(v["id"] for v in skipped_unknown))
 
-    json.dump({"budget_bytes": budget, "used_bytes": used, "profile": a.profile,
-               "items": [{k: v[k] for k in v if not k.startswith("_")} | {"score": v["_score"]} for v in plan],
-               "manual": [v["id"] for v in manual]}, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"\nTerv mentve: {a.out}")
     if a.emit_sh:
-        write_sh(plan, a.emit_sh, a.dest)
         print(f"Letöltő szkript: {a.emit_sh}  (futtatás előtt nézd át!)")
 
 
 def write_sh(plan, path, dest):
     q = shlex.quote
     c = lambda x: str(x or "").replace("\r", " ").replace("\n", " ")       # kommentbe biztonságos
+    safe = lambda x: re.sub(r"[^A-Za-z0-9._+-]", "_", str(x))            # "..."-be ágyazott útvonalelemekhez
     methods = {v["download"]["method"] for v in plan}
     need_tools = sorted({"curl"} | {t for m, ts in {"kiwix": ["curl"], "http": ["aria2c|wget"], "wget-mirror": ["wget"], "rsync": ["rsync"],
                          "git": ["git"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
@@ -340,7 +351,10 @@ def write_sh(plan, path, dest):
          'sha256c(){ if have sha256sum; then sha256sum -c -; else shasum -a 256 -c -; fi; }',
          'fetch(){ # url outdir',
          '  local ua=${UA:-Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0}',
-         '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c -U "$ua" "$1"); fi; }',
+         '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c --content-disposition --trust-server-names -U "$ua" "$1"); fi; }',
+         'ollama_pull(){ # tag célkönyvtár: külön portú ideiglenes szerver, hogy a modell a meghajtóra kerüljön',
+         '  OLLAMA_MODELS="$2" OLLAMA_HOST=127.0.0.1:11499 ollama serve >/dev/null 2>&1 & local p=$!; sleep 3',
+         '  OLLAMA_HOST=127.0.0.1:11499 ollama pull "$1"; local r=$?; kill $p 2>/dev/null; wait $p 2>/dev/null; return $r; }',
          'hfdl(){ if have hf; then hf download "$@"; elif have huggingface-cli; then huggingface-cli download "$@"; else return 127; fi; }',
          'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból (GNU és BSD sed-del is)',
          '  local u; u=$(curl -fsSL "https://library.kiwix.org/catalog/v2/entries?name=$1&count=50" 2>/dev/null \\',
@@ -350,15 +364,17 @@ def write_sh(plan, path, dest):
          '  echo "${u:-$3}"; }',
          'ok(){ echo "OK   $1" | tee -a "$LOG" "$RUNLOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG" "$RUNLOG"; }', ""]
     for v in plan:
-        d = v["download"]; m = d["method"]; sub = f'$DEST/{v["cat"]}/{v["id"]}'; vid = q(v["id"])
+        d = v["download"]; m = d["method"]; sub = f'$DEST/{safe(v["cat"])}/{safe(v["id"])}'; vid = q(v["id"])
         L.append(f"# --- {v['id']}  ({human(size_of(v))})  {c(v.get('name'))}")
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
             fl = d.get("flavour") or ""
             fl = "" if fl == "null" else fl
+            L.append(f'if [ -z "${{REFRESH:-}}" ] && [ -f "{sub}/.ok" ]; then ok {vid}; else')
             L.append(f'U=$(kiwix_latest {q(d["book"])} {q(fl)} {q(d.get("url") or "")})')
             L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --follow-metalink=mem -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
-            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && ok {vid} || fail {vid}')
+            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
+            L.append('fi')
         elif m == "http":
             for u in (d.get("urls") or [d.get("url")]):
                 if u:
@@ -372,19 +388,25 @@ def write_sh(plan, path, dest):
                 if not u:
                     continue
                 n = u.rstrip("/").split("/")[-1]
-                n = n[:-4] if n.endswith(".git") else n
-                L.append(f'{{ [ -d "{sub}/{n}.git" ] || git clone --mirror {q(u)} "{sub}/{n}.git"; }} && git -C "{sub}/{n}.git" remote update --prune && ok {vid} || fail {vid}')
+                n = safe(n[:-4] if n.endswith(".git") else n)
+                g, tag = f'"{sub}/{n}.git"', d.get("tag") or v.get("latest_version") or ""
+                tag = tag if re.fullmatch(r"[\w.+-]{1,60}", tag or "") else ""
+                # csak ágak+tagek (a GitHub refs/pull/* nélkül); alapból sekély (a legutóbbi kiadás / alapág), GIT_FULL=1: teljes történet
+                L.append(f'[ -d {g} ] || {{ git init -q --bare {g} && git -C {g} remote add origin {q(u)} && git -C {g} config remote.origin.fetch "+refs/heads/*:refs/heads/*" && git -C {g} config --add remote.origin.fetch "+refs/tags/*:refs/tags/*"; }}')
+                shallow = (f'git -C {g} fetch -q --depth 1 origin {q("refs/tags/" + tag + ":refs/tags/" + tag)} || ' if tag else "") + f'git -C {g} fetch -q --depth 1 origin "+HEAD:refs/heads/snapshot"'
+                L.append(f'if [ -n "${{GIT_FULL:-}}" ]; then git -C {g} fetch -q --prune --tags origin; else {shallow}; fi && ok {vid} || fail {vid}')
                 L.append(f'[ -n "${{BUNDLE:-}}" ] && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all   # BUNDLE=1: +1x hely!')
             if d.get("release_url"):
                 L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
-                L.append(f'echo "TODO {v["id"]} – telepítők: {c(d["release_url"])}" | tee -a "$LOG" "$RUNLOG"')
+                L.append(f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"')
         elif m == "hf":
-            inc = " ".join(f"--include {q(p)}" for p in (d.get("include") or []))
             rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""
-            L.append(f'hfdl {q(d["repo"])}{rt} {inc} --local-dir "{sub}" && ok {vid} || fail {vid}')
+            # hf/huggingface-cli < 1.0: ismételt --include esetén csak az utolsó minta marad → mintánként külön hívás
+            calls = [f'hfdl {q(d["repo"])}{rt}' + (f" --include {q(p)}" if p else "") + f' --local-dir "{sub}"' for p in (d.get("include") or [None])]
+            L.append("{ " + " && ".join(calls) + f"; }} && ok {vid} || fail {vid}")
         elif m == "ollama":
             tag = d["tag"].split(" / ")[0].split()[0]
-            L.append(f'ollama pull {q(tag)} && ok {vid} || fail {vid}   # a szerver OLLAMA_MODELS könyvtárába kerül, NEM a $DEST-be')
+            L.append(f'ollama_pull {q(tag)} "{sub}" && ok {vid} || fail {vid}   # ideiglenes ollama-szerver, a modell a $DEST alá kerül')
         elif m == "archive.org":
             glob = f' --glob={q(d["glob"])}' if d.get("glob") else ""
             for ident in (d.get("ids") or [d.get("id")]):

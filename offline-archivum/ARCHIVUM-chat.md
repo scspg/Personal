@@ -1,6 +1,6 @@
 # ARCHIVUM – chat-összefoglaló (2026-11-14)
 
-> Ez a rövid változat chatbe tölthető. A teljes katalógus (1230 tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben, az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.
+> Ez a rövid változat chatbe tölthető. A teljes katalógus (1248 tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben, az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.
 
 ## 0. Hogyan használd ezt a fájlt
 
@@ -53,26 +53,26 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 
 | SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **1TB** | 920 GB | 289 | 310 GB | 24,1 GB | 32,5 GB | 69,4 GB | 33,5 GB | 270 GB | 67,8 GB | 1 GB | 6,61 GB | 48,3 GB | 42,7 GB | 14,7 GB |
-| **2TB** | 1,84 TB | 364 | 615 GB | 25,6 GB | 33,5 GB | 69,4 GB | 38 GB | 485 GB | 72,8 GB | 199 GB | 149 GB | 86,7 GB | 50,9 GB | 14,7 GB |
-| **4TB** | 3,64 TB | 479 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 56,7 GB | 804 GB | 74,9 GB | 971 GB | 402 GB | 202 GB | 329 GB | 39 GB |
-| **8TB** | 7,12 TB | 484 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 752 GB | 74,9 GB | 1,03 TB | 3,81 TB | 202 GB | 329 GB | 39 GB |
-| **16TB** | 13,3 TB | 485 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 1,56 TB | 1,01 TB | 1,03 TB | 8,26 TB | 202 GB | 329 GB | 39 GB |
-| **32TB** | 22,2 TB | 485 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17,1 TB | 202 GB | 329 GB | 39 GB |
+| **1TB** | 920 GB | 327 | 310 GB | 24,1 GB | 32,5 GB | 69,4 GB | 33,9 GB | 270 GB | 67,8 GB | 1 GB | 6,61 GB | 55,3 GB | 35,3 GB | 14,8 GB |
+| **2TB** | 1,84 TB | 401 | 615 GB | 25,6 GB | 33,5 GB | 69,4 GB | 38,7 GB | 485 GB | 72,8 GB | 199 GB | 151 GB | 82,3 GB | 49,6 GB | 18,1 GB |
+| **4TB** | 3,61 TB | 512 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 67,5 GB | 720 GB | 74,9 GB | 971 GB | 589 GB | 102 GB | 267 GB | 51,9 GB |
+| **8TB** | 7,29 TB | 517 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 67,5 GB | 715 GB | 74,9 GB | 1,03 TB | 3,81 TB | 102 GB | 695 GB | 42,8 GB |
+| **16TB** | 13,6 TB | 518 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 8,26 TB | 102 GB | 694 GB | 51,9 GB |
+| **32TB** | 22,5 TB | 518 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17,1 TB | 102 GB | 694 GB | 51,9 GB |
 
 ### Melyik méret mire elég – mi jön be az előző mérethez képest
 
-- **1TB** – összesen 289 tétel; **új: 289**. Legnagyobb új tételek: Survivor Library full mirror on Internet Archive… (218 GB); Qwen3.8-Flash-Next · Qwen3.8-Flash-Next-GGUF · Q8_0 (GGUF) (167 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (93,7 GB); MEK szakmai válogatás… (60 GB); wikipedia_en_all_nopic_2026-06 (52,7 GB); Open Textbook Library (University of Minnesota) (40 GB); Qwen3.8-27B abliterated (huihui) / heretic-ara… (29 GB); CD3WD – Collection of Development Documents… (27,9 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **2TB** – összesen 364 tétel; **új: 76**, jobb változatra cserélt: 3. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); code_aster (Salome-Meca) (8 GB); TeX Live (6,78 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **4TB** – összesen 479 tétel; **új: 115**. Legnagyobb új tételek: Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); gutenberg_en_all_2025-11 (221 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); stackoverflow.com_en_all_2026-07 (115 GB); FineWeb-2 – magyar (hun_Latn) (98,5 GB); Linked OpenStreetMap × Wikidata × Wikipedia × Wikivoyage… (97,3 GB); osmium-tool (95,8 GB); Open Library (catalog dumps + lending) (42 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **8TB** – összesen 484 tétel; **új: 5**, jobb változatra cserélt: 5. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB); ted_mul_all_2026-09 (91,2 GB). Feljavítva: wikipedia_en_all_maxi_2026-08 (127 GB); Kolibri v0.19.5 + Khan Academy… (186 GB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB); wikisource_en_all_maxi_2026-09 (8,62 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **16TB** – összesen 485 tétel; **új: 1**, jobb változatra cserélt: 2. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); Project Gutenberg full mirror (rsync) (1,06 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **32TB** – összesen 485 tétel; **új: 0**, jobb változatra cserélt: 1. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **1TB** – összesen 327 tétel; **új: 327**. Legnagyobb új tételek: Survivor Library full mirror on Internet Archive… (218 GB); Qwen3.8-Flash-Next · Qwen3.8-Flash-Next-GGUF · Q8_0 (GGUF) (167 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (93,7 GB); MEK szakmai válogatás… (60 GB); wikipedia_en_all_nopic_2026-06 (52,7 GB); Open Textbook Library (University of Minnesota) (40 GB); Qwen3.8-27B abliterated (huihui) / heretic-ara… (29 GB); CD3WD – Collection of Development Documents… (27,9 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **2TB** – összesen 401 tétel; **új: 75**, jobb változatra cserélt: 3. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); TeX Live (6,78 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB); Project N.O.M.A.D. v1.35.1 (Crosstalk Solutions) (5 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **4TB** – összesen 512 tétel; **új: 111**, jobb változatra cserélt: 2. Legnagyobb új tételek: Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); gutenberg_en_all_2025-11 (221 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); stackoverflow.com_en_all_2026-07 (115 GB); FineWeb-2 – magyar (hun_Latn) (98,5 GB); ted_mul_all_2026-09 (91,2 GB); Open Library (catalog dumps + lending) (42 GB); Linked OpenStreetMap × Wikidata × Wikipedia × Wikivoyage… (37,9 GB). Feljavítva: Kolibri v0.19.5 + Khan Academy… (186 GB); Argos Translate / LibreTranslate + en-hu, hu-en… (9,13 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **8TB** – összesen 517 tétel; **új: 5**, jobb változatra cserélt: 3. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); The Stack v2 (BigCode) – csak megjegyzés (427 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB). Feljavítva: Argos Translate en↔hu csomagok (140 MB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB); wikisource_en_all_nopic_2026-09 (3,91 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **16TB** – összesen 518 tétel; **új: 1**, jobb változatra cserélt: 5. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); wikipedia_en_all_maxi_2026-08 (127 GB); Argos Translate / LibreTranslate + en-hu, hu-en… (9,13 GB); wikisource_en_all_maxi_2026-09 (8,62 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **32TB** – összesen 518 tétel; **új: 0**, jobb változatra cserélt: 1. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
 
 **Ajánlás:**
 - **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.
-- **2 TB:** 364 tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.
-- **4 TB** a teljes tudásanyaghoz: 479 tétel a lehetséges 485-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).
+- **2 TB:** 401 tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.
+- **4 TB** a teljes tudásanyaghoz: 512 tétel a lehetséges 518-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).
 - **8 TB fölött** főleg nagy nyers adathalmazok és tükrök jönnek, ezeket HDD-n vagy NAS-on érdemes tárolni.
 
 ### Melyik meghajtót vedd
@@ -98,35 +98,35 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 
 > Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.
 
-- **Szoftver: automatizálás, energia:** mpp-solar, OpenEMS, Node-RED, OpenPLC Runtime v3, Eclipse Mosquitto, Frigate NVR, Zigbee2MQTT, Grafana OSS (+1)
+- **Szoftver: automatizálás, energia:** pvlib-python + NREL SAM, OpenEMS, Home Assistant, Node-RED, OpenPLC Runtime v3, Eclipse Mosquitto, mpp-solar, Frigate NVR (+3)
 - **Szoftver: biztonság, titkosítás:** OpenSSH, GnuPG, KeePassXC, cryptsetup, Vaultwarden, VeraCrypt, Tor, ClamAV
-- **Szoftver: CAD/CAM, mérnöki:** EPANET, grblHAL, pcb2gcode, LibreCAD, Universal G-code Sender, code_aster, OpenModelica, OpenFOAM
-- **Szoftver: egészségügy:** Community Health Toolkit, OpenMRS 3, GNU Health, DHIS2, OpenELIS Global, openFDA, Orthanc DICOM szerver, OHIF Viewer
-- **Szoftver: elektronika, beágyazott:** MicroPython, ESPHome, PlatformIO Core, ESP-IDF, ngspice, sigrok / PulseView, Zephyr RTOS
-- **Szoftver: fejlesztés:** Git, GCC, SQLite, CPython, Zeal, VSCodium, Rust toolchain, Go (+1)
-- **Szoftver: fordítás, OCR, beszéd, keresés:** Tesseract OCR, LibreTranslate, whisper.cpp, Piper TTS, Meilisearch, SearXNG
-- **Szoftver: hálózat:** OpenWrt, Syncthing, OPNsense, rsync, WireGuard, Pi-hole, Transmission
-- **Szoftver: iroda, dokumentumok:** OsmAnd, LibreOffice, QGIS, FreeCAD, KiCad, PrusaSlicer, calibre, KOReader (+5)
+- **Szoftver: CAD/CAM, mérnöki:** EPANET, LinuxCNC, FreeCAD, grblHAL, pcb2gcode, LibreCAD, Universal G-code Sender, Seamly2D (+3)
+- **Szoftver: egészségügy:** Community Health Toolkit, OpenMRS 3, OpenEMR, GNU Health, DHIS2, OpenELIS Global, openFDA, Orthanc DICOM szerver (+2)
+- **Szoftver: elektronika, beágyazott:** KiCad, MicroPython, ESPHome, Arduino IDE, PlatformIO Core, ESP-IDF, ngspice, sigrok / PulseView (+1)
+- **Szoftver: fejlesztés:** Eclipse Temurin JDK 25 LTS, Git, GCC, SQLite, CPython, Zeal, VSCodium, Rust toolchain (+2)
+- **Szoftver: fordítás, OCR, beszéd, keresés:** GoldenDict-ng, Hunspell + magyarispell, Tesseract OCR, LibreTranslate, whisper.cpp, Piper TTS, Meilisearch, SearXNG
+- **Szoftver: hálózat:** OpenWrt, Samba, Syncthing, OPNsense, rsync, WireGuard, Pi-hole, gpsd + chrony (+1)
+- **Szoftver: iroda, dokumentumok:** MuPDF, LibreOffice, paperless-ngx, calibre, KOReader, Pandoc, OCRmyPDF, TeX Live (+2)
 - **Szoftver: kommunikáció, mesh:** Meshtastic, Reticulum Network Stack, Briar, Matrix Synapse + Element, Asterisk, ejabberd + Conversations, Mumble, Delta Chat (+2)
 - **Szoftver: mezőgazdaság:** farmOS, OpenSprinkler firmware, WeeWX, FarmBot, Grocy
 - **Szoftver: média, grafika:** FFmpeg, VLC media player, Jellyfin, Inkscape, OBS Studio, Blender, Audacity, GIMP (+2)
 - **Szoftver: oktatás:** Anki, GCompris, Scratch 3
-- **Szoftver: operációs rendszer, rendszereszközök:** Debian GNU/Linux, Ventoy, Alpine Linux, SystemRescue, F-Droid, aptly, LineageOS, Clonezilla (+1)
+- **Szoftver: operációs rendszer, rendszereszközök:** Debian GNU/Linux, Firefox ESR, 7-Zip, memtest86+ és smartmontools, Ventoy, CUPS, Alpine Linux, SystemRescue (+7)
 - **Szoftver: rádió, SDR:** CHIRP, Pat, fldigi, JS8Call, Dire Wolf, rtl-sdr, FreeDV, GNU Radio (+2)
-- **Szoftver: szerver, virtualizáció:** OpenEMR, Proxmox VE, LinuxCNC, Home Assistant, Arduino IDE, Forgejo, QEMU/KVM, Caddy (+2)
+- **Szoftver: szerver, virtualizáció:** Proxmox VE, Forgejo, QEMU/KVM, Caddy, PostgreSQL, Podman
 - **Szoftver: tárolás, mentés:** OpenZFS, restic, TrueNAS SCALE, rclone, par2cmdline, Nextcloud, TestDisk & PhotoRec
-- **Szoftver: térkép, navigáció:** Organic Maps, osmium-tool, Planetiler, GraphHopper, Martin csempeszerver, Nominatim
-- **Szoftver: tudásszerverek, wiki:** kiwix-tools, Internet-in-a-Box, Kolibri, MediaWiki, Moodle, BookStack
-- **Szoftver: tudomány, adat:** Miniforge + SciPy stack, Fiji, GNU Octave, R + RStudio Desktop, Stellarium, Cantera, Maxima, JupyterLab
-- **Szoftver: üzlet, közösség:** ODK, InvenTree, Ushahidi Platform, GnuCash, ERPNext, Koha ILS, Decidim, Gibbon (+1)
-- **Szoftver: 3D-nyomtatás:** Klipper, OctoPrint, Mainsail
+- **Szoftver: térkép, navigáció:** OsmAnd, Organic Maps, QGIS, osmium-tool, Planetiler, GraphHopper, Martin csempeszerver, Nominatim
+- **Szoftver: tudásszerverek, wiki:** kiwix-tools, Kolibri, Internet-in-a-Box, MediaWiki, Moodle, zimit + mwoffliner, BookStack
+- **Szoftver: tudomány, adat:** Qalculate!, Miniforge + SciPy stack, Fiji, GNU Octave, R + RStudio Desktop, Stellarium, Cantera, Maxima (+1)
+- **Szoftver: üzlet, közösség:** ODK, InvenTree, Ushahidi Platform, GnuCash, ERPNext, Koha ILS, Decidim, Gibbon (+2)
+- **Szoftver: 3D-nyomtatás:** PrusaSlicer, Klipper, OctoPrint, Mainsail
 - **Adathalmazok:** Magyar Wikipédia parquet, Angol Wikipédia parquet, OpenStax tankönyvek szövege, PlantVillage növénybetegség-képek, Pl@ntNet-300K képadatkészlet, Wikiforrás magyar + angol, FineWeb-Edu sample-10BT, FineWeb-2 (+8)
 - **Gyűjtőlisták (awesome):** awesome-open-hardware, awesome-selfhosted, sindresorhus/awesome, awesome-sysadmin, awesome-public-datasets
 - **Modellek: beszéd (STT/TTS):** whisper.cpp ggml, Piper TTS magyar hangok, NVIDIA Parakeet-TDT 0.6B v3, faster-whisper large-v3-turbo, Qwen3-ASR 0.6B, Coqui XTTS-v2
 - **Modellek: embedding, RAG:** BAAI bge-m3, EmbeddingGemma 2, Qwen3-Embedding 0.6B, BAAI bge-reranker-v2-m3
 - **Modellek: fordítás:** NLLB-200 distilled 600M, MADLAD-400 3B MT, OPUS-MT tc-big hu→en, Argos Translate en↔hu csomagok
 - **Modellek: hang:** BirdNET v2.4, Silero VAD, Demucs v4 hangforrás-szétválasztás
-- **Modellek: képfelismerés:** Pl@ntNet PlantCLEF2024 ViT-B DINOv2, BioCLIP 2, FungiTastic gombahatározó ViT-B/16, RF-DETR Medium, SAM 2.1 Hiera-Large, Microsoft Florence-2 base, Depth Anything 3
+- **Modellek: képfelismerés:** BioCLIP 2, Pl@ntNet PlantCLEF2024 ViT-B DINOv2, FungiTastic gombahatározó ViT-B/16, RF-DETR Medium, SAM 2.1 Hiera-Large, Microsoft Florence-2 base, Depth Anything 3
 - **Modellek: képgenerálás:** Real-ESRGAN ncnn-vulkan, FLUX.2 [klein] 4B
 - **Modellek: OCR, dokumentum:** Tesseract tessdata_best, Datalab Indra OCR, PaddleOCR-VL 1.6, Docling layout + TableFormer modellek, GLM-OCR
 - **Modellek: orvosi képelemzés:** TorchXRayVision, Google MedSigLIP-448, SkinTag SigLIP bőrelváltozás-osztályozó, Fundus diabéteszes retinopátia osztályozó

@@ -10,7 +10,7 @@ from llm_parse import load_blocks
 from llm_to_items import slug, unc_estimate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-from build import cut
+from build import cut, hf_cmd
 OPUS, FABLE = 59.1, 64.6
 
 
@@ -23,7 +23,7 @@ def variants():
         out.append({"id": v["id"], "m": name, "q": rest, "u": v["cat"] == "ai_models_uncensored", "g": v["group"],
                     "f": llm_calc.family(v), "b": v["bytes"], "bits": v["llm_bits"], "aa": v["llm_aa"], "est": bool(v.get("llm_aa_est")),
                     "act": v.get("active_b"), "moe": v.get("moe", True), "plat": v.get("platform", "any"), "hw": v.get("hw_tiers", []),
-                    "dl": (f"hf download {d['repo']}" + "".join(f' --include "{p}"' for p in d.get("include") or []))
+                    "dl": hf_cmd(d)
                           if d["method"] == "hf" else f"ollama pull {d.get('tag')}",
                     "repo": d.get("repo"), "rel": (re.search(r"\d{4}-\d{2}-\d{2}", str(v.get("released") or "")) or [""])[0],
                     "lic": cut(str(v.get("license") or ""), 28)})
@@ -289,7 +289,8 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   if(mixed){pool=pool.filter(([v])=>v.u!==v1.u); pool.sort((a,b)=>usable(b[0],b[1][0],dev.min_tps)-usable(a[0],a[1][0],dev.min_tps));}
   else{const fast=pool.filter(([,r])=>r[0]>=1.5*r1[0]); pool=fast.length?fast:pool; pool.sort((a,b)=>b[1][0]-a[1][0]||smart(b[0])-smart(a[0]));}
   if(!pool.length) return null; const [v2,r2]=pool[0];
-  return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva – egyszerre csak egy fér a memóriába']];}
+  const why=r1[2]+r2[2]>cap?' – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van':' – együtt nem érnék el a minimális sebességet, ezért felváltva futnak';
+  return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva'+why]];}
 function evaluate(dev){return {V1:bestSingle(dev,true),V2:bestSingle(dev,false),V3:team(dev,false),V4:team(dev,true)};}
 const TITLES={V1:['V1','Legokosabb cenzúrázatlan',1],V2:['V2','Legokosabb alap (cenzúrázott)',0],V3:['V3','Csapat – alap modellek',0],V4:['V4','Vegyes csapat – alap + cenzúrázatlan',1]};
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -318,7 +319,7 @@ function presetToForm(k){const p=PRESETS[k]; if(!p) return; const g=p.gpus||(p.v
   F('oc').value=Math.round(((p.vram_bw_mult??1)-1)*100); F('tp').checked=!!p.tensor_parallel; F('tpeff').value=Math.round((p.tp_eff??0.85)*100);
   for(const f of ['any','mac','server','android']) F('fmt_'+f).checked=(p.formats||'any').split(',').includes(f);
   F('dname').value=p.name;}
-function formToDevice(){const n=(id,def=0,min=0,max=1e7)=>{const x=parseFloat(F(id).value);return Number.isFinite(x)?Math.min(max,Math.max(min,x)):def;}; const gpus=[]; if(n('g1gb')&&n('g1bw')) gpus.push([n('g1gb'),n('g1bw')]); if(n('g2gb')&&n('g2bw')) gpus.push([n('g2gb'),n('g2bw')]);
+function formToDevice(){const n=(id,def=0,min=0,max=1e7)=>{const x=parseFloat(F(id).value);return Number.isFinite(x)?Math.min(max,Math.max(min,x)):def;}; const gpus=[]; if(n('g1gb')) gpus.push([n('g1gb'),n('g1bw')]); if(n('g2gb')) gpus.push([n('g2gb'),n('g2bw')]);
   const k=F('preset').value?PRESETS[F('preset').value]:{};
   return new Device({name:F('dname').value||'Saját eszköz',note:k.note&&F('preset').dataset.dirty!=='1'?k.note:'',gpus,ram:n('ram'),ram_usable:n('ramu',85,10,100)/100,ram_bw:n('rambw'),
     unified:n('uni'),unified_usable:n('uniu',80,10,100)/100,unified_bw:n('unibw'),nodes:n('nodes',1,1,16),hop_ms:n('hop',3,0,1000),

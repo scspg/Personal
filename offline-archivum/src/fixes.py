@@ -3,7 +3,7 @@
 Egy helyen, újrafuttathatóan: nyelvi enumok, letöltési blokkok, duplikátumok, tierek/pontok, magyar szövegek."""
 import re
 
-DELETE = {"village-earth-at-library"}          # azonos a village-earth-appropriate-technology-library tétellel
+DELETE = {"village-earth-at-library", "llm-qwen3-8-27b-gguf-bf16-2"}          # azonos a village-earth-appropriate-technology-library tétellel
 
 # nyelvi enum (hu/en/multi) – enélkül a kiválasztó soha nem választotta ki; külön lépés, hogy más javítás ne írja felül
 LANG = {**{i: "en" for i in ["openstax", "kolibri-khan-academy", "practical-action-knowledge-centre", "reprap-wiki-dump", "ck12",
@@ -32,7 +32,8 @@ PATCH = {
                                 "bytes": 6751876, "notes": "A /pdf/guideline-170-en.pdf útvonal csak 16 KB-os csonk – a dátumos mappa a valódi kézikönyv (2026-05). Frissítéskor a dátum változhat: a https://medicalguidelines.msf.org/en oldalról keresd."},
     "india-mark-ii-handpump-manual-2008": {"download": {"method": "http", "urls": ["https://susana.org/_resources/documents/default/3-4194-7-1617282174.pdf"]},
                                            "bytes": 3177902, "size_status": "measured:2026-11-14:content-length (SuSanA tükör)"},
-    "kx-gardenology": {"download": {"method": "kiwix", "book": "gardenology.org_en_all", "flavour": None}},
+    "kx-gardenology": {"download": {"method": "kiwix", "book": "gardenology_en_all", "flavour": None,
+                                    "url": "https://lb.download.kiwix.org/zim/other/gardenology.org_en_all_2026-09.zim"}},
     "kuphaldt-lessons-in-electric-circuits": {"bytes": 75805218},
     "ubuntu-26041-desktop-iso": {"bytes": 6482409472, "size_status": "measured:2026-11-14:content-length"},
     "raspberry-pi-os-full-arm64": {"bytes": 2064882780, "size_status": "measured:2026-11-14:content-length"},
@@ -54,18 +55,15 @@ PATCH = {
     "hub-paddleocr-vl-1-6": {"download": {"method": "hf", "repo": "PaddlePaddle/PaddleOCR-VL-1.6", "include": []}},
     "hub-indra-ocr": {"download": {"method": "hf", "repo": "datalab-to/indra-ocr", "include": []}},
     "whisper-cpp-models": {"download": {"method": "hf", "repo": "ggerganov/whisper.cpp", "include": ["ggml-large-v3-turbo-q5_0.bin", "ggml-medium.bin", "ggml-small.bin"]},
-                           "bytes": 2595406221, "size_status": "measured:2026-11-14:hf-api", "subsumed_by": ["hub-whisper-cpp-large-v3-turbo"]},
+                           "bytes": 2595406221, "size_status": "measured:2026-11-14:hf-api"},
     "piper-tts-hu": {"download": {"method": "hf", "repo": "rhasspy/piper-voices", "include": ["hu/*"]}, "bytes": 189988337,
                      "size_status": "measured:2026-11-14:hf-api (hu/ mappa, 12 fájl)", "size_human": "190 MB", "subsumed_by": ["hub-piper-hu-voices"]},
-    "argos-translate-hu": {"subsumed_by": ["hub-argos-translate-hu"]},
+    "argos-translate-hu": {"group": "argos-translate", "variant_rank": 2, "variant_role": "luxury"},
     **{i: {"bytes_est": 50_000_000, "size_status": "estimated:git mirror (Markdown lista)"} for i in
        ["hub-awesome-selfhosted", "hub-awesome-sysadmin", "hub-awesome-open-hardware", "hub-awesome-public-datasets", "hub-awesome-meta"]},
     # --- régi tételek, amelyeket az ellenőrzött nyílt forráskódú szoftvertételek lefednek ---
-    **{old: {"subsumed_by": [new]} for old, new in [
-        ("ventoy", "oss-ventoy"), ("calibre", "oss-calibre"), ("qgis", "oss-qgis"), ("kicad-eda-and-libraries", "oss-kicad"),
-        ("freecad-and-parts-library", "oss-freecad"), ("arduino-ide-offline", "oss-arduino-ide"), ("meshtastic-firmware-and-docs", "oss-meshtastic"),
-        ("reticulum-nomadnet-sideband", "oss-reticulum"), ("internet-in-a-box", "oss-internet-in-a-box"), ("alpine-3244-extended-iso", "oss-alpine"),
-        ("python-source-and-docs", "oss-cpython")]},
+    # (a régi tételek a bináris telepítőt/firmware-t töltik, az oss-* a forráskódot – mindkettő kell, nincs lefedés)
+    "internet-in-a-box": {"subsumed_by": ["oss-internet-in-a-box"], "download": {"method": "git", "repos": ["https://github.com/iiab/iiab"]}},
     # --- tier/pont-javítások ---
     "tool-vlc": {"tier": 2}, "internet-archive-ia-cli": {"tier": 3}, "organic-syntheses": {"tier": 2},
 }
@@ -112,6 +110,72 @@ def _clean_null(d):
     return d
 
 
+
+# --- 3. adatminőségi átnézés (2026-11-14) javításai: mért értékek (Content-Length / HF tree) ---
+M = "measured:2026-11-14"
+PATCH2 = {
+    "oss-internet-in-a-box": {"tier": 2},
+    "oss-osmium-tool": {"bytes_est": 5_000_000, "size_human": "~5 MB (csak az eszköz; a bolygófájl külön tétel: osm-planet-pbf)"},
+    "oss-whisper-cpp": {"bytes": None, "bytes_est": 30_000_000, "size_human": "~30 MB forráskód (a modellek: whisper-cpp-models, hub-whisper-cpp-large-v3-turbo)"},
+    "oss-piper": {"bytes": None, "bytes_est": 15_000_000, "size_human": "~15 MB forráskód (a magyar hangok: hub-piper-hu-voices)"},
+    "oss-debian": {"bytes": None, "bytes_est": 60_000_000, "size_human": "~60 MB (debian-installer forrás; a DVD-képfájl külön tétel)"},
+    "oss-gcc": {"bytes": 107_200_820}, "oss-git": {"bytes": 8_494_608}, "oss-go": {"bytes": 70_680_823},
+    "hub-codeberg-gitlab": {"download": {"method": "manual", "url": "https://codeberg.org/explore/repos"}},
+    "hub-modelscope": {"download": {"method": "manual", "url": "https://modelscope.cn/models"}},
+    "hub-myminifactory": {"download": {"method": "manual", "url": "https://www.myminifactory.com/"}},
+    "tesseract-ocr-tessdata": {"download": {"method": "git", "repos": ["https://github.com/tesseract-ocr/tessdata_best"]}},
+    "hub-tesseract-hun-best": {"bytes": 12_350_405, "size_status": M + ":content-length", "size_human": "12,4 MB"},
+    "hub-ds-plantnet-300k": {"download": {"method": "http", "urls": ["https://zenodo.org/api/records/5645731/files/plantnet_300K.zip/content"]},
+                             "bytes": 31_670_505_069, "size_status": M + ":content-length"},
+    "hub-argos-translate-hu": {"download": {"method": "http", "urls": ["https://argos-net.com/v1/translate-en_hu-1_9.argosmodel",
+                               "https://argos-net.com/v1/translate-hu_en-1_9.argosmodel"]}, "bytes": 67_859_271 + 71_809_926,
+                               "size_status": M + ":content-length", "group": "argos-translate", "variant_rank": 1, "variant_role": "pref"},
+    "hub-parakeet-tdt-v3-onnx": {"bytes": 670_619_803, "size_status": M + ":hf-tree"},
+    "hub-ds-osm-wikidata-linked": {"bytes": 37_894_983_893, "size_status": M + ":hf-tree"},
+    "hub-ds-medqa": {"bytes": None, "bytes_est": 18_300_000, "size_status": M + ":hf-tree (csak MedQA; MedMCQA, PubMedQA külön repó)"},
+    "hub-torchxrayvision": {"bytes": 28_382_008, "bytes_est": None, "size_status": M + ":content-length"},
+    "hub-real-esrgan-ncnn": {"download": {"method": "http", "urls": [
+        "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip",
+        "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"]},
+        "bytes": 46_931_474 + 45_474_481, "size_status": M + ":content-length"},
+    "hub-ds-hulu-benchmarks": {"bytes": 1_300_000, "size_status": M + ":hf-tree (csak HuCOLA; a többi NYTK-adathalmaz a HF-en: NYTK/*)"},
+    "hub-medsiglip-448": {"access": "free-registration"}, "hub-ds-the-stack-v2": {"access": "free-registration"},
+    "oss-osmand": {"cat": "oss_maps"}, "oss-qgis": {"cat": "oss_maps"}, "oss-freecad": {"cat": "oss_engineering"},
+    "oss-kicad": {"cat": "oss_embedded"}, "oss-prusaslicer": {"cat": "oss_3dprint"}, "oss-openemr": {"cat": "oss_health"},
+    "oss-linuxcnc": {"cat": "oss_engineering"}, "oss-home-assistant": {"cat": "oss_automation"}, "oss-arduino-ide": {"cat": "oss_embedded"},
+    "hub-plantnet-plantclef2024-vitb": {"tier": 2, "scores": {"S": 5, "R": 6, "A": 8, "U": 9, "Q": 7, "O": 8},
+        "notes": "Növényfelismerés segédeszköz: ehetőségi döntéshez SOHA ne egyedül – határozókönyvvel és több bélyeggel ellenőrizd."},
+    "oss-mpp-solar": {"tier": 3},
+    "alpine-3244-extended-iso": {"bytes": 1_458_192_384, "size_status": M + ":content-length"},
+    "tool-sumatra": {"download": {"method": "http", "urls": ["https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64-install.exe"]},
+                     "bytes": 11_075_960, "bytes_est": None, "size_status": M + ":content-length"},
+    "survivor-library-flash-drive": {"download": {"method": "manual", "url": "https://www.survivorlibrary.com/index.php/store/",
+        "note": "pendrive a boltban; kategóriánkénti ZIP-ek: https://www.survivorlibrary.com/index.php/main-category-index/"}},
+    "where-there-is-no-doctor": {"download": {"method": "manual", "url": "https://hesperian.org/",
+        "note": "a 2025-ös fejezetenkénti PDF-ek külön tételként szerepelnek (hesperian-where-there-is-no-doctor-2025)"}},
+}
+for _k, _v in PATCH2.items():
+    _d = PATCH.setdefault(_k, {})
+    for _kk, _vv in _v.items():
+        if _kk == "download" and isinstance(_d.get("download"), dict):
+            _d["download"] = {**_d["download"], **_vv}
+        else:
+            _d[_kk] = _vv
+
+# magyar stílus: oss/hub szövegek
+_STYLE = [(r'"([^"\n]{1,80})"', r"„\1”"), (r"<->", "↔"), (r"(?<![<-])->", "→"), (r"Nem-lineáris", "Nemlineáris"),
+          (r"\b(\d+)\.(\d+) ?(GB|MB|TB|kB)\b", r"\1,\2 \3"), (r"\b(\d+)\.(\d+)M\b", r"\1,\2 millió"),
+          (r"\bdashboard(ok|ot|on|ja)?\b", lambda m: "irányítópult" + {"ok": "ok", "ot": "ot", "on": "on", "ja": "ja"}.get(m.group(1) or "", "")),
+          (r"offline-first", "elsősorban offline"), (r"streamelés", "közvetítés"), (r"önhosztolt", "saját szerveren futó")]
+
+
+def _style(t):
+    import re as _r
+    for a, b in _STYLE:
+        t = _r.sub(a, b, t)
+    return t
+
+
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {
     "llm-gemma-4-e2b-it-ultra-uncensored-heretic-": "Gemma 4 E2B (kb. 2 milliárd effektív paraméter) Heretic-eljárással cenzúrázatlanított változata. Telefonon és 8 GB-os laptopon is gyorsan fut; tudása szerény, egyszerű kérdés-válaszra, fordításra és vázlatírásra jó.",
@@ -147,7 +211,16 @@ def apply(items):
         p = PATCH.get(it["id"])
         if p:
             for k, v in p.items():
-                it[k] = v
+                if v is None:
+                    it.pop(k, None)
+                else:
+                    it[k] = v
+        if it["id"].startswith(("oss-", "hub-")):
+            for k in ("desc_hu", "need_hu", "alternatives"):
+                if isinstance(it.get(k), str):
+                    it[k] = _style(it[k])
+            if isinstance(it.get("need_hu"), str):
+                it["need_hu"] = it["need_hu"].rstrip(". ")
         dm = (it.get("download") or {}).get("method")
         if dm in ("s3", "jigdo") or it["id"] == "debian-full-archive-ftpsync":
             src = it["download"].get("url") or ""

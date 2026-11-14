@@ -4,7 +4,7 @@ import json, glob, sys
 sys.path.insert(0, ".")
 from llm_parse import load_blocks
 from convert_research import load_yaml
-from build import cut
+from build import cut, hf_cmd
 
 
 OPUS = 59.1        # Claude Opus 5.5 (max) – AA Intelligence Index v5.0.1, 2026-11-12
@@ -54,7 +54,7 @@ def llm_tables(items):
                "| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |", "|---|---|---|---|---|---|---|---|"]
         for v in g:
             d = v["download"]
-            cmd = (f"`hf download {d['repo']}" + "".join(f' --include "{p}"' for p in d.get("include") or []) + "`") if d["method"] == "hf" \
+            cmd = ("`" + hf_cmd(d) + "`") if d["method"] == "hf" \
                 else f"`ollama pull {d.get('tag')}`"
             det.append(f"| `{v['id']}` | {esc(v['name'].split(' · ', 1)[1])} | {gb(v['bytes'])} | {v['llm_bits']} | {v['bytes'] * 1.15 / 1e9:.0f} GB | "
                        f"{','.join(v['hw_tiers'])} | {v['platform']} | {cmd} |")
