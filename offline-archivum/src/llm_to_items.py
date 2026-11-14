@@ -64,9 +64,9 @@ def slug(s):
 AA = {  # Artificial Analysis Intelligence Index v5.0.1 (2026-11-12); "~" = becslés (nincs v5 pont)
  "kimi-k3-1-pro": 46.5, "deepseek-v4-1-flash-1017": 32.6, "glm-5-3": 31.7, "mimo-v2-6-pro": 29.9, "ling-3-1-flash-1019": 29.6,
  "minimax-m3-1-flash": 29.1, "qwen3-8-flash-next": 28.6, "step-5-preview": 28.5, "glm-5-3-flash": 27.8, "muse-spark-open": 24.9,
- "qwen3-8-27b": 20.1, "muse-glimmer-30b": 6.3, "inkling-2-small": 30.6, "hy4-preview": 30.0, "qwen3-8-2-4t-a95b": 40.0,
- "mistral-large-4": 27.0, "longcat-2-5": 30.0}
-AA_EST = {"hy4-preview", "qwen3-8-2-4t-a95b", "mistral-large-4", "longcat-2-5"}
+ "qwen3-8-27b": 20.1, "muse-glimmer-30b": 6.3, "inkling-2-small": 30.6, "hy4-preview": 34.6, "qwen3-8-2-4t-a95b": 33.7,
+ "mistral-large-4": 25.3, "longcat-2-5": 30.0}
+AA_EST = {"hy4-preview", "qwen3-8-2-4t-a95b", "longcat-2-5"}  # Hy4: a végleges Hy4 pontja (34,6), mi a preview-t archiváljuk; 2.4T: a Qwen3.8-Max (API) 33,7-es pontja alapján
 UNC_BASE = [("deepseek-v4-1", 32.6), ("glm-5-3-flash", 27.8), ("glm-5-3", 31.7), ("qwen3-8-flash-next", 28.6), ("kimi-k3", 17.4),
  ("minimax-m3-1", 29.1), ("gpt-oss-120b", 3.8), ("mistral-small-4", 8.0), ("qwen3-8-27b", 20.1), ("arete-27b", 19.0),
  ("gemma-4-31b", 4.4), ("gemma-4-26b", 3.5), ("qwen3-6-35b", 8.0), ("gpt-oss-20b", 2.5), ("gemma-4-12b", 3.0),

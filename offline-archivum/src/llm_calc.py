@@ -28,6 +28,7 @@ Használat:
 import argparse, json, re, sys
 
 EFF = 0.6
+OPUS = 59.1  # Claude Opus 5.5 (max), AA Intelligence Index v5.0.1 – a "% Opus" viszonyítási pontja
 EMBED_GB = 0.8  # bge-m3 Q8 + overhead
 
 
@@ -291,7 +292,9 @@ def evaluate(dev, vs):
 
 def fmt_member(v, r, role):
     name, src = label(v)
-    return f"{name} [{v['llm_bits']} bit, {v['bytes'] / 1e9:.1f} GB, ~{r[0]:.0f} tok/s, {r[1]}] – {role} – `{src}`"
+    aa = v["llm_aa"]
+    return (f"{name} [AA v5 {'~' if v.get('llm_aa_est') else ''}{aa:.1f} = {'~' if v.get('llm_aa_est') else ''}{100 * aa / OPUS:.0f}% Opus 5.5 · "
+            f"{v['llm_bits']} bit, {v['bytes'] / 1e9:.1f} GB, ~{r[0]:.0f} tok/s, {r[1]}] – {role} – `{src}`")
 
 
 def report(dev, res, md=False):

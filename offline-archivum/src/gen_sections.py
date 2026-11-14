@@ -6,6 +6,15 @@ from llm_parse import load_blocks
 from convert_research import load_yaml
 
 
+OPUS = 59.1        # Claude Opus 5.5 (max) – AA Intelligence Index v5.0.1, 2026-11-12
+FABLE = 64.6       # Claude Fable 5.2 (max) – az index csúcsa ugyanekkor
+CODE = {"opus": 46, "deepseek-v4-1": 28}   # FrontierCode 2.0 (AA v5 kódolási kategória), %
+
+
+def pct(aa):
+    return f"{100 * aa / OPUS:.0f}%"
+
+
 def esc(s):
     return str(s or "").replace("|", "\\|").replace("\n", " ")
 
@@ -37,7 +46,7 @@ def llm_tables(items):
         plats = ", ".join(sorted({v["platform"] for v in g}))
         tiers = sorted({t for v in g for t in v["hw_tiers"]}, key=lambda t: -int(t[1]))
         kind = "cenz.-mentes" if h["cat"] == "ai_models_uncensored" else "alap"
-        rows.append(f"| {esc(name)} | {kind} | {esc(h.get('released'))[:10]} | {est}{aa} | {esc(h.get('license'))[:24]} | "
+        rows.append(f"| {esc(name)} | {kind} | {esc(h.get('released'))[:10]} | {est}{aa} | {est}{pct(aa)} | {esc(h.get('license'))[:24]} | "
                     f"{gb(g[0]['bytes'])} – {gb(g[-1]['bytes'])} | {len(g)} | {plats} | {tiers[0]}–{tiers[-1]} | `{h['group']}` |")
         det = [f"<details><summary><b>{esc(name)}</b> – {len(g)} változat</summary>\n",
                "| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |", "|---|---|---|---|---|---|---|---|"]
@@ -48,8 +57,8 @@ def llm_tables(items):
             det.append(f"| `{v['id']}` | {esc(v['name'].split(' · ', 1)[1])} | {gb(v['bytes'])} | {v['llm_bits']} | {v['bytes'] * 1.15 / 1e9:.0f} GB | "
                        f"{','.join(v['hw_tiers'])} | {v['platform']} | {cmd} |")
         details.append("\n".join(det) + "\n</details>\n")
-    head = ("| Modell | Típus | Kiadva | AA-index | Licenc | Méret (min–max) | Változat | Platform | HW | group |\n"
-            "|---|---|---|---|---|---|---|---|---|---|")
+    head = ("| Modell | Típus | Kiadva | AA v5 | % Opus 5.5 | Licenc | Méret (min–max) | Változat | Platform | HW | group |\n"
+            "|---|---|---|---|---|---|---|---|---|---|---|")
     return head + "\n" + "\n".join(rows), "\n".join(details)
 
 
@@ -86,18 +95,39 @@ LLM_TEXT = """---
 
 {TIMELINE}
 
-**Rangsor (AA v5, nyílt modellek):**
-- Kimi K3.1 Pro 46.5
-- DeepSeek-V4.1-Flash 32.6
-- GLM-5.3 31.7
-- MiMo-V2.6-Pro 29.9
-- Ling-3.1-flash 29.6
-- MiniMax-M3.1-Flash 29.1
-- Qwen3.8-Flash-Next 28.6
-- Step-5 28.5
-- GLM-5.3-Flash 27.8
-- Muse Spark 24.9
-- Qwen3.8-27B 20.1
+**Viszonyítási pont – Claude Opus 5.5 (max): 59,1 pont = 100%** (AA Intelligence Index v5.0.1, 2026-11-12). Az index csúcsa ugyanekkor a Claude Fable 5.2 (64,6 = 109%).
+
+| Nyílt modell | AA v5.0.1 | % Opus 5.5 |
+|---|---|---|
+| Kimi K3.1 Pro | 46.5 | 79% |
+| Hy4 (a végleges; mi a preview-t archiváljuk) | 34.6 | 59% |
+| Qwen3.8 2.4T (becslés a Qwen3.8-Max API 33,7-es pontjából) | ~33.7 | ~57% |
+| DeepSeek-V4.1-Flash-1017 | 32.6 | 55% |
+| GLM-5.3 | 31.7 | 54% |
+| Inkling 2 Small | 30.6 | 52% |
+| MiMo-V2.6-Pro | 29.9 | 51% |
+| Ling-3.1-flash | 29.6 | 50% |
+| MiniMax-M3.1-Flash | 29.1 | 49% |
+| Qwen3.8-Flash-Next | 28.6 | 48% |
+| Step-5 Preview | 28.5 | 48% |
+| GLM-5.3-Flash | 27.8 | 47% |
+| MiMo-V2.6-Flash | 26.7 | 45% |
+| Mistral Large 4 | 25.3 | 43% |
+| Muse Spark Open | 24.9 | 42% |
+| Qwen3.8-27B | 20.1 | 34% |
+| Kimi K3 | 17.4 | 29% |
+| Nemotron 3.5 Super VL | 13.6 | 23% |
+| Muse Glimmer 30B | 6.3 | 11% |
+| Nemotron 3.5 Lightning | 5.5 | 9% |
+| Gemma 4 31B | 4.4 | 7% |
+| gpt-oss-120b | 3.8 | 6% |
+
+**Kódolás:** az AA a v5-ben megszüntette a külön Coding Indexet. A kódolási kategória (az index 25%-a) két mérésből áll: FrontierCode 2.0 (15%) és Terminal-Bench 4.0 (10%). Modellenkénti adat csak részben nyilvános:
+- **FrontierCode 2.0:** Opus 5.5 46% (első), DeepSeek-V4.1-Flash 28%. Ez a legjobb nyílt modell, és az Opus **~61%-a**.
+- **Terminal-Bench 4.0:** a Kimi K3.1 Pro 67%-kal első. Az Opus értéke nem nyilvános.
+- A többi nyílt modell kódolási pontja nem elérhető, ezért a táblákban az összesített index százaléka szerepel.
+
+**Mit jelent a százalék:** az összesített pontszám aránya, nem a „tudás” lineáris mértéke. Az index nehéz, részben privát feladatokból áll. 50% azt jelenti, hogy a modell a feladatok kb. felénél teljesít annyit, mint az Opus 5.5; a könnyű, hétköznapi feladatokon a különbség jóval kisebb. Az alacsony pontú kis modellek (Gemma 4, gpt-oss) egyszerű kérdésekre jól válaszolnak, de a nehéz, többlépéses feladatokban messze elmaradnak.
 
 **A Kimi K3.1 létezik, de csak `moonshotai/Kimi-K3.1-Pro` néven** (2026-11-02, 2,8T összes / 104B aktív paraméter).
 - A GGUF-változata kísérleti: új `kimi_k31` architektúra, egyes kvantokhoz llama.cpp-fork kell.
@@ -267,8 +297,8 @@ def uncensored_ranking(items):
            "- **UGI NatInt:** a természetes intelligencia mérése az Uncensored General Intelligence ranglistán, az alap → cenzúrázatlan változás.",
            "- **„Leggyengébb gép”:** az a legkisebb hardverszint, amelyen még fut GGUF-változat.",
            "- **Méretek:** a Hugging Face API-ból (2026-11-14).", "",
-           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
-           "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | % Opus 5.5 | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for n, r in enumerate(rows, 1):
         m, vs = r["m"], r["vs"]
         repo = m.get("hf_repo") or ""
@@ -277,7 +307,8 @@ def uncensored_ranking(items):
         low = r["lowest"]
         lowtxt = f"{low}: `{r['best'][low]['download'].get('repo','')}` {r['best'][low]['download'].get('include') or ''} ({gb(r['best'][low]['bytes'])})" if low else "csak szerver / MLX"
         out.append(f"| {n} | **[{esc(rname)}]({repo})** | `{esc(m.get('base'))}` ({esc(m.get('base_created'))}) | {esc(m.get('params'))[:45]} | "
-                   f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{r['aa'] if r['aa'] is not None else '?'} | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
+                   f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{r['aa'] if r['aa'] is not None else '?'} | "
+                   f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{pct(r['aa']) if r['aa'] else '?'} | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
                    f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(m.get('license'))[:28]} |")
     out += ["",
             "**Hogyan olvasd:**",
