@@ -1,0 +1,33 @@
+OVERRIDES = {
+ "_drop": ["encyclopedia-of-country-living", "the-knowledge-dartnell", "gingery-shop-from-scrap", "foxfire-books-set",
+           "storeys-guide-raising-chickens", "cd3wd-archive-org", "hu-wikisource", "osm-hungary-geofabrik"],
+ "survivor-library-ia-mirror": {"group": "survivor", "variant_rank": 1, "variant_role": "pref", "bytes": 217_600_000_000,
+    "size_status": "measured:2026-11-14:archive.org metadata (csak PDF)", "size_human": "217.6 GB (11 622 PDF)",
+    "download": {"method": "archive.org", "ids": ["SurvivorLibrary-com-Collection-2026"], "glob": "*.pdf"}},
+ "project-gutenberg-rsync": {"group": "gutenberg", "variant_rank": 3, "variant_role": "luxury", "bytes": 1_065_000_000_000,
+    "size_status": "official:1.065 TB fő gyűjtemény (rsync listázás)",
+    "download": {"method": "rsync", "url": "rsync.ibiblio.org::gutenberg", "rsync_args": "--exclude='*.zip' --exclude='*.mp3' --exclude='*.ogg' --exclude='*.m4b'"}},
+ "openstax": {"download": {"method": "agent", "note": "PDF-lista a CMS API-ból: curl 'https://openstax.org/apps/cms/api/v2/pages/?type=books.Book&fields=title,book_state,high_resolution_pdf_url&limit=200' → a book_state=live elemek high_resolution_pdf_url mezői → fetch.",
+    "seed_urls": ["https://openstax.org/apps/cms/api/v2/pages/?type=books.Book&fields=title,book_state,high_resolution_pdf_url&limit=200"]}},
+ "mit-ocw": {"bytes": None, "bytes_est": 30_000_000_000, "size_status": "estimated:~150 alapkurzus ZIP (videó nélkül); a teljes 200-400 GB",
+    "download": {"method": "agent", "note": "Válassz ~150 alapkurzust (18.xx matek, 8.xx fizika, 5.xx kémia, 2.xx gépész, 6.xx villamos, 1.xx építő, 3.xx anyagtud., 10.xx vegyipar, 7.xx biológia, HST orvosi). Kurzusonként: https://ocw.mit.edu/courses/<slug>/download/ oldalon a .zip link.",
+    "seed_urls": ["https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/download/"]}},
+ "mek-oszk": {"group": "mek", "variant_rank": 2, "variant_role": "luxury", "bytes_est": 1_000_000_000_000,
+    "download": {"method": "agent", "note": "Teljes MEK: OAI-PMH-val (https://mek.oszk.hu/oai/) az azonosítók listája, majd tételenként a ZIP/PDF linkek lassan (robots.txt tiszteletben tartásával). Tömeges másolatért érdemes írni: mek@oszk.hu.",
+    "seed_urls": ["https://mek.oszk.hu/"]}},
+ "revai-nagy-lexikona": {"bytes": 4_210_000_000, "size_status": "measured:2026-11-14:PDF 39 fájl",
+    "download": {"method": "agent", "note": "A https://mek.oszk.hu/06700/06758/ tételoldalról a /pdf/ alatti 39 fájl linkje (revai01_1.pdf …); a könyvtárindex 404, ezért az oldal HTML-jéből kell kiszedni.", "seed_urls": ["https://mek.oszk.hu/06700/06758/"]}},
+ "pallas-nagy-lexikona": {"download": {"method": "http", "urls": ["https://mek.oszk.hu/00000/00060/00060pdf.zip"]}},
+ "magyar-neprajzi-lexikon": {"download": {"method": "http", "urls": ["https://mek.oszk.hu/02100/02115/02115html.zip"]}},
+ "open-library": {"download": {"method": "archive.org", "ids": ["ol_exports"]}, "notes": "Csak metaadat-dump (könyvjegyzék), nem maguk a könyvek."},
+}
+MEK_CORE = {"id": "mek-oszk-szakmai", "name": "MEK szakmai válogatás (mezőgazdaság, orvostudomány, műszaki, természettudomány, lexikonok)",
+  "cat": "hungarian", "tier": 1, "group": "mek", "variant_rank": 1, "variant_role": "pref",
+  "desc_hu": "A Magyar Elektronikus Könyvtár gyakorlati szakkönyvei magyarul (mezőgazdaság, kertészet, állattartás, egészség, műszaki ismeretek, lexikonok). A legfontosabb magyar nyelvű szakmai forrás.",
+  "lang": "hu", "access": "free", "license": "tételenként eltérő (szabad olvasás, nem-kereskedelmi)", "bytes_est": 60_000_000_000,
+  "size_human": "~60 GB", "size_status": "estimated:~5-8 ezer tétel a szakmai témakörökből", "format": "pdf/html/zip",
+  "info_url": "https://mek.oszk.hu/", "url_status": "200 verified 2026-11-14",
+  "download": {"method": "agent", "note": "OAI-PMH (https://mek.oszk.hu/oai/) ListRecords → dc:subject szűrés: Mezőgazdaság, Orvostudomány, Műszaki tudományok, Természettudományok, Kézikönyvek/Lexikonok → tételenként ZIP/PDF.", "seed_urls": ["https://mek.oszk.hu/"]},
+  "scores": {"S": 6, "R": 8, "A": 7, "U": 9, "Q": 7, "O": 9}}
+for _g in ("annas-archive", "library-genesis", "sci-hub", "z-library"):
+    OVERRIDES.setdefault(_g, {}).update({"download": {"method": "manual", "note": "Szürke zóna: szerzői jogi kockázat (HU/EU). Csak kifejezett emberi döntés után, célzottan; tömeges letöltés nem ajánlott."}})

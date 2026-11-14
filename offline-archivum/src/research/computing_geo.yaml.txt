@@ -1,0 +1,1100 @@
+COMPUTING & DATA: 60 items, YAML below. It parses with PyYAML, every item has exactly the 17 required fields in order, and all enum values are valid. The file is saved at /tmp/claude-0/-home-user-Personal/5fbce50e-ce84-531e-8258-3354b3da35f3/scratchpad/computing.yaml.
+
+After your scope change, LLM weights and runtimes are cut down to 2 placeholders: Ollama runtime (with a one-line note on llama.cpp) and nomic-embed-text. I left out the OSM planet file and all Kiwix ZIM files. Sizes were checked on 2026-11-14 with curl HEAD, directory listings, the Hugging Face API, the Ollama registry, S3 listings, git ls-remote and official size pages.
+
+What you need to know before using it:
+- **GitHub API, release assets and codeload are blocked (403).** I used git ls-remote and raw.githubusercontent.com instead. Because of this the LLVM tarball size is an estimate.
+- **download.geofabrik.de is blocked** (the connection is reset). The Europe extract (41.2 GB) comes from the OSM France mirror instead. The Hungary extract size is an estimate and its item is marked blocked.
+- **onegeology.org failed TLS verification**, so it is marked blocked.
+- **The Copernicus DEM totals are estimates.** Each bucket has about 10 auxiliary files per tile, so a full listing was too slow. I sampled 80 random tiles and multiplied by the tile count.
+- **Some sizes are marked unverified or estimated:** the full crates.io mirror, npm, the full PMC set, global ESA WorldCover, Bergamot model files, zim-tools (HTTP 429) and the full Arctic Vault figure.
+- **Facts that may surprise:** PMC's FTP oa_bulk tarballs were removed in August 2026, so only per-article S3 objects are left. OsmAnd retired its single-file Hungary map; Hungary now comes as 8 regional files totalling 522 MB.
+
+```yaml
+# OPERATING SYSTEMS & OFFLINE PACKAGE MIRRORS
+- id: debian-13-amd64-bd-jigdo-set
+  name: "Debian 13.7.0 (trixie) amd64 full Blu-ray set (jigdo, BD-1..BD-6)"
+  category: os_mirror
+  description_hu: "A teljes Debian bináris csomagkészlet 6 Blu-ray lemezképen, jigdo-val összerakva. Internet nélkül telepíthető és bővíthető teljes Linux rendszer, fordítókkal, szerverekkel, tudományos szoftverekkel."
+  url_info: "https://www.debian.org/CD/jigdo-cd/"
+  url_download: "https://cdimage.debian.org/debian-cd/current/amd64/jigdo-bd/"
+  url_status: "200 verified 2026-11-14"
+  method: jigdo
+  access: free
+  price: null
+  license: "DFSG free software (mixed: GPL, BSD, MIT, etc.) + non-free-firmware"
+  size: "~120-130 GB total (6 images; BD-1..5 up to 25 GB each, BD-6 small)"
+  size_status: "estimated(6 jigdo files listed 2026-09-12; 27-image DVD set of same content, DVD-1 measured 3.99 GB)"
+  format: "ISO 9660 (built via .jigdo + .template from any Debian mirror)"
+  language: "multilingual (incl. Hungarian locales)"
+  notes: "jigdo-lite downloads packages from a normal mirror and rebuilds the ISOs; there are no direct BD ISO downloads (only edu BD torrent). Alternative: 27-disc DVD jigdo set at jigdo-dvd/. Images >4 GB: use exFAT/ext4, not FAT32. Also grab arm64 set for Raspberry Pi/ARM boards."
+  scores: {survival: 4, rebuild: 9, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 6}
+
+- id: debian-13-amd64-dvd1-iso
+  name: "Debian 13.7.0 amd64 DVD-1 ISO"
+  category: os_mirror
+  description_hu: "Egyetlen DVD-kép a legfontosabb Debian csomagokkal, asztali környezettel. Gyors, önálló offline telepítő régi és új PC-kre."
+  url_info: "https://www.debian.org/CD/http-ftp/"
+  url_download: "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-13.7.0-amd64-DVD-1.iso"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "DFSG free software"
+  size: "3.99 GB (3,992,977,408 bytes)"
+  size_status: "measured(HTTP Content-Length)"
+  format: ISO
+  language: multilingual
+  notes: "Fits FAT32 (<4 GiB) so works on any USB stick/Ventoy. Netinst (756 MB) is useless offline."
+  scores: {survival: 4, rebuild: 7, actionable: 8, uniqueness: 3, reliability: 9, offline_ease: 8}
+
+- id: debian-13-source-bd-jigdo-set
+  name: "Debian 13.7.0 source Blu-ray set (jigdo, 5 images)"
+  category: source_code
+  description_hu: "A teljes Debian forráskód 5 Blu-ray képen: minden csomag forrása, amiből a rendszer újrafordítható. Ez a szoftveres civilizáció 'magbankja'."
+  url_info: "https://cdimage.debian.org/debian-cd/current/source/"
+  url_download: "https://cdimage.debian.org/debian-cd/current/source/jigdo-bd/"
+  url_status: "200 verified 2026-11-14"
+  method: jigdo
+  access: free
+  price: null
+  license: "DFSG free software"
+  size: "~126 GB (Debian 'source' archive section; 5 BD images)"
+  size_status: "official(debian.org/mirror/size: source = 126 GB) / 5 jigdo files listed"
+  format: "ISO via jigdo; contains .dsc/.orig.tar.*"
+  language: en
+  notes: "Pair with the binary set; lets you rebuild any package (dpkg-buildpackage) for a new architecture."
+  scores: {survival: 1, rebuild: 9, actionable: 4, uniqueness: 7, reliability: 9, offline_ease: 6}
+
+- id: debian-full-archive-ftpsync
+  name: "Debian full archive mirror (ftpsync / archvsync)"
+  category: os_mirror
+  description_hu: "A teljes Debian csomagtároló tükre rsync-kel (ftpsync), apt-tal közvetlenül használható helyi repóként. Csak a kiválasztott architektúrák tükrözése javasolt."
+  url_info: "https://www.debian.org/mirror/size"
+  url_download: "https://ftp-master.debian.org/ftpsync.tar.gz"
+  url_status: "200 verified 2026-11-14"
+  method: rsync
+  access: free
+  price: null
+  license: "DFSG free software"
+  size: "5,497 GB all architectures; amd64 898 GB + all 326 GB + source 126 GB ≈ 1.35 TB; arm64 813 GB"
+  size_status: "official(debian.org/mirror/size, fetched 2026-11-14)"
+  format: "Debian pool + dists (apt repository)"
+  language: multilingual
+  notes: "Includes all suites (oldstable..unstable) unless excluded; use ftpsync ARCH_EXCLUDE or debmirror to restrict to one release. Needs push-mirror etiquette; pick a nearby rsync mirror."
+  scores: {survival: 2, rebuild: 9, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 5}
+
+- id: apt-mirror-debmirror
+  name: "apt-mirror / debmirror (partial apt repo mirroring tools)"
+  category: tools
+  description_hu: "Eszközök, amelyekkel csak a szükséges Debian/Ubuntu kiadás és architektúra tükrözhető helyi apt-tárolóba. Így néhány száz GB-ból teljes offline csomagforrás lesz."
+  url_info: "https://packages.debian.org/trixie/debmirror"
+  url_download: "git: https://github.com/apt-mirror/apt-mirror ; apt install debmirror"
+  url_status: "200 verified 2026-11-14"
+  method: apt-mirror
+  access: free
+  price: null
+  license: "GPL"
+  size: "tool <1 MB; one release+arch (e.g. trixie amd64 main+contrib+non-free-firmware) roughly 150-250 GB"
+  size_status: "estimated(subset of official 898 GB amd64 + 326 GB all, which covers all suites)"
+  format: "Perl scripts"
+  language: en
+  notes: "debmirror can filter by dist/section/arch and include sources. Add an apt-cacher-ng or simple nginx to serve LAN clients."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 3, reliability: 8, offline_ease: 8}
+
+- id: ubuntu-26041-desktop-iso
+  name: "Ubuntu 26.04.1 LTS Desktop amd64 ISO"
+  category: os_mirror
+  description_hu: "Az Ubuntu legújabb hosszú támogatású asztali kiadása, széles hardvertámogatással. Könnyen telepíthető kezdő felhasználóknak is."
+  url_info: "https://releases.ubuntu.com/26.04.1/"
+  url_download: "https://releases.ubuntu.com/26.04.1/ubuntu-26.04.1-desktop-amd64.iso"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Mostly GPL/free + some restricted firmware/drivers"
+  size: "6.48 GB (6,482,409,472 bytes); live-server ISO 2.7 GB"
+  size_status: "measured(HTTP Content-Length)"
+  format: ISO
+  language: multilingual
+  notes: "Exceeds FAT32 4 GiB limit: use Ventoy with exFAT or dd to USB. Offline extra packages need a separate apt mirror."
+  scores: {survival: 3, rebuild: 6, actionable: 8, uniqueness: 2, reliability: 9, offline_ease: 7}
+
+- id: alpine-3244-extended-iso
+  name: "Alpine Linux 3.24.4 extended / standard ISO (x86_64)"
+  category: os_mirror
+  description_hu: "Nagyon kicsi, erőforrás-takarékos Linux, amely régi gépeken, RAM-ból is fut. Ideális kis szerverekhez, routerekhez, mentőrendszerhez."
+  url_info: "https://alpinelinux.org/downloads/"
+  url_download: "https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-extended-3.24.4-x86_64.iso"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Mixed free (musl MIT, BusyBox GPL)"
+  size: "extended 1.46 GB (1,458,192,384 bytes); standard 353 MB; virt 67 MB"
+  size_status: "measured(HTTP Content-Length / directory listing)"
+  format: ISO
+  language: en
+  notes: "Extended ISO contains the most common packages for offline install. Full Alpine package mirror via rsync is also possible (size unverified)."
+  scores: {survival: 2, rebuild: 6, actionable: 7, uniqueness: 4, reliability: 9, offline_ease: 9}
+
+- id: raspberry-pi-os-full-arm64
+  name: "Raspberry Pi OS (trixie) arm64 Full, 2026-10-06"
+  category: os_mirror
+  description_hu: "A Raspberry Pi hivatalos rendszere teljes asztali és oktatási szoftverkészlettel. Alacsony fogyasztású (napelemről is táplálható) számítógépekhez."
+  url_info: "https://www.raspberrypi.com/software/operating-systems/"
+  url_download: "https://downloads.raspberrypi.com/raspios_full_arm64/images/raspios_full_arm64-2026-10-06/2026-10-06-raspios-trixie-arm64-full.img.xz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Mostly free (Debian based) + Raspberry Pi firmware blobs"
+  size: "2.06 GB (2,064,882,780 bytes) .img.xz; desktop (non-full) 1.36 GB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "raw disk image, xz-compressed"
+  language: multilingual
+  notes: "Flash with Raspberry Pi Imager or dd; expands to ~8+ GB. Keep the matching arm64 Debian packages for offline extras."
+  scores: {survival: 4, rebuild: 7, actionable: 8, uniqueness: 4, reliability: 9, offline_ease: 9}
+
+- id: freedos-14
+  name: "FreeDOS 1.4 (FullUSB / LiveCD / Floppy)"
+  category: os_mirror
+  description_hu: "Szabad DOS-kompatibilis rendszer régi PC-khez, ipari vezérlőkhöz és BIOS-frissítéshez. Akár 8 MB RAM-os gépen is fut."
+  url_info: "https://www.freedos.org/download/"
+  url_download: "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.4/FD14-FullUSB.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "GPL and other free licenses"
+  size: "FullUSB 638 MB; LiveCD 280 MB; BonusCD 383 MB; Floppy 23 MB"
+  size_status: "measured(directory listing)"
+  format: "zip containing .img/.iso"
+  language: "multilingual (incl. Hungarian NLS)"
+  notes: "Useful for legacy industrial machines and very old hardware; includes compilers (OpenWatcom, FreeBASIC) in Bonus CD."
+  scores: {survival: 1, rebuild: 4, actionable: 6, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+- id: fdroid-repo-mirror
+  name: "F-Droid main repository mirror (rsync)"
+  category: os_mirror
+  description_hu: "Az F-Droid szabad Android-alkalmazástár teljes tükre: térképek, offline szótárak, eszközök telefonokra. Helyi F-Droid tárolóként szolgálható ki."
+  url_info: "https://f-droid.org/docs/Running_a_Mirror/"
+  url_download: "rsync -axv ftp.fau.de::fdroid"
+  url_status: "200 verified 2026-11-14"
+  method: rsync
+  access: free
+  price: null
+  license: "FOSS apps (various licenses)"
+  size: "main repo 675 GB (189K files), archive 3.78 TB (Sept 2025); index-v2.json 73.5 MB"
+  size_status: "official(F-Droid mirror docs, Sept 2025) / index measured"
+  format: "APK + index-v2.json"
+  language: multilingual
+  notes: "Main repo keeps several versions of each app; to save space, fetch only latest APK per package via index (e.g. fdroidcl or a script). Archive section rarely needed."
+  scores: {survival: 4, rebuild: 4, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 8}
+
+- id: ventoy
+  name: "Ventoy 1.1.18 (multi-ISO bootable USB)"
+  category: tools
+  description_hu: "Egy pendrive-ra több ISO-t másolhatunk, és bootoláskor választhatunk közülük. Ideális a fenti telepítőlemezek egy helyen tartására."
+  url_info: "https://www.ventoy.net/en/download.html"
+  url_download: "https://sourceforge.net/projects/ventoy/files/v1.1.18/ventoy-1.1.18-linux.tar.gz/download"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPLv3
+  size: "20.3 MB (linux tar.gz); windows zip and livecd ISO also available"
+  size_status: "measured(HTTP Content-Length)"
+  format: "tar.gz / zip"
+  language: multilingual
+  notes: "Default exFAT partition avoids FAT32 4 GB limit. Secure Boot needs enrolling Ventoy key once."
+  scores: {survival: 2, rebuild: 5, actionable: 9, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+# SOURCE CODE & TOOLCHAINS
+- id: linux-kernel-source
+  name: "Linux kernel 7.3.4 stable source (+ 6.18 LTS)"
+  category: source_code
+  description_hu: "A Linux kernel teljes forráskódja és dokumentációja (Documentation/). Szükséges új hardver támogatásához és a rendszer újrafordításához."
+  url_info: "https://www.kernel.org/"
+  url_download: "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.3.4.tar.xz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-2.0
+  size: "162 MB (162,439,264 bytes); longterm 6.18.63 = 155 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: tar.xz
+  language: en
+  notes: "Unpacked ~1.6 GB. Full git history (git clone) is several GB; tarball is enough for archive. Prefer the LTS for long-term use."
+  scores: {survival: 1, rebuild: 7, actionable: 4, uniqueness: 3, reliability: 9, offline_ease: 9}
+
+- id: gcc-source
+  name: "GCC 16.2.0 source"
+  category: source_code
+  description_hu: "A GNU fordítógyűjtemény (C, C++, Fortran, Ada, Go, stb.) forrása. A szoftveres önellátás alapja: ezzel fordítható újra minden más."
+  url_info: "https://gcc.gnu.org/"
+  url_download: "https://ftp.gnu.org/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "GPL-3.0 with runtime exception"
+  size: "107 MB (107,200,820 bytes)"
+  size_status: "measured(HTTP Content-Length)"
+  format: tar.xz
+  language: en
+  notes: "Also archive binutils, glibc, make, gmp/mpfr/mpc (download_prerequisites needs internet). Consider all of ftp.gnu.org/gnu (whole GNU project, size unverified)."
+  scores: {survival: 1, rebuild: 8, actionable: 4, uniqueness: 3, reliability: 9, offline_ease: 9}
+
+- id: llvm-project-source
+  name: "LLVM/Clang llvm-project 23.1.5 source"
+  category: source_code
+  description_hu: "Az LLVM fordító-infrastruktúra és a Clang C/C++ fordító forrása. Modern alternatíva a GCC mellé, sok új nyelv (Rust, Swift) alapja."
+  url_info: "https://llvm.org/"
+  url_download: "git: https://github.com/llvm/llvm-project (tag llvmorg-23.1.5)"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: "Apache-2.0 with LLVM exception"
+  size: "~150 MB (llvm-project-*.src.tar.xz release asset); full git clone several GB"
+  size_status: "estimated(typical release tarball size; GitHub release download blocked by proxy, tag verified via git ls-remote)"
+  format: "tar.xz / git"
+  language: en
+  notes: "GitHub release assets and API were blocked (403) from this environment; tag existence verified with git ls-remote. Use 'git clone --depth 1 --branch llvmorg-23.1.5'."
+  scores: {survival: 1, rebuild: 7, actionable: 4, uniqueness: 2, reliability: 9, offline_ease: 8}
+
+- id: python-source-and-docs
+  name: "CPython 3.15.2 source + Python 3.15 HTML docs"
+  category: source_code
+  description_hu: "A Python nyelv forrása és teljes offline dokumentációja. A Python egyszerűsége miatt kiváló újrakezdő nyelv számításokhoz és automatizáláshoz."
+  url_info: "https://www.python.org/downloads/"
+  url_download: "https://www.python.org/ftp/python/3.15.2/Python-3.15.2.tar.xz ; https://docs.python.org/3/archives/python-3.15-docs-html.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "PSF License"
+  size: "source 28.0 MB; HTML docs 16.1 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "tar.xz, zip (HTML)"
+  language: en
+  notes: "3.16.0 also exists; 3.15 is the more mature line. Docs zip opens in any browser."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 2, reliability: 9, offline_ease: 10}
+
+- id: rust-standalone-installer
+  name: "Rust 1.100.0 standalone offline installer (x86_64 Linux)"
+  category: source_code
+  description_hu: "A Rust fordító, Cargo és szabványos könyvtár offline telepítője, rustup nélkül. Biztonságos rendszerszoftverek fordításához."
+  url_info: "https://forge.rust-lang.org/infra/other-installation-methods.html"
+  url_download: "https://static.rust-lang.org/dist/2026-11-12/rust-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "MIT / Apache-2.0"
+  size: "211 MB (211,225,068 bytes)"
+  size_status: "measured(HTTP Content-Length)"
+  format: tar.xz
+  language: en
+  notes: "Includes offline docs (rust-docs). Crates still need a local crates mirror (see crates-io-mirror)."
+  scores: {survival: 1, rebuild: 5, actionable: 5, uniqueness: 2, reliability: 9, offline_ease: 8}
+
+- id: pypi-full-mirror-bandersnatch
+  name: "PyPI full mirror (bandersnatch)"
+  category: source_code
+  description_hu: "A teljes Python csomagtár tükre bandersnatch-csal. Teljes formájában irreálisan nagy; szűrt (allowlist) tükörként érdemes használni."
+  url_info: "https://pypi.org/stats/"
+  url_download: "git: https://github.com/pypa/bandersnatch (pip install bandersnatch)"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "per-package (mostly OSI licenses)"
+  size: "51.5 TB total package files"
+  size_status: "measured(pypi.org/stats JSON total_packages_size, 2026-11-14)"
+  format: "wheels / sdists + PEP 503 simple index"
+  language: en
+  notes: "Use bandersnatch allowlist plugin (e.g. top ~5,000 packages, latest versions only, platform filters) to get to ~100-500 GB (estimated). Alternative: 'pip download -r requirements.txt' for a curated set."
+  scores: {survival: 1, rebuild: 4, actionable: 4, uniqueness: 3, reliability: 8, offline_ease: 4}
+
+- id: cran-mirror
+  name: "CRAN full mirror (R packages, rsync)"
+  category: source_code
+  description_hu: "Az R statisztikai nyelv teljes csomagtára (25 770 csomag) rsync-kel tükrözve. Statisztikához, mezőgazdasági és orvosi adatelemzéshez."
+  url_info: "https://cran.r-project.org/mirror-howto.html"
+  url_download: "rsync -rptlzv --delete cran-rsync@cran.r-project.org::CRAN /local/dir"
+  url_status: "200 verified 2026-11-14"
+  method: rsync
+  access: free
+  price: null
+  license: "per-package (GPL mostly)"
+  size: "~410 GB (2024-02-22, growing)"
+  size_status: "official(CRAN mirror HOWTO)"
+  format: "R source/binary packages + CRAN web"
+  language: en
+  notes: "Official recommendation: mirror over SSH tunnel. Can exclude old binaries (bin/windows, bin/macosx) to cut size substantially."
+  scores: {survival: 1, rebuild: 4, actionable: 4, uniqueness: 3, reliability: 8, offline_ease: 6}
+
+- id: crates-io-mirror
+  name: "crates.io mirror (panamax) + crates.io DB dump"
+  category: source_code
+  description_hu: "A Rust csomagtár (377 961 crate) helyi tükre a panamax eszközzel, rustup-tükörrel együtt. Offline Rust fejlesztéshez szükséges."
+  url_info: "https://github.com/panamax-rs/panamax"
+  url_download: "git: https://github.com/panamax-rs/panamax ; https://static.crates.io/db-dump.tar.gz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "per-crate (mostly MIT/Apache-2.0)"
+  size: "all crate files ~200+ GB (unverified); DB dump 2.22 GB (2,220,439,297 bytes)"
+  size_status: "estimated(no official total; 377,961 crates per crates.io API; db-dump measured)"
+  format: ".crate (tar.gz) + sparse index"
+  language: en
+  notes: "Panamax mirrors both rustup toolchains and crates. Exact full mirror size not published; plan for several hundred GB."
+  scores: {survival: 1, rebuild: 3, actionable: 3, uniqueness: 3, reliability: 8, offline_ease: 5}
+
+- id: npm-go-registries-note
+  name: "npm and Go module registries (note: impractical to mirror fully)"
+  category: source_code
+  description_hu: "Az npm (4,6 millió csomag) és a Go modulproxy teljes tükrözése nem reális. Csak projekt-specifikus függőségeket érdemes elmenteni (npm pack, go mod vendor)."
+  url_info: "https://replicate.npmjs.com/ ; https://proxy.golang.org/"
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: null
+  license: "per-package"
+  size: "npm: 4,605,311 package docs (size tens-hundreds of TB, unverified); Go: no published total"
+  size_status: "estimated(npm doc_count measured from replicate.npmjs.com; byte size not published)"
+  format: "tarballs / zip modules"
+  language: en
+  notes: "Use Verdaccio (npm) or Athens (Go) as caching proxies before collapse, or 'go mod vendor' per project."
+  scores: {survival: 0, rebuild: 2, actionable: 2, uniqueness: 1, reliability: 7, offline_ease: 3}
+
+- id: software-heritage-graph
+  name: "Software Heritage graph dataset (2026-06-04) and popular-1k subgraph"
+  category: source_code
+  description_hu: "A világ nyilvános forráskód-archívumának gráf-exportja (commitok, könyvtárfák, eredet). A fájltartalmakat nem tartalmazza; a 'popular-1k' részhalmaz kezelhetőbb."
+  url_info: "https://docs.softwareheritage.org/devel/swh-export/graph/dataset.html"
+  url_download: "s3://softwareheritage/graph/2026-06-04/compressed ; s3://softwareheritage/graph/2025-05-18-popular-1k/"
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: "CC-BY-4.0 (dataset); contents under their own licenses"
+  size: "2026-06-04: ORC 33 TiB, compressed graph 16 TiB; popular-1k (2025-05-18) ORC 349 GiB"
+  size_status: "official(SWH dataset docs)"
+  format: "Apache ORC / WebGraph compressed"
+  language: en
+  notes: "Metadata/graph only: file blobs must be requested separately. For actual code, better to git clone key repos yourself. Low survival value. GitHub Archive Program (Arctic Code Vault, archiveprogram.github.com, 200 verified) is physical film storage and not downloadable."
+  scores: {survival: 0, rebuild: 3, actionable: 1, uniqueness: 6, reliability: 9, offline_ease: 1}
+
+- id: devdocs-offline
+  name: "DevDocs (318 API documentation sets)"
+  category: tools
+  description_hu: "Programozási nyelvek és könyvtárak dokumentációja egy kereshető, offline használható webes felületen. Önállóan is futtatható (Ruby/Docker)."
+  url_info: "https://devdocs.io/"
+  url_download: "git: https://github.com/freeCodeCamp/devdocs ; docs index https://documents.devdocs.io/docs.json"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: "MPL-2.0 (app); docs under upstream licenses"
+  size: "~2.0 GB for all 318 docs"
+  size_status: "measured(sum of db_size in docs.json)"
+  format: "JSON + HTML, served by Ruby app"
+  language: en
+  notes: "Browser offline mode stores docs in IndexedDB (fragile). For a real archive self-host with 'thor docs:download --all'. Alternative desktop viewer: Zeal (zealdocs.org, git tag v0.9.2 verified) with Dash docsets (sizes unverified)."
+  scores: {survival: 0, rebuild: 6, actionable: 7, uniqueness: 3, reliability: 9, offline_ease: 8}
+
+# SPEECH / TRANSLATION / OCR / TTS
+- id: whisper-cpp-models
+  name: "whisper.cpp v1.9.5 + ggml Whisper models"
+  category: ai_tools
+  description_hu: "Offline beszédfelismerés (magyarul is) CPU-n, a Whisper modellekkel. Hangfelvételek, rádióadások, interjúk leírására."
+  url_info: "https://github.com/ggml-org/whisper.cpp"
+  url_download: "hf: ggerganov/whisper.cpp (ggml-large-v3-turbo-q5_0.bin, ggml-medium.bin, ggml-small.bin); git: https://github.com/ggml-org/whisper.cpp"
+  url_status: "200 verified 2026-11-14"
+  method: hf
+  access: free
+  price: null
+  license: "MIT (code and models)"
+  size: "large-v3-turbo-q5_0 574 MB; large-v3-turbo 1.62 GB; large-v3 3.10 GB; medium 1.53 GB; small 488 MB; base 148 MB"
+  size_status: "measured(HF API tree sizes)"
+  format: "ggml .bin"
+  language: "99 languages incl. Hungarian"
+  notes: "Hungarian accuracy is good only with medium/large models. large-v3-turbo-q5_0 is the best size/quality compromise (~2 GB RAM). Alternative: Systran/faster-whisper-large-v3 (3.09 GB, CTranslate2)."
+  scores: {survival: 3, rebuild: 4, actionable: 7, uniqueness: 6, reliability: 7, offline_ease: 6}
+
+- id: argos-translate-hu
+  name: "Argos Translate / LibreTranslate + en-hu, hu-en models"
+  category: ai_tools
+  description_hu: "Offline gépi fordító Python-könyvtár és webszerver (LibreTranslate) angol-magyar és magyar-angol modellekkel. Idegen nyelvű kézikönyvek fordítására CPU-n."
+  url_info: "https://github.com/argosopentech/argos-translate"
+  url_download: "https://argos-net.com/v1/translate-en_hu-1_9.argosmodel ; https://argos-net.com/v1/translate-hu_en-1_9.argosmodel ; index: https://raw.githubusercontent.com/argosopentech/argospm-index/main/index.json"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "MIT (code); models CC0/CC-BY-style per package"
+  size: "en_hu 67.9 MB + hu_en 71.8 MB; all 100 packages 8.99 GB"
+  size_status: "measured(HTTP Content-Length, all 100 index links)"
+  format: ".argosmodel (zip, CTranslate2 + SentencePiece)"
+  language: "~50 languages; pivots through English"
+  notes: "LibreTranslate v1.9.6 gives a web UI/API on top. Quality moderate; non-English pairs pivot via English (double error)."
+  scores: {survival: 3, rebuild: 5, actionable: 7, uniqueness: 5, reliability: 6, offline_ease: 8}
+
+- id: firefox-translations-bergamot
+  name: "Firefox Translations (Bergamot) models incl. en-hu / hu-en"
+  category: ai_tools
+  description_hu: "A Mozilla kicsi, CPU-n futó fordítómodelljei (Bergamot/Marian) magyar irányokkal is. Nagyon gyors, kevés memóriát igényel."
+  url_info: "https://github.com/mozilla/firefox-translations-models"
+  url_download: "git: https://github.com/mozilla/firefox-translations-models (models/base-memory/enhu, models/tiny/huen)"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: MPL-2.0
+  size: "~15-40 MB per direction (unverified); 94 language-pair folders"
+  size_status: "estimated(git tree listing verified; files are Git LFS, sizes not fetched)"
+  format: "Marian intgemm .bin.gz + SentencePiece vocab"
+  language: "en<->hu among ~90 pairs"
+  notes: "Repo last commit 2025-12; newer models moved to Mozilla remote-settings. Needs bergamot-translator or translateLocally to run outside Firefox. Requires git-lfs."
+  scores: {survival: 2, rebuild: 4, actionable: 6, uniqueness: 4, reliability: 6, offline_ease: 9}
+
+- id: nllb-200
+  name: "Meta NLLB-200 translation models (distilled-600M, 3.3B)"
+  category: ai_tools
+  description_hu: "200 nyelv közötti közvetlen fordítómodell (magyar is), angol köztes nyelv nélkül. Ritka nyelvekhez is használható."
+  url_info: "https://huggingface.co/facebook/nllb-200-distilled-600M"
+  url_download: "hf: facebook/nllb-200-distilled-600M ; hf: facebook/nllb-200-3.3B"
+  url_status: "200 verified 2026-11-14"
+  method: hf
+  access: free
+  price: null
+  license: "CC-BY-NC-4.0 (non-commercial)"
+  size: "distilled-600M 2.48 GB (repo files); 3.3B 17.6 GB"
+  size_status: "measured(HF API blobs sum)"
+  format: "PyTorch / safetensors (convert to CTranslate2 int8 to shrink ~4x)"
+  language: "200 languages incl. hun_Latn"
+  notes: "Repo includes duplicate weight formats; download only one. Non-commercial license."
+  scores: {survival: 2, rebuild: 4, actionable: 6, uniqueness: 5, reliability: 6, offline_ease: 6}
+
+- id: piper-tts-hu
+  name: "Piper TTS + Hungarian voices (anna, berta, imre)"
+  category: ai_tools
+  description_hu: "Gyors, offline szövegfelolvasó (TTS), amely Raspberry Pi-n is valós időben fut. Magyar női és férfi hangokkal; látássérülteknek, rádióhoz."
+  url_info: "https://github.com/OHF-Voice/piper1-gpl"
+  url_download: "hf: rhasspy/piper-voices (hu/hu_HU/anna/medium/hu_HU-anna-medium.onnx etc.)"
+  url_status: "200 verified 2026-11-14"
+  method: hf
+  access: free
+  price: null
+  license: "GPL-3.0 (piper1-gpl); voices MIT/per voice model card"
+  size: "each Hungarian voice 63.2 MB (.onnx) + 5 KB json; all voices repo 12.25 GB"
+  size_status: "measured(HF API)"
+  format: "ONNX"
+  language: "Hungarian + ~40 others"
+  notes: "Original rhasspy/piper repo archived; development continues at OHF-Voice/piper1-gpl."
+  scores: {survival: 2, rebuild: 3, actionable: 6, uniqueness: 4, reliability: 8, offline_ease: 9}
+
+- id: tesseract-ocr-tessdata
+  name: "Tesseract OCR 5.5.4 + tessdata_best (incl. hun)"
+  category: ai_tools
+  description_hu: "Nyílt forrású szövegfelismerő (OCR) szkennelt könyvekhez, dokumentumokhoz, magyar nyelvi modellel. Papíralapú tudás digitalizálására."
+  url_info: "https://github.com/tesseract-ocr/tesseract"
+  url_download: "https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/main/hun.traineddata ; git: https://github.com/tesseract-ocr/tessdata_best"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: Apache-2.0
+  size: "hun best 12.4 MB, hun fast 5.3 MB, eng best 15.4 MB; all tessdata_best (162 files) 1.77 GB"
+  size_status: "measured(HTTP Content-Length on each raw file)"
+  format: ".traineddata (LSTM)"
+  language: "100+ languages incl. Hungarian"
+  notes: "Also in Debian (tesseract-ocr-hun). Combine with OCRmyPDF for searchable PDFs."
+  scores: {survival: 2, rebuild: 5, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 9}
+
+# LOCAL AI (placeholders only; covered by dedicated agents)
+- id: ollama-runtime-placeholder
+  name: "Ollama runtime (placeholder; see dedicated LLM agent)"
+  category: ai_tools
+  description_hu: "Helyi LLM-futtató; részletek a dedikált AI-modell listában."
+  url_info: "https://ollama.com/"
+  url_download: "https://ollama.com/download/ollama-linux-amd64.tar.zst"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: MIT
+  size: "1.55 GB (1,545,767,640 bytes, includes CUDA/ROCm libs)"
+  size_status: "measured(HTTP Content-Length)"
+  format: tar.zst
+  language: en
+  notes: "Placeholder; models and alternatives covered elsewhere. llama.cpp (git https://github.com/ggml-org/llama.cpp, verified) is the other core runtime."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 4, reliability: 5, offline_ease: 5}
+
+- id: nomic-embed-text-placeholder
+  name: "nomic-embed-text embedding model for RAG (placeholder)"
+  category: ai_models
+  description_hu: "Beágyazó modell offline dokumentumkereséshez (RAG); részletek a dedikált listában."
+  url_info: "https://ollama.com/library/nomic-embed-text"
+  url_download: "ollama pull nomic-embed-text:latest"
+  url_status: "200 verified 2026-11-14"
+  method: ollama
+  access: free
+  price: null
+  license: Apache-2.0
+  size: "274 MB"
+  size_status: "measured(Ollama registry manifest layer sum)"
+  format: GGUF
+  language: "mainly English"
+  notes: "Placeholder."
+  scores: {survival: 2, rebuild: 3, actionable: 4, uniqueness: 3, reliability: 6, offline_ease: 8}
+
+# MAPS & GEO
+- id: osm-europe-pbf
+  name: "OpenStreetMap Europe extract (.osm.pbf)"
+  category: maps_geo
+  description_hu: "Egész Európa OpenStreetMap adatai (utak, épületek, vizek, címek) egy fájlban. Ebből bármely ország/régió kivágható osmium-mal."
+  url_info: "https://download.openstreetmap.fr/extracts/"
+  url_download: "https://download.openstreetmap.fr/extracts/europe-latest.osm.pbf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: ODbL-1.0
+  size: "41.2 GB (41,187,719,620 bytes, 2026-11-13)"
+  size_status: "measured(HTTP Content-Length)"
+  format: osm.pbf
+  language: "multilingual names"
+  notes: "Geofabrik (download.geofabrik.de) was BLOCKED from this environment (connection reset); OSM France mirror used. Raw data needs rendering/routing software (OsmAnd, Organic Maps, tilemaker, OSRM)."
+  scores: {survival: 6, rebuild: 7, actionable: 5, uniqueness: 5, reliability: 8, offline_ease: 5}
+
+- id: geofabrik-hungary-pbf
+  name: "Geofabrik Hungary extract (hungary-latest.osm.pbf + shapefile)"
+  category: maps_geo
+  description_hu: "Magyarország teljes OSM térképadata, naponta frissítve. Helyi navigációhoz, tervezéshez, GIS-elemzéshez az otthoni régióra."
+  url_info: "https://download.geofabrik.de/europe/hungary.html"
+  url_download: "https://download.geofabrik.de/europe/hungary-latest.osm.pbf"
+  url_status: "blocked"
+  method: http
+  access: free
+  price: null
+  license: ODbL-1.0
+  size: "~0.3-0.4 GB pbf (unverified); shapefile zip larger"
+  size_status: "estimated(Geofabrik blocked; no measurement possible)"
+  format: "osm.pbf / shp.zip"
+  language: hu
+  notes: "Host blocked by proxy here; verify on download. Alternatively cut from europe pbf: 'osmium extract -b 16,45.7,22.9,48.6'."
+  scores: {survival: 7, rebuild: 6, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 7}
+
+- id: osmand-hungary-maps
+  name: "OsmAnd offline maps: Hungary (8 regional .obf files)"
+  category: maps_geo
+  description_hu: "Kész, telefonon azonnal használható offline navigációs térkép Magyarországról (utak, POI, címek). Szintvonal és domborzatárnyékolás is letölthető."
+  url_info: "https://osmand.net/"
+  url_download: "https://download.osmand.net/download?standard=yes&file=Hungary_pest_europe_2.obf.zip (and 7 other Hungary_*_europe_2 regions)"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "ODbL (data); OsmAnd app GPL-3.0"
+  size: "522 MB zipped total (8 regions, 2026-11-01); contour lines +37 MB; hillshade +42 MB"
+  size_status: "measured(OsmAnd get_indexes containerSize sum; Pest file Content-Length 112,792,975 confirmed)"
+  format: ".obf (zip)"
+  language: hu
+  notes: "Country-level Hungary_europe_2.obf was retired (deleted_map 2026-09-09) in favor of regions. Install OsmAnd APK from F-Droid. Organic Maps is a simpler alternative."
+  scores: {survival: 7, rebuild: 4, actionable: 9, uniqueness: 3, reliability: 8, offline_ease: 9}
+
+- id: protomaps-planet-pmtiles
+  name: "Protomaps daily planet basemap (PMTiles)"
+  category: maps_geo
+  description_hu: "Az egész Föld vektoros alaptérképe egyetlen PMTiles fájlban, webszerver nélkül is megjeleníthető. Régiók kivághatók a pmtiles eszközzel."
+  url_info: "https://docs.protomaps.com/basemaps/downloads"
+  url_download: "https://build.protomaps.com/20261114.pmtiles"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "ODbL (OSM data) + BSD/CC0 tooling"
+  size: "139.5 GB (139,488,191,421 bytes)"
+  size_status: "measured(HTTP Content-Length + builds.json)"
+  format: "PMTiles v3 (MVT vector tiles, z0-15)"
+  language: multilingual
+  notes: "Builds rotate (old dates disappear). 'pmtiles extract --bbox' gives a Hungary file of a few hundred MB (estimated). Used by Project NOMAD. MapTiler/OpenMapTiles planet MBTiles (data.maptiler.com/downloads/planet/, 200 verified) needs a commercial license; Protomaps is the free substitute."
+  scores: {survival: 6, rebuild: 5, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 7}
+
+- id: natural-earth
+  name: "Natural Earth vector + raster data"
+  category: maps_geo
+  description_hu: "Közkincs kisléptékű világtérkép-adatok (határok, folyók, városok, domborzat) 1:10m–1:110m méretarányban. Gyors áttekintő térképekhez, nyomtatáshoz."
+  url_info: "https://www.naturalearthdata.com/downloads/"
+  url_download: "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Public domain"
+  size: "vector all-scales zip 587 MB (shp); GeoPackage 446 MB; SQLite 434 MB; raster HYP_HR_SR_OB_DR 404 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "Shapefile / GeoPackage / GeoTIFF"
+  language: "en + names in many languages"
+  notes: "Last release 2022 (v5.1.x); stable."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 3, reliability: 9, offline_ease: 9}
+
+- id: copernicus-dem-glo30-glo90
+  name: "Copernicus DEM GLO-30 / GLO-90 (AWS Open Data)"
+  category: maps_geo
+  description_hu: "Az egész Föld 30 m (és 90 m) felbontású digitális domborzatmodellje. Vízgazdálkodáshoz, árvízveszélyhez, gáttervezéshez, látóvonalakhoz."
+  url_info: "https://registry.opendata.aws/copernicus-dem/"
+  url_download: "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N47_00_E019_00_DEM/Copernicus_DSM_COG_10_N47_00_E019_00_DEM.tif (aws s3 sync --no-sign-request s3://copernicus-dem-30m/)"
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: "Copernicus DEM licence (free, attribution)"
+  size: "GLO-30 ~630 GB (26,450 tiles); GLO-90 ~94 GB (26,475 tiles); Hungary ~28 tiles x ~44 MB ≈ 1.2 GB at 30 m"
+  size_status: "estimated(random sample of 80 tiles: mean 24.0 MB (30m) / 3.56 MB (90m) x tileList count; DEM .tif only)"
+  format: "Cloud-Optimized GeoTIFF (1x1 degree)"
+  language: en
+  notes: "No registration needed on AWS (unlike ESA PANDA portal). Each tile folder also has AUXFILES (water/edit masks) not counted. GLO-90 is the practical global choice; GLO-30 for home region. Smaller alternative: CGIAR SRTM v4.1 90 m 5x5-degree tiles, e.g. https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/srtm_40_03.zip (32.0 MB measured; non-commercial terms)."
+  scores: {survival: 4, rebuild: 6, actionable: 5, uniqueness: 5, reliability: 9, offline_ease: 6}
+
+- id: gebco-2026-grid
+  name: "GEBCO 2026 global bathymetry/topography grid"
+  category: maps_geo
+  description_hu: "A teljes földfelszín és tengerfenék 15 ívmásodperces domborzati rácsa. Tengeri hajózáshoz, halászathoz, partvonal-tervezéshez."
+  url_info: "https://www.gebco.net/data-products/gridded-bathymetry-data"
+  url_download: "https://dap.ceda.ac.uk/bodc/gebco/global/gebco_2026/ice_surface_elevation/netcdf/GEBCO_2026.zip?download=1"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "GEBCO public domain-like (attribution requested)"
+  size: "4.25 GB (NetCDF zip); GeoTIFF zip 4.24 GB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "NetCDF / GeoTIFF / ASCII"
+  language: en
+  notes: "Not for navigation safety-critical use (not a nautical chart). Sub-ice and TID grids also available."
+  scores: {survival: 2, rebuild: 4, actionable: 4, uniqueness: 5, reliability: 8, offline_ease: 7}
+
+- id: hydrosheds
+  name: "HydroSHEDS: HydroRIVERS, HydroLAKES, HydroBASINS"
+  category: maps_geo
+  description_hu: "Globális folyóhálózat, tavak és vízgyűjtők vektoros adatai. Vízellátás, öntözés, vízimalom- és gáthelyek tervezéséhez."
+  url_info: "https://www.hydrosheds.org/products/hydrosheds"
+  url_download: "https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_eu_shp.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "HydroSHEDS license (free, attribution; CC-BY-4.0-like)"
+  size: "HydroRIVERS global gdb 618 MB, Europe shp 67.6 MB; HydroLAKES polys 820 MB; HydroBASINS Europe lev01-12 361 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "Shapefile / FileGDB"
+  language: en
+  notes: "Rivers include discharge estimates and stream order, useful for micro-hydro siting."
+  scores: {survival: 4, rebuild: 5, actionable: 5, uniqueness: 5, reliability: 8, offline_ease: 8}
+
+- id: soilgrids-1km
+  name: "SoilGrids 2.0 aggregated 1000 m (ISRIC)"
+  category: maps_geo
+  description_hu: "Globális talajtérképek: pH, agyag/homok/iszap arány, szerves szén, nitrogén, víztartó képesség, több mélységben. Mezőgazdasági tervezéshez."
+  url_info: "https://www.isric.org/explore/soilgrids/soilgrids-access"
+  url_download: "https://files.isric.org/soilgrids/latest/data_aggregated/1000m/"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: CC-BY-4.0
+  size: "13.4 GB (85 GeoTIFFs, 14 properties)"
+  size_status: "measured(sum of Content-Length of all 85 files)"
+  format: GeoTIFF
+  language: en
+  notes: "250 m native data (data/ folder) is VRT tiles and much larger (multi-TB, unverified). 1 km is enough for regional planning; local soil testing still needed."
+  scores: {survival: 4, rebuild: 6, actionable: 5, uniqueness: 6, reliability: 7, offline_ease: 7}
+
+- id: worldclim-21
+  name: "WorldClim 2.1 historical climate (1970-2000)"
+  category: maps_geo
+  description_hu: "Havi átlaghőmérséklet, csapadék, napsugárzás, szél és 19 bioklimatikus változó rácsadatai. Növénytermesztés és épülettervezés klímaalapjaihoz."
+  url_info: "https://www.worldclim.org/data/worldclim21.html"
+  url_download: "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/wc2.1_2.5m_prec.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Free for research/education (WorldClim terms)"
+  size: "30 arc-sec all 9 variables 29.6 GB; 2.5 arc-min all 9 variables 2.79 GB"
+  size_status: "measured(sum of Content-Length)"
+  format: "GeoTIFF in zip"
+  language: en
+  notes: "2.5' resolution is plenty for crop zone decisions. Future CMIP6 projections also available."
+  scores: {survival: 3, rebuild: 5, actionable: 5, uniqueness: 5, reliability: 8, offline_ease: 8}
+
+- id: esa-worldcover
+  name: "ESA WorldCover 10 m 2021 v200 land cover"
+  category: maps_geo
+  description_hu: "10 m felbontású globális felszínborítás-térkép (erdő, szántó, település, víz). Erőforrások (fa, termőföld) feltérképezéséhez."
+  url_info: "https://esa-worldcover.org/"
+  url_download: "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N45E018_Map.tif"
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: CC-BY-4.0
+  size: "tile N45E018 75.4 MB; Hungary ~4-6 tiles ≈ 0.3-0.5 GB; global ~100+ GB (unverified)"
+  size_status: "estimated(one tile measured; global total not measured)"
+  format: "Cloud-Optimized GeoTIFF (3x3 degree)"
+  language: en
+  notes: "No registration via public S3 bucket (aws s3 sync --no-sign-request s3://esa-worldcover/v200/2021/map/)."
+  scores: {survival: 3, rebuild: 4, actionable: 4, uniqueness: 4, reliability: 8, offline_ease: 7}
+
+- id: onegeology-portal
+  name: "OneGeology global geological map portal"
+  category: maps_geo
+  description_hu: "Nemzeti földtani szolgálatok térképeinek közös portálja (kőzetek, ásványi nyersanyagok). Ércek, építőkövek, vízadó rétegek felkutatásához."
+  url_info: "https://portal.onegeology.org/OnegeologyGlobal/"
+  url_download: null
+  url_status: "blocked"
+  method: manual
+  access: free
+  price: null
+  license: "per data provider"
+  size: "n/a (WMS/WFS services, not bulk files)"
+  size_status: "estimated(service-based, no bulk download)"
+  format: "WMS/WFS"
+  language: multilingual
+  notes: "TLS certificate verification failed from this environment. Mostly online services; for offline use, download national data (e.g. Hungarian MBFSZ 1:100k maps) separately or GLiM global lithology."
+  scores: {survival: 2, rebuild: 6, actionable: 3, uniqueness: 6, reliability: 7, offline_ease: 2}
+
+- id: stellarium-star-catalogs
+  name: "Stellarium 26.3 + extra star catalogs (Gaia DR3)"
+  category: maps_geo
+  description_hu: "Offline planetárium-program csillagkatalógusokkal: égbolt bármely időpontra és helyre. Csillagászati navigációhoz, időméréshez, naptárkészítéshez."
+  url_info: "https://stellarium.org/"
+  url_download: "https://sourceforge.net/projects/stellarium/files/Extra-data-files/stars-3.0/stars_8_2v0_3.cat/download (and stars_4..7); git: https://github.com/Stellarium/stellarium (tag v26.3)"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-2.0
+  size: "app ~300 MB (unverified); extra catalogs stars4-8 = 4.75 GB total (53 MB + 245 MB + 912 MB + 1.71 GB + 1.83 GB)"
+  size_status: "official(sizeMb in stars/hip_gaia3/defaultStarsConfig.json)"
+  format: ".cat binary catalogs"
+  language: "multilingual incl. Hungarian UI"
+  notes: "Default install includes stars to mag ~10.5, enough for navigation; extra catalogs only for deep sky. Pair with printed nautical almanac tables."
+  scores: {survival: 3, rebuild: 4, actionable: 5, uniqueness: 4, reliability: 9, offline_ease: 7}
+
+- id: qgis
+  name: "QGIS 4.2.3 desktop GIS"
+  category: tools
+  description_hu: "Teljes értékű, ingyenes térinformatikai program a fenti DEM, talaj-, klíma- és OSM-adatok elemzéséhez és nyomtatható térképek készítéséhez."
+  url_info: "https://qgis.org/download/"
+  url_download: "https://qgis.org/downloads/QGIS-OSGeo4W-4.2.3-2.msi"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-2.0+
+  size: "610 MB (Windows MSI); Linux via Debian packages"
+  size_status: "measured(HTTP Content-Length)"
+  format: MSI / deb
+  language: "multilingual incl. Hungarian"
+  notes: "Includes GDAL/OGR command line tools. Archive the PDF user manual too."
+  scores: {survival: 3, rebuild: 6, actionable: 6, uniqueness: 3, reliability: 9, offline_ease: 6}
+
+# BIG KNOWLEDGE DUMPS
+- id: enwiki-pages-articles-xml
+  name: "English Wikipedia pages-articles-multistream XML dump"
+  category: knowledge_dump
+  description_hu: "Az angol Wikipédia összes szócikkének wikiszöveges nyers dumpja. Kiindulás saját keresőhöz, RAG-hoz, vagy ZIM nélküli feldolgozáshoz."
+  url_info: "https://dumps.wikimedia.org/enwiki/latest/"
+  url_download: "https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles-multistream.xml.bz2"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC-BY-SA-4.0 / GFDL"
+  size: "27.0 GB multistream (27,019,419,473 bytes, 2026-11-07); non-multistream 25.9 GB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "XML (wikitext), bz2"
+  language: en
+  notes: "Raw wikitext needs a renderer; for reading, Kiwix ZIM is easier (listed elsewhere). Multistream + index allows random access without full decompression (~100 GB uncompressed). Torrents available."
+  scores: {survival: 3, rebuild: 6, actionable: 3, uniqueness: 3, reliability: 7, offline_ease: 4}
+
+- id: huwiki-pages-articles-xml
+  name: "Hungarian Wikipedia pages-articles XML dump"
+  category: knowledge_dump
+  description_hu: "A magyar Wikipédia teljes szócikkállománya nyers formában. Magyar nyelvű RAG-indexhez, szövegelemzéshez."
+  url_info: "https://dumps.wikimedia.org/huwiki/latest/"
+  url_download: "https://dumps.wikimedia.org/huwiki/latest/huwiki-latest-pages-articles.xml.bz2"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC-BY-SA-4.0 / GFDL"
+  size: "1.26 GB (1,258,692,711 bytes, 2026-11-01)"
+  size_status: "measured(HTTP Content-Length)"
+  format: "XML (wikitext), bz2"
+  language: hu
+  notes: "Small enough to keep alongside ZIM version for full-text processing."
+  scores: {survival: 3, rebuild: 4, actionable: 3, uniqueness: 3, reliability: 7, offline_ease: 6}
+
+- id: wikidata-json-dump
+  name: "Wikidata full entity dump (JSON) / truthy N-Triples"
+  category: knowledge_dump
+  description_hu: "A Wikidata strukturált tudásbázisa (120+ millió entitás: helyek, anyagok, vegyületek, személyek). Gépi lekérdezéshez, tényellenőrzéshez."
+  url_info: "https://www.wikidata.org/wiki/Wikidata:Database_download"
+  url_download: "https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: CC0-1.0
+  size: "latest-all.json.bz2 103.8 GB; .json.gz 157.0 GB; latest-truthy.nt.bz2 43.7 GB"
+  size_status: "measured(HTTP Content-Length, 2026-11-11/14)"
+  format: "JSON lines / N-Triples"
+  language: multilingual
+  notes: "Needs a database (QLever, Blazegraph, or custom) to be useful; uncompressed >1.5 TB (estimated). Truthy dump is the more practical choice."
+  scores: {survival: 1, rebuild: 4, actionable: 2, uniqueness: 4, reliability: 7, offline_ease: 2}
+
+- id: wikimedia-commons-note
+  name: "Wikimedia Commons media (note: impractical)"
+  category: knowledge_dump
+  description_hu: "A Wikipédia képeit, hangjait, videóit tartalmazó médiatár. Teljes mérete petabájt nagyságrendű, csak szűk válogatás menthető."
+  url_info: "https://commons.wikimedia.org/wiki/Special:MediaStatistics"
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: null
+  license: "CC-BY-SA / CC-BY / PD (per file)"
+  size: "1.04 PB (150,444,262 files)"
+  size_status: "official(Special:MediaStatistics)"
+  format: "JPEG/TIFF/PNG/SVG/OGG/WebM"
+  language: multilingual
+  notes: "No bulk media dump exists. Select categories via API or rely on ZIM files with images."
+  scores: {survival: 0, rebuild: 2, actionable: 1, uniqueness: 3, reliability: 8, offline_ease: 0}
+
+- id: arxiv-bulk-s3
+  name: "arXiv bulk data (S3 requester-pays)"
+  category: knowledge_dump
+  description_hu: "Az arXiv összes preprintje (fizika, matematika, informatika) PDF-ben és forrásban. Tudományos alapismeretek és mérnöki módszerek tára."
+  url_info: "https://info.arxiv.org/help/bulk_data_s3.html"
+  url_download: "s3://arxiv/pdf/ and s3://arxiv/src/ (--request-payer requester)"
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: paid
+  price: "AWS egress ~0.09 USD/GB → roughly 800+ USD for full set (estimated)"
+  license: "per paper (arXiv license / CC)"
+  size: "~9.2 TB complete (April 2025), growing ~100 GB/month"
+  size_status: "official(arXiv bulk data page)"
+  format: "PDF + LaTeX source tar chunks"
+  language: en
+  notes: "Requester-pays: you pay AWS transfer. Free alternative: Kaggle arXiv metadata only. Mostly research-level, low direct survival value."
+  scores: {survival: 1, rebuild: 5, actionable: 2, uniqueness: 5, reliability: 7, offline_ease: 6}
+
+- id: pmc-open-access-s3
+  name: "PubMed Central Open Access subset (AWS pmc-oa-opendata)"
+  category: knowledge_dump
+  description_hu: "Több millió szabadon újrahasznosítható orvosi és élettudományi cikk teljes szövege. Orvosi tudás újraépítéséhez, gyógyszer- és kezelési információkhoz."
+  url_info: "https://registry.opendata.aws/ncbi-pmc/"
+  url_download: "aws s3 sync --no-sign-request s3://pmc-oa-opendata/ ."
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: "CC-BY/CC0/other per article"
+  size: "multi-TB with PDFs and media (unverified); XML+text only much smaller"
+  size_status: "estimated(no official total published)"
+  format: "JATS XML, plain text, PDF, media, JSON metadata"
+  language: en
+  notes: "Legacy FTP oa_bulk tarballs were removed in Aug 2026; now only per-article S3 objects (organized by PMCID). Filter to text/XML to keep size manageable."
+  scores: {survival: 4, rebuild: 6, actionable: 4, uniqueness: 6, reliability: 8, offline_ease: 5}
+
+- id: openalex-snapshot
+  name: "OpenAlex snapshot (scholarly metadata, CC0)"
+  category: knowledge_dump
+  description_hu: "586 millió tudományos rekord (cikkek, szerzők, intézmények, témák) metaadata és kivonatai. Szakirodalom-kereséshez, de teljes szövegek nélkül."
+  url_info: "https://help.openalex.org/access/snapshot/"
+  url_download: "aws s3 sync --no-sign-request s3://openalex/data/jsonl/ ."
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: CC0-1.0
+  size: "755.5 GB (gzip JSONL, 2026-10-14 release)"
+  size_status: "measured(data/jsonl/manifest.json meta.content_length)"
+  format: "JSONL.gz (also Parquet copy)"
+  language: multilingual
+  notes: "No registration needed. Metadata/abstracts only; links to OA full texts are online. Semantic Scholar datasets (api.semanticscholar.org/datasets/v1/release/latest, 200 verified) need a free API key; OpenAlex covers most metadata without one."
+  scores: {survival: 0, rebuild: 3, actionable: 1, uniqueness: 3, reliability: 8, offline_ease: 3}
+
+- id: common-crawl-note
+  name: "Common Crawl (note: impractical)"
+  category: knowledge_dump
+  description_hu: "Havi webarchívum több milliárd oldallal. Csak tudomásul vételre: túl nagy, és válogatás nélkül alacsony értékű."
+  url_info: "https://data.commoncrawl.org/crawl-data/index.html"
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: s3
+  access: free
+  price: null
+  license: "Common Crawl terms of use (content copyright of owners)"
+  size: "~2.16 billion pages / ~360-370 TiB uncompressed per monthly crawl (latest CC-MAIN-2026-43)"
+  size_status: "official(Common Crawl blog announcements)"
+  format: "WARC/WAT/WET"
+  language: multilingual
+  notes: "Only WET text of a filtered language subset (e.g. Hungarian) might be useful for training; skip for archive."
+  scores: {survival: 0, rebuild: 1, actionable: 0, uniqueness: 2, reliability: 4, offline_ease: 0}
+
+- id: internet-archive-note
+  name: "Internet Archive collections (selective download)"
+  category: knowledge_dump
+  description_hu: "Könyvek, folyóiratok, kézikönyvek, szoftverek hatalmas digitális könyvtára. Célzottan, gyűjteményenként érdemes letölteni (pl. régi műszaki kézikönyvek)."
+  url_info: "https://archive.org/"
+  url_download: "https://archive.org/download/<identifier>/ (ia CLI: pip install internetarchive)"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "per item (many public domain, some lending-only)"
+  size: "n/a (total ~ tens of PB; per item MB-GB)"
+  size_status: "estimated(not measured)"
+  format: "PDF/EPUB/DjVu/torrent per item"
+  language: multilingual
+  notes: "Use 'ia download --glob=*.pdf' and per-item torrents. Check rights; controlled-lending books are not downloadable."
+  scores: {survival: 4, rebuild: 6, actionable: 5, uniqueness: 7, reliability: 7, offline_ease: 9}
+
+# OFFLINE SERVER BUNDLES
+- id: kiwix-tools-serve
+  name: "kiwix-tools 3.8.2 (kiwix-serve) + Kiwix Desktop"
+  category: server_bundle
+  description_hu: "Statikus bináris, amely ZIM fájlokat (Wikipédia, stb.) szolgál ki webböngészőre a helyi hálózaton. Raspberry Pi-n is fut."
+  url_info: "https://kiwix.org/"
+  url_download: "https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-x86_64-musl-3.8.2.tar.gz ; https://download.kiwix.org/release/kiwix-tools/kiwix-tools_linux-aarch64.tar.gz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-3.0
+  size: "x86_64 20.2 MB; aarch64 20.5 MB; Kiwix Desktop AppImage 168 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "tar.gz static binaries / AppImage"
+  language: "multilingual UI"
+  notes: "Also archive Android Kiwix APK (F-Droid). 'kiwix-serve --library library.xml' for many ZIMs."
+  scores: {survival: 5, rebuild: 5, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: zim-tools
+  name: "zim-tools 3.8.0 (zimcheck, zimdump, zimwriterfs)"
+  category: tools
+  description_hu: "Parancssori eszközök ZIM fájlok ellenőrzésére, kibontására és saját ZIM készítésére (pl. helyi dokumentumokból)."
+  url_info: "https://github.com/openzim/zim-tools"
+  url_download: "https://download.openzim.org/release/zim-tools/zim-tools_linux-x86_64-3.8.0.tar.gz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-3.0
+  size: "~10-20 MB (unverified)"
+  size_status: "estimated(file listed in directory; mirror returned 429 rate limit on HEAD)"
+  format: tar.gz
+  language: en
+  notes: "Use zimcheck -A to verify downloaded ZIMs before trusting them. zimit/warc2zim make ZIMs from websites."
+  scores: {survival: 1, rebuild: 4, actionable: 6, uniqueness: 4, reliability: 9, offline_ease: 10}
+
+- id: internet-in-a-box
+  name: "Internet-in-a-Box (IIAB) 8.3"
+  category: server_bundle
+  description_hu: "Raspberry Pi-re vagy Debian/Ubuntu gépre telepíthető offline 'internet': Kiwix, Kolibri, térképek, Calibre-Web, Wi-Fi hotspot egy csomagban."
+  url_info: "https://internet-in-a-box.org/"
+  url_download: "https://download.iiab.io/ (installer: curl iiab.io/install.txt | bash); git: https://github.com/iiab/iiab"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: BSD-2-Clause
+  size: "software few GB after install; content depends on chosen ZIM/maps/videos (unverified)"
+  size_status: "estimated(not measured)"
+  format: "Ansible playbooks"
+  language: "multilingual"
+  notes: "Installer needs internet: run it BEFORE collapse, then image the SD card. 2.4 GHz hotspot for old devices. Latest git tag v7.0.9, site offers 8.3 pre-release."
+  scores: {survival: 5, rebuild: 6, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 8}
+
+- id: project-nomad
+  name: "Project N.O.M.A.D. v1.35.1 (Crosstalk Solutions)"
+  category: server_bundle
+  description_hu: "Docker-alapú offline tudásszerver: Kiwix, Kolibri (Khan Academy), Protomaps térképek, helyi AI (Ollama+Qdrant RAG), CyberChef, jegyzetek."
+  url_info: "https://www.projectnomad.us"
+  url_download: "git: https://github.com/Crosstalk-Solutions/project-nomad (install/install_nomad.sh)"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: "Apache-2.0 (per repo, unverified)"
+  size: "~5 GB base install; content extra"
+  size_status: "official(README: NOMAD needs about 5 GB disk, <1 GB RAM)"
+  format: "Docker compose stack"
+  language: en
+  notes: "Requires Debian/Ubuntu + Docker; install script pulls images from internet, so set up beforehand and save images (docker save). AI features want a GPU."
+  scores: {survival: 5, rebuild: 5, actionable: 7, uniqueness: 5, reliability: 7, offline_ease: 6}
+
+- id: rachel-world-possible
+  name: "RACHEL (World Possible) offline content modules"
+  category: server_bundle
+  description_hu: "Oktatási tartalomcsomagok (Khan Academy, orvosi kézikönyvek, Wikipédia, stb.) offline szerverre, főleg fejlődő országok iskoláinak. Modulonként letölthető."
+  url_info: "https://rachel.worldpossible.org/content"
+  url_download: "https://rachel.worldpossible.org/zipped-modules/en-algebra2go.zip (one zip per module)"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: "modules free; RACHEL 5 hardware device 500 USD"
+  license: "per module (mostly CC)"
+  size: "237 modules totalling ~1,750 GB (site-listed sizes); e.g. en-algebra2go 1.22 GB"
+  size_status: "official(sum of 'Size' fields on content page) / one module measured"
+  format: "zip of HTML/video modules for RACHEL/Apache"
+  language: "en, es, fr, multi"
+  notes: "Many modules overlap with Kiwix ZIMs; pick unique ones (medical, vocational). Runs on any Apache+PHP server or RACHEL-Pi."
+  scores: {survival: 5, rebuild: 5, actionable: 7, uniqueness: 5, reliability: 8, offline_ease: 8}
+
+- id: kolibri-khan-academy
+  name: "Kolibri v0.19.5 + Khan Academy (English - US curriculum) channel"
+  category: server_bundle
+  description_hu: "Offline tanulási platform; a Khan Academy angol csatorna 27 701 videót és gyakorlatot tartalmaz matematikából, természettudományból. Iskola újraindításához."
+  url_info: "https://learningequality.org/kolibri/download/"
+  url_download: "Kolibri channel id c9d7f950ab6b5a1199e3d6c10d7f0103 (kolibri manage importchannel network ...); git: https://github.com/learningequality/kolibri"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Kolibri MIT; Khan Academy content CC-BY-NC-SA"
+  size: "Khan EN-US 67.8 GB (27,701 resources); EN-CBSE India 54.8 GB; ES 39.4 GB; FR 23.5 GB"
+  size_status: "official(Kolibri Studio public API published_size, 2026-11-14)"
+  format: "Kolibri channel (SQLite + content files)"
+  language: "en (many other language channels; no Hungarian channel found)"
+  notes: "Import channels to a Kolibri server before collapse, then export to USB drive ('Export to drive') for sneakernet. Video-heavy; partial topic import possible."
+  scores: {survival: 3, rebuild: 7, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 7}
+
+- id: calibre
+  name: "Calibre 9.18.0 e-book manager"
+  category: tools
+  description_hu: "E-könyv-gyűjtemény kezelő, konvertáló (EPUB/PDF/MOBI) és beépített tartalomszerver. A letöltött könyvtár rendezéséhez és hálózati megosztásához."
+  url_info: "https://calibre-ebook.com/download"
+  url_download: "https://download.calibre-ebook.com/9.18.0/calibre-9.18.0-x86_64.txz"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-3.0
+  size: "Linux 241 MB; Windows MSI 291 MB"
+  size_status: "measured(HTTP Content-Length)"
+  format: "txz / msi"
+  language: "multilingual incl. Hungarian"
+  notes: "Use calibre-server for LAN access; Calibre-Web is a lighter alternative included in IIAB."
+  scores: {survival: 2, rebuild: 4, actionable: 7, uniqueness: 2, reliability: 9, offline_ease: 8}
+```

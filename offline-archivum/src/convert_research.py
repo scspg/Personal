@@ -14,14 +14,37 @@ def load_yaml(path):
     blocks = re.findall(r"```ya?ml\n(.*?)```", t, re.S)
     out = []
     for b in (blocks or [t]):
-        try:
-            d = yaml.safe_load(b)
-        except yaml.YAMLError as e:
-            print(f"YAML hiba {path}: {e}", file=sys.stderr)
-            continue
-        if isinstance(d, list):
-            out += [x for x in d if isinstance(x, dict) and x.get("id")]
+        # elemenként parse-olunk, hogy egy hibás elem ne vigye el az egészet
+        chunks = re.split(r"(?m)^(?=- id:)", b)
+        for ch in chunks:
+            if not ch.lstrip().startswith("- id:"):
+                continue
+            for attempt in (ch, sanitize(ch)):
+                try:
+                    d = yaml.safe_load(attempt)
+                    if isinstance(d, list):
+                        out += [x for x in d if isinstance(x, dict) and x.get("id")]
+                    break
+                except yaml.YAMLError as e:
+                    err = e
+            else:
+                print(f"YAML hiba {path}: {ch[:60]!r}: {err}", file=sys.stderr)
     return out
+
+
+SCALAR_KEYS = r"([a-z_0-9]+)"
+
+
+def sanitize(ch):
+    """Idézőjel nélküli, ': '-t tartalmazó skalárértékek idézése."""
+    lines = []
+    for line in ch.splitlines():
+        m = re.match(r"^(\s*-?\s*" + SCALAR_KEYS + r":\s)(.*)$", line)
+        if m and m.group(3) and not m.group(3)[:1] in "\"'|>[{":
+            v = m.group(3).replace("\\", "\\\\").replace('"', '\\"')
+            line = f'{m.group(1)}"{v}"'
+        lines.append(line)
+    return "\n".join(lines)
 
 
 def parse_size(s):
@@ -44,6 +67,8 @@ def expand_patterns(text, base_url):
         return urls
     base = base_url.rsplit("/", 1)[0] + "/"
     for stem, body, ext in re.findall(r"([\w.-]+?)_?\{([^}]+)\}\.(\w+)", text):
+        if stem.rstrip("_-") not in base_url.rsplit("/", 1)[-1] and stem.rstrip("_-") not in base_url:
+            continue  # csak a letöltési URL saját fájlnév-mintáját bontjuk ki
         parts = []
         for p in body.split(","):
             p = p.strip()
@@ -113,7 +138,20 @@ def convert(x, ov):
         dl["method"] = "manual"
         if dl_url:
             dl["url"] = dl_url
-    if method in ("http", "wget-mirror", "rsync", "git", "archive.org", "ia-cli", "torrent", "jigdo", "s3") and not (
+    # prózában megadott "URL"-ek: csak valódi URL-tokenek maradnak; ha nincs ilyen, AI-feladat (method=agent)
+    URL_RE = r"https?://[^\s;,'\"()<>]+"
+    if dl.get("urls"):
+        toks = []
+        for u in dl["urls"]:
+            toks += [t.rstrip(".") for t in re.findall(URL_RE, str(u)) if "<" not in t]
+        prose = any(not re.fullmatch(URL_RE, str(u)) for u in dl["urls"])
+        if prose:
+            dl = {"method": "agent", "note": " | ".join(map(str, dl["urls"])), "seed_urls": toks}
+        else:
+            dl["urls"] = toks
+    if dl.get("url") and dl["method"] in ("wget-mirror", "rsync", "torrent") and not re.match(r"^(https?|rsync)://|^[\w.-]+::", str(dl["url"])):
+        dl = {"method": "agent", "note": str(dl["url"]), "seed_urls": re.findall(URL_RE, str(dl["url"])) or ([x.get("url_info")] if x.get("url_info") else [])}
+    if method in ("http", "wget-mirror", "rsync", "git", "archive.org", "ia-cli", "torrent", "jigdo", "s3") and dl["method"] != "agent" and not (
             dl.get("urls") or dl.get("url") or dl.get("repos") or dl.get("ids")):
         dl = {"method": "manual", "note": "nincs ellenőrzött közvetlen link – lásd info_url"}
     b = parse_size(x.get("size"))

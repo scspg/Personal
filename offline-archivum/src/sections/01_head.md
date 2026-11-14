@@ -13,8 +13,9 @@
 6. [NAGY FEJEZET: helyi, nyílt súlyú LLM-ek](#6-helyi-llm-ek)
 7. [Letöltési receptek módszerenként](#7-letöltési-receptek)
 8. [Fizetős, regisztrációs és fizikai beszerzések](#8-fizetős-regisztrációs-és-fizikai-beszerzések)
-9. [Gépi katalógus (JSONL) – a szkript ezt olvassa](#9-gépi-katalógus)
-10. [select_items.py – kiválasztó és letöltő-generátor](#10-select_itemspy)
+9. [Webes hozzáférés az AI-nak: captcha- és blokkmentes keresés és letöltés (Camoufox és társai)](#9-webes-hozzáférés-az-ai-nak-captcha--és-blokkmentes-keresés-és-letöltés)
+10. [Gépi katalógus (JSONL) – a szkript ezt olvassa](#10-gépi-katalógus)
+11. [select_items.py – kiválasztó és letöltő-generátor](#11-select_itemspy)
 
 ---
 
@@ -24,9 +25,9 @@
 2. Add ezt a fájlt egy olyan AI-ágensnek, amely parancsot tud futtatni. Írd mellé például ezt: *„Van egy 1 TB-os meghajtóm a /media/usb alatt, RTX 4090 + 128 GB RAM gépem, magyar és angol anyag kell, főleg orvosi és mezőgazdasági. Csináld meg.”*
 3. Ha kézzel csinálnád:
    ```bash
-   # a 9. és 10. fejezet blokkjai alapján a szkript magát az .md fájlt is tudja olvasni:
+   # a szkript a 11. fejezetből bontható ki, és magát az .md fájlt olvassa (10. fejezet):
    sed -n '/^```python select_items.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > select_items.py
-   python3 select_items.py ARCHIVUM.md --budget 1TB --profile balanced --langs hu,en,multi --hw T3 --emit-sh dl.sh
+   python3 select_items.py ARCHIVUM.md --budget 1TB --profile balanced --langs hu,en,multi --hw T3 --mem 160GB --emit-sh dl.sh
    less dl.sh && DEST=/media/usb/archivum bash dl.sh
    ```
 4. **Fontos:**

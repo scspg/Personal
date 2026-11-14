@@ -18,3 +18,7 @@ EST = {"wikem-emergency-medicine-wiki": (1_500_000_000, "estimated:~5k MediaWiki
        "icraf-agroforestree-database": (1_000_000_000, "estimated:HTML fajoldalak képekkel")}
 for k, (b, st) in EST.items():
     OVERRIDES.setdefault(k, {}).update({"bytes_est": b, "size_status": st})
+OVERRIDES["cd3wd-2012-dvd-isos"].update({"group": "cd3wd", "variant_rank": 2, "variant_role": "pref"})
+OVERRIDES["msf-clinical-guidelines"] = {"download": {"method": "http", "urls": [
+    "https://medicalguidelines.msf.org/sites/default/files/pdf/guideline-170-en.pdf"]},
+    "notes": "Stabil útvonal: /sites/default/files/pdf/guideline-170-<nyelv>.pdf (en, fr, es, ar). A dátumos mappa (pl. 2026-05) frissítéskor változik."}

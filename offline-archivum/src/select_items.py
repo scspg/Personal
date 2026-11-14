@@ -20,7 +20,8 @@ PROFILES = {  # súlyok: S=túlélés R=újjáépítés A=gyakorlatiasság U=pó
     "education": {"S": .10, "R": .35, "A": .10, "U": .15, "Q": .20, "O": .10},
     "computing": {"S": .05, "R": .40, "A": .20, "U": .15, "Q": .10, "O": .10},
 }
-AUTO_METHODS = {"kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent", "jigdo", "s3"}
+MEM_CAP = {"T5": 10e9, "T4": 100e9, "T3": 220e9, "T2": 900e9, "T1": 1e18}  # alapértelmezett max. modellméret hardverszintenként
+AUTO_METHODS = {"agent", "kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent", "jigdo", "s3"}
 UNITS = {"B": 1, "KB": 1e3, "MB": 1e6, "GB": 1e9, "TB": 1e12, "PB": 1e15,
          "KIB": 2**10, "MIB": 2**20, "GIB": 2**30, "TIB": 2**40}
 
@@ -82,6 +83,10 @@ def main():
                     help="engedett hozzáférés: free,free-registration,donation,paid,gray,physical")
     ap.add_argument("--hw", default=None, help="LLM hardverszint: T1..T5 (ha nincs megadva: nincs LLM, csak ha --llm-max>0 és --hw adott)")
     ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra")
+    ap.add_argument("--platform", default="", help="LLM-formátumok a GGUF/Ollama mellé: mac (MLX), server (vLLM/SGLang: FP8/NVFP4/AWQ), android (LiteRT); vesszővel")
+    ap.add_argument("--uncensored", choices=["no", "also", "only"], default="also", help="cenzúrázatlan LLM-változatok: no | also | only")
+    ap.add_argument("--llm-models", type=int, default=3, help="legfeljebb ennyi különböző LLM-modell (group) kerüljön be")
+    ap.add_argument("--mem", default=None, help="LLM-re használható memória (RAM+VRAM vagy unified), pl. 48GB / 512GB; a modell max. 85%%-a lehet")
     ap.add_argument("--focus", default="", help="kategória-szorzók, pl. medicine=2,agriculture=1.5")
     ap.add_argument("--max-tier", type=int, default=5)
     ap.add_argument("--include", default="", help="kötelezően beveendő id-k (vesszővel)")
@@ -121,8 +126,19 @@ def main():
             continue
         if it.get("access") not in access:
             continue
-        if it["cat"] == "ai_models":
+        if it["cat"] in ("ai_tools",) or it["id"] == "tool-ollama-installers":
+            if not a.hw:
+                continue
+        if it["cat"].startswith("ai_models"):
             if not a.hw or a.hw not in (it.get("hw_tiers") or []):
+                continue
+            if it.get("platform", "any") not in ({"any"} | set(p for p in a.platform.split(",") if p)):
+                continue
+            memcap = parse_size(a.mem) * 0.85 if a.mem else MEM_CAP.get(a.hw, 1e18)
+            if size_of(it) and size_of(it) > memcap:
+                continue
+            unc = it["cat"] == "ai_models_uncensored"
+            if (a.uncensored == "no" and unc) or (a.uncensored == "only" and not unc):
                 continue
         method = (it.get("download") or {}).get("method")
         if method not in AUTO_METHODS or it.get("access") in ("paid", "physical"):
@@ -143,14 +159,17 @@ def main():
     llm_cap = int(budget * a.llm_max)
 
     def llm_used():
-        return sum(size_of(v) for v in chosen.values() if v["cat"] == "ai_models")
+        return sum(size_of(v) for v in chosen.values() if v["cat"].startswith("ai_models"))
 
     def fits(new, old=None):
         delta = size_of(new) - (size_of(old) if old else 0)
         if used + delta > budget:
             return False
-        if new["cat"] == "ai_models" and llm_used() + delta > llm_cap:
-            return False
+        if new["cat"].startswith("ai_models"):
+            if llm_used() + delta > llm_cap:
+                return False
+            if old is None and sum(1 for v in chosen.values() if v["cat"].startswith("ai_models")) >= a.llm_models:
+                return False
         return True
 
     def pref_rank(g):
@@ -185,11 +204,40 @@ def main():
     def tier_of(k, g):
         return -1 if any(v["id"] in incl for v in g) else min(v["tier"] for v in g)
 
+    def is_llm(g):
+        return g[0]["cat"].startswith("ai_models")
+
+    def llm_pass():
+        """LLM: modellenként a legjobb (intelligencia x kvant-minőség) beférő változat; 1 fő + 1 cenzúrázatlan + 1 kicsi tartalék + töltés."""
+        nonlocal used
+        def eff(v):
+            b = v.get("llm_bits") or 4.5
+            q = 0.55 if b < 2 else 0.75 if b < 3 else 0.9 if b < 4 else 1.0 if b < 5 else 1.03 if b < 7 else 1.05
+            return (v.get("llm_aa") or 5) * q
+        cands = sorted([v for k, g in groups.items() if is_llm(g) for v in g], key=lambda v: (-eff(v), size_of(v)))
+        def take(pred):
+            nonlocal used
+            for v in cands:
+                k = v.get("group") or v["id"]
+                if k in chosen or not pred(v):
+                    continue
+                if fits(v):
+                    chosen[k] = v; used += size_of(v)
+                    return v
+        take(lambda v: v["cat"] == "ai_models")
+        if a.uncensored != "no":
+            take(lambda v: v["cat"] == "ai_models_uncensored")
+        take(lambda v: size_of(v) <= 20e9)
+        while take(lambda v: True):
+            pass
+
     for t in tiers:
-        fill(lambda k, g, t=t: tier_of(k, g) == t)
+        if t == 1:
+            llm_pass()
+        fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g))
     # 3) luxus-feljavítások (pl. képes Wikipedia) pontszám szerint
     for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
-        if k in chosen:
+        if k in chosen and not is_llm(g):
             for v in sorted(g, key=size_of, reverse=True):
                 if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
                     used += size_of(v) - size_of(chosen[k]); chosen[k] = v
@@ -200,7 +248,7 @@ def main():
         used -= size_of(chosen[k]); del chosen[k]
     ids = {v["id"] for v in chosen.values()}
     for t in tiers:
-        fill(lambda k, g, t=t: tier_of(k, g) == t and not any(set(v.get("subsumed_by") or []) & ids for v in g))
+        fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g) and not any(set(v.get("subsumed_by") or []) & ids for v in g))
 
     plan = sorted(chosen.values(), key=lambda x: (x["tier"], -x["_score"]))
     # szükséges olvasó/futtató eszközök (requires) – ha a katalógusban szerepelnek, mindig kerüljenek be
@@ -245,7 +293,8 @@ def write_sh(plan, path, dest):
          "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'LOG="$DEST/_log.txt"; mkdir -p "$DEST"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
          'fetch(){ # url outdir',
-         '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -d "$2" "$1"; else (cd "$2" && wget -c "$1"); fi; }',
+         '  local ua=${UA:-Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0}',
+         '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c -U "$ua" "$1"); fi; }',
          'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból',
          '  local u; u=$(curl -fsSL "https://library.kiwix.org/catalog/v2/entries?name=$1&count=50" 2>/dev/null \\',
          '    | tr "\\n" " " | sed "s#<entry>#\\n#g" | { if [ -n "$2" ]; then grep "<flavour>$2</flavour>"; else cat; fi; } \\',
@@ -265,7 +314,7 @@ def write_sh(plan, path, dest):
                 if u:
                     L.append(f'fetch {q(u)} "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "wget-mirror":
-            L.append(f'(cd "{sub}" && wget -m -np -k -E -c -e robots=off --wait=1 {d.get("wget_args","")} {q(d["url"])}) && ok {q(v["id"])} || fail {q(v["id"])}')
+            L.append(f'(cd "{sub}" && wget -m -np -k -E -c -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "rsync":
             L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "git":
@@ -284,6 +333,12 @@ def write_sh(plan, path, dest):
                 L.append(f'ia download {q(ident)}{glob} --destdir "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "torrent":
             L.append(f'aria2c -c --seed-time=0 -d "{sub}" {q(d.get("url") or d.get("magnet"))} && ok {q(v["id"])} || fail {q(v["id"])}')
+        elif m == "agent":
+            L.append(f'# AGENT-FELADAT: ezt az AI-nak kell egyedileg megoldania (lista összegyűjtése API/OAI-PMH/oldal alapján, majd fetch).')
+            L.append(f'# Leírás: {d.get("note","")}'.replace("\n", " "))
+            for u in d.get("seed_urls") or []:
+                L.append(f'#   kiinduló URL: {u}')
+            L.append(f'echo "TODO {v["id"]}" | tee -a "$LOG"')
         elif m == "s3":
             L.append(f'# S3: {d.get("note","")}\n# aws s3 sync {d.get("url")} "{sub}" {d.get("s3_args","")}')
         L.append("")

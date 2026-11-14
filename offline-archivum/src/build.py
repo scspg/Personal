@@ -76,8 +76,8 @@ def main():
         subprocess.run(cmd, check=True, capture_output=True)
         p = json.load(open(outp, encoding="utf-8"))
         its = p["items"]
-        llm = [i for i in its if i["cat"] == "ai_models"]
-        big = sorted([i for i in its if i["cat"] not in ("ai_models", "tools")], key=lambda x: -(x.get("bytes") or x.get("bytes_est") or 0))[:4]
+        llm = [i for i in its if i["cat"].startswith("ai_models")]
+        big = sorted([i for i in its if not i["cat"].startswith(("ai_models", "tools", "ai_tools"))], key=lambda x: -(x.get("bytes") or x.get("bytes_est") or 0))[:4]
         preset_rows.append(f"| **{b}** | {who} | {hw or '–'} | {len(its)} | {human(p['used_bytes'])} | "
                            f"{', '.join(i['id'] for i in llm) or '–'} | {', '.join(i['id'] for i in big)} |")
 
@@ -87,7 +87,7 @@ def main():
         bycat.setdefault(it["cat"], []).append(it)
     cat_md = ["---\n\n## 5. Katalógus kategóriánként\n",
               "> Pont = `balanced` összpontszám (0–10). T = tier. Méret: **M** = mért, **H** = hivatalos, **B** = becsült. "
-              "A teljes adat (letöltési mód, licenc, megjegyzések) a 9. fejezet JSONL-jében van.\n"]
+              "A teljes adat (letöltési mód, licenc, megjegyzések) a 10. fejezet JSONL-jében van. Az LLM-ek a 6. fejezetben.\n"]
     order = sorted(bycat, key=lambda c: (min(i["tier"] for i in bycat[c]), -max(score(i) for i in bycat[c])))
     for c in order:
         if c == "ai_models":
@@ -112,19 +112,55 @@ def main():
     llm_md = sec.get("06_llm.md", "---\n\n## 6. Helyi LLM-ek\n\n(készül)\n")
     llm_items = sorted(bycat.get("ai_models", []), key=lambda x: (x["tier"], -score(x)))
 
-    jsonl = "\n".join(json.dumps(i, ensure_ascii=False, separators=(",", ":")) for i in
+    LLM_KEYS = ("id", "name", "cat", "tier", "group", "variant_rank", "lang", "access", "license", "bytes", "size_status", "format",
+                "download", "scores", "hw_tiers", "platform", "llm_aa", "llm_aa_est", "llm_bits", "released")
+
+    def compact(i):
+        if i["cat"].startswith("ai_models") and "llm_aa" in i:
+            d = {k: i[k] for k in LLM_KEYS if k in i}
+            d["size_status"] = "measured:2026-11-14:hf-api"
+            d["license"] = str(d.get("license", ""))[:20]
+            return d
+        d = dict(i)
+        if d.get("bytes"):
+            d.pop("size_human", None)
+        return d
+    jsonl = "\n".join(json.dumps(compact(i), ensure_ascii=False, separators=(",", ":")) for i in
                       sorted(items, key=lambda x: (x["tier"], x["cat"], x["id"])))
     n_measured = sum(1 for i in items if (i.get("size_status") or "").startswith("measured"))
     head = sec["01_head.md"].replace("{{BUILD_DATE}}", datetime.date.today().isoformat()).replace("{{N_ITEMS}}", f"{len(items)} ({n_measured} mért méretű)")
     parts = [head, sec["02_prompt.md"], sec["03_rules.md"], sec["04_scoring.md"], "\n".join(preset_md), "\n".join(cat_md), llm_md,
-             sec["07_recipes.md"], sec.get("08_manual.md", ""),
-             "---\n\n## 9. Gépi katalógus\n\nSoronként egy JSON-objektum. Mezők: `id`, `name`, `cat`, `tier` (0–5), `group` (egymást kizáró változatok), "
+             sec["07_recipes.md"], sec.get("08_manual.md", ""), sec.get("09_web.md", ""),
+             "---\n\n## 10. Gépi katalógus\n\nSoronként egy JSON-objektum. Mezők: `id`, `name`, `cat`, `tier` (0–5), `group` (egymást kizáró változatok), "
              "`variant_rank`, `variant_role` (`pref` = ajánlott, `luxury`), `desc_hu`, `lang`, `access` (free | free-registration | donation | paid | gray | physical), `price`, "
              "`license`, `bytes` (mért vagy hivatalos), `bytes_est` (becsült), `size_status`, `format`, `info_url`, `download` {method, …}, `url_status`, "
              "`scores` {S,R,A,U,Q,O}, `requires`, `subsumed_by`, `hw_tiers` (LLM: T1–T5), `notes`.\n\n```jsonl\n" + jsonl + "\n```\n",
-             "---\n\n## 10. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n"]
+             "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n"]
     open(OUT, "w", encoding="utf-8").write("\n\n".join(p.strip("\n") + "\n" for p in parts if p))
     print(f"OK: {OUT}  elemek={len(items)}  méret={os.path.getsize(OUT)/1e3:.0f} KB")
+    # --- kompakt változat chatbe töltéshez ---
+    full = open(OUT, encoding="utf-8").read()
+    seen, keep = set(), []
+    for i in sorted(items, key=lambda x: (x["tier"], x["cat"], x["id"])):
+        if i["cat"].startswith("ai_models") and "llm_aa" in i:
+            key = (i["group"], i["platform"], i["llm_bits"])
+            if key in seen:
+                continue
+            seen.add(key)
+        c = compact(i)
+        if c.get("notes") and len(c["notes"]) > 240:
+            c["notes"] = c["notes"][:240] + "…"
+        keep.append(json.dumps(c, ensure_ascii=False, separators=(",", ":")))
+    import re as _re
+    comp = _re.sub(r"(?s)\n---\n\n## 5\. Katalógus kategóriánként.*?(?=\n---\n\n## 6\.)",
+                   "\n---\n\n## 5. Katalógus kategóriánként\n\n*A kompakt változatból kimaradt; a teljes adat a 10. fejezet JSONL-jében van, emberi táblákért lásd a teljes ARCHIVUM.md-t.*\n", full)
+    comp = _re.sub(r"(?s)### 6\.4 .*?(?=### 6\.5 )",
+                   "### 6.4 Kvantált változatok\n\nA kompakt változatban modellenként és platformonként bitszintenként egy változat szerepel a JSONL-ben. Az összes (609) változat linkkel a teljes ARCHIVUM.md-ben van.\n\n", comp)
+    comp = _re.sub(r"(?s)```jsonl\n.*?```", lambda m: "```jsonl\n" + "\n".join(keep) + "\n```", comp, count=1)
+    comp = comp.replace("# ARCHIVUM – Offline tudásarchívum", "# ARCHIVUM (kompakt) – Offline tudásarchívum", 1)
+    cp = os.path.join(HERE, "..", "ARCHIVUM-kompakt.md")
+    open(cp, "w", encoding="utf-8").write(comp)
+    print(f"OK: {cp}  JSONL-sorok={len(keep)}  méret={os.path.getsize(cp)/1e3:.0f} KB")
 
 
 if __name__ == "__main__":
