@@ -1,0 +1,95 @@
+# book	flavour	id	tier	cat	group	variant_rank	pref	S	R	A	U	Q	O	lang	desc_hu	subsumed_by
+mdwiki_en_all	maxi	kx-mdwiki	0	medicine	-	-	-	9	6	6	6	8	9	en	WikiProjectMed orvosi enciklopédia (betegségek, gyógyszerek, eljárások), képekkel; laikus és szakmai szinten is használható.	-
+zimgit-post-disaster_en		kx-post-disaster	0	survival	-	-	-	9	6	9	8	7	9	en	Katasztrófa utáni kézikönyv-gyűjtemény (menedék, víz, egészség, újjáépítés) – rendezett PDF/HTML anyagok.	-
+zimgit-water_en		kx-water	0	water_sanitation	-	-	-	9	5	9	6	7	9	en	Víztisztítás, kutak, szűrők, fertőtlenítés gyakorlati anyagai.	-
+zimgit-medicine_en		kx-zimgit-medicine	0	medicine	-	-	-	8	4	8	6	7	9	en	Válogatott terepi orvosi kézikönyvek (elsősegély, orvos nélküli ellátás).	-
+zimgit-food-preparation_en		kx-food-prep	0	food	-	-	-	7	4	8	5	7	9	en	Élelmiszer-feldolgozás és -tartósítás (szárítás, befőzés, füstölés) útmutatói.	-
+irp.fas.org_en_military-medicine		kx-fas-milmed	0	medicine	-	-	-	9	5	9	8	9	9	en	US katonai orvosi kézikönyvek (FAS gyűjtés): trauma, sebellátás, terepi sebészet, járványügy.	-
+nhs.uk_en_medicines		kx-nhs-medicines	0	medicine	-	-	-	7	3	7	5	9	9	en	NHS gyógyszer-adatlapok: adagolás, mellékhatás, kölcsönhatás – egyszerű nyelven.	-
+cd3wdproject.org_en_all		kx-cd3wd	0	appropriate_tech	-	-	-	8	8	8	8	7	9	en	CD3WD: fejlődő országoknak készült több ezer technológiai kézikönyv (mezőgazdaság, víz, építés, kisipar, egészség).	-
+wwwnc.cdc.gov_en_all		kx-cdc	1	medicine	-	-	-	6	3	5	5	9	9	en	CDC Travel Health: fertőző betegségek, oltások, megelőzés országonként.	-
+zimgit-knots_en		kx-knots	1	survival	-	-	-	5	3	9	5	8	9	en	Csomókötés animált útmutatókkal (kötélmunka, emelés, hajózás).	-
+wikipedia_en_all	maxi	kx-wp-en-maxi	1	reference	wp-en	6	luxury	6	9	4	9	8	9	en	Teljes angol Wikipedia képekkel (6,9M+ cikk). A tudásbázis gerince.	-
+wikipedia_en_all	nopic	kx-wp-en-nopic	1	reference	wp-en	5	pref	6	9	4	9	8	9	en	Teljes angol Wikipedia képek nélkül – legjobb tudás/GB arány.	-
+wikipedia_en_top1m	nopic	kx-wp-en-top1m	1	reference	wp-en	4	-	6	8	4	8	8	9	en	A legolvasottabb 1 millió angol cikk, képek nélkül.	-
+wikipedia_en_all	mini	kx-wp-en-mini	1	reference	wp-en	3	-	5	7	3	8	8	9	en	Összes angol cikk, de csak bevezető + infobox.	-
+wikipedia_en_top	maxi	kx-wp-en-top-maxi	1	reference	wp-en	2	-	5	6	3	6	8	9	en	Top ~50 ezer angol cikk képekkel.	-
+wikipedia_en_top	nopic	kx-wp-en-top-nopic	1	reference	wp-en	1	-	5	6	3	6	8	9	en	Top ~50 ezer angol cikk képek nélkül (kis tárhelyre).	-
+wikipedia_hu_all	maxi	kx-wp-hu-maxi	1	reference	wp-hu	4	pref	6	8	4	7	7	9	hu	Teljes magyar Wikipédia képekkel.	-
+wikipedia_hu_all	nopic	kx-wp-hu-nopic	1	reference	wp-hu	3	-	6	8	4	7	7	9	hu	Teljes magyar Wikipédia képek nélkül.	-
+wikipedia_hu_top	maxi	kx-wp-hu-top	1	reference	wp-hu	2	-	5	6	3	6	7	9	hu	A legfontosabb magyar cikkek képekkel.	-
+wikipedia_hu_all	mini	kx-wp-hu-mini	1	reference	wp-hu	1	-	5	6	3	6	7	9	hu	Összes magyar cikk, csak bevezetővel.	-
+wikipedia_en_medicine	maxi	kx-wp-en-med	0	medicine	wp-en-med	2	pref	8	6	4	4	7	9	en	Wikipedia összes orvosi cikke képekkel (önálló, ha nincs teljes WP).	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_medicine	nopic	kx-wp-en-med-nopic	0	medicine	wp-en-med	1	-	8	6	4	4	7	9	en	Wikipedia orvosi cikkek képek nélkül.	kx-wp-en-maxi,kx-wp-en-nopic
+libretexts.org_en_med		kx-lt-med	1	medicine	-	-	-	8	7	6	5	9	9	en	LibreTexts orvosi/ápolási egyetemi tankönyvek (anatómia, ápolás, farmakológia).	-
+libretexts.org_en_workforce		kx-lt-workforce	1	manufacturing	-	-	-	5	8	8	7	8	9	en	LibreTexts szakképzés: hegesztés, villanyszerelés, HVAC, építőipar, gépészet.	-
+ifixit_en_all		kx-ifixit	1	repair	-	-	-	5	6	9	8	8	9	en	iFixit: lépésről lépésre javítási útmutatók eszközökhöz, járművekhez, elektronikához.	-
+appropedia_en_all	maxi	kx-appropedia	1	appropriate_tech	-	-	-	6	7	7	7	6	9	en	Appropedia: megfelelő technológia, fenntartható építés, víz, energia, egészség.	-
+energypedia_en_all	maxi	kx-energypedia	1	energy	-	-	-	5	7	6	7	7	9	en	Energypedia: kisléptékű energia (napelem, biogáz, mikro-víz, főzőkályhák).	-
+diy.stackexchange.com_en_all		kx-se-diy	1	construction	-	-	-	5	6	9	7	7	9	en	Házfelújítás, villany-, víz-, fűtésszerelés kérdés-válasz formában.	-
+gardening.stackexchange.com_en_all		kx-se-gardening	1	agriculture	-	-	-	7	5	8	6	7	9	en	Kertészet, növényvédelem, termesztés Q&A.	-
+solar.lowtechmagazine.com_mul_all		kx-lowtech	2	appropriate_tech	-	-	-	4	7	5	7	7	9	en	Low-tech Magazine: áram nélküli és régi technológiák, energiatakarékos megoldások.	-
+quickguidesformedicine_en_all		kx-qg-medicine	2	medicine	-	-	-	6	4	7	5	7	6	en	Orvosi gyorsreferencia videók (videólejátszás kell).	-
+lrnselfreliance_en_all		kx-learn-self-reliance	2	survival	-	-	-	7	4	8	5	5	6	en	Learn Self Reliance videócsatorna: önellátás, tartósítás, kézművesség (videó).	-
+libretexts.org_en_chem		kx-lt-chem	2	chemistry	-	-	-	4	9	5	6	9	9	en	LibreTexts kémia tankönyvek (általános, szerves, analitikai, ipari).	-
+libretexts.org_en_eng		kx-lt-eng	2	engineering	-	-	-	4	9	6	7	9	9	en	LibreTexts mérnöki tankönyvek (gépész, villamos, építő, anyagtudomány).	-
+libretexts.org_en_phys		kx-lt-phys	2	science	-	-	-	3	9	5	5	9	9	en	LibreTexts fizika tankönyvek.	-
+libretexts.org_en_bio		kx-lt-bio	2	science	-	-	-	4	8	5	6	9	9	en	LibreTexts biológia (mikrobiológia, genetika, ökológia, botanika).	-
+libretexts.org_en_math		kx-lt-math	2	science	-	-	-	2	8	5	5	9	9	en	LibreTexts matematika (algebra, analízis, lineáris algebra).	-
+libretexts.org_en_geo		kx-lt-geo	3	science	-	-	-	3	6	4	5	9	9	en	LibreTexts földtudományok (geológia, talajtan, meteorológia).	-
+libretexts.org_en_k12		kx-lt-k12	3	education	-	-	-	2	6	5	5	9	9	en	LibreTexts közoktatási anyagok.	-
+libretexts.org_en_stats		kx-lt-stats	3	science	-	-	-	1	6	5	4	9	9	en	LibreTexts statisztika.	-
+libretexts.org_en_human		kx-lt-human	4	humanities	-	-	-	1	4	3	4	9	9	en	LibreTexts bölcsészet.	-
+libretexts.org_en_socialsci		kx-lt-socialsci	4	humanities	-	-	-	1	4	3	4	9	9	en	LibreTexts társadalomtudományok.	-
+libretexts.org_en_biz		kx-lt-biz	4	humanities	-	-	-	1	4	4	4	9	9	en	LibreTexts üzlet/közgazdaság.	-
+electronics.stackexchange.com_en_all		kx-se-electronics	2	electronics	-	-	-	3	8	8	7	7	9	en	Elektronika Q&A: áramkörtervezés, tápegységek, javítás.	-
+chemistry.stackexchange.com_en_all		kx-se-chemistry	2	chemistry	-	-	-	3	7	6	5	7	9	en	Kémia Q&A.	-
+engineering.stackexchange.com_en_all		kx-se-engineering	2	engineering	-	-	-	3	7	6	5	7	9	en	Mérnöki Q&A.	-
+mechanics.stackexchange.com_en_all		kx-se-mechanics	2	repair	-	-	-	4	6	8	6	7	9	en	Gépjármű-javítás Q&A.	-
+woodworking.stackexchange.com_en_all		kx-se-woodworking	2	manufacturing	-	-	-	3	6	8	5	7	9	en	Famegmunkálás Q&A.	-
+ham.stackexchange.com_en_all		kx-se-ham	2	communications	-	-	-	5	6	7	7	7	9	en	Rádióamatőr Q&A: antennák, adó-vevők, terjedés.	-
+cooking.stackexchange.com_en_all		kx-se-cooking	2	food	-	-	-	5	3	8	4	7	9	en	Főzés és élelmiszerbiztonság Q&A.	-
+outdoors.stackexchange.com_en_all		kx-se-outdoors	2	survival	-	-	-	6	2	7	4	7	9	en	Szabadtéri túlélés, túrázás Q&A.	-
+bicycles.stackexchange.com_en_all		kx-se-bicycles	2	repair	-	-	-	4	4	8	5	7	9	en	Kerékpár-javítás Q&A (áram nélküli közlekedés).	-
+medicalsciences.stackexchange.com_en_all		kx-se-medsci	2	medicine	-	-	-	5	4	4	4	6	9	en	Orvostudomány Q&A.	-
+wikibooks_en_all	maxi	kx-wikibooks-en	2	reference	-	-	-	4	8	7	7	6	9	en	Wikibooks: nyílt tankönyvek és kézikönyvek (kémia, elektronika, programozás, főzés).	-
+wikibooks_hu_all	maxi	kx-wikibooks-hu	2	hungarian	-	-	-	3	6	6	6	6	9	hu	Magyar Wikikönyvek.	-
+wiktionary_hu_all	nopic	kx-wiktionary-hu	2	hungarian	-	-	-	2	6	3	6	7	9	hu	Magyar Wikiszótár (fordításokkal) – idegen nyelvű anyagok értelmezéséhez.	-
+archlinux_en_all	maxi	kx-archwiki	2	computing	-	-	-	1	7	8	6	8	9	en	ArchWiki: a legjobb Linux-rendszergazda tudásbázis.	-
+wikipedia_en_chemistry	maxi	kx-wp-en-chem	2	chemistry	-	-	-	3	7	3	3	7	9	en	Wikipedia kémia-tematikus részhalmaz (kis tárhelyre).	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_physics	maxi	kx-wp-en-phys	3	science	-	-	-	2	7	3	3	7	9	en	Wikipedia fizika részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_mathematics	maxi	kx-wp-en-math	3	science	-	-	-	1	6	3	3	7	9	en	Wikipedia matematika részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_molcell	maxi	kx-wp-en-molcell	3	science	-	-	-	2	6	3	3	7	9	en	Wikipedia molekuláris és sejtbiológia részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_geography	maxi	kx-wp-en-geo	3	reference	-	-	-	3	5	3	3	7	9	en	Wikipedia földrajz részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_history	maxi	kx-wp-en-history	3	humanities	-	-	-	1	5	2	3	7	9	en	Wikipedia történelem részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikipedia_en_computer	maxi	kx-wp-en-computer	3	computing	-	-	-	1	6	3	3	7	9	en	Wikipedia számítástechnika részhalmaz.	kx-wp-en-maxi,kx-wp-en-nopic
+wikisource_en_all	nopic	kx-wikisource-en-nopic	3	library	wikisource-en	1	pref	2	6	3	6	7	9	en	Wikisource: közkincs szövegek (pl. 1911-es Britannica, régi szakkönyvek).	-
+wikisource_en_all	maxi	kx-wikisource-en-maxi	3	library	wikisource-en	2	luxury	2	6	3	6	7	9	en	Wikisource képekkel.	-
+wikisource_hu_all	maxi	kx-wikisource-hu	3	hungarian	-	-	-	1	4	2	5	7	9	hu	Magyar Wikiforrás.	-
+wikiversity_en_all	maxi	kx-wikiversity	3	education	-	-	-	3	6	5	5	5	9	en	Wikiversity kurzusok.	-
+wiktionary_en_all	nopic	kx-wiktionary-en	3	reference	-	-	-	2	6	2	6	7	9	en	Angol Wiktionary (többnyelvű szótár).	-
+phet_hu_all		kx-phet-hu	3	education	-	-	-	1	6	5	6	9	7	hu	PhET interaktív fizika/kémia szimulációk magyarul (böngésző + JS kell).	-
+phet_en_all		kx-phet-en	4	education	-	-	-	1	6	5	3	9	7	en	PhET szimulációk angolul.	kx-phet-hu
+physics.stackexchange.com_en_all		kx-se-physics	3	science	-	-	-	2	7	5	5	7	9	en	Fizika Q&A.	-
+biology.stackexchange.com_en_all		kx-se-biology	3	science	-	-	-	3	5	4	4	7	9	en	Biológia Q&A.	-
+earthscience.stackexchange.com_en_all		kx-se-earthsci	3	science	-	-	-	2	5	4	4	7	9	en	Földtudomány Q&A.	-
+arduino.stackexchange.com_en_all		kx-se-arduino	3	electronics	-	-	-	1	6	7	5	7	9	en	Arduino/mikrokontroller Q&A.	-
+3dprinting.stackexchange.com_en_all		kx-se-3dprint	3	manufacturing	-	-	-	1	5	7	5	7	9	en	3D-nyomtatás Q&A.	-
+homebrew.stackexchange.com_en_all		kx-se-homebrew	3	food	-	-	-	3	3	7	5	7	9	en	Erjesztés, sörfőzés (fertőtlenítő alkohol, tartósítás) Q&A.	-
+sustainability.stackexchange.com_en_all		kx-se-sustainability	3	appropriate_tech	-	-	-	3	4	4	4	6	9	en	Fenntarthatóság Q&A.	-
+askubuntu.com_en_all		kx-se-askubuntu	3	computing	-	-	-	1	6	7	5	7	9	en	Ubuntu/Linux Q&A.	-
+unix.stackexchange.com_en_all		kx-se-unix	3	computing	-	-	-	1	7	7	6	7	9	en	Unix/Linux shell és rendszer Q&A.	-
+docs.python.org_en_all		kx-python-docs	3	computing	-	-	-	1	7	7	6	9	9	en	Hivatalos Python dokumentáció.	-
+gutenberg_hu_all		kx-gutenberg-hu	3	hungarian	-	-	-	1	5	2	5	8	9	hu	Project Gutenberg magyar nyelvű könyvei.	-
+urban-prepper_en_all		kx-urban-prepper	3	survival	-	-	-	6	2	7	4	4	6	en	Urban Prepper videócsatorna (felkészülés, felszerelés; videó).	-
+wikivoyage_en_all	maxi	kx-wikivoyage	4	reference	-	-	-	3	2	4	4	6	9	en	Wikivoyage: régiók, útvonalak, helyi infó.	-
+math.stackexchange.com_en_all		kx-se-math	4	science	-	-	-	1	6	4	5	7	9	en	Matematika Q&A (nagy).	-
+robotics.stackexchange.com_en_all		kx-se-robotics	4	electronics	-	-	-	1	5	5	4	7	9	en	Robotika Q&A.	-
+superuser.com_en_all		kx-se-superuser	4	computing	-	-	-	1	5	7	4	7	9	en	Számítógép-használat Q&A.	-
+stackoverflow.com_en_all		kx-stackoverflow	4	computing	-	-	-	1	8	7	8	7	9	en	Teljes StackOverflow: programozási tudás (114 GB).	-
+khanacademy_en_all		kx-khan	4	education	-	-	-	2	8	6	7	9	7	en	Khan Academy teljes angol kurzusanyag videókkal (2023-as snapshot) – gyerekek/új generáció oktatása.	-
+crashcourse_en_all		kx-crashcourse	4	education	-	-	-	1	6	4	4	8	6	en	CrashCourse oktatóvideók (tudomány, történelem).	-
+gutenberg_en_all		kx-gutenberg-en	4	library	gutenberg	1	pref	1	6	3	7	8	9	en	Project Gutenberg angol könyvek (~70e+ közkincs mű).	-
+gutenberg_mul_all		kx-gutenberg-mul	4	library	gutenberg	2	luxury	1	6	3	7	8	9	multi	Project Gutenberg összes nyelv.	-
+ted_mul_all		kx-ted	5	education	-	-	-	0	3	2	3	7	6	multi	TED előadások videón.	-
+wikipedia_en-simple_all	maxi	kx-wp-simple	3	education	-	-	-	3	5	3	4	8	9	en	Simple English Wikipedia – egyszerű angol, tanuláshoz/gyerekeknek.	-
