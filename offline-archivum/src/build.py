@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ARCHIVUM.md összeállítása: sections/*.md + items_*.jsonl + select_items.py -> ../ARCHIVUM.md"""
-import json, glob, os, subprocess, sys, tempfile, datetime
+import json, glob, os, re, subprocess, sys, tempfile, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "ARCHIVUM.md")
@@ -190,6 +190,35 @@ def ssd_section(plans):
     return "\n".join(md)
 
 
+def oss_section(items):
+    """5b: igényenként a legjobb nyílt forráskódú szoftver / modell / adathalmaz – link, verzió, licenc, méret, alternatívák."""
+    L = [i for i in items if i["id"].startswith(("oss-", "hub-"))]
+    by = {}
+    for i in L:
+        by.setdefault(i["cat"], []).append(i)
+    order = sorted(by, key=lambda c: (not c.startswith("oss_"), CAT_HU.get(c, c)))
+    md = ["---", "", "## 5b. Mindenre a legjobb nyílt forráskódú szoftver és modell", "",
+          f"> {sum(1 for i in L if i['id'].startswith('oss-'))} nyílt forráskódú szoftver és {sum(1 for i in L if i['id'].startswith('hub-'))} modell, adathalmaz, platform.",
+          "> - **Szoftverek:** kategóriánként a legjobb, aktívan karbantartott, OSI-licencű projekt. Mindegyik repóját `git ls-remote`-tal ellenőrizték (2026-11-14), a verzió a legutóbbi stabil tag.",
+          "> - **Letöltés:** a forráskód git-tükörként, a telepítők a kiadási oldalról töltődnek le (a letöltő szkript AI-feladatként jelzi).",
+          "> - **Modellek:** a Hugging Face API-val ellenőrzöttek, a méret a ténylegesen letöltendő fájloké.", "",
+          "**Kategóriák:** " + " · ".join(f"[{CAT_HU.get(c, c).replace('Szoftver: ', '').replace('Modellek: ', '')}](#{re.sub(r'[^0-9a-záéíóöőúüű -]', '', CAT_HU.get(c, c).lower()).replace(' ', '-')})" for c in order), ""]
+    for c in order:
+        rows = sorted(by[c], key=lambda x: (x["tier"], -score(x)))
+        md.append(f"### {CAT_HU.get(c, c)}\n")
+        md.append("| Igény | Legjobb választás | Verzió | Licenc | Méret | Alternatívák |\n|---|---|---|---|---|---|")
+        for i in rows:
+            d = i.get("download") or {}
+            repo = (d.get("repos") or [None])[0] or (f"https://huggingface.co/{d['repo']}" if d.get("repo") else None) or d.get("url")
+            links = " · ".join(x for x in [f"[web]({i['info_url']})" if i.get("info_url") else "", f"[repó]({repo})" if repo else "",
+                                            f"[letöltés]({d['release_url']})" if d.get("release_url") else ""] if x)
+            sz = human(i.get("bytes") or i.get("bytes_est")) if (i.get("bytes") or i.get("bytes_est")) else "–"
+            md.append(f"| {esc(cut(hu(i.get('need_hu') or ''), 110))} | **{esc(cut(i['name'], 60))}** – {esc(cut(i.get('desc_hu'), 220))} {links} | "
+                      f"{esc(cut(i.get('latest_version') or '–', 24))} | {esc(cut(i.get('license'), 32))} | {sz} | {esc(cut(hu(i.get('alternatives') or '–'), 200))} |")
+        md.append("")
+    return "\n".join(md)
+
+
 def main():
     items = []
     for f in sorted(glob.glob(os.path.join(HERE, "items_*.jsonl"))):
@@ -233,7 +262,7 @@ def main():
               "A teljes adat (letöltési mód, licenc, megjegyzések) a 10. fejezet JSONL-jében van. Az LLM-ek a 6. fejezetben.\n"]
     order = sorted(bycat, key=lambda c: (min(i["tier"] for i in bycat[c]), -max(score(i) for i in bycat[c])))
     for c in order:
-        if c.startswith("ai_models"):
+        if c.startswith(("ai_models", "oss_", "hub_")):
             continue
         rows = sorted(bycat[c], key=lambda x: (x["tier"], -score(x)))
         cat_md.append(f"\n### {CAT_HU.get(c, c)} (`{c}`) – {len(rows)} elem\n")
@@ -278,7 +307,7 @@ def main():
     plans = ssd_plans(cat_path, tmp)
     json.dump([[b, [{k: i.get(k) for k in ("id", "name", "cat", "tier", "bytes", "bytes_est", "score", "desc_hu")} for i in p["items"]], p["used_bytes"]] for b, p in plans],
               open(os.path.join(HERE, "ssd_plans.json"), "w", encoding="utf-8"), ensure_ascii=False)
-    parts = [head, sec["02_prompt.md"], sec["03_rules.md"], sec["04_scoring.md"], "\n".join(preset_md), ssd_section(plans), "\n".join(cat_md), llm_md,
+    parts = [head, sec["02_prompt.md"], sec["03_rules.md"], sec["04_scoring.md"], "\n".join(preset_md), ssd_section(plans), "\n".join(cat_md), oss_section(items), llm_md,
              sec["07_recipes.md"], sec.get("08_manual.md", ""), sec.get("09_web.md", ""),
              "---\n\n## 10. Gépi katalógus\n\nSoronként egy JSON-objektum. Mezők: `id`, `name`, `cat`, `tier` (0–5), `group` (egymást kizáró változatok), "
              "`variant_rank`, `variant_role` (`pref` = ajánlott, `luxury`), `desc_hu`, `lang`, `access` (free | free-registration | donation | paid | gray | physical), `price`, "

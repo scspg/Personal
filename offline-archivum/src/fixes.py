@@ -60,6 +60,12 @@ PATCH = {
     "argos-translate-hu": {"subsumed_by": ["hub-argos-translate-hu"]},
     **{i: {"bytes_est": 50_000_000, "size_status": "estimated:git mirror (Markdown lista)"} for i in
        ["hub-awesome-selfhosted", "hub-awesome-sysadmin", "hub-awesome-open-hardware", "hub-awesome-public-datasets", "hub-awesome-meta"]},
+    # --- régi tételek, amelyeket az ellenőrzött nyílt forráskódú szoftvertételek lefednek ---
+    **{old: {"subsumed_by": [new]} for old, new in [
+        ("ventoy", "oss-ventoy"), ("calibre", "oss-calibre"), ("qgis", "oss-qgis"), ("kicad-eda-and-libraries", "oss-kicad"),
+        ("freecad-and-parts-library", "oss-freecad"), ("arduino-ide-offline", "oss-arduino-ide"), ("meshtastic-firmware-and-docs", "oss-meshtastic"),
+        ("reticulum-nomadnet-sideband", "oss-reticulum"), ("internet-in-a-box", "oss-internet-in-a-box"), ("alpine-3244-extended-iso", "oss-alpine"),
+        ("python-source-and-docs", "oss-cpython")]},
     # --- tier/pont-javítások ---
     "tool-vlc": {"tier": 2}, "internet-archive-ia-cli": {"tier": 3}, "organic-syntheses": {"tier": 2},
 }
@@ -106,11 +112,19 @@ def _clean_null(d):
     return d
 
 
+# hiányzó leírás / méret (validátor: 2026-11-14)
+EXTRA_DESC = {
+    "llm-gemma-4-e2b-it-ultra-uncensored-heretic-": "Gemma 4 E2B (kb. 2 milliárd effektív paraméter) Heretic-eljárással cenzúrázatlanított változata. Telefonon és 8 GB-os laptopon is gyorsan fut; tudása szerény, egyszerű kérdés-válaszra, fordításra és vázlatírásra jó.",
+}
+EXTRA_SIZE = {"oss-openfda": 3_000_000_000}   # becsült: drug/label + event részhalmaz zip JSON
+
+
 def apply(items):
-    out = []
+    out, seen = [], set()
     for it in items:
-        if it["id"] in DELETE:
+        if it["id"] in DELETE or it["id"] in seen:     # azonos id két kutatásból: az első (részletesebb) marad
             continue
+        seen.add(it["id"])
         it = _clean_null(it)
         dl = it.get("download") or {}
         if isinstance(dl.get("include"), list):
@@ -121,6 +135,10 @@ def apply(items):
             it["lang"] = LANG[it["id"]]
         elif it.get("lang") not in ("hu", "en", "multi"):
             it["lang"] = "multi" if "," in str(it.get("lang")) else "en"
+        if not (it.get("desc_hu") or "").strip() and it.get("group") in EXTRA_DESC:
+            it["desc_hu"] = EXTRA_DESC[it["group"]]
+        if it["id"] in EXTRA_SIZE and not it.get("bytes"):
+            it["bytes_est"] = EXTRA_SIZE[it["id"]]
         p = PATCH.get(it["id"])
         if p:
             for k, v in p.items():

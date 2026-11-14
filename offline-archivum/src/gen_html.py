@@ -165,6 +165,7 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models th button{all:unset;cursor:pointer;display:inline-block}
 #models th button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #models td.date{white-space:nowrap}
+.soft td{vertical-align:top}.soft .sd{font-size:.86em;color:var(--muted);max-width:420px}.soft td:first-child{min-width:160px}
 #models td.det{max-width:380px}
 #models td.det div{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 th[aria-sort="ascending"]::after{content:" ▲"} th[aria-sort="descending"]::after{content:" ▼"}
@@ -327,6 +328,16 @@ function modelTable(){const q=F('mq').value.toLowerCase(), typ=F('mtyp').value, 
     <td class="det" style="min-width:260px"><div title="${esc(m.u?(m.why||''):(m.strength||''))}">${m.u?`alap: ${esc(m.base||'')} (AA ${fmt(m.base_aa)}) × ${fmt(m.ratio,3)} – ${esc(m.why||'')}`:esc(m.strength||'')}</div></td></tr>`).join('')||'<tr><td colspan="13" class="empty">Nincs a szűrésnek megfelelő modell.</td></tr>';
   F('models').innerHTML=`<table><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`; F('mcount').textContent=L.length+' modell';
   F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable();}));}
+/* ---------- szoftverek és modellek ---------- */
+const S=__SOFT__;
+function softTable(){const q=F('sq').value.toLowerCase(), c=F('scat').value;
+  const L=S.filter(x=>(!c||x.c===c)&&(!q||(x.n+' '+x.need+' '+x.d+' '+x.alt).toLowerCase().includes(q)));
+  const link=(u,l)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`:'';
+  const tr=L.map(x=>`<tr><td>${esc(x.need)}<br><small class="muted">${esc(x.c)}</small></td><td><b>${esc(x.n)}</b><div class="sd">${esc(x.d)}</div><small>${[link(x.w,'web'),link(x.r,'repó'),link(x.rel,'letöltés')].filter(Boolean).join(' · ')}</small></td>
+    <td class="num">${x.t}</td><td>${esc(x.v)||'–'}</td><td>${esc(x.lic)}</td><td class="num">${x.b?gb(x.b):'–'}</td><td class="sd">${esc(x.alt)||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
+  F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Tier</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
+  F('scount').textContent=L.length+' tétel';}
+(()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].sort((a,b)=>a.localeCompare(b,'hu')).forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
 /* ---------- indítás ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-copy]'); if(!b) return; const t=b.dataset.copy;
   const done=()=>{b.textContent='Másolva';setTimeout(()=>b.textContent='Másolás',1500)};
@@ -359,7 +370,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <span class="chip est">~ = becsült érték</span>
   </div>
 </header>
-<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a><a href="#fogalmak">Fogalmak</a></nav>
+<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#szoftverek">Szoftverek és modellek</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a><a href="#fogalmak">Fogalmak</a></nav>
 
 <section id="kalkulator">
   <h2>Kalkulátor</h2>
@@ -410,6 +421,17 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
   <div class="tablebox" id="models"></div>
 </section>
 
+<section id="szoftverek">
+  <h2>Mindenre a legjobb nyílt forráskódú szoftver, modell és adathalmaz</h2>
+  <p class="muted">Igényenként a legjobb választás: GitHub/GitLab/Codeberg-repók (git ls-remote-tal ellenőrizve, 2026-11-14), Hugging Face-modellek és -adathalmazok (HF API-val ellenőrzött méret). A „Tier” 0 = életmentő … 5 = luxus.</p>
+  <div class="filters">
+    <label>Keresés<input id="sq" type="search" placeholder="pl. térkép, orvosi, rádió, whisper"></label>
+    <label>Kategória<select id="scat"><option value="">mind</option></select></label>
+    <span class="hint" id="scount"></span>
+  </div>
+  <div class="tablebox" id="soft"></div>
+</section>
+
 <section id="ssd">
   <h2>Hány TB-os SSD kell? – 1, 2, 4, 8, 16, 32 TB</h2>
   <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil, T2-es LLM-gép ~300 GB memóriával, alap + cenzúrázatlan modellekkel). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
@@ -453,6 +475,23 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 </div>
 <script>__JS__</script>
 """
+
+
+def software():
+    from gen_sections import all_items
+    from build import CAT_HU, hu
+    out = []
+    for i in all_items():
+        if not i["id"].startswith(("oss-", "hub-")):
+            continue
+        d = i.get("download") or {}
+        repo = (d.get("repos") or [None])[0] or (f"https://huggingface.co/{d['repo']}" if d.get("repo") else None) or d.get("url")
+        out.append({"n": i["name"], "c": CAT_HU.get(i["cat"], i["cat"]), "need": hu(i.get("need_hu") or ""), "d": cut(i.get("desc_hu") or "", 260),
+                    "v": i.get("latest_version") or "", "lic": cut(i.get("license") or "", 40), "b": i.get("bytes") or i.get("bytes_est") or 0,
+                    "t": i["tier"], "w": i.get("info_url") or "", "r": repo or "", "rel": d.get("release_url") or "",
+                    "alt": cut(hu(i.get("alternatives") or ""), 220)})
+    out.sort(key=lambda x: (x["c"], x["t"], x["n"].lower()))
+    return out
 
 
 def ssd_html():
@@ -503,6 +542,7 @@ def main():
     js = (JS.replace("__OPUS__", str(OPUS)).replace("__VARIANTS__", json.dumps(vs, ensure_ascii=False, separators=(",", ":")))
           .replace("__MODELS__", json.dumps(ms, ensure_ascii=False, separators=(",", ":"), default=str))
           .replace("__PRESETS__", json.dumps(presets, ensure_ascii=False, separators=(",", ":")))
+          .replace("__SOFT__", json.dumps(software(), ensure_ascii=False, separators=(",", ":")))
           .replace("__START__", "gamer-pc-128" if "gamer-pc-128" in presets else next(iter(presets))))
     date = datetime.date.today().isoformat()
     frag = BODY.replace("__SSD__", ssd_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
