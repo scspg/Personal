@@ -128,6 +128,11 @@ def convert(x, ov):
         dl["url"] = dl_url or x.get("url_info")
     elif method in ("rsync", "torrent", "jigdo", "s3", "ollama", "hf"):
         dl["url"] = dl_url
+    elif method == "kiwix":
+        m = re.search(r"book=([\w.\-]+)(?:\s+flavour=(\w+))?", notes)
+        dl = {"method": "kiwix", "book": m.group(1) if m else None, "flavour": (m.group(2) if m else None), "url": dl_url}
+        if not dl["book"]:
+            dl = {"method": "http", "urls": [dl_url]} if dl_url else {"method": "manual"}
     elif method == "git":
         dl["repos"] = [u for u in re.split(r"[\s,]+", str(dl_url or x.get("url_info") or "")) if u.startswith("http")]
     elif method in ("archive.org", "ia-cli"):

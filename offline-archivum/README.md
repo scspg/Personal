@@ -17,7 +17,11 @@ Források:
 - `src/overrides_*.py`: kézi javítások.
 
 ## Fájlok a ZIP-ben
-- `ARCHIVUM-LLM.html` – **offline kalkulátor + eszközmátrix + modelltábla** (böngészőben nyisd meg, internet nem kell)
-- `ARCHIVUM.md` / `ARCHIVUM-kompakt.md` – a teljes katalógus AI-ágensnek / chatbe
-- `eszkozok/select_items.py` – letöltési terv a tárhelyhez; `eszkozok/llm_calc.py` – LLM-kalkulátor parancssorból
-- `forras/` – minden generátor és a kutatási nyersanyag (újragenerálás: `cd forras && python3 gen_sections.py && python3 build.py && python3 gen_html.py`)
+- **`ARCHIVUM-LLM.html`** – offline kalkulátor (4 változat bármely eszközre), eszközmátrix 22 profillal (köztük a feloldott RTX 6090), modelltábla (AA v5, % Opus 5.5), **SSD-tervező 1–32 TB**. Böngészőben nyisd meg, internet nem kell.
+- **`ARCHIVUM.md`** – a teljes katalógus (989 tétel), AI-ágensnek; **`ARCHIVUM-kompakt.md`** – chatbe tölthető változat.
+  - 1. fejezet: AI-prompt · 2: szabályok · 3: pontozás · 4/4b: csomagok tárhely és SSD-méret szerint · 5: katalógus kategóriánként
+  - 6: LLM-ek (6.1 rangsor + % Opus · 6.3–6.5 modellek, cenzúrázatlanok, gépigény · 6.10 eszközönkénti 4 változat · 6.11 GeForce-feloldás)
+  - 7: letöltési receptek · 8: fizetős/fizikai beszerzések · 9: captcha-mentes web (Camoufox stb.) · 10: gépi JSONL · 11–12: szkriptek
+- `eszkozok/select_items.py` – letöltési terv a tárhelyhez (`--budget 2TB --hw T2 --mem 300GB --emit-sh dl.sh`)
+- `eszkozok/llm_calc.py` – LLM-kalkulátor parancssorból (`--preset all` vagy saját adatok: `--gpu 32:1790 --ram 128 --ram-bw 96`)
+- `forras/` – minden generátor és a kutatási nyersanyag (újragenerálás: `cd forras && python3 gen_sections.py && python3 build.py && python3 gen_html.py && python3 make_zip.py`)

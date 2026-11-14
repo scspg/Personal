@@ -15,7 +15,7 @@ CAT_HU = {
  "hungarian": "Magyar források", "humanities": "Bölcsészet", "computing": "Számítástechnika",
  "os_mirror": "Operációs rendszerek, csomagtükrök", "source_code": "Forráskód", "ai_models": "LLM / AI modellek",
  "ai_tools": "AI futtatók és eszközök", "maps_geo": "Térképek, geoadatok", "knowledge_dump": "Nagy adathalmazok",
- "server_bundle": "Offline szerver-csomagok", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
+ "server_bundle": "Offline szerver-csomagok", "civil_defense": "Polgári védelem", "governance": "Közösség, jog, kormányzás", "gpu_unlock": "GPU-feloldás és -hangolás (GeForce)", "tools": "Olvasók, futtatók (kötelező)", "bundle": "Kész csomagok (kereskedelmi)",
  "reference_book": "Kézikönyvek (könyv)", "gray_library": "Szürke zónás könyvtárak",
 }
 PRESETS = [("32GB", None, "pendrive / telefon"), ("128GB", "T5", "telefon + kis SSD"), ("512GB", "T4", "laptop SSD"),
@@ -54,7 +54,7 @@ SSD_SIZES = ["1TB", "2TB", "4TB", "8TB", "16TB", "32TB"]
 CAT_GROUP = {  # kategória → összevont csoport az SSD-bontáshoz
  "medicine": "Életmentő: orvoslás, víz, élelem, túlélés", "water_sanitation": "Életmentő: orvoslás, víz, élelem, túlélés",
  "food": "Életmentő: orvoslás, víz, élelem, túlélés", "survival": "Életmentő: orvoslás, víz, élelem, túlélés", "veterinary": "Életmentő: orvoslás, víz, élelem, túlélés",
- "civil_defense": "Életmentő: orvoslás, víz, élelem, túlélés",
+ "civil_defense": "Életmentő: orvoslás, víz, élelem, túlélés", "governance": "Tudomány, oktatás, könyvtárak",
  "agriculture": "Mezőgazdaság, megfelelő technológia, energia", "appropriate_tech": "Mezőgazdaság, megfelelő technológia, energia", "energy": "Mezőgazdaság, megfelelő technológia, energia",
  "reference": "Lexikonok, szótárak", "hungarian": "Magyar források",
  "engineering": "Mérnöki tudás, gyártás, kémia, elektronika", "manufacturing": "Mérnöki tudás, gyártás, kémia, elektronika", "chemistry": "Mérnöki tudás, gyártás, kémia, elektronika",

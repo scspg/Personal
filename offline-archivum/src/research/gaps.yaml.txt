@@ -1,0 +1,1091 @@
+## Summary
+
+I audited `/home/user/Personal/offline-archivum/ARCHIVUM-kompakt.md` (557 JSONL items, about 300 of them non-LLM) and did not edit any files. I also checked candidates against the full `ARCHIVUM.md` and the `src/` research files. Two near-overlaps came up. Hesperian Community Mental Health and Helping Health Workers Learn appear only as file-name patterns in a note, not as items. The IMCI chart booklet is mentioned in one item's note.
+
+There are **56 new items** below. Every URL was checked on 2026-11-14:
+- archive.org: metadata API, plus a ranged GET on the download link.
+- WHO IRIS: DSpace REST API for bitstream size, plus a ranged GET.
+- Kiwix: OPDS catalog length, plus a ranged GET on the .zim.
+- GitHub and SourceForge repos: `git ls-remote`. GitHub release assets also downloaded fine with a ranged GET.
+
+**Blocked from this environment (403/captcha):**
+- cisa.gov
+- ready.gov
+- NCBI Bookshelf
+- wtcs.pressbooks.pub (Open RN)
+- fema.gov (not tried, assumed to behave like ready.gov)
+- openknowledge.fao.org API
+
+**Practical notes for whoever builds on this:**
+- WHO IRIS bitstream URLs answer HEAD with a 500 but serve GET normally.
+- hesperian.org sends no Content-Length, so I downloaded those chapters to a temp folder to measure them, then deleted it.
+
+---
+
+## (1) Hiányelemzés (gap analysis)
+
+- **Polgári védelem / civil_defense: a katalógusban nincs ilyen kategória.** Hiányzott a nukleáris csapadék és óvóhely (Kearny NWSS), a nukleáris robbanás utáni teendők, az EMP-védelem és a Faraday-elv. Nem volt meg a CERT/ready.gov, a tábori higiénia (FM 21-10), a GPS nélküli térképes navigáció és a katasztrófavédelmi lakossági kiadványok sem.
+- **Kormányzás / governance: nulla elem.** Nem volt gyűléselvezetés (Robert's Rules), közösségi döntéshozatal (Sociocracy 3.0) és magyar alapjogszabály (Alaptörvény, Ptk., Btk., katasztrófavédelmi törvény).
+- **Mentális egészség: teljesen hiányzott.** Nem volt meg a pszichológiai elsősegély, az mhGAP, a „Where There Is No Psychiatrist” és a Hesperian közösségi mentálhigiénés kézikönyve. Egy hosszú összeomlás után ez kritikus.
+- **Labordiagnosztika áram nélkül:** nem volt sem a WHO alap laborkézikönyve, sem Cheesbrough.
+- **Ápolás:** Open RN nincs, ez is hiány.
+- **Sebészet és altatás laikus-közeli szinten:** a Maurice King-féle Primary Surgery és Primary Anaesthesia hiányzott.
+- **Sterilizálás, eszköz-újrafeldolgozás:** nem volt erről anyag.
+- **Gyermekgyógyászati protokoll (IMCI) és alapszintű szülészet-újszülöttgondozás (PCPNC):** egyik sem szerepelt.
+- **Növényi gyógyszerek bizonyítékalapú forrásai (WHO monográfiák):** hiányoztak.
+- **Kommunikáció: nagyon gyenge volt, csak 3 elem.** Nem volt Meshtastic/LoRa firmware, Reticulum, fldigi, JS8Call, Direwolf/APRS, sem magyar rádióamatőr-vizsga anyag.
+- **Energia:** nem volt fagáz-generátor (FEMA 1989), biogáz, faszén és akkumulátor/szigetüzem-méretezés (Victron). Kézi kútfúrás és kézi pumpa (India Mark II) sem.
+- **Kézművesség:** nem volt cserzés, fazekasság, szövés, üvegfúvás, szappanfőzés, csapdázás. A Survivor Library részben lefedi, de célzott, könnyen megtalálható tételek nem voltak.
+- **Mezőgazdaság, talaj:** hiányzott a talajgazdálkodás (SARE), az Agrodok-sorozat, a faszén és a gyümölcs-zöldség feldolgozás (FAO).
+- **Magyar nyelvű gyakorlati anyagok:** nem volt gombaismeret, méhészet, katasztrófavédelem és rádióamatőr-vizsga.
+- **Kiwix ZIM-ek, amik kimaradtak:**
+  - armypubs (8,2 GB)
+  - ready.gov
+  - MedlinePlus
+  - WikiVet
+  - LibrePathology
+  - OpenWrt
+  - ManKier man-oldalak
+  - maps_en_hungary (Kiwix-térkép)
+  - WikiCiv
+  - Restarters
+  - Gardenology
+  - TruePrepper
+
+  A magyar ZIM-ek, a wikiquote_hu kivételével, már mind benne vannak.
+- **Hosszú távú adathordozó:** az M-DISC csak a 12. szabályban szerepel, beszerzési tételként nincs.
+- **Elektronika tananyag:** nem volt közérthető, CC-licencű tananyag (Kuphaldt: Lessons in Electric Circuits).
+- **Továbbra is hiányzik, mert nem találtam ellenőrizhető ingyenes forrást:**
+  - modern magyar gombahatározó (csak megvásárolható)
+  - magyar kertészeti klímaspecifikus útmutató
+  - magyar gyermekkönyv-gyűjtemény (a MEK részben lefedi)
+  - NEAK/OGYÉI gyógyszertörzs (a letöltési útvonalat nem sikerült ellenőrizni)
+
+---
+
+## (2) YAML – new items
+
+```yaml
+- id: kearny-nuclear-war-survival-skills
+  name: "Nuclear War Survival Skills (Cresson H. Kearny, ORNL/OISM 1987 updated ed.)"
+  category: civil_defense
+  description_hu: "A klasszikus atomháborús túlélési kézikönyv: csapadék elleni óvóhely építése házilag, szellőztetés, víz és élelem tárolása, valamint a KFM sugárzásmérő házi elkészítése. Közkincs."
+  url_info: "https://archive.org/details/NuclearWarSurvivalSkills_201405"
+  url_download: "https://archive.org/download/NuclearWarSurvivalSkills_201405/nwss.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (US gov work; IA: PD Mark 1.0)"
+  size: "19.8 MB"
+  size_status: measured(content-length)
+  format: PDF (also EPUB 30.2 MB, DjVu)
+  language: en
+  notes: "19,834,771 bytes. Includes KFM fallout meter build plans and expedient shelter designs."
+  scores: {survival: 9, rebuild: 3, actionable: 10, uniqueness: 10, reliability: 8, offline_ease: 10}
+
+- id: fema-wood-gas-generator-1989
+  name: "Construction of a Simplified Wood Gas Generator for Fueling Internal Combustion Engines in a Petroleum Emergency (FEMA, 1989)"
+  category: energy
+  description_hu: "A FEMA lépésről lépésre leírt fagáz-generátor terve, amellyel benzinmotor (traktor, generátor) fával üzemeltethető üzemanyaghiány idején. Hordóból és csövekből építhető."
+  url_info: "https://archive.org/details/FEMAEmergencyGassifer"
+  url_download: "https://archive.org/download/FEMAEmergencyGassifer/FEMA_emergency_gassifer.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (US gov)"
+  size: "2.0 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "1,992,702 bytes. Alt scan: archive.org DTIC_ADA208249 (3.4 MB). Extended version with Biomass Energy Foundation 2001 notes: femasimplifiedwoodgasgeneratormar1989withbiomassenergyfoundation2001."
+  scores: {survival: 5, rebuild: 9, actionable: 10, uniqueness: 10, reliability: 8, offline_ease: 10}
+
+- id: fema-planning-guidance-nuclear-detonation
+  name: "Planning Guidance for Response to a Nuclear Detonation (2nd ed., 2010, via DTIC)"
+  category: civil_defense
+  description_hu: "Amerikai szövetségi tervezési útmutató nukleáris robbanás utánra: zónák, menedék vagy evakuálás döntése, sugárzásos sérültek ellátása. A „menj be, maradj bent” logika tudományos háttere."
+  url_info: "https://archive.org/details/DTIC_ADA526039"
+  url_download: "https://archive.org/download/DTIC_ADA526039/DTIC_ADA526039.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (US gov)"
+  size: "1.9 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "1,905,356 bytes. A 3rd edition (2022) exists on fema.gov, not verified here (FEMA/ready.gov sites return 403 through this proxy)."
+  scores: {survival: 7, rebuild: 2, actionable: 6, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: ifrc-first-aid-guidelines-2020
+  name: "IFRC International First Aid, Resuscitation and Education Guidelines 2020"
+  category: medicine
+  description_hu: "A Vöröskereszt nemzetközi, bizonyítékokra épülő elsősegély-irányelve laikus elsősegélynyújtóknak: vérzéscsillapítás, égés, mérgezés, újraélesztés, lelki elsősegély. A magyar Vöröskereszt anyagainak is ez a forrása."
+  url_info: "https://www.ifrc.org/document/international-first-aid-resuscitation-and-education-guidelines"
+  url_download: "https://www.ifrc.org/sites/default/files/2022-02/EN_GFARC_GUIDELINES_2020.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© IFRC (free download)"
+  size: "4.4 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "4,432,256 bytes."
+  scores: {survival: 8, rebuild: 3, actionable: 8, uniqueness: 6, reliability: 10, offline_ease: 10}
+
+- id: cisa-emp-protection-guidelines-2019
+  name: "CISA/NCC Electromagnetic Pulse (EMP) Protection and Resilience Guidelines for Critical Infrastructure and Equipment v2.2 (2019)"
+  category: civil_defense
+  description_hu: "Hivatalos útmutató elektronika EMP elleni védelméhez négy védelmi szinten (túlfeszültség-levezetők, szűrők, árnyékolt rack/szoba). Ebből lehet Faraday-ketrecet tervezni az archívumot tároló eszközöknek."
+  url_info: "https://www.cisa.gov/topics/risk-management/electromagnetic-pulse"
+  url_download: "https://www.cisa.gov/sites/default/files/publications/19_0307_CISA_EMP-Protection-Resilience-Guidelines.pdf"
+  url_status: "blocked"
+  method: http
+  access: free
+  price: null
+  license: "Public domain (US gov)"
+  size: "~3 MB"
+  size_status: estimated(typical size of a ~60-page gov PDF; not measured, cisa.gov returned 403 to this proxy)
+  format: PDF
+  language: en
+  notes: "URL found via web search; 403 from this sandbox, retry from a normal connection. Companion: DHS S&T 'EMP Shielding Mitigations Best Practices' (2022)."
+  scores: {survival: 4, rebuild: 4, actionable: 6, uniqueness: 10, reliability: 9, offline_ease: 10}
+
+- id: us-army-fm-21-10-field-hygiene
+  name: "US Army FM 21-10 / MCRP 4-11.1D Field Hygiene and Sanitation (2000)"
+  category: water_sanitation
+  description_hu: "Tábori higiénia: víz fertőtlenítése, latrinák, hulladék, rovar- és rágcsálóirtás, ételhigiénia, hő- és hidegártalmak megelőzése. Táborok és menekülttelepek járványmegelőzéséhez."
+  url_info: "https://archive.org/details/FM21-10_2000"
+  url_download: "https://archive.org/download/FM21-10_2000/FM21-10_2000.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (US gov; IA PD Mark)"
+  size: "2.9 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "2,913,453 bytes. Successor doc: ATP 4-25.12 Unit Field Sanitation Team (not checked)."
+  scores: {survival: 8, rebuild: 4, actionable: 9, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: us-army-fm-3-25-26-land-navigation
+  name: "US Army FM 3-25.26 Map Reading and Land Navigation"
+  category: navigation
+  description_hu: "Térképolvasás, koordináták, iránytű, tájolás csillagokkal és nappal, terepen való tájékozódás GPS nélkül. A Lechner topográfiai térképekkel együtt használható."
+  url_info: "https://archive.org/details/milmanual-fm-3-25.26-map-reading-and-land-navigation"
+  url_download: "https://archive.org/download/milmanual-fm-3-25.26-map-reading-and-land-navigation/fm_3-25.26_map_reading_and_land_navigation.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (US gov)"
+  size: "23.6 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "23,583,528 bytes. Older FM 21-26 (1993) also on IA: FM21-26_201211."
+  scores: {survival: 7, rebuild: 4, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: kx-armypubs
+  name: "armypubs_en_all_2024-12 (Army Publishing Directorate ZIM)"
+  category: civil_defense
+  description_hu: "Az amerikai hadsereg kiadványtárának offline tükre (FM/ATP/TC/TM kézikönyvek): elsősegély, műszaki, híradó, logisztika, járműjavítás, higiénia. Egy fájlban több ezer gyakorlati kézikönyv."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=armypubs_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/zimit/armypubs_en_all_2024-12.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "Public domain (US gov content; ZIM by openZIM)"
+  size: "8.23 GB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=armypubs_en_all flavour=null. 8,232,396,997 bytes. Snapshot from 2024-12 (older than most). Overlaps partly with existing FM items but covers far more."
+  scores: {survival: 7, rebuild: 7, actionable: 8, uniqueness: 7, reliability: 8, offline_ease: 9}
+
+- id: kx-ready-gov
+  name: "ready.gov_en_all_2026-10 (FEMA Ready.gov ZIM)"
+  category: civil_defense
+  description_hu: "A FEMA lakossági felkészülési oldala offline: katasztrófatípusonkénti teendők, családi vészterv, készletlista. A CERT önkéntes mentőképzés anyagai is benne lehetnek."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=ready.gov_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/zimit/ready.gov_en_all_2026-10.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "Public domain (US gov)"
+  size: "2.06 GB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=ready.gov_en_all flavour=null. 2,063,895,408 bytes. ready.gov itself returns 403 here, so the ZIM is the practical route to CERT Basic Training materials (whether the CERT PDFs are inside was not checked)."
+  scores: {survival: 7, rebuild: 2, actionable: 7, uniqueness: 6, reliability: 9, offline_ease: 9}
+
+- id: katasztrofavedelem-lakossagi-kiadvanyok
+  name: "BM OKF Katasztrófavédelem – lakossági felkészítés és kiadványok"
+  category: hungarian
+  description_hu: "A magyar katasztrófavédelem lakossági tájékoztatói: veszélyes üzemek közelében teendők, téli és nyári veszélyek, árvíz, riasztási jelek. Magyar viszonyokra szabott polgári védelmi alap."
+  url_info: "https://www.katasztrofavedelem.hu/62/lakossagfelkeszites"
+  url_download: "https://jasz.katasztrofavedelem.hu/application/uploads/documents/2019-08/63348.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: null
+  license: "© BM OKF (public information)"
+  size: "~30 MB"
+  size_status: estimated(several dozen 0.5–1 MB PDFs on central and county sites)
+  format: PDF/HTML
+  language: hu
+  notes: "url_download is the methodology guide for public-information leaflets (857,985 B). Other verified sample: veszprem.katasztrofavedelem.hu/application/uploads/documents/2025-04/85885.pdf (927,997 B). The kiadványaink page (/24/kiadvanyaink) loads its list with JavaScript, so collect by hand. Also mirror the 'lakossagvedelem' (/46) and 'katasztrofatipusok' pages."
+  scores: {survival: 6, rebuild: 2, actionable: 6, uniqueness: 9, reliability: 9, offline_ease: 7}
+
+- id: njt-alaptorveny-alapjogszabalyok
+  name: "Nemzeti Jogszabálytár – Alaptörvény, Ptk. (2013:V), Btk. (2012:C), katasztrófavédelmi tv. (2011:CXXVIII)"
+  category: governance
+  description_hu: "A magyar jogrend alapjai offline: Alaptörvény, Polgári és Büntető Törvénykönyv, katasztrófavédelmi törvény hatályos szövege. Jogrend-helyreállításhoz és közösségi szabályalkotáshoz viszonyítási pont."
+  url_info: "https://njt.jog.gov.hu/jogszabaly/2011-4301-02-00"
+  url_download: "https://njt.jog.gov.hu/jogszabaly/2011-4301-02-00"
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "Hungarian legislation (not subject to copyright, Szjt. 1. § (4))"
+  size: "3.4 MB"
+  size_status: measured(content-length)
+  format: HTML (save with wget; print to PDF)
+  language: hu
+  notes: "Measured HTML sizes: Alaptörvény 361,934 B; Ptk 2013-5-00-00 1,454,030 B; Btk 2012-100-00-00 1,189,169 B; Kat.tv 2011-128-00-00 373,507 B. Optionally add Mt. (2012:I) and Közigazgatási rendtartás. Text is the version in force at download time."
+  scores: {survival: 1, rebuild: 7, actionable: 3, uniqueness: 10, reliability: 10, offline_ease: 8}
+
+- id: roberts-rules-of-order-1915
+  name: "Robert's Rules of Order (Henry M. Robert, Project Gutenberg #9097)"
+  category: governance
+  description_hu: "Gyűlésvezetés és döntéshozatal klasszikus szabálykönyve: indítvány, vita, szavazás, jegyzőkönyv, tisztségviselők. Egy újjáalakuló közösségi tanács működési rendjéhez."
+  url_info: "https://www.gutenberg.org/ebooks/9097"
+  url_download: "https://www.gutenberg.org/cache/epub/9097/pg9097-images.epub"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Public domain"
+  size: "0.15 MB"
+  size_status: measured(content-length)
+  format: EPUB (HTML 279 KB also)
+  language: en
+  notes: "153,901 bytes. Probably already inside the Gutenberg ZIM/rsync items, but listed so it is easy to find."
+  scores: {survival: 1, rebuild: 6, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+- id: sociocracy-30-practical-guide
+  name: "Sociocracy 3.0 – A Practical Guide (Bockelbrink, Priest, David)"
+  category: governance
+  description_hu: "Gyakorlati minták közösségek és szervezetek önszerveződéséhez: konszenzus alapú döntéshozatal, körök, szerepek, ellenvetés-kezelés. Kis közösségek vezetéséhez és konfliktuskezeléshez."
+  url_info: "https://sociocracy30.org/guide"
+  url_download: "https://sociocracy30.org/_res/practical-guide/S3-practical-guide.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC BY-SA 4.0"
+  size: "13.7 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "13,733,705 bytes. Source repo: github.com/S3-working-group/s3-practical-guide (not ls-remote checked)."
+  scores: {survival: 2, rebuild: 7, actionable: 8, uniqueness: 9, reliability: 6, offline_ease: 10}
+
+- id: kx-wikiciv
+  name: "wikiciv_en_all_maxi_2025-11 (WikiCiv – rebuilding civilization wiki)"
+  category: appropriate_tech
+  description_hu: "Kis wiki, amely technológiai „receptfákat” gyűjt a civilizáció újraépítéséhez (mi kell az előállításhoz, milyen sorrendben). Kevés tartalom, de célzottan erre a felhasználásra készült."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=wikiciv_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/wikiciv_en_all_maxi_2025-11.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC-BY-SA (ZIM metadata)"
+  size: "4.6 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=wikiciv_en_all flavour=maxi. 4,632,130 bytes. Content is sparse."
+  scores: {survival: 2, rebuild: 6, actionable: 5, uniqueness: 7, reliability: 4, offline_ease: 10}
+
+- id: primary-surgery-king-vol1-2
+  name: "Primary Surgery, 2nd ed., Vol. 1 Non-Trauma + Vol. 2 Trauma (Maurice King et al., GTZ/Global-HELP)"
+  category: medicine
+  description_hu: "Járási kórházi és egészségközponti sebészeti kézikönyv nem sebész orvosoknak, lépésenkénti rajzokkal (tályog, sérv, császármetszés, törések, égés, amputáció). A WHO SCDH mellé a részletes műtéttani rész."
+  url_info: "https://archive.org/details/primary-surgery-vol-1-non-trauma-2nd-edition"
+  url_download: "https://archive.org/download/primary-surgery-vol-1-non-trauma-2nd-edition/Primary%20Surgery%20Vol%201%20Non-Trauma%202nd%20Edition.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "CC BY-ND 4.0 (IA metadata)"
+  size: "188.4 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "Vol1 59,945,946 B; Vol2 https://archive.org/download/primary-surgery-vol-2-trauma-2nd-edition/Primary%20Surgery%20Vol%202%20Trauma%202nd%20Edition.pdf 128,472,093 B."
+  scores: {survival: 9, rebuild: 7, actionable: 10, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: primary-anaesthesia-king
+  name: "Primary Anaesthesia (Maurice King, ed., OUP 1986)"
+  category: medicine
+  description_hu: "Altatás és érzéstelenítés minimális eszközzel: ketamin, éter, spinális és helyi érzéstelenítés, légútbiztosítás járási kórházban. A WHO 'Anaesthesia at the District Hospital' mellé gyakorlatias kiegészítés."
+  url_info: "https://archive.org/details/sochara.primaryanaesthes0000king"
+  url_download: "https://archive.org/download/sochara.primaryanaesthes0000king/sochara.primaryanaesthes0000king.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "unclear (OUP 1986; SOCHARA collection upload)"
+  size: "27.8 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "27,785,180 bytes. The item also lists an LCP-encrypted EPUB, which suggests the work may still be under copyright. The PDF downloads openly. Check the rights status before sharing."
+  scores: {survival: 7, rebuild: 6, actionable: 9, uniqueness: 8, reliability: 8, offline_ease: 10}
+
+- id: cheesbrough-district-laboratory-practice
+  name: "District Laboratory Practice in Tropical Countries, Parts 1–2, 2nd ed. (Monica Cheesbrough, Cambridge UP)"
+  category: medicine
+  description_hu: "A legismertebb alapszintű laborkézikönyv: mikroszkópos parazitológia, vérkép, vércsoport, Gram-festés, tenyésztés minimális felszereléssel. Áram nélküli diagnosztikához alapmű."
+  url_info: "https://www.cambridge.org/9780521676304"
+  url_download: null
+  url_status: "blocked"
+  method: purchase
+  access: paid
+  price: "Part 1 approx. £110–123 / USD 153–167 retail (retailer listings via web search, not verified); Part 2 similar"
+  license: "© Cambridge University Press"
+  size: "14.1 MB (digital scans)"
+  size_status: measured(content-length)
+  format: print / PDF
+  language: en
+  notes: "ISBN Part1 9780521676304, Part2 9780521676311. archive.org has uploads (district-laboratory-practice-in-tropical-countries-part-1: 6,768,991 B; -part-2: 7,357,296 B; marked PD Mark, which is almost certainly wrong). Treat those as gray. Recommended: buy the print copies. cambridge.org product page returned 403 here."
+  scores: {survival: 7, rebuild: 8, actionable: 9, uniqueness: 9, reliability: 10, offline_ease: 9}
+
+- id: who-basic-laboratory-techniques-2003
+  name: "WHO Manual of Basic Techniques for a Health Laboratory, 2nd ed. (2003)"
+  category: medicine
+  description_hu: "WHO laborkézikönyv kis laboroknak: mikroszkóp, festések, parazitológia, bakteriológia, vizelet, vér, fertőtlenítés, eszközkészítés. Ingyenes Cheesbrough-alternatíva."
+  url_info: "https://iris.who.int/handle/10665/42295"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/15cf893e-17e4-448d-a680-5e6741f65fd6/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "7.7 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "7,718,391 bytes (DSpace sizeBytes and Content-Range agree). HEAD returns 500; use GET."
+  scores: {survival: 6, rebuild: 8, actionable: 9, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: who-psychological-first-aid-2011
+  name: "WHO Psychological First Aid: Guide for Field Workers (2011)"
+  category: medicine
+  description_hu: "Lelki elsősegély katasztrófa után: hogyan közelítsünk sokkos, gyászoló emberekhez, mit mondjunk és mit ne, mikor kell továbbküldeni. Laikusoknak, rövid és azonnal használható."
+  url_info: "https://iris.who.int/handle/10665/44615"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/e7e129fb-b306-496d-84a5-67bb70abc130/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO/War Trauma Foundation/World Vision"
+  size: "1.5 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "1,487,833 bytes. No Hungarian version in IRIS (RO, KO, JA, FA and others exist). Facilitator manual: 10665/102380."
+  scores: {survival: 7, rebuild: 4, actionable: 9, uniqueness: 10, reliability: 10, offline_ease: 10}
+
+- id: who-mhgap-intervention-guide-2
+  name: "WHO mhGAP Intervention Guide v2.0 (2016)"
+  category: medicine
+  description_hu: "Mentális, neurológiai és szerhasználati zavarok (depresszió, pszichózis, epilepszia, öngyilkossági veszély, alkohol) kezelése nem szakorvosi ellátásban, folyamatábrákkal és gyógyszeradagokkal."
+  url_info: "https://iris.who.int/handle/10665/250239"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/6ded7ffd-9d69-493a-b48a-0b3e6250c173/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "3.6 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "3,633,801 bytes. Also mhGAP humanitarian/stress module 10665/85623."
+  scores: {survival: 6, rebuild: 5, actionable: 9, uniqueness: 10, reliability: 10, offline_ease: 10}
+
+- id: who-doing-what-matters-stress
+  name: "WHO Doing What Matters in Times of Stress: An Illustrated Guide (2020)"
+  category: medicine
+  description_hu: "Illusztrált önsegítő kézikönyv stresszkezeléshez (ACT alapú): földelés, értékek szerinti cselekvés, nehéz gondolatok kezelése. Bárki használhatja, krízisben is."
+  url_info: "https://iris.who.int/handle/10665/331901"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/65bb7c04-5180-4773-a0d8-0d5be2cc35a0/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC BY-NC-SA 3.0 IGO"
+  size: "3.4 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "3,383,689 bytes. Audio exercises exist separately on the WHO site (not checked)."
+  scores: {survival: 5, rebuild: 3, actionable: 9, uniqueness: 8, reliability: 10, offline_ease: 10}
+
+- id: where-there-is-no-psychiatrist-2018
+  name: "Where There Is No Psychiatrist, 2nd ed. (Vikram Patel & Charlotte Hanlon, RCPsych/Cambridge, 2018) – Open Access"
+  category: medicine
+  description_hu: "A „Where There Is No Doctor” mentálhigiénés megfelelője: tünetalapú eligazítás, beszélgetéses terápiák, pszichiátriai gyógyszerek, sürgősségi helyzetek egészségügyi dolgozóknak szakorvos nélkül."
+  url_info: "https://www.cambridge.org/core/books/where-there-is-no-psychiatrist/47578A845CAFC7E23A181749A4190B54"
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: "print approx. GBP 19.99 / USD 26–41 (retailer listings, not verified)"
+  license: "CC BY-NC-ND 4.0 (Open Access)"
+  size: "18.6 MB"
+  size_status: measured(content-length)
+  format: PDF (29 chapter PDFs)
+  language: en
+  notes: "Sum of 29 chapter PDFs linked on the book page (/core/services/aop-cambridge-core/content/view/.../9781108683302c*_CBO.pdf), all measured. Scrape the href list from the book page."
+  scores: {survival: 6, rebuild: 5, actionable: 9, uniqueness: 9, reliability: 10, offline_ease: 9}
+
+- id: hesperian-community-mental-health-2025
+  name: "Hesperian – Community Mental Health guide (2025 chapter PDFs, en_pcmh_2025)"
+  category: medicine
+  description_hu: "Hesperian közösségi mentálhigiénés kézikönyv: trauma, gyász, szorongás, depresszió, függőség, közösségi támogató csoportok, egyszerű nyelven és rajzokkal."
+  url_info: "https://hesperian.org/"
+  url_download: "https://hesperian.org/wp-content/uploads/pdf/en_pcmh_2025/en_pcmh_2025_01.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "18.9 MB"
+  size_status: measured(content-length)
+  format: PDF (11 files)
+  language: en
+  notes: "Files: en_pcmh_2025_{fm,01..09,ob}.pdf; total 18,941,099 B, measured by download (server sends no Content-Length). Catalog notes mention the pattern but there is no item. Exact English book title not confirmed (Hesperian lists it as a community mental health guide)."
+  scores: {survival: 6, rebuild: 5, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: hesperian-helping-health-workers-learn-2026
+  name: "Helping Health Workers Learn (Hesperian, 2026 chapter PDFs, en_hhwl_2026)"
+  category: education
+  description_hu: "Hogyan tanítsunk egészségügyi ismereteket laikusoknak: módszertan, taneszközök házi elkészítése, közösségi oktatás. Az orvosi tudás továbbadásához."
+  url_info: "https://hesperian.org/"
+  url_download: "https://hesperian.org/wp-content/uploads/pdf/en_hhwl_2026/en_hhwl_2026_01.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "36.7 MB"
+  size_status: measured(content-length)
+  format: PDF (30 files)
+  language: en
+  notes: "Files en_hhwl_2026_{fm,01..27,resc,ob}.pdf, total 36,712,873 B (measured by download)."
+  scores: {survival: 3, rebuild: 8, actionable: 8, uniqueness: 9, reliability: 9, offline_ease: 10}
+
+- id: who-pcpnc-2015
+  name: "WHO Pregnancy, Childbirth, Postpartum and Newborn Care: A Guide for Essential Practice (PCPNC, 3rd ed. 2015)"
+  category: medicine
+  description_hu: "A szüléskörnyéki ellátás döntési táblái alapszintű ellátóknak: terhesgondozás, szülésvezetés, vérzés, eklampszia, újszülött-újraélesztés. Az MCPC és a bábakönyv mellé gyors protokoll."
+  url_info: "https://iris.who.int/handle/10665/249580"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/e9f751fd-6eab-42cb-9e0c-0eb86a0365bb/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "2.8 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "2,759,103 bytes. Slovenian translation in same record."
+  scores: {survival: 8, rebuild: 5, actionable: 10, uniqueness: 6, reliability: 10, offline_ease: 10}
+
+- id: who-imci-distance-learning-2014
+  name: "WHO Integrated Management of Childhood Illness (IMCI) – distance learning course incl. Chart Booklet (2014)"
+  category: medicine
+  description_hu: "Beteg gyermek (2 hó – 5 év) ellátása folyamatábrákkal: hasmenés, tüdőgyulladás, láz, alultápláltság, kiszáradás, veszélyjelek. A teljes modulsor és a táblázatos füzet."
+  url_info: "https://iris.who.int/handle/10665/104772"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/056b19cd-1d81-45f2-9984-d8a37822ce1e/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "31.1 MB"
+  size_status: measured(content-length)
+  format: PDF (15 files)
+  language: en
+  notes: "Sum of 15 bitstreams (Intro, Modules 1–9, facilitator guides, Logbook, Chartbook) = 31,052,611 B per DSpace API. url_download is the intro; get the others from /server/api/core/items/08aa4ca2-17ec-41e9-a22b-3521e5f7938b/bundles. The 2008 chart booklet (10665/43993) is mentioned only in a note of an existing item."
+  scores: {survival: 8, rebuild: 4, actionable: 10, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: who-monographs-medicinal-plants-vol1-4
+  name: "WHO Monographs on Selected Medicinal Plants, Vols. 1–4"
+  category: medicine
+  description_hu: "Bizonyítékokra épülő gyógynövény-monográfiák: hatóanyag, klinikai bizonyíték, adagolás, ellenjavallat, mellékhatás (kamilla, kakukkfű, fokhagyma, orbáncfű stb.). Gyógyszerhiány idején a népi gyógyászat tudományos szűrője."
+  url_info: "https://iris.who.int/handle/10665/42052"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/6e21eaaa-d157-421d-a136-eb61964de18c/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "8.8 MB"
+  size_status: measured(content-length)
+  format: PDF (4 files)
+  language: en
+  notes: "Vol1 9241545178.pdf 2,737,468 B; Vol2 9241545372.pdf 2,678,644 B (bitstream 3d613749-d5e9-4286-96db-7b3abc5dfdbe); Vol3 9789241547024_eng.pdf 1,977,010 B (f4e276e8-6a1a-4ea4-979f-776a7ddfe2d1); Vol4 9789241547055_eng.pdf 1,438,105 B (64ddcde7-127f-455d-827e-3ba757a4fabd). The NIS monographs record (10665/44059) has no file."
+  scores: {survival: 5, rebuild: 7, actionable: 6, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: who-decontamination-medical-devices-2016
+  name: "WHO/PAHO Decontamination and Reprocessing of Medical Devices for Health-care Facilities (2016)"
+  category: medicine
+  description_hu: "Műszerek tisztítása, fertőtlenítése és sterilizálása (gőz, száraz hő, vegyszer), a sterilizáló helyiség kialakítása, ellenőrzés. Eldobható eszközök nélkül nélkülözhetetlen."
+  url_info: "https://iris.who.int/handle/10665/250232"
+  url_download: "https://iris.who.int/server/api/core/bitstreams/d128e952-f919-4462-bdb0-392312908782/content"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "2.1 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "2,102,183 bytes."
+  scores: {survival: 6, rebuild: 7, actionable: 8, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: open-rn-nursing-skills-pharmacology
+  name: "Open RN – Nursing Skills 2e, Nursing Pharmacology 2e, Nursing Fundamentals 2e (Chippewa Valley Technical College)"
+  category: medicine
+  description_hu: "Nyílt licencű ápolástani tankönyvek: injekciózás, sebkötözés, katéterezés, gyógyszerelés, betegmegfigyelés lépésről lépésre. Az orvosi kézikönyvek mellől az ápolási gyakorlat hiányzott."
+  url_info: "https://wtcs.pressbooks.pub/pharmacology2e/"
+  url_download: null
+  url_status: "blocked"
+  method: http
+  access: free
+  price: null
+  license: "CC BY 4.0"
+  size: "~150 MB"
+  size_status: estimated(3 books; Pharmacology 2e PDF is 953 pages per the NCBI record, assuming ~30–60 MB each)
+  format: PDF/EPUB
+  language: en
+  notes: "Pressbooks (wtcs.pressbooks.pub) and NCBI Bookshelf (NBK596735, NBK595000, NBK597872, NBK590025) are blocked here by 403/reCAPTCHA. Download from a normal browser. Possibly also inside the Open Textbook Library item, not confirmed."
+  scores: {survival: 6, rebuild: 6, actionable: 9, uniqueness: 7, reliability: 8, offline_ease: 9}
+
+- id: kx-medlineplus
+  name: "medlineplus.gov_en_all_2025-01 (MedlinePlus ZIM)"
+  category: medicine
+  description_hu: "Az amerikai NLM közérthető betegtájékoztatója: betegségek, gyógyszerek (hatóanyag szerint), gyógynövények és étrend-kiegészítők, orvosi enciklopédia. Laikus nyelven, hiteles."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=medlineplus.gov_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/zimit/medlineplus.gov_en_all_2025-01.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "Public domain (US gov) / some licensed content"
+  size: "1.94 GB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=medlineplus.gov_en_all flavour=null. 1,944,841,111 bytes."
+  scores: {survival: 6, rebuild: 3, actionable: 6, uniqueness: 5, reliability: 10, offline_ease: 9}
+
+- id: kx-librepathology
+  name: "librepathology_en_all_maxi_2026-09"
+  category: medicine
+  description_hu: "Szabad patológiai wiki: szövettani képek és diagnosztikai kritériumok. A laborkézikönyvek mellé haladó szintű referencia."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=librepathology_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/librepathology_en_all_maxi_2026-09.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC BY-SA (ZIM metadata)"
+  size: "95.3 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=librepathology_en_all flavour=maxi. 95,279,611 bytes."
+  scores: {survival: 2, rebuild: 5, actionable: 4, uniqueness: 8, reliability: 7, offline_ease: 10}
+
+- id: kx-wikivet
+  name: "wikivet.net_en_all_maxi_2026-07a (WikiVet)"
+  category: veterinary
+  description_hu: "Állatorvos-hallgatóknak készült wiki: haszonállatok anatómiája, élettana, betegségei, gyógyszerei, parazitológia. A 3 meglévő állatorvosi elem mellé részletes referencia."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=wikivet.net_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/wikivet.net_en_all_maxi_2026-07a.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC BY-SA (ZIM metadata)"
+  size: "57.0 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=wikivet.net_en_all flavour=maxi. 56,980,345 bytes."
+  scores: {survival: 4, rebuild: 6, actionable: 5, uniqueness: 8, reliability: 7, offline_ease: 10}
+
+- id: sare-building-soils-for-better-crops-4
+  name: "Building Soils for Better Crops, 4th ed. (Magdoff & van Es, SARE 2021)"
+  category: agriculture
+  description_hu: "Talajgazdálkodás kézikönyve: szerves anyag, komposzt, takarónövények, vetésforgó, trágyázás, talajtömörödés, talajvizsgálat. Műtrágya nélküli termeléshez."
+  url_info: "https://www.sare.org/resources/building-soils-for-better-crops/"
+  url_download: "https://www.sare.org/wp-content/uploads/Building-Soils-for-Better-Crops.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: "print USD 23 + shipping (SARE, per search result)"
+  license: "© SARE/USDA (free download)"
+  size: "14.4 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "14,429,734 bytes (old /media/pdf/B/u/i/ URL redirects here). Companion: SARE 'Managing Cover Crops Profitably' (not checked)."
+  scores: {survival: 5, rebuild: 9, actionable: 8, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: agromisa-agrodok-series
+  name: "Agromisa/CTA Agrodok series (~45 English booklets)"
+  category: agriculture
+  description_hu: "Rövid, lépésenkénti füzetek kisgazdáknak: méhészet, halastó, nyúl-, kecske-, baromfi- és sertéstartás, gabonatárolás, tartósítás, vízgyűjtés, komposzt. Jól illusztrált és nagyon gyakorlatias."
+  url_info: "https://cgspace.cgiar.org/handle/10568/52966"
+  url_download: "https://cgspace.cgiar.org/server/api/core/bitstreams/53f2d79c-19ca-422b-860c-c26b6b70e2b1/content"
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: null
+  license: "© Agromisa/CTA (free download; Agromisa closed in 2021)"
+  size: "~55 MB"
+  size_status: estimated(~45 English titles × ~1.1 MB; samples measured: AD32 Beekeeping 1,053,178 B, AD15 Fish farming 1,292,377 B)
+  format: PDF
+  language: en
+  notes: "CGSpace (DSpace 7) search 'agrodok' returns 313 items in several languages. Script it via /server/api/discover/search/objects?query=agrodok, then the bundles endpoint. The handle page returned 429 (rate limit), so throttle requests."
+  scores: {survival: 6, rebuild: 8, actionable: 9, uniqueness: 7, reliability: 8, offline_ease: 9}
+
+- id: fao-practical-html-books
+  name: "FAO: Simple Technologies for Charcoal Making (FP 41), Fruit and Vegetable Processing (AGS Bull. 119), Manual on Meat Inspection (APH 119)"
+  category: food
+  description_hu: "Három FAO kézikönyv: faszénégetés boksában és kemencében; gyümölcs- és zöldségfeldolgozás (szárítás, savanyítás, lekvár, lé) kisüzemben; húsvizsgálat és vágóhídi higiénia."
+  url_info: "https://www.fao.org/4/X5328E/X5328E00.htm"
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© FAO (all rights reserved; free online)"
+  size: "~30 MB"
+  size_status: estimated(three HTML books with figures; index pages measured at 19–29 KB, not mirrored in full)
+  format: HTML
+  language: en
+  notes: "Verified: fao.org/4/X5328E/X5328E00.htm (charcoal), fao.org/4/v5030e/v5030e00.htm (fruit/veg), fao.org/4/t0756e/t0756e00.htm (meat inspection). No PDF at the guessed paths. A Google Books scan of the meat-inspection manual is at archive.org bub_gb_qVbyYXQwTaMC. Mirror with: wget -r -np -k -p --wait=1."
+  scores: {survival: 5, rebuild: 7, actionable: 8, uniqueness: 7, reliability: 9, offline_ease: 7}
+
+- id: harding-deadfalls-and-snares-1907
+  name: "Deadfalls and Snares (A. R. Harding, 1907)"
+  category: survival
+  description_hu: "Csapdázás házilag készült csapóval, hurokkal és ejtőcsapdával, rajzokkal. Vadhús beszerzéséhez a túlélés első éveiben (vadászati jogszabályokat figyelembe kell venni)."
+  url_info: "https://archive.org/details/deadfallssnaresb00harduoft"
+  url_download: "https://archive.org/download/deadfallssnaresb00harduoft/deadfallssnaresb00harduoft.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain"
+  size: "9.0 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "9,024,520 bytes. Also Gutenberg #34110 (deadfallsandsnar34110gut)."
+  scores: {survival: 6, rebuild: 3, actionable: 9, uniqueness: 6, reliability: 6, offline_ease: 10}
+
+- id: hu-gomba-klasszikusok
+  name: "Magyar gombaismeret: Istvánffy Gy. – A magyar ehető és mérges gombák könyve (1899) + Cserey A. – Gombaismertető (MEK 10910)"
+  category: hungarian
+  description_hu: "Magyar nyelvű gombaismertetők színes táblákkal az ehető és mérges fajokról. Régi nevezéktan, ezért modern, megvásárolt határozóval együtt használandó."
+  url_info: "https://real-eod.mtak.hu/18838/"
+  url_download: "https://real-eod.mtak.hu/18838/1/N%C3%B6vt_O_314.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: "a modern Hungarian field guide must be bought (price not verified)"
+  license: "Public domain (1899 / old work); MEK terms"
+  size: "146.6 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: hu
+  notes: "Istvánffy 102,793,181 B; Cserey https://www.mek.oszk.hu/10900/10910/10910.pdf 43,767,892 B (MEK title 'Gombaisme…', keywords include gombamérgezés). Neither replaces a modern guide. Buy one current Hungarian 'gombahatározó', e.g. 'Gombák – Képes határozó' (Kossuth, 2024; price not verified)."
+  scores: {survival: 5, rebuild: 3, actionable: 6, uniqueness: 9, reliability: 6, offline_ease: 10}
+
+- id: omme-meheszet-egeszsegugy-hu
+  name: "OMME Méhegészségügyi ismeretek (2026) + Biokontroll: Méhbetegségek kezelése, megelőzése"
+  category: hungarian
+  description_hu: "Magyar méhészeti anyagok: méhbetegségek (varroa, nosema, költésbetegségek) felismerése, megelőzése és kezelése, technológia. Méz és viasz forrásaként stratégiai fontosságú."
+  url_info: "https://www.omme.hu/"
+  url_download: "https://www.omme.hu/evcms_medias/upload/images/meheu-beliv-2026-szerk4.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© OMME / Biokontroll (free publication)"
+  size: "10.6 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: hu
+  notes: "OMME 2026 issue 6,214,815 B + https://www.biokontroll.hu/wp-content/uploads/2013/04/mehbetegsegek_kezelese_megelozese.pdf 4,416,139 B. Older OMME issue mehegeszsegugyi-ismeretek-20.pdf 6,454,498 B. For basics see also Agrodok 32 and Peace Corps ICE."
+  scores: {survival: 3, rebuild: 6, actionable: 7, uniqueness: 9, reliability: 8, offline_ease: 10}
+
+- id: kx-gardenology
+  name: "gardenology.org_en_all_2026-09"
+  category: agriculture
+  description_hu: "Kertészeti növény-enciklopédia: termesztési igények, szaporítás, betegségek. A PFAF és a gardening.SE mellé."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=gardenology_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/gardenology.org_en_all_2026-09.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC BY-SA (ZIM metadata)"
+  size: "112.5 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=gardenology_en_all flavour=null (file name prefix gardenology.org_en_all). 112,499,438 bytes."
+  scores: {survival: 3, rebuild: 5, actionable: 5, uniqueness: 5, reliability: 5, offline_ease: 10}
+
+- id: kx-trueprepper
+  name: "trueprepper.com_en_all_2026-05"
+  category: survival
+  description_hu: "Felkészülési cikkgyűjtemény: készletezés, víz- és élelemtárolás, áramszünet, egészségügyi doboz, bug-out tervek. Gyakorlati kiegészítés az urban-prepper ZIM mellé."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=trueprepper.com_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/trueprepper.com_en_all_2026-05.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "per ZIM metadata (site copyright)"
+  size: "1.42 GB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=trueprepper.com_en_all flavour=null. 1,423,584,895 bytes. Quality and authority are mixed (blog)."
+  scores: {survival: 6, rebuild: 2, actionable: 7, uniqueness: 4, reliability: 4, offline_ease: 9}
+
+- id: india-mark-ii-handpump-manual-2008
+  name: "Installation & Maintenance Manual for the India Mark II Handpump (SKAT/RWSN, 2008)"
+  category: water_sanitation
+  description_hu: "A világ legelterjedtebb közkincs mélykúti kézipumpájának szerelési, karbantartási és hibaelhárítási kézikönyve, alkatrészlistával. Mélyebb kutakhoz áram nélküli vízkiemelés."
+  url_info: "https://rural-water-supply.net/en/implementation/public-domain-handpumps/india-mark-ii"
+  url_download: "https://www.engineeringforchange.org/wp-content/uploads/2015/08/mark2.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© SKAT-RWSN; extracts may be reproduced with acknowledgment"
+  size: "6.3 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "6,279,868 bytes. Alt copy (SuSanA): https://susana.org/_resources/documents/default/3-4194-7-1617282174.pdf 3,177,902 B. Specs: IS 8035 (Indian Standard, not free). IRC WASH has older 1980/1993 manuals."
+  scores: {survival: 7, rebuild: 8, actionable: 9, uniqueness: 10, reliability: 9, offline_ease: 10}
+
+- id: unicef-practica-manual-drilling-toolkit
+  name: "UNICEF/PRACTICA/EnterpriseWorks Manual Drilling Toolkit (technical manuals: Augering, Jetting, Percussion, Groundwater & Wells)"
+  category: water_sanitation
+  description_hu: "Kézi kútfúrás gépek nélkül: csigás fúrás, vízsugaras fúrás, ütve fúrás, kútkiképzés, talajvíz-alapismeretek, lépésről lépésre. Az ásott kutas Watt & Wood könyv kiegészítője."
+  url_info: "https://www.ri.org/toolkit-for-professionalizing-manual-drilling-in-africa/"
+  url_download: "https://www.ri.org/content/uploads/2019/08/manual-drilling-series-augering.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© UNICEF/PRACTICA (free distribution)"
+  size: "13.4 MB"
+  size_status: measured(content-length)
+  format: PDF (6 files)
+  language: en
+  notes: "manual-drilling-series-augering 4,018,970; -jetting 3,080,303; -percussion 2,845,872; understanding-groundwater-wells-in-manual-drilling 2,701,878; Manual-Drilling-Techniques 384,671; Selection-of-Well-Construction-Methods 359,531 (all under /content/uploads/2019/08/). French versions are also listed."
+  scores: {survival: 6, rebuild: 8, actionable: 9, uniqueness: 9, reliability: 8, offline_ease: 10}
+
+- id: gtz-biogas-digest-vol1
+  name: "GTZ/ISAT Biogas Digest Vol. I – Biogas Basics (1999)"
+  category: energy
+  description_hu: "Biogáz alapjai: erjedés folyamata, alapanyagok, kis falusi biogázüzem-típusok (fix kupolás, úszóharangos), gáz felhasználása főzésre és világításra, a kirothadt trágya mint műtrágya."
+  url_info: "https://infohub.practicalaction.org/items/f1d9e92f-52ff-4aac-8cf4-bfdcf8087d8b"
+  url_download: "https://kolibri.teacherinabox.org.au/modules/en-practical_action/Energy/Biogas/KnO-100619_Biogas%20Digest%20vol%201.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC BY-NC-SA (per Practical Action record, via search)"
+  size: "0.66 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "656,288 bytes. Vols II–IV (application, costs, programme) exist but were not checked. Indian construction manuals for fixed-dome plants are on archive.org (dli.ernet.288717)."
+  scores: {survival: 4, rebuild: 7, actionable: 6, uniqueness: 9, reliability: 8, offline_ease: 10}
+
+- id: victron-energy-unlimited-wiring-unlimited
+  name: "Victron Energy – 'Energy Unlimited' + 'Wiring Unlimited' (free books)"
+  category: energy
+  description_hu: "Szigetüzemű napelemes rendszer méretezése: akkumulátor-típusok (ólomsav, AGM, LiFePO4), töltési görbék, inverter, kábelkeresztmetszet, biztosítékok, földelés. Az archívumot működtető napelemes rendszerhez."
+  url_info: "https://www.victronenergy.com.au/orderbook"
+  url_download: "https://www.victronenergy.com/upload/documents/The_Wiring_Unlimited_book/43562-Wiring_Unlimited-pdf-en.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Victron Energy (free download)"
+  size: "29.6 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "Wiring Unlimited 29,024,866 B + Energy Unlimited https://www.victronenergy.com.au/upload/documents/Book-Energy-Unlimited-EN.pdf 614,372 B. Also the off-grid booklet: /upload/documents/Booklet-Off-Grid-EN-2026.pdf 7,312,566 B. Vendor material, but technically solid."
+  scores: {survival: 4, rebuild: 7, actionable: 8, uniqueness: 9, reliability: 7, offline_ease: 10}
+
+- id: kuphaldt-lessons-in-electric-circuits
+  name: "Lessons in Electric Circuits, Vols. I–VI (Tony R. Kuphaldt)"
+  category: electronics
+  description_hu: "Teljes, közérthető elektrotechnika-tankönyv: egyenáram, váltóáram, félvezetők, digitális áramkörök, mérés, kísérletek. A NEETS mellé a legjobb ingyenes alap."
+  url_info: "https://www.ibiblio.org/kuphaldt/electricCircuits/"
+  url_download: "https://archive.org/download/lessonsinelectriccircuits/Lessons_In_Electric_Circuits.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Design Science License (copyleft) / CC BY 4.0 for later versions"
+  size: "40.8 MB"
+  size_status: measured(content-length)
+  format: PDF (also HTML tarball)
+  language: en
+  notes: "Combined PDF 40,778,787 B. Official HTML tarball https://www.ibiblio.org/kuphaldt/electricCircuits/liechtml.tar.gz 35,026,431 B; source liecsrc.tar 85,688,320 B."
+  scores: {survival: 2, rebuild: 8, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: mdisc-bdxl-archival-media
+  name: "Verbatim M-DISC BD-R XL 100 GB (5-pack) + BD-XL writer – long-term archival media"
+  category: computing
+  description_hu: "Szervetlen adathordozó rétegű, a gyártó szerint évszázados élettartamú Blu-ray lemez az archívum 3-2-1 mentéséhez. Áram nélkül tárolva nem veszít adatot, ellentétben az SSD-vel."
+  url_info: "https://www.bechtle.com/de-en/shop/verbatim-m-disc-bd-r-blu-ray-100gb-5-pck--4110979--p"
+  url_download: null
+  url_status: "unverified"
+  method: purchase
+  access: physical
+  price: "approx. EUR 70–98 or USD 68–70 per 5×100 GB pack (retailer listings via web search, not verified); BD-XL capable M-DISC writer extra (price not checked)"
+  license: null
+  size: "500 GB capacity per 5-pack"
+  size_status: official(stated)
+  format: optical disc (BD-R XL)
+  language: multi
+  notes: "Referenced only in rule 12 of the catalog; no item exists. Verbatim part 98913. Writer must support BDXL and M-DISC. Lifetime claims come from the manufacturer."
+  scores: {survival: 3, rebuild: 7, actionable: 6, uniqueness: 9, reliability: 7, offline_ease: 6}
+
+- id: pd-craft-classics-tanning-pottery-weaving-glass
+  name: "Public-domain craft classics: Practical Tanning (Flemming 1910), The Potter's Craft (Binns 1910), Hand-loom Weaving (Hooper 1910), Methods of Glass Blowing (Shenstone)"
+  category: manufacturing
+  description_hu: "Négy klasszikus mesterségkönyv: bőrcserzés (növényi és krómcserzés), fazekasság (agyag, korong, máz, égetés), kézi szövés (szövőszék, kötéstan) és üvegfúvás. Ruházathoz, edényhez, laboreszközhöz."
+  url_info: "https://archive.org/details/practicaltanning00flemuoft"
+  url_download: "https://archive.org/download/practicaltanning00flemuoft/practicaltanning00flemuoft.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain"
+  size: "109.5 MB"
+  size_status: measured(content-length)
+  format: PDF (4 files)
+  language: en
+  notes: "Tanning 43,461,434 B; potterscraftprac00binnuoft.pdf 9,664,286 B; handloomweavingp00hooprich.pdf 39,540,991 B; glassblowing00shenrich.pdf 16,785,014 B. Survivor Library probably has overlapping titles."
+  scores: {survival: 3, rebuild: 8, actionable: 7, uniqueness: 5, reliability: 6, offline_ease: 10}
+
+- id: thomssen-soap-making-manual-1922
+  name: "Soap-making Manual (E. G. Thomssen, Van Nostrand 1922)"
+  category: chemistry
+  description_hu: "Szappanfőzés nyersanyagai (zsírok, lúg, hamuzsír), eljárásai és minőségellenőrzése. Hamulúgos házi szappankészítés és fertőtlenítés alapja."
+  url_info: "https://archive.org/details/soapmakingmanua00thomgoog"
+  url_download: "https://archive.org/download/soapmakingmanua00thomgoog/soapmakingmanua00thomgoog_text.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: "Public domain (1922)"
+  size: "10.0 MB"
+  size_status: measured(content-length)
+  format: PDF
+  language: en
+  notes: "Text PDF 9,961,906 B (image PDF 3,941,114 B). Written for industry, so pair it with Henley's for home-scale recipes."
+  scores: {survival: 4, rebuild: 7, actionable: 7, uniqueness: 6, reliability: 6, offline_ease: 10}
+
+- id: meshtastic-firmware-and-docs
+  name: "Meshtastic LoRa mesh firmware v2.8.2 (all platforms) + docs repo"
+  category: communications
+  description_hu: "Olcsó LoRa-rádiókon (ESP32, nRF52, RP2040) futó, infrastruktúra nélküli szöveges mesh-hálózat, kilométeres hatótávval. Firmware és dokumentáció offline flasheléshez."
+  url_info: "https://github.com/meshtastic/firmware"
+  url_download: "https://github.com/meshtastic/firmware/releases/download/v2.8.2.d5f1619/firmware-esp32-2.8.2.d5f1619.zip"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: "hardware approx. 20–60 USD per node (not verified)"
+  license: "GPL-3.0"
+  size: "343.8 MB"
+  size_status: measured(content-length)
+  format: ZIP firmware bundles + git repos
+  language: en
+  notes: "Release zips: esp32 40,071,234; esp32s3 227,052,406; nrf52840 58,645,536; rp2040 3,107,185; esp32c3 5,468,481; esp32c6 9,413,978 B (pattern firmware-<plat>-2.8.2.d5f1619.zip). git ls-remote OK: firmware latest tag v2.8.2.d5f1619 (there is also v2.8.2.4c89b69), docs repo github.com/meshtastic/meshtastic HEAD 4097527c. Also mirror the Meshtastic Android APK (via F-Droid) and the web flasher."
+  scores: {survival: 7, rebuild: 7, actionable: 8, uniqueness: 10, reliability: 7, offline_ease: 7}
+
+- id: reticulum-nomadnet-sideband
+  name: "Reticulum Network Stack (RNS 1.6.0) + LXMF + NomadNet 1.5.0 + Sideband 2.3.0 + RNode firmware"
+  category: communications
+  description_hu: "Titkosított, infrastruktúra nélküli hálózati réteg LoRa, packet radio, soros vonal vagy WiFi fölött, üzenetküldő (Sideband) és szöveges „web” (NomadNet) alkalmazással. Tartós, decentralizált közösségi hálózathoz."
+  url_info: "https://github.com/markqvist/Reticulum"
+  url_download: "https://github.com/markqvist/Reticulum"
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: "Reticulum License (MIT-like, with use restrictions)"
+  size: "~80 MB"
+  size_status: estimated(PyPI measured: rns whl 681 KB, lxmf 75 KB, nomadnet 337 KB, sbapp whl 68.8 MB; plus RNode firmware and source repos)
+  format: git / Python wheels / APK
+  language: en
+  notes: "git ls-remote OK: Reticulum 1.6.0, NomadNet 1.5.0, Sideband 2.3.0, RNode_Firmware v1.17. A guessed Sideband APK asset name returned 404, so look up the real asset name. Store pip wheels with: pip download rns lxmf nomadnet sbapp."
+  scores: {survival: 5, rebuild: 7, actionable: 6, uniqueness: 10, reliability: 6, offline_ease: 6}
+
+- id: ham-digital-modes-fldigi-js8call-direwolf
+  name: "HF/VHF digital-mode software: fldigi 4.2.13 (+flmsg/flarq), JS8Call 2.3.1, Dire Wolf 1.8.1 (APRS/packet TNC)"
+  category: communications
+  description_hu: "Rádióamatőr digitális üzemmódok: fldigi (PSK, RTTY, Olivia, MT63 űrlapokkal), JS8Call (gyenge jelű üzenetküldés és relé), Dire Wolf (szoftveres TNC APRS-hez és packet rádióhoz). Számítógéppel és hangkártyával kiépíthető rádiós adatkapcsolat."
+  url_info: "https://www.w1hkj.org/files/fldigi/"
+  url_download: "https://www.w1hkj.org/files/fldigi/fldigi-4.2.13_setup.exe"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "GPL-3.0 (all three)"
+  size: "~60 MB"
+  size_status: measured(content-length)
+  format: installers + source tarballs + PDF help
+  language: en
+  notes: "Measured: fldigi setup.exe 7,504,745; fldigi-4.2.13.tar.gz 5,244,946; fldigi_help.pdf 14,638,082; JS8Call win64 https://github.com/js8call/js8call/releases/download/v2.3.1/js8call-2.3.1-win64.exe 21,165,527 (total 48.6 MB). Dire Wolf: git https://github.com/wb2osz/direwolf tag 1.8.1 (archive tarball returned 403, use git clone; ~10 MB estimated). fldigi git: git.code.sf.net/p/fldigi/fldigi v4.2.13. Also consider Pat Winlink (github.com/la5nta/pat v1.0.1; release asset name not found)."
+  scores: {survival: 5, rebuild: 7, actionable: 6, uniqueness: 10, reliability: 8, offline_ease: 7}
+
+- id: hu-radioamator-vizsga-anyagok
+  name: "Magyar rádióamatőr-vizsga: 15/2013. (IX.25.) NMHH rendelet + HA5KDR tanulási jegyzet"
+  category: hungarian
+  description_hu: "A magyar rádióamatőr-szolgálat szabályai (frekvenciák, vizsgaszintek, tematika) és egy klubjegyzet kezdőknek. Magyar nyelvű alap rádiós képzéshez és legális adáshoz."
+  url_info: "https://njt.jog.gov.hu/jogszabaly/2013-15-20-3H"
+  url_download: "https://www.ha5kdr.hu/uploads/2015/10/jegyzet.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "jogszabály: no copyright; jegyzet: © HA5KDR club"
+  size: "5.7 MB"
+  size_status: measured(content-length)
+  format: PDF + HTML
+  language: hu
+  notes: "jegyzet.pdf 5,394,642 B; NMHH decree HTML 293,099 B. No official NMHH question bank was found online. Check mrasz.hu for further training material."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 10, reliability: 7, offline_ease: 9}
+
+- id: kx-openwrt
+  name: "openwrt.org_en_all_2026-07 (OpenWrt wiki/docs ZIM)"
+  category: computing
+  description_hu: "OpenWrt routerfirmware teljes dokumentációja: régi routerek átalakítása mesh-WiFi csomóponttá, helyi hálózat és szerver kiépítése internet nélkül."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=openwrt.org_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/zimit/openwrt.org_en_all_2026-07.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC BY-SA 4.0 (OpenWrt wiki)"
+  size: "519.9 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=openwrt.org_en_all flavour=null. 519,894,596 bytes. Firmware images are not included; download images for your own routers separately."
+  scores: {survival: 2, rebuild: 6, actionable: 7, uniqueness: 9, reliability: 8, offline_ease: 9}
+
+- id: kx-mankier-man-pages
+  name: "www.mankier.com_en_all_2026-10 (Linux man pages ZIM)"
+  category: computing
+  description_hu: "Linux parancsok kézikönyv-oldalai kereshető formában, a Kiwix olvasóban telefonról is. Rendszer-helyreállításhoz, amikor nincs telepített man."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=www.mankier.com_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/zimit/www.mankier.com_en_all_2026-10.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "various (man page licenses)"
+  size: "182.9 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=www.mankier.com_en_all flavour=null. 182,885,768 bytes. Much smaller alternative: devdocs_en_man (~30 MB)."
+  scores: {survival: 1, rebuild: 5, actionable: 6, uniqueness: 5, reliability: 7, offline_ease: 10}
+
+- id: kx-maps-hungary
+  name: "maps_en_hungary_2026-06 (Kiwix offline map ZIM)"
+  category: maps_geo
+  description_hu: "Magyarország offline vektortérképe ZIM-ben, a Kiwix olvasóban közvetlenül böngészhető. Nem kell hozzá OsmAnd vagy QGIS."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=maps_en_hungary"
+  url_download: "https://lb.download.kiwix.org/zim/maps/maps_en_hungary_2026-06.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "ODbL (OpenStreetMap data)"
+  size: "605.2 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=maps_en_hungary flavour=null. 605,227,506 bytes. Europe version maps_en_europe 26.7 GB. Overlaps the OsmAnd/Geofabrik items, but only needs a Kiwix reader."
+  scores: {survival: 5, rebuild: 4, actionable: 5, uniqueness: 4, reliability: 8, offline_ease: 9}
+
+- id: kx-restarters
+  name: "restarters_en_all_maxi_2026-10 (Restarters repair wiki)"
+  category: repair
+  description_hu: "A Restart Project közösségi javítási wikije: háztartási elektronika, laptop, telefon hibakeresése és javítása. Kis méretű kiegészítő az iFixit mellé."
+  url_info: "https://library.kiwix.org/catalog/v2/entries?name=restarters_en_all"
+  url_download: "https://lb.download.kiwix.org/zim/other/restarters_en_all_maxi_2026-10.zim"
+  url_status: "200 verified 2026-11-14"
+  method: kiwix
+  access: free
+  price: null
+  license: "CC BY-SA (ZIM metadata)"
+  size: "17.0 MB"
+  size_status: measured(content-length)
+  format: zim
+  language: en
+  notes: "kiwix book=restarters_en_all flavour=maxi. 17,044,635 bytes."
+  scores: {survival: 1, rebuild: 4, actionable: 6, uniqueness: 4, reliability: 6, offline_ease: 10}
+```
+
+**Other Kiwix ZIMs not yet in the catalog, left out because they are lower value:**
+
+| ZIM | Size |
+|---|---|
+| theworldfactbook_en_all | 407 MB |
+| s2underground_en_all (comms/security videos) | 5.5 GB |
+| canadian-prepper_en_preppingfood (video) | 2.2 GB |
+| 100r.co_en_all | 177 MB |
+| wikispecies | 1.7–3.5 GB |
+| openstreetmap-wiki | 0.5–1.2 GB |
+| wikiquote_hu | 7–18 MB |
+| permacomputing | 1 MB |
+
+All of these are in `/tmp/claude-0/-home-user-Personal/5fbce50e-ce84-531e-8258-3354b3da35f3/scratchpad/kiwix/names.tsv`, the full parsed OPDS list of 3,655 entries.
