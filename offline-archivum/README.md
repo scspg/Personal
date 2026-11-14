@@ -15,3 +15,9 @@ Források:
 - `src/items_*.jsonl`: tételek;
 - `src/research/`: a kutatási nyersanyag;
 - `src/overrides_*.py`: kézi javítások.
+
+## Fájlok a ZIP-ben
+- `ARCHIVUM-LLM.html` – **offline kalkulátor + eszközmátrix + modelltábla** (böngészőben nyisd meg, internet nem kell)
+- `ARCHIVUM.md` / `ARCHIVUM-kompakt.md` – a teljes katalógus AI-ágensnek / chatbe
+- `eszkozok/select_items.py` – letöltési terv a tárhelyhez; `eszkozok/llm_calc.py` – LLM-kalkulátor parancssorból
+- `forras/` – minden generátor és a kutatási nyersanyag (újragenerálás: `cd forras && python3 gen_sections.py && python3 build.py && python3 gen_html.py`)
