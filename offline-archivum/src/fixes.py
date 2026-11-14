@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Adatjavítások a minőségellenőrzés (QA) alapján – a build minden futáskor alkalmazza (apply(items) -> items).
 Egy helyen, újrafuttathatóan: nyelvi enumok, letöltési blokkok, duplikátumok, tierek/pontok, magyar szövegek."""
-import re
+import json, os, re
 
 DELETE = {"village-earth-at-library", "llm-qwen3-8-27b-gguf-bf16-2"}          # azonos a village-earth-appropriate-technology-library tétellel
 
@@ -226,6 +226,19 @@ EXTRA_SIZE = {"oss-openfda": 3_000_000_000}
 SIZE_OVERRIDE = {"oss-internet-in-a-box": 50_000_000}   # becsült: drug/label + event részhalmaz zip JSON
 
 
+_NHU = None
+
+
+def _notes_hu():
+    global _NHU
+    if _NHU is None:
+        try:
+            _NHU = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "research", "notes_hu.json"), encoding="utf-8"))
+        except OSError:
+            _NHU = {"notes": {}, "size_human": {}}
+    return _NHU
+
+
 def apply(items):
     out, seen = [], set()
     for it in items:
@@ -259,6 +272,10 @@ def apply(items):
         if (it.get("download") or {}).get("method") == "archive.org" and not it["download"].get("glob") and "PDF" in str(it.get("format", "")).upper():
             it["download"]["glob"] = "*.pdf"
         if not it["cat"].startswith("ai_models"):
+            for k in ("notes", "size_human"):          # angol megjegyzések magyarul (csak ha a forrásszöveg azóta nem változott)
+                tr = _notes_hu()[k].get(it["id"])
+                if tr and it.get(k) == tr[0]:
+                    it[k] = tr[1]
             for k in ("desc_hu", "need_hu", "alternatives"):
                 if isinstance(it.get(k), str):
                     it[k] = _style(it[k])
