@@ -125,6 +125,14 @@ def apply(items):
         if p:
             for k, v in p.items():
                 it[k] = v
+        dm = (it.get("download") or {}).get("method")
+        if dm in ("s3", "jigdo") or it["id"] == "debian-full-archive-ftpsync":
+            src = it["download"].get("url") or ""
+            how = {"s3": "AWS CLI-vel (aws s3 sync … --no-sign-request; fizetős vödörnél --request-payer requester, előtte költségbecslés)",
+                   "jigdo": "jigdo-lite-tal (apt install jigdo-file; jigdo-lite <…>.jigdo) – a .jigdo fájlok a megadott könyvtárban vannak",
+                   "rsync": "Debian ftpsync-kel (https://salsa.debian.org/mirror-team/archvsync) – helyi tükör beállítása, nem egyszerű rsync"}[
+                   "rsync" if it["id"] == "debian-full-archive-ftpsync" else dm]
+            it["download"] = {"method": "agent", "note": f"Letöltés {how}. Forrás/parancs: {src}", "seed_urls": [u for u in re.findall(r"(?:https?|s3)://\S+", str(src))]}
         if it["id"] in MULTI_FILE and it.get("download", {}).get("method") == "http":
             urls = it["download"].get("urls") or []
             it["download"] = {"method": "agent", "note": "Több fájlból álló készlet: a kiinduló URL mellett a megjegyzésben (notes) és a forrásoldalon felsorolt további fájlok is kellenek.",

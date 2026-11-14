@@ -1,6 +1,6 @@
 # ARCHIVUM – chat-összefoglaló (2026-11-14)
 
-> Ez a rövid változat chatbe tölthető. A teljes katalógus (989 tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben, az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.
+> Ez a rövid változat chatbe tölthető. A teljes katalógus (1149 tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben, az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.
 
 ## 0. Gyorsindítás embernek
 
@@ -60,23 +60,23 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 
 ### Összefoglaló
 
-| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Olvasók, eszközök |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **1TB** | 920 GB | 189 | 310 GB | 24,2 GB | 33,6 GB | 69,4 GB | 34,3 GB | 300 GB | 67,8 GB | 44,3 GB | 21,9 GB | 14,8 GB |
-| **2TB** | 1,84 TB | 207 | 615 GB | 24,2 GB | 33,6 GB | 69,4 GB | 38,4 GB | 483 GB | 72,8 GB | 197 GB | 282 GB | 24,7 GB |
-| **4TB** | 3,61 TB | 272 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 67,5 GB | 629 GB | 74,9 GB | 1,03 TB | 1 TB | 52,1 GB |
-| **8TB** | 6,62 TB | 275 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 752 GB | 73,9 GB | 1,03 TB | 3,81 TB | 52,1 GB |
-| **16TB** | 12,8 TB | 272 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 8,27 TB | 52,1 GB |
-| **32TB** | 21,6 TB | 271 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17 TB | 52,1 GB |
+| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **1TB** | 920 GB | 275 | 310 GB | 24,1 GB | 32,5 GB | 69,4 GB | 33,9 GB | 270 GB | 67,8 GB | 1,61 GB | 20,6 GB | 30,3 GB | 45,7 GB | 14,8 GB |
+| **2TB** | 1,84 TB | 344 | 615 GB | 27,9 GB | 33,7 GB | 69,4 GB | 55,2 GB | 493 GB | 73,9 GB | 204 GB | 159 GB | 38,9 GB | 52,5 GB | 17,5 GB |
+| **4TB** | 3,68 TB | 308 | 615 GB | 24,2 GB | 33,6 GB | 69,4 GB | 38,7 GB | 483 GB | 72,8 GB | 57,7 GB | 156 GB | 2,06 TB | 50,9 GB | 15,5 GB |
+| **8TB** | 7,28 TB | 410 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 67,5 GB | 804 GB | 74,9 GB | 971 GB | 2,16 TB | 2,08 TB | 329 GB | 40,2 GB |
+| **16TB** | 14,4 TB | 410 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 752 GB | 1,01 TB | 1,03 TB | 8,27 TB | 2,08 TB | 329 GB | 40,2 GB |
+| **32TB** | 24 TB | 409 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17 TB | 2,08 TB | 329 GB | 40,2 GB |
 
 ### Melyik méret mire elég – mi jön be az előző mérethez képest
 
-- **1TB** – összesen 189 tétel; **új: 189**. Legnagyobb új tételek: Survivor Library full mirror on Internet Archive… (218 GB); Qwen3.8-Flash-Next · Qwen3.8-Flash-Next-GGUF · Q8_0 (GGUF) (167 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (93,7 GB); MEK szakmai válogatás… (60 GB); wikipedia_en_all_nopic_2026-06 (52,7 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Open Textbook Library (University of Minnesota) (40 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
-- **2TB** – összesen 207 tétel; **új: 21**, jobb változatra cserélt: 2. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); Argos Translate / LibreTranslate + en-hu, hu-en models (9,13 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB); KSH STADAT táblák és kiadványok (5 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
-- **4TB** – összesen 272 tétel; **új: 65**, jobb változatra cserélt: 2. Legnagyobb új tételek: Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); CRAN full mirror (R packages, rsync) (410 GB); gutenberg_en_all_2025-11 (221 GB); stackoverflow.com_en_all_2026-07 (115 GB); Open Library (catalog dumps + lending) (42 GB); WorldClim 2.1 historical climate (1970-2000) (32,4 GB); crashcourse_en_all_2026-05 (23 GB); Meta NLLB-200 translation models (distilled-600M, 3.3B) (20,1 GB). Feljavítva: Kolibri v0.19.5 + Khan Academy… (186 GB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
-- **8TB** – összesen 275 tétel; **új: 4**, jobb változatra cserélt: 2. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB); ted_mul_all_2026-09 (91,2 GB). Feljavítva: wikipedia_en_all_maxi_2026-08 (127 GB); gutenberg_mul_all_2025-11 (253 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
-- **16TB** – összesen 272 tétel; **új: 1**, jobb változatra cserélt: 2. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); Project Gutenberg full mirror (rsync) (1,06 TB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
-- **32TB** – összesen 271 tétel; **új: 0**, jobb változatra cserélt: 1. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **1TB** – összesen 275 tétel; **új: 275**. Legnagyobb új tételek: Survivor Library full mirror on Internet Archive… (218 GB); Qwen3.8-Flash-Next · Qwen3.8-Flash-Next-GGUF · Q8_0 (GGUF) (167 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (93,7 GB); MEK szakmai válogatás… (60 GB); wikipedia_en_all_nopic_2026-06 (52,7 GB); Open Textbook Library (University of Minnesota) (40 GB); Qwen3.8-27B abliterated (huihui) / heretic-ara… (29 GB); CD3WD – Collection of Development Documents… (27,9 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **2TB** – összesen 344 tétel; **új: 70**, jobb változatra cserélt: 3. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB); RepRap.org wiki - WikiTeam dump 2025-06-12 (16,4 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); TeX Live (6,78 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **4TB** – összesen 308 tétel; **új: 1**. Legnagyobb új tételek: Internet-in-a-Box (IIAB) (2,03 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **8TB** – összesen 410 tétel; **új: 102**. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); gutenberg_en_all_2025-11 (221 GB); Protomaps daily planet basemap (PMTiles) (140 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); stackoverflow.com_en_all_2026-07 (115 GB); FineWeb-2 – magyar (hun_Latn) (98,5 GB); Linked OpenStreetMap × Wikidata × Wikipedia × Wikivoyage… (97,3 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **16TB** – összesen 410 tétel; **új: 5**, jobb változatra cserélt: 6. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB); ted_mul_all_2026-09 (91,2 GB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); wikipedia_en_all_maxi_2026-08 (127 GB); Kolibri v0.19.5 + Khan Academy… (186 GB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **32TB** – összesen 409 tétel; **új: 0**, jobb változatra cserélt: 2. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB); Project Gutenberg full mirror (rsync) (1,06 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
 
 **Ajánlás:**
 - **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.

@@ -25,7 +25,7 @@ Használat:
   python3 llm_calc.py ARCHIVUM.md --name "3 db Strix" --unified 192 --unified-usable 0.83 --unified-bw 273 --nodes 3 --hop-ms 3
   --min-tps 5 (alap): ennél lassabb modellt nem tekint "elfutónak". --md: Markdown-tábla kimenet.
 """
-import argparse, json, re, sys
+import argparse, json, math, re, sys
 
 EFF = 0.6
 OPUS = 59.1  # Claude Opus 5.5 (max), AA Intelligence Index v5.0.1 – a "% Opus" viszonyítási pontja
@@ -150,7 +150,7 @@ class Device:
         gpus = [(g, b * m) for g, b in gpus]
         self.gpus = gpus
         self.tp = bool(k.get("tensor_parallel"))           # P2P-vel: kártyák párhuzamosan (sávszélesség összeadódik)
-        self.tp_eff = k.get("tp_eff", 0.85)
+        self.tp_eff = k.get("tp_eff") or 0.85
         self.vram = sum(g for g, _ in gpus)
         # több (eltérő) GPU rétegenkénti felosztással: a token sorban halad át a kártyákon → kapacitással súlyozott harmonikus sávszélesség
         self.vram_bw = self.vram / sum(g / b for g, b in gpus) if gpus else 0
@@ -163,8 +163,8 @@ class Device:
     def capacity(self):
         return max(self.uni, self.vram + self.ram, self.vram, self.ram)
 
-    def run(self, v, mem_left=None):
-        """(tok/s, elhelyezés, igény GB) vagy None, ha nem fér el / nem futtatható."""
+    def run(self, v, mem_left=None, vram_used=0.0):
+        """(tok/s, elhelyezés, igény GB) vagy None, ha nem fér el / nem futtatható. vram_used: csapatnál a már foglalt VRAM."""
         fmt = v.get("platform", "any")
         if fmt not in self.formats:
             return None
@@ -176,24 +176,27 @@ class Device:
         opts = []
         fix = self.fix_ms / 1000
         if self.uni and need <= min(self.uni, cap_left) and fmt != "server":
-            t = act / (EFF * self.uni_bw * 1e9) + fix + (self.nodes - 1) * self.hop_ms / 1000
+            hops = max(0, math.ceil(need / (self.uni / self.nodes)) - 1) if self.nodes > 1 else 0
+            t = act / (EFF * self.uni_bw * 1e9) + fix + hops * self.hop_ms / 1000
             opts.append((1 / t, f"unified{' ×' + str(self.nodes) if self.nodes > 1 else ''}"))
-        if self.vram and need <= self.vram:
+        vram = max(0.0, self.vram - vram_used)
+        gpus = [(g * vram / self.vram, b) for g, b in self.gpus] if self.vram else []
+        if vram and need <= vram:
             bw, how = self.vram_bw, "csak GPU"
-            if self.tp and len(self.gpus) > 1:
+            if self.tp and len(gpus) > 1:
                 # tensor parallel eltérő kártyákkal: "vízszint-kitöltés" – a kártyák egyszerre dolgoznak, a lassabbik dönt;
                 # a kis kártya megtelik (capacity cap), a maradék a többire kerül sávszélesség-arányosan
-                fr = tp_fractions(self.gpus, need)
-                t_rel = max(f / b for f, (g, b) in zip(fr, self.gpus))            # idő / (aktív bájt), 1/(GB/s)
+                fr = tp_fractions(gpus, need)
+                t_rel = max(f / b for f, (g, b) in zip(fr, gpus))            # idő / (aktív bájt), 1/(GB/s)
                 bw_tp = self.tp_eff / t_rel
                 if bw_tp > bw:
                     bw, how = bw_tp, f"csak GPU, tensor parallel ×{len(self.gpus)} (P2P)"
             opts.append((1 / (act / (EFF * bw * 1e9) + fix), how))
-        if fmt != "server" and self.vram and self.ram and need <= self.vram + self.ram and need > self.vram:
-            share = max(0.0, (self.vram - 2) / need)
-            f = min(1.0, (0.3 + 0.7 * share) if v.get("moe") else share)
-            t = act * f / (EFF * self.vram_bw * 1e9) + act * (1 - f) / (EFF * self.ram_bw * 1e9) + fix
-            opts.append((1 / t, "hibrid GPU+RAM" + ("" if v.get("moe") else " (dense)")))
+        if fmt != "server" and self.ram and need <= vram + self.ram and need > vram:
+            share = max(0.0, (vram - 2) / need)
+            f = min(1.0, (0.3 + 0.7 * share) if v.get("moe", True) else share) if vram > 2 else 0.0
+            t = (act * f / (EFF * self.vram_bw * 1e9) if f else 0) + act * (1 - f) / (EFF * self.ram_bw * 1e9) + fix
+            opts.append((1 / t, ("hibrid GPU+RAM" if f else "csak CPU") + ("" if v.get("moe", True) else " (dense)")))
         if fmt != "server" and self.ram and need <= self.ram and not self.uni:
             opts.append((1 / (act / (EFF * self.ram_bw * 1e9) + fix), "csak CPU"))
         if not opts:
@@ -259,15 +262,20 @@ def team(dev, vs, mixed):
     cands.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
     helper_tps = min(20, 2 * dev.min_tps + 2)            # telefonon ~10, PC-n 12-20 tok/s
     helper_max = max(4.0, min(40.0, 0.3 * cap))          # a segéd kicsi legyen
+    def vram_of(r):
+        return min(r[2], dev.vram) if r[1].startswith("csak GPU") else dev.vram if r[1].startswith("hibrid") else 0.0
     best = None
     for v1, r1 in cands[:80]:
         left = cap - r1[2]
-        for v2, r2 in cands:
-            if v2["group"] == v1["group"] or r2[2] > left:
+        for v2, _r2 in cands:
+            if v2["group"] == v1["group"] or _r2[2] > left:
+                continue
+            r2 = dev.run(v2, left, vram_of(r1))            # a maradék VRAM-ba/RAM-ba kell beférnie
+            if not r2 or r2[0] < dev.min_tps:
                 continue
             if mixed and (v1["cat"] == "ai_models_uncensored") == (v2["cat"] == "ai_models_uncensored"):
                 continue
-            if not mixed and (r2[0] < helper_tps or r2[2] > helper_max or v2["llm_bits"] < 3.5):
+            if not mixed and (r2[0] < max(helper_tps, 1.2 * r1[0]) or r2[2] > helper_max or v2["llm_bits"] < 3.5):
                 continue  # gyors segéd: kicsi, gyors, legalább ~3,5 bites
             if mixed and v2["llm_bits"] < 3.5 and v2.get("moe") is False:
                 continue
@@ -280,8 +288,10 @@ def team(dev, vs, mixed):
         used = sum(r[2] for _, r, _ in best[1])
         groups = {v["group"] for v, _, _ in best[1]}
         h = None
-        for v, r in cands:
-            if v["group"] in groups or r[2] > cap - used or r[0] < max(helper_tps, 1.5 * best[1][0][1][0]) or v["llm_bits"] < 3.5 or r[2] > helper_max:
+        vu = sum(vram_of(r) for _, r, _ in best[1])
+        for v, _r in cands:
+            r = dev.run(v, cap - used, vu)
+            if not r or v["group"] in groups or r[2] > cap - used or r[0] < max(helper_tps, 1.5 * best[1][0][1][0]) or v["llm_bits"] < 3.5 or r[2] > helper_max:
                 continue
             if h is None or smart(v) > smart(h[0]):
                 h = (v, r)
@@ -349,7 +359,7 @@ def report(dev, res, md=False):
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
             cell = "<br>".join(fmt_member(*m) for m in r) if r else "nincs elég memória / túl lassú"
-            if r and len(r) > 1:
+            if r and len(r) > 1 and k in ("V3", "V4") and "váltva" not in r[0][2]:
                 cell += f"<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~{hu(sum(m[1][2] for m in r) + EMBED_GB, 0)} GB"
             out.append(f"| **{title[k]}** | {cell} |")
         out.append("")
@@ -376,22 +386,44 @@ def main():
     ap.add_argument("--ram", type=float, help="rendszer-RAM GB"); ap.add_argument("--ram-usable", type=float, default=0.85)
     ap.add_argument("--ram-bw", type=float, help="RAM sávszélesség GB/s (DDR5 2 csatorna ≈ 80-96, DDR4 2 csatorna ≈ 40-50)")
     ap.add_argument("--unified", type=float, help="unified memória GB (Mac, Strix Halo, telefon)")
-    ap.add_argument("--unified-usable", type=float, default=0.75); ap.add_argument("--unified-bw", type=float)
+    ap.add_argument("--unified-usable", type=float, default=0.8); ap.add_argument("--unified-bw", type=float)
     ap.add_argument("--nodes", type=int, default=1); ap.add_argument("--hop-ms", type=float, default=3)
     ap.add_argument("--formats", default="any", help="any (GGUF/Ollama), mac (MLX), server (vLLM/SGLang safetensors), android (LiteRT)")
     ap.add_argument("--min-tps", type=float, default=5); ap.add_argument("--fix-ms", type=float, default=10)
+    ap.add_argument("--tensor-parallel", action="store_true", help="több GPU párhuzamosan (P2P), mint a HTML 'FELOLDVA' profiljai")
+    ap.add_argument("--tp-eff", type=float, default=0.85, help="tensor parallel hatásfok (0,3–1,0; P2P-vel ~0,82)")
+    ap.add_argument("--vram-bw-mult", type=float, default=1.0, help="memória-túlhajtás szorzója (pl. 1.06)")
     ap.add_argument("--md", action="store_true")
     a = ap.parse_args()
     vs = load(a.catalog)
     devs = []
     if a.preset:
         keys = list(PRESETS) if a.preset == "all" else a.preset.split(",")
+        unknown = [k for k in keys if k not in PRESETS]
+        if unknown:
+            ap.error(f"ismeretlen profil: {', '.join(unknown)} – választható: {', '.join(PRESETS)}")
         devs = [Device(**PRESETS[k]) for k in keys]
     else:
-        gpus = [tuple(map(float, g.split(":"))) for g in a.gpu] or None
+        try:
+            gpus = [tuple(float(x) for x in g.split(":")) for g in a.gpu] or None
+        except ValueError:
+            ap.error("--gpu formátuma GB:GB/s, pl. --gpu 32:1790")
+        if gpus and any(len(g) != 2 or g[0] <= 0 or g[1] <= 0 for g in gpus):
+            ap.error("--gpu formátuma GB:GB/s, mindkettő pozitív, pl. --gpu 32:1790")
+        if a.vram and not (a.vram_bw and a.vram_bw > 0):
+            ap.error("--vram mellé --vram-bw (GB/s) is kell")
+        if a.ram and not (a.ram_bw and a.ram_bw > 0):
+            ap.error("--ram mellé --ram-bw (GB/s) is kell (DDR4 2 csatorna ≈ 40–50, DDR5 2 csatorna ≈ 80–96)")
+        if a.unified and not (a.unified_bw and a.unified_bw > 0):
+            ap.error("--unified mellé --unified-bw (GB/s) is kell")
+        if not (gpus or a.vram or a.ram or a.unified):
+            ap.error("adj meg legalább egy memóriát: --gpu / --vram, --ram vagy --unified (vagy használj --preset-et)")
+        if a.min_tps <= 0 or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
+            ap.error("--min-tps > 0, --tp-eff 0,3–1,0, --nodes >= 1 kell")
         devs = [Device(name=a.name, gpus=gpus, vram=a.vram, vram_bw=a.vram_bw, ram=a.ram, ram_usable=a.ram_usable, ram_bw=a.ram_bw,
                        unified=a.unified, unified_usable=a.unified_usable, unified_bw=a.unified_bw, nodes=a.nodes, hop_ms=a.hop_ms,
-                       formats=a.formats, fix_ms=a.fix_ms, min_tps=a.min_tps)]
+                       formats=a.formats, fix_ms=a.fix_ms, min_tps=a.min_tps, tensor_parallel=a.tensor_parallel, tp_eff=a.tp_eff,
+                       vram_bw_mult=a.vram_bw_mult)]
     for d in devs:
         print(report(d, evaluate(d, vs), a.md))
 

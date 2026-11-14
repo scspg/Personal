@@ -21,16 +21,26 @@ PROFILES = {  # súlyok: S=túlélés R=újjáépítés A=gyakorlatiasság U=pó
     "computing": {"S": .05, "R": .40, "A": .20, "U": .15, "Q": .10, "O": .10},
 }
 MEM_CAP = {"T5": 10e9, "T4": 100e9, "T3": 220e9, "T2": 900e9, "T1": 1e18}  # alapértelmezett max. modellméret hardverszintenként
-AUTO_METHODS = {"agent", "kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent", "jigdo", "s3"}
-UNITS = {"B": 1, "KB": 1e3, "MB": 1e6, "GB": 1e9, "TB": 1e12, "PB": 1e15,
+AUTO_METHODS = {"agent", "kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent"}
+UNITS = {"B": 1, "KB": 1e3, "MB": 1e6, "GB": 1e9, "TB": 1e12, "PB": 1e15, "K": 1e3, "M": 1e6, "G": 1e9, "T": 1e12, "P": 1e15,
          "KIB": 2**10, "MIB": 2**20, "GIB": 2**30, "TIB": 2**40}
+LANG_WORDS = {"hu": "hungarian", "en": "english"}
 
 
-def parse_size(s):
-    m = re.fullmatch(r"\s*([\d.]+)\s*([A-Za-z]*)\s*", s)
-    if not m:
-        sys.exit(f"Érvénytelen méret: {s}")
-    return int(float(m.group(1)) * UNITS.get((m.group(2) or "B").upper(), 1))
+def lang_ok(lang, langs):
+    l = (lang or "").lower()
+    if l == "multi" or l in langs:
+        return True
+    toks = set(re.findall(r"[a-z]+", l))
+    return bool(toks & langs) or any(LANG_WORDS.get(x, "\0") in l for x in langs)
+
+
+def parse_size(s, default_unit="GB"):
+    m = re.fullmatch(r"\s*(\d+(?:[.,]\d+)?)\s*([A-Za-z]*)\s*", s)
+    u = (m.group(2) or default_unit).upper() if m else None
+    if not m or u not in UNITS:
+        sys.exit(f"Érvénytelen méret: {s!r} (pl. 512GB, 2TB, 1.5TiB)")
+    return int(float(m.group(1).replace(",", ".")) * UNITS[u])
 
 
 def human(b):
@@ -81,7 +91,7 @@ def main():
     ap.add_argument("--langs", default="hu,en,multi", help="engedett nyelvek, vesszővel")
     ap.add_argument("--access", default="free,free-registration,donation",
                     help="engedett hozzáférés: free,free-registration,donation,paid,gray,physical")
-    ap.add_argument("--hw", default=None, help="LLM hardverszint: T1..T5 (ha nincs megadva: nincs LLM, csak ha --llm-max>0 és --hw adott)")
+    ap.add_argument("--hw", default=None, choices=["T1", "T2", "T3", "T4", "T5"], help="LLM hardverszint: T1..T5 (ha nincs megadva: nincs LLM, csak ha --llm-max>0 és --hw adott)")
     ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra")
     ap.add_argument("--platform", default="", help="LLM-formátumok a GGUF/Ollama mellé: mac (MLX), server (vLLM/SGLang: FP8/NVFP4/AWQ), android (LiteRT); vesszővel")
     ap.add_argument("--uncensored", choices=["no", "also", "only"], default="also", help="cenzúrázatlan LLM-változatok: no | also | only")
@@ -122,7 +132,7 @@ def main():
             continue
         if it["tier"] > a.max_tier and it["id"] not in incl:
             continue
-        if it.get("lang") not in langs and it["id"] not in incl:
+        if not lang_ok(it.get("lang"), langs) and it["id"] not in incl:
             continue
         if it.get("access") not in access:
             continue
@@ -141,6 +151,8 @@ def main():
             if (a.uncensored == "no" and unc) or (a.uncensored == "only" and not unc):
                 continue
         method = (it.get("download") or {}).get("method")
+        if method == "hf" and not it["download"].get("repo"):
+            method = "manual"
         if method not in AUTO_METHODS or it.get("access") in ("paid", "physical"):
             manual.append(it)
             continue
@@ -157,12 +169,23 @@ def main():
 
     chosen, used = {}, 0
     llm_cap = int(budget * a.llm_max)
+    byid = {it["id"]: it for it in items}
+
+    def missing_deps(v):
+        have = {x["id"] for x in chosen.values()}
+        return [byid[r] for r in (v.get("requires") or []) if r in byid and r not in have and r not in excl and f"cat:{byid[r]['cat']}" not in excl]
+
+    def choose(k, v):
+        nonlocal used
+        for t in missing_deps(v):
+            chosen[t.get("group") or t["id"]] = t; used += size_of(t) or 0
+        chosen[k] = v; used += size_of(v)
 
     def llm_used():
         return sum(size_of(v) for v in chosen.values() if v["cat"].startswith("ai_models"))
 
     def fits(new, old=None):
-        delta = size_of(new) - (size_of(old) if old else 0)
+        delta = size_of(new) - (size_of(old) if old else 0) + sum(size_of(t) or 0 for t in missing_deps(new))
         if used + delta > budget:
             return False
         if new["cat"].startswith("ai_models"):
@@ -189,11 +212,12 @@ def main():
         for k, g in sel:                       # 1) legkisebb változat
             if k in chosen:
                 continue
-            v = min(g, key=size_of)
+            forced = [x for x in g if x["id"] in incl]
+            v = forced[0] if forced else min(g, key=size_of)
             if fits(v):
-                chosen[k] = v; used += size_of(v)
+                choose(k, v)
         for k, g in sel:                       # 2) feljavítás az ajánlott változatig
-            if k not in chosen:
+            if k not in chosen or chosen[k]["id"] in incl:
                 continue
             pr = pref_rank(g)
             for v in sorted([x for x in g if (x.get("variant_rank") or 0) <= pr], key=size_of, reverse=True):
@@ -222,8 +246,9 @@ def main():
                 if k in chosen or not pred(v):
                     continue
                 if fits(v):
-                    chosen[k] = v; used += size_of(v)
+                    choose(k, v)
                     return v
+        take(lambda v: v["id"] in incl)
         take(lambda v: v["cat"] == "ai_models")
         if a.uncensored != "no":
             take(lambda v: v["cat"] == "ai_models_uncensored")
@@ -237,24 +262,27 @@ def main():
         fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g))
     # 3) luxus-feljavítások (pl. képes Wikipedia) pontszám szerint
     for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
-        if k in chosen and not is_llm(g):
+        if k in chosen and not is_llm(g) and chosen[k]["id"] not in incl:
             for v in sorted(g, key=size_of, reverse=True):
                 if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
                     used += size_of(v) - size_of(chosen[k]); chosen[k] = v
                     break
     # 4) átfedések kiszűrése (pl. Wikipedia-orvosi részhalmaz, ha a teljes WP bent van), majd újratöltés
-    ids = {v["id"] for v in chosen.values()}
-    for k in [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids]:
-        used -= size_of(chosen[k]); del chosen[k]
-    ids = {v["id"] for v in chosen.values()}
-    for t in tiers:
-        fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g) and not any(set(v.get("subsumed_by") or []) & ids for v in g))
+    for _ in range(10):
+        ids = {v["id"] for v in chosen.values()}
+        drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl]
+        if not drop:
+            break
+        for k in drop:
+            used -= size_of(chosen[k]); del chosen[k]
+        ids = {v["id"] for v in chosen.values()}
+        for t in tiers:
+            fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g) and not any(set(v.get("subsumed_by") or []) & ids for v in g))
 
     plan = sorted(chosen.values(), key=lambda x: (x["tier"], -x["_score"]))
     # szükséges olvasó/futtató eszközök (requires) – ha a katalógusban szerepelnek, mindig kerüljenek be
     need = {r for v in plan for r in (v.get("requires") or [])}
-    byid = {it["id"]: it for it in items}
-    tools = [byid[r] for r in sorted(need) if r in byid and r not in {v["id"] for v in plan}]
+    tools = []  # függőségek már a kiválasztáskor bekerültek (choose/missing_deps)
     for t in tools:
         if size_of(t):
             used += size_of(t)
@@ -266,6 +294,16 @@ def main():
     for i, v in enumerate(plan, 1):
         print(f"{i:>3} {v['tier']:>2} {v['_score']:5.2f} {human(size_of(v)):>10}  {v['download']['method']:<11} {v['id']}"
               + ("  (becsült méret)" if not v.get("bytes") else ""))
+    ag = sum(size_of(v) or 0 for v in plan if v["download"]["method"] == "agent")
+    if ag:
+        print(f"Ebből AI-feladat (nem automatikus, a dl.sh TODO-ként jelzi): {human(ag)} – "
+              f"{sum(1 for v in plan if v['download']['method'] == 'agent')} tétel (API/OAI-PMH-lista, S3, jigdo, több fájlos készletek)")
+    miss = sorted(x for x in incl if x not in {v["id"] for v in plan})
+    if miss:
+        known = {it["id"] for it in items}
+        for x in miss:
+            why = "ismeretlen azonosító" if x not in known else "nem fér el a keretben, ki van zárva (--exclude / nyelv / hozzáférés / hardver), vagy fizetős/kézi tétel"
+            print(f"FIGYELEM: a kötelezőnek kért tétel nem került be: {x} – {why}")
     left = sorted([it for k, g in groups.items() if k not in chosen for it in g[:1]], key=lambda x: (x["tier"], -x["_score"]))
     if left:
         print(f"\nKimaradt (nem fért be) – első 15 a fontosság szerint:")
@@ -289,65 +327,86 @@ def main():
 
 def write_sh(plan, path, dest):
     q = shlex.quote
+    c = lambda x: str(x or "").replace("\r", " ").replace("\n", " ")       # kommentbe biztonságos
+    methods = {v["download"]["method"] for v in plan}
+    need_tools = sorted({"curl"} | {t for m, ts in {"kiwix": ["curl"], "http": ["aria2c|wget"], "wget-mirror": ["wget"], "rsync": ["rsync"],
+                         "git": ["git"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
+                         "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
-         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'LOG="$DEST/_log.txt"; mkdir -p "$DEST"',
+         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
+         'anyhave(){ local t; for t in ${1//|/ }; do have "$t" && return 0; done; return 1; }',
+         "for t in " + " ".join(q(t) for t in need_tools) + '; do anyhave "$t" || echo "FIGYELEM: hiányzó eszköz: $t – az ezt igénylő tételek FAIL-lel végződnek"; done',
+         'sha256c(){ if have sha256sum; then sha256sum -c -; else shasum -a 256 -c -; fi; }',
          'fetch(){ # url outdir',
          '  local ua=${UA:-Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0}',
          '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c -U "$ua" "$1"); fi; }',
-         'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból',
+         'hfdl(){ if have hf; then hf download "$@"; elif have huggingface-cli; then huggingface-cli download "$@"; else return 127; fi; }',
+         'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból (GNU és BSD sed-del is)',
          '  local u; u=$(curl -fsSL "https://library.kiwix.org/catalog/v2/entries?name=$1&count=50" 2>/dev/null \\',
-         '    | tr "\\n" " " | sed "s#<entry>#\\n#g" | { if [ -n "$2" ]; then grep "<flavour>$2</flavour>"; else cat; fi; } \\',
+         "    | tr '\\n' ' ' | sed $'s#<entry>#\\\\\\n#g' | grep \"<name>$1</name>\" \\",
+         '    | { if [ -n "$2" ]; then grep "<flavour>$2</flavour>"; else grep -v "<flavour>[^<]"; fi; } \\',
          '    | grep -o "https://[^\\"]*\\.zim\\.meta4" | sed "s/\\.meta4$//" | sort | tail -1)',
          '  echo "${u:-$3}"; }',
-         'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
+         'ok(){ echo "OK   $1" | tee -a "$LOG" "$RUNLOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG" "$RUNLOG"; }', ""]
     for v in plan:
-        d = v["download"]; m = d["method"]; sub = f'$DEST/{v["cat"]}/{v["id"]}'
-        L.append(f"# --- {v['id']}  ({human(size_of(v))})  {v.get('name','')}")
+        d = v["download"]; m = d["method"]; sub = f'$DEST/{v["cat"]}/{v["id"]}'; vid = q(v["id"])
+        L.append(f"# --- {v['id']}  ({human(size_of(v))})  {c(v.get('name'))}")
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
-            L.append(f'U=$(kiwix_latest {q(d["book"])} {q(d.get("flavour") or "")} {q(d.get("url") or "")}); F="{sub}/${{U##*/}}"')
-            L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --seed-time=0 -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
-            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256sum -c -) && ok {q(v["id"])} || fail {q(v["id"])}')
-        elif m in ("http", "jigdo"):
+            fl = d.get("flavour") or ""
+            fl = "" if fl == "null" else fl
+            L.append(f'U=$(kiwix_latest {q(d["book"])} {q(fl)} {q(d.get("url") or "")})')
+            L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --follow-metalink=mem -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
+            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && ok {vid} || fail {vid}')
+        elif m == "http":
             for u in (d.get("urls") or [d.get("url")]):
                 if u:
-                    L.append(f'fetch {q(u)} "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
+                    L.append(f'fetch {q(u)} "{sub}" && ok {vid} || fail {vid}')
         elif m == "wget-mirror":
-            L.append(f'(cd "{sub}" && wget -m -np -k -E -c -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {q(v["id"])} || fail {q(v["id"])}')
+            L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {vid} || fail {vid}')
         elif m == "rsync":
-            L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {q(v["id"])} || fail {q(v["id"])}')
+            L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {vid} || fail {vid}')
         elif m == "git":
             for u in (d.get("repos") or [d.get("url")]):
+                if not u:
+                    continue
                 n = u.rstrip("/").split("/")[-1]
-                L.append(f'[ -d "{sub}/{n}.git" ] || git clone --mirror {q(u)} "{sub}/{n}.git"; '
-                         f'git -C "{sub}/{n}.git" remote update && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all && ok {q(v["id"])} || fail {q(v["id"])}')
+                n = n[:-4] if n.endswith(".git") else n
+                L.append(f'{{ [ -d "{sub}/{n}.git" ] || git clone --mirror {q(u)} "{sub}/{n}.git"; }} && git -C "{sub}/{n}.git" remote update --prune && ok {vid} || fail {vid}')
+                L.append(f'[ -n "${{BUNDLE:-}}" ] && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all   # BUNDLE=1: +1x hely!')
             if d.get("release_url"):
-                L.append(f'# Telepítők/binárisok (AI-feladat): a {d["release_url"]} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
-                L.append(f'echo "TODO {v["id"]} – telepítők: {d["release_url"]}" | tee -a "$LOG"')
+                L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
+                L.append(f'echo "TODO {v["id"]} – telepítők: {c(d["release_url"])}" | tee -a "$LOG" "$RUNLOG"')
         elif m == "hf":
             inc = " ".join(f"--include {q(p)}" for p in (d.get("include") or []))
             rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""
-            L.append(f'hf download {q(d["repo"])}{rt} {inc} --local-dir "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
+            L.append(f'hfdl {q(d["repo"])}{rt} {inc} --local-dir "{sub}" && ok {vid} || fail {vid}')
         elif m == "ollama":
-            L.append(f'ollama pull {q(d["tag"])} && ok {q(v["id"])} || fail {q(v["id"])}   # tárolás: ~/.ollama/models (vagy $OLLAMA_MODELS)')
+            tag = d["tag"].split(" / ")[0].split()[0]
+            L.append(f'ollama pull {q(tag)} && ok {vid} || fail {vid}   # a szerver OLLAMA_MODELS könyvtárába kerül, NEM a $DEST-be')
         elif m == "archive.org":
+            glob = f' --glob={q(d["glob"])}' if d.get("glob") else ""
             for ident in (d.get("ids") or [d.get("id")]):
-                glob = f' --glob={q(d["glob"])}' if d.get("glob") else ""
-                L.append(f'ia download {q(ident)}{glob} --destdir "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
+                if ident:
+                    L.append(f'ia download {q(ident)}{glob} --checksum --destdir "{sub}" && ok {vid} || fail {vid}')
         elif m == "torrent":
-            L.append(f'aria2c -c --seed-time=0 -d "{sub}" {q(d.get("url") or d.get("magnet"))} && ok {q(v["id"])} || fail {q(v["id"])}')
+            u = d.get("url") or d.get("magnet")
+            if u:
+                L.append(f'have aria2c && aria2c -c --seed-time=0 -d "{sub}" {q(u)} && ok {vid} || fail {vid}')
         elif m == "agent":
-            L.append(f'# AGENT-FELADAT: ezt az AI-nak kell egyedileg megoldania (lista összegyűjtése API/OAI-PMH/oldal alapján, majd fetch).')
-            L.append(f'# Leírás: {d.get("note","")}'.replace("\n", " "))
+            L.append('# AGENT-FELADAT: ezt az AI-nak kell egyedileg megoldania (lista összegyűjtése API/OAI-PMH/oldal alapján, majd fetch).')
+            L.append(f'# Leírás: {c(d.get("note"))}')
             for u in d.get("seed_urls") or []:
-                L.append(f'#   kiinduló URL: {u}')
-            L.append(f'echo "TODO {v["id"]}" | tee -a "$LOG"')
-        elif m == "s3":
-            L.append(f'# S3: {d.get("note","")}\n# aws s3 sync {d.get("url")} "{sub}" {d.get("s3_args","")}')
+                L.append(f'#   kiinduló URL: {c(u)}')
+            L.append(f'echo "TODO {v["id"]}" | tee -a "$LOG" "$RUNLOG"')
+        else:   # s3, jigdo, …: nincs megbízható automatikus parancs
+            L.append(f'# KÉZI ({m}): {c(d.get("note"))} {c(d.get("url"))}')
+            L.append(f'echo "TODO {v["id"]} ({m})" | tee -a "$LOG" "$RUNLOG"')
         L.append("")
-    L.append('echo "Kész. Napló: $LOG"; grep -c FAIL "$LOG" || true')
-    open(path, "w").write("\n".join(L) + "\n")
+    L.append('echo "Kész. Napló: $RUNLOG"; echo "FAIL ebben a futásban: $(grep -c "^FAIL" "$RUNLOG")"')
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(L) + "\n")
 
 
 if __name__ == "__main__":

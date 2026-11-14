@@ -228,17 +228,19 @@ class Device{constructor(k){
   this.uni=(k.unified||0)*(k.unified_usable??0.8)*this.nodes; this.uni_bw=k.unified_bw||0;
   this.formats=new Set((k.formats||'any').split(',')); this.fix_ms=k.fix_ms??10; this.min_tps=k.min_tps??5;}
   capacity(){return Math.max(this.uni,this.vram+this.ram,this.vram,this.ram);}
-  run(v,left){const fmtp=v.plat; if(!this.formats.has(fmtp)) return null;
+  run(v,left,vramUsed=0){const fmtp=v.plat; if(!this.formats.has(fmtp)) return null;
     const need=v.b/1e9*1.15+1, cap=left??this.capacity(); if(need>cap+1e-9) return null;
     const act=(v.act||30)*1e9*v.bits/8, fix=this.fix_ms/1000, o=[];
-    if(this.uni&&need<=Math.min(this.uni,cap)&&fmtp!=='server'){const t=act/(EFF*this.uni_bw*1e9)+fix+(this.nodes-1)*this.hop_ms/1000; o.push([1/t,'unified'+(this.nodes>1?' ×'+this.nodes:'')]);}
-    if(this.vram&&need<=this.vram){let bw=this.vram_bw,how='csak GPU';
-      if(this.tp&&this.gpus.length>1){const fr=tpFractions(this.gpus,need); const tRel=Math.max(...fr.map((f,i)=>f/this.gpus[i][1])); const bwTp=this.tp_eff/tRel;
+    if(this.uni&&need<=Math.min(this.uni,cap)&&fmtp!=='server'){const hops=this.nodes>1?Math.max(0,Math.ceil(need/(this.uni/this.nodes))-1):0;
+      const t=act/(EFF*this.uni_bw*1e9)+fix+hops*this.hop_ms/1000; o.push([1/t,'unified'+(this.nodes>1?' ×'+this.nodes:'')]);}
+    const vram=Math.max(0,this.vram-vramUsed), gpus=this.vram?this.gpus.map(([g,b])=>[g*vram/this.vram,b]):[];
+    if(vram&&need<=vram){let bw=this.vram_bw,how='csak GPU';
+      if(this.tp&&gpus.length>1){const fr=tpFractions(gpus,need); const tRel=Math.max(...fr.map((f,i)=>f/gpus[i][1])); const bwTp=this.tp_eff/tRel;
         if(bwTp>bw){bw=bwTp;how='csak GPU, tensor parallel ×'+this.gpus.length+' (P2P)';}}
       o.push([1/(act/(EFF*bw*1e9)+fix),how]);}
-    if(fmtp!=='server'&&this.vram&&this.ram&&need<=this.vram+this.ram&&need>this.vram){const share=Math.max(0,(this.vram-2)/need);
-      const f=Math.min(1,v.moe!==false?0.3+0.7*share:share); const t=act*f/(EFF*this.vram_bw*1e9)+act*(1-f)/(EFF*this.ram_bw*1e9)+fix;
-      o.push([1/t,'hibrid GPU+RAM'+(v.moe!==false?'':' (dense)')]);}
+    if(fmtp!=='server'&&this.ram&&need<=vram+this.ram&&need>vram){const share=Math.max(0,(vram-2)/need);
+      const f=vram>2?Math.min(1,v.moe!==false?0.3+0.7*share:share):0; const t=(f?act*f/(EFF*this.vram_bw*1e9):0)+act*(1-f)/(EFF*this.ram_bw*1e9)+fix;
+      o.push([1/t,(f?'hibrid GPU+RAM':'csak CPU')+(v.moe!==false?'':' (dense)')]);}
     if(fmtp!=='server'&&this.ram&&need<=this.ram&&!this.uni) o.push([1/(act/(EFF*this.ram_bw*1e9)+fix),'csak CPU']);
     if(!o.length) return null; o.sort((a,b)=>b[0]-a[0]); return [o[0][0],o[0][1],need];}}
 function bestSingle(dev,unc){let best=null; const all=[];
@@ -252,15 +254,18 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   if(!mixed) c=c.filter(([v])=>!v.u);
   c.sort((a,b)=>usable(b[0],b[1][0],dev.min_tps)-usable(a[0],a[1][0],dev.min_tps));
   const hTps=Math.min(20,2*dev.min_tps+2), hMax=Math.max(4,Math.min(40,0.3*cap)); let best=null;
+  const vramOf=r=>r[1].startsWith('csak GPU')?Math.min(r[2],dev.vram):r[1].startsWith('hibrid')?dev.vram:0;
   for(const [v1,r1] of c.slice(0,80)){const left=cap-r1[2];
-    for(const [v2,r2] of c){ if(v2.g===v1.g||r2[2]>left) continue;
+    for(const [v2,_r2] of c){ if(v2.g===v1.g||_r2[2]>left) continue;
+      const r2=dev.run(v2,left,vramOf(r1)); if(!r2||r2[0]<dev.min_tps) continue;
       if(mixed&&v1.u===v2.u) continue;
-      if(!mixed&&(r2[0]<hTps||r2[2]>hMax||v2.bits<3.5)) continue;
+      if(!mixed&&(r2[0]<Math.max(hTps,1.2*r1[0])||r2[2]>hMax||v2.bits<3.5)) continue;
       if(mixed&&v2.bits<3.5&&v2.moe===false) continue;
       const w=(mixed?0.35:0.25)*(v1.f===v2.f?0.6:1); const s=usable(v1,r1[0],dev.min_tps)+w*usable(v2,r2[0],dev.min_tps);
       if(!best||s>best[0]) best=[s,[[v1,r1,'fő modell'],[v2,r2,mixed?('partner ('+(v2.u?'cenzúrázatlan':'alap')+')'):'gyors segéd / router']]];}}
   if(best&&mixed){const used=best[1].reduce((s,m)=>s+m[1][2],0), groups=new Set(best[1].map(m=>m[0].g)); let h=null;
-    for(const [v,r] of c){ if(groups.has(v.g)||r[2]>cap-used||r[0]<Math.max(hTps,1.5*best[1][0][1][0])||v.bits<3.5||r[2]>hMax) continue; if(!h||smart(v)>smart(h[0])) h=[v,r];}
+    const vu=best[1].reduce((s,m)=>s+vramOf(m[1]),0);
+    for(const [v,_r] of c){ const r=dev.run(v,cap-used,vu); if(!r||groups.has(v.g)||r[2]>cap-used||r[0]<Math.max(hTps,1.5*best[1][0][1][0])||v.bits<3.5||r[2]>hMax) continue; if(!h||smart(v)>smart(h[0])) h=[v,r];}
     if(h) best[1].push([h[0],h[1],'gyors segéd / router']);}
   if(best) return best[1];
   const singles=c.filter(([v])=>mixed||!v.u); if(!singles.length) return null; const [v1,r1]=singles[0];
