@@ -169,7 +169,8 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models td.date{white-space:nowrap}
 .soft td{vertical-align:top}.soft .sd{font-size:.86em;color:var(--muted);max-width:420px}.soft td:first-child{min-width:160px}
 #models,#soft,#stor{max-height:80vh;overflow:auto}
-.stortab{width:max-content;min-width:100%}.stortab td{max-width:280px}.stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:220px}.stortab td:nth-child(3){min-width:200px}.stortab td:last-child{min-width:300px}.stortab td:nth-child(9){min-width:120px}
+.bund td{vertical-align:top}.bund ul{margin:0;padding-left:16px}.bund td:nth-child(2){min-width:260px}
+.stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:240px;max-width:320px;white-space:normal;overflow-wrap:anywhere}.stortab td:nth-child(3){min-width:0;max-width:220px}.stortab td:last-child{min-width:240px;max-width:340px}
 .soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){max-width:110px;overflow-wrap:anywhere}
 #ssd td:first-child{white-space:nowrap}
 .tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
@@ -191,8 +192,9 @@ tr:hover td{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
   .matrix tr{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
   .matrix td{display:block;min-width:0;border:0;padding:2px 10px}
   .matrix td[data-l]::before{content:attr(data-l);display:block;font:600 11px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-  #ssd td.num:nth-child(n+4),#ssd th.num:nth-child(n+4){display:none}
-  #ssd td:nth-child(4){min-width:160px!important}
+  .ssdplan td.num:nth-child(n+4),.ssdplan th.num:nth-child(n+4){display:none}
+  .stortab{width:100%!important}#stor{max-height:none}.stortab td{max-width:none!important;min-width:0!important;white-space:normal;overflow-wrap:anywhere}
+  .ssdplan td:nth-child(4){min-width:160px!important}
   .soft thead{display:none}
   .soft tr{display:grid;gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
   .soft td{display:block;min-width:0!important;max-width:none!important;border:0;padding:2px 10px}
@@ -224,7 +226,7 @@ const EFF=0.6, EMBED_GB=0.8, OPUS=__OPUS__;
 const V=__VARIANTS__, M=__MODELS__, PRESETS=__PRESETS__;
 const FAMS=["deepseek-v4-1","glm-5-3-flash","glm-5-3","qwen3-8-flash-next","qwen3-8-27b","qwen3-8-2-4t","kimi-k3","minimax-m3-1","gemma-4","qwen3-5","qwen3-6","gpt-oss","mistral","nemotron","mimo","ling","step-5","inkling","hy4","muse","longcat"];
 const $=s=>document.querySelector(s), fmt=(x,d=1)=>Number(x).toLocaleString('hu-HU',{maximumFractionDigits:d,minimumFractionDigits:d});
-const gb=b=>b>=1e12?fmt(b/1e12,2)+' TB':fmt(b/1e9,1)+' GB';
+const gb=b=>b>=1e12?fmt(b/1e12,2)+' TB':b>=1e9?fmt(b/1e9,1)+' GB':fmt(b/1e6,b<1e7?1:0)+' MB';
 const pct=a=>Math.round(100*a/OPUS);
 function qf(bits,moe){ if(moe!==false) return bits<2?0.55:bits<3?0.75:bits<4?0.9:bits<5?1.0:bits<7?1.03:1.05;
   return bits<2?0.15:bits<3?0.6:bits<4?0.85:bits<5?1.0:bits<7?1.03:1.05;}
@@ -294,6 +296,7 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva'+why]];}
 function evaluate(dev){return {V1:bestSingle(dev,true),V2:bestSingle(dev,false),V3:team(dev,false),V4:team(dev,true)};}
 const TITLES={V1:['V1','Legokosabb cenzúrázatlan',1],V2:['V2','Legokosabb alap (cenzúrázott)',0],V3:['V3','Csapat – alap modellek',0],V4:['V4','Vegyes csapat – alap + cenzúrázatlan',1]};
+const norm=s=>String(s??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function meter(aa,u,est){const p=Math.min(110,100*aa/OPUS);return `<div class="meter" title="AA v5 ${fmt(aa)} / Opus 5.5 ${OPUS}"><div class="track"><div class="fill${u?' u':''}" style="width:${Math.min(100,p)}%"></div></div><span class="val">${est?'~':''}${pct(aa)}%</span></div>`;}
 function memberHTML([v,r,role]){return `<div class="member"><div class="mname">${esc(v.m)}</div><div class="role">${esc(role)} · <span class="chip ${v.u?'u':'a'}">${v.u?'cenzúrázatlan':'alap'}</span></div>
@@ -335,8 +338,8 @@ function matrix(){const rows=Object.entries(PRESETS).map(([k,p])=>{const d=new D
 /* ---------- modelltábla ---------- */
 let sortKey='aa',sortDir=-1;
 const COLS=[['m','Modell',0],['u','Típus',0],['aa','AA v5',1],['pct','% Opus 5.5',1],['rel','Kiadva',0],['act','Aktív param.',1],['minb','Legkisebb',1],['maxb','Legnagyobb',1],['n','Kvant',1],['plats','Formátum',0],['hw','Gépszint',0],['lic','Licenc',0],['info','Részletek',0]];
-function modelTable(){const q=F('mq').value.toLowerCase(), typ=F('mtyp').value, minp=parseFloat(F('mpct').value)||0, maxs=parseFloat(F('msize').value)||1e9;
-  let L=M.filter(m=>(!q||m.m.toLowerCase().includes(q)||(m.repo||'').toLowerCase().includes(q))&&(typ===''||(typ==='u')===m.u)&&pct(m.aa)>=minp&&m.minb/1e9<=maxs);
+function modelTable(){const q=norm(F('mq').value), typ=F('mtyp').value, minp=parseFloat(F('mpct').value)||0, maxs=parseFloat(F('msize').value)||1e9;
+  let L=M.filter(m=>(!q||norm(m.m+' '+(m.repo||'')).includes(q))&&(typ===''||(typ==='u')===m.u)&&pct(m.aa)>=minp&&m.minb/1e9<=maxs);
   L.sort((a,b)=>{const k=sortKey,x=k==='pct'?a.aa:a[k],y=k==='pct'?b.aa:b[k];return (x>y?1:x<y?-1:0)*sortDir;});
   const th=COLS.map(([k,l,n])=>k==='info'?`<th>${l}</th>`:`<th class="${n?'num':''}" data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}"><button type="button">${l}</button></th>`).join('');
   const tr=L.map(m=>`<tr><td><b>${esc(m.m)}</b>${m.repo?`<br><a href="https://huggingface.co/${esc(m.repo)}" target="_blank" rel="noopener">${esc(m.repo)}</a>`:''}</td>
@@ -349,8 +352,8 @@ function modelTable(){const q=F('mq').value.toLowerCase(), typ=F('mtyp').value, 
   F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable(); F('models').querySelector('th[data-k="'+k+'"] button')?.focus();}));}
 /* ---------- szoftverek és modellek ---------- */
 const S=__SOFT__;
-function softTable(){const q=F('sq').value.toLowerCase(), c=F('scat').value;
-  const L=S.filter(x=>(!c||x.c===c)&&(!q||(x.n+' '+x.need+' '+x.d+' '+x.alt).toLowerCase().includes(q)));
+function softTable(){const q=norm(F('sq').value), c=F('scat').value;
+  const L=S.filter(x=>(!c||x.c===c)&&(!q||norm(x.n+' '+x.need+' '+x.d+' '+x.alt+' '+x.c).includes(q)));
   const link=(u,l)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`:'';
   const tr=L.map(x=>`<tr><td>${esc(x.need)}<br><small class="muted">${esc(x.c)}</small></td><td><b>${esc(x.n)}</b><div class="sd">${esc(x.d)}</div><small>${[link(x.w,'web'),link(x.r,'repó'),link(x.rel,'letöltés')].filter(Boolean).join(' · ')}</small></td>
     <td class="num" data-l="Szint">${x.t}</td><td data-l="Verzió">${esc(x.v)||'–'}</td><td data-l="Licenc">${esc(x.lic)}</td><td class="num" data-l="Méret">${x.b?gb(x.b):'–'}</td><td class="sd" data-l="Alternatívák">${esc(x.alt)||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
@@ -359,17 +362,18 @@ function softTable(){const q=F('sq').value.toLowerCase(), c=F('scat').value;
 (()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
 /* ---------- tárolók ---------- */
 const ST=__STOR__;
-function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=F('stq').value.toLowerCase();
-  const L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||(x.n+' '+x.d+' '+x.pro+' '+x.con).toLowerCase().includes(q)));
+function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=norm(F('stq').value);
+  const so=F('stsort').value, L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||norm(x.n+' '+x.k+' '+x.d+' '+x.pro+' '+x.con+' '+x.l.map(l=>l[0]).join(' ')).includes(q)));
+  if(so){const key=x=>so==='tb'?-(x.tb||0):(x[so]??1e15); L.sort((a,b)=>key(a)-key(b));}
   const lv={olcso:'olcsó',kozep:'közép',profi:'profi',extrem:'extrém'};
-  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small></td><td class="num" data-l="TB">${x.tb??'–'}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
-    <td class="num" data-l="Ár">${x.ar?Math.round(x.ar).toLocaleString('hu-HU')+' Ft':'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
-    <td data-l="Hol">${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join('<br>')}</td><td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="10" class="empty">Nincs találat.</td></tr>';
-  F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Hol kapható</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
+  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${x.tb??'–'}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
+    <td class="num" data-l="Ár">${x.ar?Math.round(x.ar).toLocaleString('hu-HU')+' Ft':'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)||'–'}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
+    <td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Nincs találat.</td></tr>';
+  F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
   F('stcount').textContent=L.length+' termék';}
-(()=>{const sel=F('stcat'); [...new Set(ST.map(x=>x.k))].forEach(c=>sel.add(new Option(c,c))); ['stcat','stlvl','stq'].forEach(id=>F(id).addEventListener('input',storTable)); storTable();})();
+(()=>{const sel=F('stcat'); [...new Set(ST.map(x=>x.k))].forEach(c=>sel.add(new Option(c,c))); ['stcat','stlvl','stq','stsort'].forEach(id=>F(id).addEventListener('input',storTable)); storTable();})();
 /* ---------- indítás ---------- */
-if('IntersectionObserver' in window){const navA=[...document.querySelectorAll('nav.tabs a')];const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navA.forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-45% 0px -50% 0px'});navA.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t);});}
+if('IntersectionObserver' in window){const navA=[...document.querySelectorAll('nav.tabs a')];const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navA.forEach(a=>{if(a.getAttribute('href')==='#'+e.target.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}});},{rootMargin:'-45% 0px -50% 0px'});navA.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t);});}
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-copy]'); if(!b) return; const t=b.dataset.copy;
   const done=()=>{b.textContent='Másolva';setTimeout(()=>b.textContent='Másolás',1500)};
   const sel=()=>{const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Kijelölve – Ctrl+C';setTimeout(()=>b.textContent='Másolás',2500);};
@@ -401,7 +405,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <span class="chip est">~ = becsült érték</span>
   </div>
 </header>
-<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#szoftverek">Szoftverek és modellek</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a><a href="#fogalmak">Fogalmak</a></nav>
+<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#szoftverek">Szoftverek és modellek</a><a href="#ssd">SSD-tervező</a><a href="#tarolok">Tárolók</a><a href="#modszertan">Módszertan</a><a href="#fogalmak">Fogalmak</a></nav>
 
 <section id="kalkulator">
   <h2>Kalkulátor</h2>
@@ -465,14 +469,15 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 
 <section id="ssd">
   <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
-  <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil, T2-es LLM-gép ~300 GB memóriával, alap + cenzúrázatlan modellekkel). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
+  <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil; LLM: 1–32 TB-ig T2-es gép ~300 GB memóriával és max. 4 modell, 64–128 TB-nál T1 szerver ~2 TB memóriával és max. 8 modell). A nagyobb méret a kisebb teljes tartalmát megtartja. A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
-  <h3>Tárolók – mit vegyél, hogy soha ne vesszen el</h3>
+  <h3 id="tarolok">Tárolók – mit vegyél, hogy soha ne vesszen el</h3>
   __STORAGE__
   <div class="filters">
     <label>Kategória<select id="stcat"><option value="">mind</option></select></label>
     <label>Szint<select id="stlvl"><option value="">mind</option><option value="olcso">olcsó</option><option value="kozep">közép</option><option value="profi">profi</option><option value="extrem">extrém</option></select></label>
     <label>Keresés<input id="stq" type="search" placeholder="pl. IP65, 32TB, Toshiba"></label>
+    <label>Rendezés<select id="stsort"><option value="">kategória, Ft/TB</option><option value="ar">ár szerint</option><option value="ptb">Ft/TB szerint</option><option value="tb">kapacitás (csökkenő)</option></select></label>
     <span class="hint" id="stcount"></span>
   </div>
   <div class="tablebox" id="stor"></div>
@@ -482,19 +487,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 
 <section id="modszertan">
   <h2>Módszertan és feltételezések</h2>
-  <details open id="fogalmak"><summary>Fogalmak</summary><div class="body"><ul>
-    <li><b>V1</b> = legokosabb cenzúrázatlan modell · <b>V2</b> = legokosabb alap (cenzúrázott) modell · <b>V3</b> = alap fő modell + gyors segédmodell egyszerre · <b>V4</b> = alap + cenzúrázatlan modell együtt (+ segéd).</li>
-    <li><b>AA v5</b> = Artificial Analysis Intelligence Index v5.0.1 (nehéz, részben titkos feladatsor). <b>% Opus</b> = a modell pontja a Claude Opus 5.5 (legmagasabb gondolkodási beállítás) 59,1 pontjához képest. 50% nem azt jelenti, hogy „fele olyan okos”: nehéz feladatoknál kb. a felét hozza, hétköznapiaknál jóval közelebb van.</li>
-    <li><b>Gépszint:</b> T1 szerver (≥1 TB) · T2 munkaállomás 256–1000 GB · T3 gamer PC 24–32 GB VRAM + RAM · T4 laptop · T5 telefon.</li>
-    <li><b>tok/s</b> = token másodpercenként (magyar szövegnél kb. 0,5–0,7 szó/token). 5 tok/s még olvasható, 20+ tok/s kényelmes.</li>
-    <li><b>Kvant</b> = tömörített modellváltozat; kevesebb bit → kisebb és gyorsabb, de butább (4–5 bit a jó kompromisszum). <b>GGUF</b> = mindenhol futó formátum (llama.cpp, Ollama), <b>MLX</b> = Apple, <b>vLLM</b> = NVIDIA-szerver formátum.</li>
-    <li><b>MoE</b> = sok „szakértőből” álló modell, tokenenként csak egy részük dolgozik (aktív paraméter) → gyors; <b>dense</b> = minden paraméter dolgozik.</li>
-    <li><b>Cenzúrázatlan módszerek:</b> <b>abliterated</b> = a modell „elutasítási irányát” matematikailag eltávolítják a súlyokból; <b>Heretic</b> = automatizált abliteráció, amely a minőségromlást is minimalizálja; finomhangolt (pl. „uncensored” SFT) = tanítással oldják.</li>
-    <li><b>Unified (egyesített) memória:</b> a CPU és a GPU ugyanazt a nagy memóriát használja (Apple M, AMD Strix Halo / MS-S1, ZBook Ultra G3a) – nagy modell fér el olcsóbban, de lassabb, mint a VRAM.</li>
-    <li><b>P2P / tensor parallel:</b> két kártya közvetlenül cserél adatot (P2P), és egy réteget egyszerre számolnak (tensor parallel) – a sebességük összeadódik. GeForce-on a P2P driver-patch-csel oldható fel (6.11 fejezet).</li>
-    <li><b>Hibrid GPU+RAM:</b> ami nem fér a VRAM-ba, a rendszermemóriában marad; MoE-nél a gyakori rétegek a GPU-n → elfogadható sebesség.</li>
-    <li><b>RAG</b> = a modell válasz előtt a saját archívumodban (ZIM, PDF) keres, és abból idéz – kevesebb hallucináció. Ehhez kell a kis embedding-modell (bge-m3).</li>
-  </ul></div></details>
+
   <details open><summary>Hogyan számol a kalkulátor</summary><div class="body"><ul>
     <li><b>Okosság:</b> Artificial Analysis Intelligence Index v5.0.1 (2026-11-12). Viszonyítás: Claude Opus 5.5 (max) 59,1 = 100%. Az AA a v5-ben megszüntette a külön Coding Indexet; a kódolás (FrontierCode 2.0 + Terminal-Bench 4.0) az összpont 25%-a.</li>
     <li><b>Cenzúrázatlan modellek:</b> alapmodell AA × (cenzúrázatlan / alap) arány. Az arány a UGI ranglista NatInt-méréséből jön, ahol van („M”), máshol becslés: nagy MoE 0,95–0,97, közösségi/nem ellenőrzött 0,93, kis dense 0,93.</li>
@@ -510,6 +503,36 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <li><b>MS-S1 MAX-P495, ZBook Ultra G3a:</b> 192 GB LPDDR5X, a GPU-nak max. 160 GB; sávszélesség ~256–273 GB/s (számolt).</li>
     <li><b>HP Pavilion 15-bc504ur:</b> i5-9300H + GTX 1050 4 GB (a bc504TX testvérmodell adatlapja alapján).</li>
     <li><b>Telefonok:</b> S24 Ultra ~7,4 GB, iPhone 15 Pro ~5,0 GB jut a modellnek (becslés; a kalkulátor számolja a profil adataiból).</li>
+  </ul></div></details>
+</section>
+<section id="fogalmak">
+  <h2>Fogalmak</h2>
+  <details open><summary>LLM és kalkulátor</summary><div class="body"><ul>
+    <li><b>V1</b> = legokosabb cenzúrázatlan modell · <b>V2</b> = legokosabb alap (cenzúrázott) modell · <b>V3</b> = alap fő modell + gyors segédmodell egyszerre · <b>V4</b> = alap + cenzúrázatlan modell együtt (+ segéd).</li>
+    <li><b>AA v5</b> = Artificial Analysis Intelligence Index v5.0.1 (nehéz, részben titkos feladatsor). <b>% Opus</b> = a modell pontja a Claude Opus 5.5 (legmagasabb gondolkodási beállítás) 59,1 pontjához képest. 50% nem azt jelenti, hogy „fele olyan okos”: nehéz feladatoknál kb. a felét hozza, hétköznapiaknál jóval közelebb van.</li>
+    <li><b>Gépszint:</b> T1 szerver (≥1 TB) · T2 munkaállomás 256–1000 GB · T3 gamer PC 24–32 GB VRAM + RAM · T4 laptop · T5 telefon.</li>
+    <li><b>tok/s</b> = token másodpercenként (magyar szövegnél kb. 0,5–0,7 szó/token). 5 tok/s még olvasható, 20+ tok/s kényelmes.</li>
+    <li><b>Kvant</b> = tömörített modellváltozat; kevesebb bit → kisebb és gyorsabb, de butább (4–5 bit a jó kompromisszum). <b>GGUF</b> = mindenhol futó formátum (llama.cpp, Ollama), <b>MLX</b> = Apple, <b>vLLM</b> = NVIDIA-szerver formátum.</li>
+    <li><b>MoE</b> = sok „szakértőből” álló modell, tokenenként csak egy részük dolgozik (aktív paraméter) → gyors; <b>dense</b> = minden paraméter dolgozik.</li>
+    <li><b>Cenzúrázatlan módszerek:</b> <b>abliterated</b> = a modell „elutasítási irányát” matematikailag eltávolítják a súlyokból; <b>Heretic</b> = automatizált abliteráció, amely a minőségromlást is minimalizálja; finomhangolt (pl. „uncensored” SFT) = tanítással oldják.</li>
+    <li><b>Unified (egyesített) memória:</b> a CPU és a GPU ugyanazt a nagy memóriát használja (Apple M, AMD Strix Halo / MS-S1, ZBook Ultra G3a) – nagy modell fér el olcsóbban, de lassabb, mint a VRAM.</li>
+    <li><b>P2P / tensor parallel:</b> két kártya közvetlenül cserél adatot (P2P), és egy réteget egyszerre számolnak (tensor parallel) – a sebességük összeadódik. GeForce-on a P2P driver-patch-csel oldható fel (6.11 fejezet).</li>
+    <li><b>Hibrid GPU+RAM:</b> ami nem fér a VRAM-ba, a rendszermemóriában marad; MoE-nél a gyakori rétegek a GPU-n → elfogadható sebesség.</li>
+    <li><b>RAG</b> = a modell válasz előtt a saját archívumodban (ZIM, PDF) keres, és abból idéz – kevesebb hallucináció. Ehhez kell a kis embedding-modell (bge-m3).</li>
+  </ul></div></details>
+  <details open><summary>Tárolók</summary><div class="body"><ul>
+    <li><b>CMR / SMR:</b> hagyományos / átfedő sávos HDD-írás; archívumra CMR kell (az SMR nagy írásnál lelassul, újraépítésnél kockázatos).</li>
+    <li><b>AFR:</b> éves meghibásodási arány (Backblaze-mérés); 1% = 100 lemezből évente 1 hal meg.</li>
+    <li><b>TBW / DWPD:</b> SSD-élettartam: összesen írható terabájt / naponta hányszor írható tele 5 évig.</li>
+    <li><b>IP65 / IP68:</b> por- és vízállóság; IP65 = fröccsenő víz, IP68 = tartós víz alá merülés (a megadott mélységig).</li>
+    <li><b>TLC / QLC:</b> cellánként 3 / 4 bit; a TLC tartósabb és áram nélkül tovább őrzi az adatot.</li>
+    <li><b>ZFS scrub:</b> a fájlrendszer végigolvas mindent, ellenőrzőösszeggel felismeri és (másolatból) javítja a sérült blokkokat.</li>
+    <li><b>par2:</b> javító paritásfájl; pl. 10%-kal a sérült adat 10%-a visszaállítható.</li>
+    <li><b>M-DISC:</b> egyszer írható archív Blu-ray (100 GB); áram, mágnes és zsarolóvírus nem árt neki.</li>
+    <li><b>LTO:</b> szalagos mentés (LTO-9: 18 TB/kazetta, ~30 év); drága meghajtó, olcsó kazetta.</li>
+    <li><b>URE:</b> olvashatatlan szektor esélye (pl. 1/10¹⁵ bit) – egy teljes 32 TB-os olvasásnál nem elhanyagolható, ezért kell a második példány.</li>
+    <li><b>PLP:</b> áramkimaradás elleni védelem (vállalati SSD-kben), írás közbeni áramszünetnél nem sérül az adat.</li>
+    <li><b>Faraday-tasak:</b> fémhálós árnyékolás; az offline meghajtót óvja villám és EMP indukált túlfeszültségétől.</li>
   </ul></div></details>
 </section>
 <footer>ARCHIVUM · a teljes katalógus, letöltési receptek és a Python-kalkulátor: ARCHIVUM.md (6. és 12. fejezet). Generálva: __DATE__.</footer>
@@ -542,11 +565,15 @@ def storage_data():
     import gen_storage as G
     d, prods = G.load()
     out = []
+    order = {k: i for i, k in enumerate(G.ORDER)}
+    prods = sorted(prods, key=lambda p: (order.get(p.get("kategoria"), 99), p.get("ar_huf") is None,
+                                         (p.get("ar_huf") or 0) / max(float(p.get("kapacitas_tb") or 1), 0.001)))
     for p in prods:
         if p.get("kategoria") == "other" and not p.get("ar_huf"):
             continue
         out.append({"n": p.get("nev"), "k": G.KAT.get(p.get("kategoria"), p.get("kategoria")), "tb": p.get("kapacitas_tb"), "d": G.dur(p.get("tartossag")).replace("\\|", "|"),
-                    "s": G.speed(p.get("sebesseg_mb_s")), "ar": p.get("ar_huf"), "pt": p.get("ar_per_tb") or "", "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
+                    "s": G.speed(p.get("sebesseg_mb_s")), "ar": p.get("ar_huf"), "pt": G._e(p.get("ar_per_tb") or ""),
+                    "ptb": round(p["ar_huf"] / float(p["kapacitas_tb"])) if p.get("ar_huf") and p.get("kapacitas_tb") else None, "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
                     "l": [[x.get("bolt"), x.get("url")] for x in (p.get("linkek") or [])[:3] if x.get("url")],
                     "pro": "; ".join((p.get("elonyok") or [])[:2]), "con": "; ".join((p.get("hatranyok") or [])[:2])})
     return out
@@ -563,7 +590,40 @@ def storage_html():
     return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 24–32 TB-os HDD-re ráfér, de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
             'Egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3% (becslés a Backblaze Q2 2026 adataiból). '
             '<b>Legkompaktabb ajánlás:</b> 2 nagy HDD + 1 kis strapabíró SSD a maggal. Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
-            f'<div class="tablebox"><table><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>')
+            f'<div class="tablebox"><table><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>'
+            + storage_bundles_html())
+
+
+def storage_bundles_html():
+    import gen_storage as G, html
+    d, prods = G.load()
+    hd = d["hdd"]
+    E = lambda x: html.escape(G.hunum(str(x or "")))
+    rows = []
+    for k, v in (hd.get("javaslat") or {}).items():
+        key = next((b for b in G.BUNDLE_CAP if k.startswith(b)), "")
+        rows.append(f"<tr><td><b>{E(k)}</b></td><td><ul>" + "".join(f"<li>{E(x)}</li>" for x in v.get("elemek") or []) + "</ul></td>"
+                    f"<td>{E(G.BUNDLE_CAP.get(key, '–'))}</td><td class='num'>{E(G.BUNDLE_PRICE.get(key) or v.get('osszesen'))}</td><td>{E(G.BUNDLE_SURV.get(key, '–'))}</td></tr>")
+    k2 = []
+    for k, v in (hd.get("kompakt_2_eszkoz") or {}).items():
+        if isinstance(v, dict):
+            k2.append(f"<tr><td><b>{E(G.lab(k))}</b></td><td>{E(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))}</td>"
+                      f"<td>{E(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))}</td><td class='num'>{E(v.get('osszesen'))}</td></tr>")
+    one = []
+    for k, v in (hd.get("egyeszkozos_opciok") or {}).items():
+        if isinstance(v, list):
+            one.append(f"<tr><td><b>{E(G.lab(k + '_e' if k == '32_TB' else k))}</b></td><td><ul>" + "".join(f"<li>{E(x)}</li>" for x in v) + "</ul></td></tr>")
+    note = next((p for p in prods if p.get("kategoria") == "other" and not p.get("ar_huf")), None)
+    nt = (f'<p class="hint"><b>{E(note.get("nev"))}</b> – ' + E(" ".join((note.get("hatranyok") or []) + (note.get("elonyok") or []))) + "</p>") if note else ""
+    return ('<h3>Ajánlott összeállítások árszintenként</h3><div class="tablebox"><table class="bund"><thead><tr><th>Keret</th><th>Összeállítás</th><th>Kapacitás</th><th class="num">Ár</th><th>Mit bír ki</th></tr></thead><tbody>'
+            + "".join(rows) + '</tbody></table></div>'
+            '<h3>A legkompaktabb kételemes megoldás („minden egyben”, 1 lemezhibát, vizet, ütést, EMP-t is túlél)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th class="num">Összesen</th></tr></thead><tbody>'
+            + "".join(k2) + '</tbody></table></div>'
+            '<details><summary>Ha mégis egyetlen eszköz kell – méretenként</summary><div class="tablebox"><table class="bund"><tbody>' + "".join(one) + '</tbody></table></div>'
+            '<p class="hint">Egy doboz közös ponton hibázik (táp, túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs) – a RAID nem mentés.</p></details>'
+            '<p class="hint"><b>Kockázat (becslés, Backblaze Q2 2026):</b> egy példány 10 év alatt ~13–22% eséllyel vész el; két példány félévente ellenőrizve ~0,1–0,3%. '
+            'Kerülendő: Seagate Exos X24 24TB (3,24% éves meghibásodás); legmegbízhatóbb: Toshiba MG11 (0,50%), WD HC580/HC590 (0,58–0,84%).</p>' + nt
+            + '<h3>Terméktábla</h3>')
 
 
 def ssd_html():
@@ -603,7 +663,7 @@ def ssd_html():
         prev = {i["id"] for i in items}; prevg = {i.get("group") or i["id"] for i in items}
     legend = "".join(f'<span class="lg"><i style="background:{c}"></i>{H.escape(g)}</span>' for g, c in zip(groups, colors))
     head = "".join(f'<th class="num">{H.escape(g.split(":")[0].split(",")[0])}</th>' for g in groups)
-    return (f'<div class="legend">{legend}</div><div class="tablebox"><table><thead><tr><th>SSD</th><th class="num">Felhasználva</th><th class="num">Elem</th><th>Tartalom aránya</th>{head}</tr></thead>'
+    return (f'<div class="legend">{legend}</div><div class="tablebox"><table class="ssdplan"><thead><tr><th>SSD</th><th class="num">Felhasználva</th><th class="num">Elem</th><th>Tartalom aránya</th>{head}</tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div>' + "".join(cards))
 
 

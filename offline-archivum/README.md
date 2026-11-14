@@ -1,7 +1,7 @@
 # ARCHIVUM – offline tudásarchívum (olvass el)
 
 ## Kezdd itt
-1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra.
+1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra és tárolóválasztó (termékek, árak, bolti linkek).
 2. **Letöltés a meghajtóra:** add oda az `ARCHIVUM.md`-t egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.), és másold be neki az 1. fejezet promptját kitöltve. Vagy kézzel:
    ```bash
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
@@ -22,6 +22,7 @@
 
 ## A katalógus fejezetei
 1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
+4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
 6 LLM-ek (6.1 rangsor + % Opus · 6.5 cenzúrázatlanok és gépigény · 6.10 eszközönként 4 változat · 6.11 GeForce-feloldás) ·
 7 letöltési receptek · 8 fizetős/fizikai beszerzések · 9 captcha-mentes web · 10 gépi JSONL · 11–12 szkriptek
 

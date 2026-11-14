@@ -57,7 +57,11 @@ MUNKAMENET:
    Másold a meghajtóra az ARCHIVUM.md-t, az ARCHIVUM-LLM.html-t, a select_items.py-t és a llm_calc.py-t is.
 8. Olvasóprogramok: töltsd le a tool-* elemeket (Kiwix desktop/Android, kiwix-tools, VLC, PDF-olvasó,
    llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), Windows/macOS/Linux/Android változatban.
-9. Zárójelentés:
+9. Második példány (ha van második meghajtó – lásd 4c fejezet):
+   - `rsync -a --checksum <cél>/ <második>/` az offline példányra (más gyártó, utána leválasztva, Faraday-tasakba);
+   - `par2 create -r10` a 0–1. szintű mappákra (10% javító paritás);
+   - sha256 manifest mindkét példányon (`find . -type f -exec sha256sum {} + > MANIFEST.sha256`), és ellenőrzés: `sha256sum -c`.
+10. Zárójelentés:
    - mi jött le (OK), mi bukott (FAIL), mennyi hely maradt;
    - a KÉZI TEENDŐK listája linkkel és árral (fizetős, regisztrációs, fizikai könyv);
    - a következő frissítés ajánlott ideje.

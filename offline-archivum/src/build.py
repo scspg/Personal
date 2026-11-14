@@ -149,7 +149,8 @@ def ssd_plans(cat_path, tmp):
 def ssd_section(plans):
     md = ["---", "", "## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16, 32, 64 és 128 TB-ra", "",
           "A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. "
-          "LLM-ek: **T2-es gép alsó határa, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. "
+          "LLM-ek: **1–32 TB-ig T2-es gép, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro), legfeljebb 4 modell; **64 és 128 TB-nál T1 szerver, ~2 TB LLM-memória, legfeljebb 8 modell**. "
+          "Alap és cenzúrázatlan modell is; az LLM legfeljebb a keret 35%-át foglalhatja; szerverformátum is (`--platform server`). **A nagyobb méret a kisebb teljes tartalmát megtartja**, csak bővít vagy jobb változatra cserél. "
           "A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.", "",
           "### Összefoglaló", "",
           "| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |",
@@ -224,15 +225,20 @@ IMPERSONAL = [("nem ellenőriztem", "nem ellenőrzött"), ("Nem ellenőriztem", 
               ("AI workstation", "AI-munkaállomás"), ("workstation + HDD", "munkaállomás + HDD")]
 
 
+HUNUM = re.compile(r"(?<![\w./-])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|GB/s|TB/s|tok/s|bit\b|B\b|EUR|USD|-szer|×))")
+
+
 def impersonal(t):
     """kézikönyv-hang: első személy és belső ellenőrzési zaj nélkül (a JSONL url_status mezőit nem érinti: ott szó szerinti adat)."""
     head, sep, rest = t.partition("```jsonl")
     for a, b in IMPERSONAL:
         head = head.replace(a, b)
+    head = HUNUM.sub(r"\1,\2\3", head)
     if sep:
         js, sep2, tail = rest.partition("```")
         for a, b in IMPERSONAL:
             tail = tail.replace(a, b)
+        tail = HUNUM.sub(r"\1,\2\3", tail)
         return head + sep + js + sep2 + tail
     return head
 
@@ -336,7 +342,8 @@ def main():
 
     preset_md = ["---\n\n## 4. Előre számolt csomagok\n",
                  "`select_items.py --budget <X> --hw <T>`, `balanced` profil, nyelv: hu, en, multi, hozzáférés: free, free-registration, donation. "
-                 "Ez csak tájékoztató, a pontos tervet az ágens futtatja a saját keretével.\n",
+                 "Ez csak tájékoztató, a pontos tervet az ágens futtatja a saját keretével. "
+                 "*A 4b fejezet ugyanazokra a méretekre nagyobb LLM-géppel (T2, ~300 GB) számol, ezért ott több hely jut LLM-re és kevesebb a többi tétel.*\n",
                  "| Keret | Tipikus eszköz | LLM-szint | Elemek | Felhasznált | LLM | 4 legnagyobb tartalmi elem |",
                  "|---|---|---|---|---|---|---|", *preset_rows]
 
@@ -445,7 +452,7 @@ def main():
     readme = f"""# ARCHIVUM – offline tudásarchívum (olvass el)
 
 ## Kezdd itt
-1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra.
+1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra és tárolóválasztó (termékek, árak, bolti linkek).
 2. **Letöltés a meghajtóra:** add oda az `ARCHIVUM.md`-t egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.), és másold be neki az 1. fejezet promptját kitöltve. Vagy kézzel:
    ```bash
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
@@ -466,6 +473,7 @@ def main():
 
 ## A katalógus fejezetei
 1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
+4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
 6 LLM-ek (6.1 rangsor + % Opus · 6.5 cenzúrázatlanok és gépigény · 6.10 eszközönként 4 változat · 6.11 GeForce-feloldás) ·
 7 letöltési receptek · 8 fizetős/fizikai beszerzések · 9 captcha-mentes web · 10 gépi JSONL · 11–12 szkriptek
 

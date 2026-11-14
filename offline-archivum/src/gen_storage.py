@@ -20,8 +20,30 @@ def load():
     return d, prods
 
 
+LABEL = {"24_TB": "24 TB – legjobb ár/érték", "32_TB": "32 TB – a legkisebb térfogat a teljes archívumhoz", "5_TB_mag": "5 TB-os mag – zsebméret",
+         "gaming_pc_munkameghajto_llm": "Gamer PC munkameghajtó (LLM-ek)", "gyors_hordozhato_masolat": "Gyors hordozható másolat",
+         "enterprise_30_120tb_all_flash": "Vállalati all-flash, 30–120 TB", "profi": "profi", "kozep": "közép", "kozep_olcso": "közép / olcsó",
+         "olcsobb_qlc": "olcsóbb (QLC)", "profi_tlc": "profi (TLC)", "oszinte_ertekeles": "őszinte értékelés", "megjegyzes": "megjegyzés",
+         "8_TB": "8 TB", "16_TB": "16 TB", "32_TB_e": "32 TB", "64_TB": "64 TB", "128_TB": "128 TB"}
+BUNDLE_CAP = {"~150": "5 TB HDD + 0,5 TB M-DISC", "~400": "2 × 8 TB", "~1 m": "2 × 24 TB + 0,5 TB M-DISC", "~3": "66 TB NAS + 84 TB offline", "Extr": "132 TB + 132 TB (HDD vagy LTO)"}
+BUNDLE_SURV = {"~150": "lemezhiba (2 példány); a mag víz, EMP és zsarolóvírus ellen is (M-DISC)", "~400": "1 lemezhiba; ha a B példány máshol van: tűz, víz, lopás; Faraday: EMP",
+               "~1 m": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP (Faraday), zsarolóvírus (offline); a mag 3. médiumon is",
+               "~3": "1 lemezhiba a NAS-ban + teljes offline másolat másik helyen", "Extr": "2 lemezhiba a NAS-ban + teljes offline másolat; LTO-val 30 év bekapcsolás nélkül"}
+BUNDLE_PRICE = {"Extr": "~5,9 M Ft (HDD-másolattal) / ~8,3 M Ft (LTO-val)"}
+
+
+def lab(k):
+    return LABEL.get(k, str(k).replace("_", " "))
+
+
+def hunum(t):
+    """angol tizedespont → vessző, csak mértékegység / százalék előtt (típusszámokat nem bánt)."""
+    import re
+    return re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|EUR|€|USD|-szer|x\b|°C|év))", r"\1,\2\3", t)
+
+
 def _e(s):
-    return str(s if s is not None else "").replace("|", "\\|").replace("\n", " ")
+    return hunum(str(s if s is not None else "")).replace("|", "\\|").replace("\n", " ")
 
 
 def ft(x):
@@ -45,8 +67,10 @@ def dur(t):
 
 def speed(s):
     if isinstance(s, dict):
-        return f"{s.get('olvasas', '?')}/{s.get('iras', '?')}"
-    return _e(s)
+        r, w = s.get("olvasas"), s.get("iras")
+        v = "/".join(str(x) for x in (r, w) if x not in (None, ""))
+        return _e(v) if v else "–"
+    return _e(s) if s not in (None, "") else "–"
 
 
 def links(p):
@@ -57,7 +81,9 @@ def links(p):
 def src_tag(p):
     f = p.get("ar_forras")
     f = " ".join(f) if isinstance(f, list) else str(f or "")
-    return "mért" if "mért" in f and "becsült" not in f.split("mért")[0][-40:] else ("becsült" if f else "–")
+    if f.strip().lower().startswith("becsült") or "nincs ellenőrzött" in f:
+        return "becsült"
+    return "mért" if "mért" in f else ("becsült" if f else "–")
 
 
 def section(plans):
@@ -81,24 +107,26 @@ def section(plans):
           "Ezért a logikus, legkompaktabb megoldás: 2 nagy HDD (egy használatban, egy Faraday-tasakban, lőszerládában, másik helyen) + egy kicsi, strapabíró SSD a létfontosságú maggal.**", "",
           "### Mi hova kerüljön – rétegek", "",
           "| Réteg | Mi kerül rá | Méret (32 TB-os terv) | Ajánlott eszköz | Miért |", "|---|---|---|---|---|",
-          f"| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~{c(t01 + 0.05)} TB | strapabíró SSD 2–4 TB (IP65, 3 m esés) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |",
+          f"| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~{c(t01 + 0.05)} TB | strapabíró SSD 2–4 TB, alapajánlat: **Samsung T7 Shield 4TB** (IP65, 3 m esés, 317 341 Ft, mért) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken; olcsóbb HDD-s változat: LaCie Rugged 5TB (nem vízálló) vagy ADATA HD710 Pro (IP68) | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |",
           f"| **2. Munka** (gyors, a gépben) | az LLM-modellek + amit naponta használsz | ~{c(sz(llm))} TB + tartalék | NVMe PCIe 5.0 SSD 4–8 TB a gamer PC-ben | a modell betöltése 8 TB-os Gen5-ről ~50 s; ez NEM archívum, mindenről van másolat |",
           f"| **3. Teljes archívum** (A példány, használatban) | minden: 2–5. szint, nagy tükrök, térképek, lexikonok | ~{c(tot)} TB | 1 db 24–32 TB HDD (CMR) dokkolóban, ZFS-sel | a legolcsóbb TB-ár, havi ellenőrzéssel önjavító |",
           f"| **4. Offline másolat** (B példány) | ugyanaz, mint a 3. | ~{c(tot)} TB | 1 db 24–32 TB HDD, **más gyártótól**, antisztatikus tasak + Faraday-tasak + tömített acél lőszerláda + szilikagél, **másik épületben** | tűz, víz, lopás, villám, EMP, zsarolóvírus, rossz parancs ellen; félévente be kell kapcsolni és végigolvasni |",
           "| **5. (opcionális) 30 éves réteg** | a teljes archívum harmadik példánya | 22–128 TB | LTO-9 szalag (kazetta ~2 000 Ft/TB) | csak ~260 TB felett vagy 3+ másolatnál éri meg a ~4 M Ft-os meghajtó miatt; a meghajtót is meg kell őrizni |", "",
           "### Ajánlott összeállítások árszintenként", "",
-          "| Keret | Összeállítás | Kapacitás | Ár | Mit bír ki |", "|---|---|---|---|---|"]
+          "| Keret | Összeállítás | Kapacitás | Ár | Mit bír ki | Megjegyzés / alternatíva |", "|---|---|---|---|---|---|"]
     J = hd.get("javaslat") or {}
     for k, v in J.items():
         el = v.get("elemek") or []
-        md.append(f"| **{_e(k)}** | " + "<br>".join(_e(x) for x in el) + f" | – | {_e(v.get('osszesen'))} | {_e(v.get('megjegyzes') or v.get('alternativa') or '3-2-1: lemezhiba, és ha a másolat máshol van: tűz, víz, lopás')} |")
+        key = next((b for b in BUNDLE_CAP if k.startswith(b)), "")
+        md.append(f"| **{_e(k)}** | " + "<br>".join(_e(x) for x in el) + f" | {BUNDLE_CAP.get(key, '–')} | {_e(BUNDLE_PRICE.get(key) or v.get('osszesen'))} | "
+                  f"{BUNDLE_SURV.get(key, '–')} | {_e(v.get('megjegyzes') or v.get('alternativa') or '–')} |")
     K2 = hd.get("kompakt_2_eszkoz") or {}
     md += ["", "### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre)", "",
            "| Változat | 1. eszköz | 2. eszköz (offline) | Védelem | Összesen |", "|---|---|---|---|---|"]
     for k, v in K2.items():
         if not isinstance(v, dict):
             continue
-        md.append(f"| **{_e(k)}** | {_e(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))} | {_e(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))} | "
+        md.append(f"| **{lab(k)}** | {_e(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))} | {_e(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))} | "
                   f"{_e(v.get('vedelem') or v.get('plusz_opcionalis_mag') or '')} | {_e(v.get('osszesen'))} |")
     if K2.get("miert_nem_raid1_egy_dobozban"):
         md += ["", f"*Miért nem egy RAID1-es doboz?* {_e(K2['miert_nem_raid1_egy_dobozban'])}"]
@@ -106,12 +134,13 @@ def section(plans):
     md += ["", "### A leggyorsabb, legprofibb (SSD) ág", ""]
     for k, v in GY.items():
         if isinstance(v, dict):
-            md.append(f"- **{_e(k).replace('_', ' ')}:** " + " ".join(f"*{_e(kk).replace('_', ' ')}:* {_e(vv)}" for kk, vv in v.items()))
+            md.append(f"- **{lab(k)}:**")
+            md += [f"  - *{lab(kk)}:* {_e(vv)}" for kk, vv in v.items()]
     E1 = hd.get("egyeszkozos_opciok") or {}
     md += ["", "### Egyetlen eszköz méretenként (ha mégis egy kell)", "", "| Méret | Lehetőségek |", "|---|---|"]
     for k, v in E1.items():
         if isinstance(v, list):
-            md.append(f"| **{_e(k).replace('_', ' ')}** | " + "<br>".join(_e(x) for x in v) + " |")
+            md.append(f"| **{lab(k + '_e' if k == '32_TB' else k)}** | " + "<br>".join(_e(x) for x in v) + " |")
     if E1.get("kovetkeztetes"):
         md += ["", f"> **Figyelem:** {_e(E1['kovetkeztetes'])}"]
     KA = hd.get("kockazat_elemzes") or {}
@@ -130,7 +159,7 @@ def section(plans):
     AM = sx.get("adatmegorzes_tenyek") or {}
     AI = hd.get("adatintegritas") or {}
     md += ["### Adatmegőrzés és -épség – a gyakorlat", "",
-           "**SSD áram nélkül (JEDEC JESD218):** " + " ".join(_e(x) for x in AM.get("jedec_jesd218") or []) + f" {_e(AM.get('homerseklet'))} {_e(AM.get('tlc_vs_qlc'))}", ""]
+           "**SSD áram nélkül (JEDEC JESD218):**"] + [f"- {_e(x)}" for x in AM.get("jedec_jesd218") or []] + [f"- {_e(AM.get('homerseklet'))}", f"- {_e(AM.get('tlc_vs_qlc'))}", ""]
     for k, l in [("zfs_btrfs", "ZFS / Btrfs (önjavító ellenőrzőösszeg)"), ("snapraid_par2", "SnapRAID / par2 (paritás)"), ("offline_bekapcsolas", "Offline példány karbantartása"),
                  ("tarolasi_klima", "Tárolási klíma"), ("smart", "SMART-figyelés")]:
         v = AI.get(k)
@@ -139,18 +168,23 @@ def section(plans):
             md += [f"  - {_e(x)}" for x in (v if isinstance(v, list) else [v])]
     if AI.get("diverzifikacio"):
         md.append(f"- **Diverzifikáció:** {_e(AI['diverzifikacio'])}")
-    md += ["- **SSD-gyakorlat:** " + " ".join(_e(x) for x in AM.get("gyakorlat") or []), "",
-           f"### Terméktábla – {len(prods)} termék, kategóriánként", "",
+    note = next((p for p in prods if p.get("kategoria") == "other" and not p.get("ar_huf")), None)
+    real = [p for p in prods if p.get("kategoria") != "other" or p.get("ar_huf")]
+    md += ["- **SSD-gyakorlat:**"] + [f"  - {_e(x)}" for x in AM.get("gyakorlat") or []] + ["",
+           f"### Terméktábla – {len(real)} termék, kategóriánként", ""]
+    if note:
+        md += [f"> **{_e(note.get('nev'))}** – " + " ".join(_e(x) for x in (note.get("hatranyok") or []) + (note.get("elonyok") or [])), ""]
+    md += [
            "Szint: olcsó / közép / profi / extrém. Sebesség MB/s (SSD-nél olvasás/írás). A „Forrás” oszlop jelzi, hogy az ár mért vagy becsült.", ""]
     by = {}
-    for p in prods:
+    for p in real:
         by.setdefault(p.get("kategoria"), []).append(p)
     for k in ORDER:
         if k not in by:
             continue
         md += [f"#### {KAT.get(k, k)}", "", "| Termék | TB | Tartósság | Sebesség | Ár | Ft/TB | Forrás | Szint | Hol kapható | Előny / hátrány |",
                "|---|---|---|---|---|---|---|---|---|---|"]
-        for p in sorted(by[k], key=lambda p: (p.get("ar_huf") is None, p.get("ar_huf") or 0)):
+        for p in sorted(by[k], key=lambda p: (p.get("ar_huf") is None, (p.get("ar_huf") or 0) / max(float(p.get("kapacitas_tb") or 1), 0.001))):
             pro = "; ".join((p.get("elonyok") or [])[:2])
             con = "; ".join((p.get("hatranyok") or [])[:2])
             md.append(f"| **{_e(p.get('nev'))}** | {_e(p.get('kapacitas_tb') or '–')} | {dur(p.get('tartossag'))} | {speed(p.get('sebesseg_mb_s'))} | "

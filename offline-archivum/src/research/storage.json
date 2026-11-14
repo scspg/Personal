@@ -188,7 +188,7 @@
     "ar_huf": 575890,
     "ar_eur": 1575.2,
     "ar_per_tb": "17 997 Ft/TB (becsült)",
-    "ar_forras": "alza.hu keresési snapshot, 2026-11-14, becsült (az oldal 403-at adott); amazon.de 1 993,26 € (mért, a harmadik feles eladó nem ellenőrzött, túlárazott)",
+    "ar_forras": "becsült: alza.hu keresési snapshot 575 890 Ft (az oldal nem volt lekérhető); amazon.de 1 993,26 € (harmadik feles, túlárazott)",
     "linkek": [
      {
       "bolt": "alza.hu (nem ellenőrizhető)",
@@ -288,7 +288,7 @@
    {
     "id": "hdd-wd-redpro-22",
     "kategoria": "hdd_internal",
-    "nev": "WD Red Pro 22TB (WD221KFGX) – a 26TB-os WD260KFGX-et magyar boltban nem találtam",
+    "nev": "WD Red Pro 22TB (WD221KFGX)",
     "kapacitas_tb": 22,
     "tipus": "3,5\" SATA, 7200 rpm, 512 MB, CMR, OptiNAND",
     "tartossag": {
@@ -317,7 +317,8 @@
      "Másik gyártó, ezért jó diverzifikáció a Seagate/Toshiba mellé"
     ],
     "hatranyok": [
-     "Ma Magyarországon drága/TB"
+     "Ma Magyarországon drága/TB",
+     "A 26TB-os WD260KFGX-et magyar boltban nem találtam"
     ],
     "ajanlas_szint": "kozep"
    },
@@ -380,7 +381,7 @@
     "elonyok": [
      "Olcsó/TB",
      "Ütésálló, a Rescue adatmentés benne van az árban",
-     "Ideális a 'mag-archívum' offsite példányának"
+     "Ideális a „mag-archívum” offsite példányának"
     ],
     "hatranyok": [
      "Nem vízálló, csak esőálló",
@@ -631,7 +632,7 @@
      "Lassú írás"
     ],
     "ajanlas_szint": "kozep",
-    "javaslat": "Csak a 'mag' (pl. 0,5-2 TB: Wikipedia ZIM, orvosi/mezőgazdasági PDF-ek, térképek) kerüljön rá, par2 +10-20% paritással és SHA256 listával."
+    "javaslat": "Csak a „mag” (pl. 0,5-2 TB: Wikipedia ZIM, orvosi/mezőgazdasági PDF-ek, térképek) kerüljön rá, par2 +10-20% paritással és SHA256 listával."
    },
    {
     "id": "opt-verbatim-mdisc-bdr-25",
@@ -1113,7 +1114,7 @@
    {
     "id": "far-mfh-ammo-box-50cal",
     "kategoria": "faraday",
-    "nev": "MFH US Ammo Box M2A1 .50 cal acél lőszeresláda (tömítéssel)",
+    "nev": "MFH US Ammo Box M2A1 .50 cal acél lőszerláda (tömítéssel)",
     "kapacitas_tb": null,
     "tipus": "acél doboz gumitömítéssel, külső méret 300x155x190 mm, 2,6 kg (a listázás szerint)",
     "tartossag": {
@@ -1145,7 +1146,7 @@
   ],
   "egyeszkozos_opciok": {
    "8_TB": [
-    "ioSafe Solo G3 8TB – tűz (843 °C/30 perc) és víz (3 m/72 óra) ellen véd, ~362 USD-tól (becsült). Egyetlen lemez, tehát egy lemezhibát NEM él túl.",
+    "ioSafe Solo G3 8TB – tűz (843 °C/30 perc) és víz (3 m/72 óra) ellen véd; a 4 TB-os változat ~362 USD-tól, a 8 TB drágább (becsült). Egyetlen lemez, tehát egy lemezhibát NEM él túl.",
     "Alternatíva: 1x Toshiba MG10 22TB (376 290 Ft) – a legolcsóbb/TB, és bőven marad hely.",
     "2,5\"-es rugged HDD legfeljebb 5 TB, ezért 8 TB-ra nincs egylemezes rugged HDD."
    ],
@@ -1199,24 +1200,26 @@
    "konkluzio": "Az 1 elsődleges + 1 offline (más helyen, más gyártótól) másolat ~20%-ról ~0,3%-ra viszi le a 10 éves adatvesztési kockázatot (~70x javulás), és csak +1 lemezbe kerül. Ez a minimum logikus kompromisszum. A korrelált hibák (azonos gyártási sorozat, közös lakás, közös villám) ezt rontják, ezért: két különböző gyártó, két helyszín, az offline lemez Faraday-tasakban."
   },
   "kompakt_2_eszkoz": {
-   "22_TB_valtozat (ajánlott ár/érték)": {
-    "eszkoz_1_elsodleges": "Toshiba MG10AFA22TE 22TB (pcx, 376 290 Ft) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS single-disk pool, havi scrub",
-    "eszkoz_2_offline": "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft) – MÁS GYÁRTÓ. Antisztatikus tasakba, habba, majd Faraday Defense NEST-Z-be (27 797 Ft) és MFH .50 cal acél lőszer­ládába (~11 570 Ft, becsült) teszed, szilikagéllel, másik épületben/rokonnál tárolva.",
+   "24_TB": {
+    "eszkoz_1_elsodleges": "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft, mért) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS egylemezes pool, havi scrub",
+    "eszkoz_2_offline": "WD Ultrastar DC HC590 24TB (ipon, 527 889 Ft, mért; SAS – SAS-HBA vagy SAS-dokkoló kell) VAGY egy második IronWolf Pro 24TB; antisztatikus tasak + hab + Faraday Defense NEST-Z (27 797 Ft) + MFH .50 cal lőszerláda (~11 570 Ft, becsült), másik épületben",
+    "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline)",
     "plusz_opcionalis_mag": "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen.",
-    "osszesen": "885 487 Ft (M-DISC nélkül); 975 287 Ft M-DISC maggal"
+    "osszesen": "~1 037 000 Ft (2× IronWolf Pro 24TB + dokkoló + védelem); M-DISC maggal ~1 127 000 Ft"
    },
-   "32_TB_valtozat (legkisebb térfogat a teljes 32 TB-hoz)": {
+   "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tüzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.",
+   "32_TB": {
     "eszkoz_1": "Seagate Exos M 32TB (ipon, 784 390 Ft)",
     "eszkoz_2": "Seagate IronWolf Pro 32TB (alza snapshot 575 890 Ft, becsült) – azonos gyártó, de más termékcsalád és gyártási sorozat (32 TB-ban ma nincs WD/Toshiba)",
     "vedelem": "ugyanaz: NEST-Z + lőszerláda + szilikagél + külön helyszín",
     "osszesen": "~1 420 000 Ft (becsült, az IronWolf Pro ára nem ellenőrzött); csak ipon-ról: 2x Exos M 32TB = 1 568 780 Ft + kb. 60e Ft tartozék"
    },
-   "5_TB_mag_valtozat (zsebméret, víz és ütés)": {
+   "5_TB_mag": {
     "eszkoz_1": "LaCie Rugged USB-C 5TB (81 309 Ft)",
     "eszkoz_2": "ADATA HD710 Pro 4-5TB IP68 (119 741 Ft, 4 TB) – vagy egy második LaCie Rugged",
-    "osszesen": "~201 000 Ft"
-   },
-   "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tűzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi."
+    "osszesen": "~201 000 Ft",
+    "vedelem": "ütés (rugged HDD-nél csak kikapcsolva), víz: csak az IP68-as ADATA; 2 példány"
+   }
   },
   "adatintegritas": {
    "zfs_btrfs": [
@@ -1245,7 +1248,7 @@
    "diverzifikacio": "Két másolat = két gyártó (pl. Toshiba + Seagate vagy WD), két vásárlási sorozat, két helyszín. A Backblaze szerint ugyanazon a kapacitáson belül is 6x különbség lehet a modellek AFR-je között."
   },
   "javaslat": {
-   "~150-170e Ft – 'mag-archívum' ≤5 TB": {
+   "~150–170 ezer Ft – „mag-archívum” ≤5 TB": {
     "elemek": [
      "1. példány: meglévő PC-lemez (vagy a mag egy belső SSD-n)",
      "2. példány: LaCie Rugged USB-C 5TB – amazon.de 81 309 Ft (mért)",
@@ -1254,7 +1257,7 @@
     "osszesen": "171 109 Ft",
     "alternativa": "2x LaCie Rugged 5TB (162 618 Ft): két offline HDD két helyen, M-DISC nélkül"
    },
-   "~400e Ft – 8 TB teljes redundanciával": {
+   "~400 ezer Ft – 8 TB teljes redundanciával": {
     "elemek": [
      "2x Seagate IronWolf Pro 8TB – pcx 2x157 390 = 314 780 Ft (mért)",
      "ICY BOX IB-RD3621U3 dokkoló – 21 040 Ft (amazon.de, mért)",
@@ -1264,15 +1267,15 @@
     "osszesen": "~375 187 Ft",
     "megjegyzes": "A 2026-os HDD-árakon 400e Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül."
    },
-   "~1M Ft – 22-24 TB, két gyártó, M-DISC mag": {
+   "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
     "elemek": [
-     "1. (online): Toshiba MG10AFA22TE 22TB – pcx 376 290 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
-     "2. (offline, offsite): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
-     "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5x M-DISC BDXL (24 111 Ft)"
+     "1. (online): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
+     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-dokkoló kell) vagy második IronWolf Pro 24TB; NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
+     "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
-    "osszesen": "~975 287 Ft"
+    "osszesen": "~1 040 000–1 125 000 Ft"
    },
-   "~3-3,6M Ft – 64-66 TB, NAS + offline szett": {
+   "~3–3,7 millió Ft – 64–66 TB, NAS + offline szett": {
     "elemek": [
      "1. (online, ZFS RAIDZ1): UGREEN DXP4800 Plus (262 691 Ft) + 4x Toshiba MG10 22TB (1 505 160 Ft) = 66 TB hasznos, TrueNAS SCALE, havi scrub",
      "2. (offline, offsite): 3x Seagate Exos M 28TB (3x578 590 = 1 735 770 Ft) = 84 TB, SnapRAID nélkül JBOD-ként, ZFS/lemez + SHA256 manifest, 2 lőszerládában, Faraday-tasakban (2x(27 797 + 11 570) = 78 734 Ft)",
@@ -1280,7 +1283,7 @@
     ],
     "osszesen": "~3 696 266 Ft"
    },
-   "Extrém 128 TB (~6-8M Ft)": {
+   "Extrém 128 TB (~6–8 millió Ft)": {
     "elemek": [
      "1. Synology DS1825+ + 8x Toshiba MG10 22TB RAID6 = 132 TB hasznos – 3 631 110 Ft",
      "2a. Offline HDD-szett: 6x MG10 22TB = 132 TB, 2 lőszerládában – 2 257 740 Ft (összesen ~5,9M Ft), VAGY",
@@ -3020,7 +3023,7 @@
     "JEDEC kikapcsolt megőrzés: kliens 1 év / enterprise 3 hónap (élettartam végén)"
    ],
    "egy_ssd": "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1-(1-0.009)^5). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, ransomware, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év.",
-   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1.6% x (0.125 + 14/365) = kb. 0.26%. Együtt kb. 0.0023%/év, azaz kb. 0.01% 5 év alatt. Ez kb. 400-szor kisebb kockázat, és a másolat offline volta a ransomware, a túlfeszültség és a véletlen törlés ellen is véd.",
+   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Együtt kb. 0.0023%/év, azaz kb. 0.01% 5 év alatt. Ez kb. 400-szor kisebb kockázat, és a másolat offline volta a ransomware, a túlfeszültség és a véletlen törlés ellen is véd.",
    "kovetkeztetes": "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). 'Soha ne vesszen el' = minimum 2 példány, ebből 1 offline + checksum + scrub."
   },
   "ket_eszkozos_minimal_setup": {
