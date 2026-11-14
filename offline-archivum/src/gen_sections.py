@@ -20,10 +20,11 @@ def esc(s):
 
 
 def all_items():
+    import fixes
     out = []
     for f in sorted(glob.glob("items_*.jsonl")):
         out += [json.loads(l) for l in open(f, encoding="utf-8") if l.strip()]
-    return out
+    return fixes.apply(out)
 
 
 def gb(b):

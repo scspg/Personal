@@ -2,7 +2,7 @@
 
 ## 9. Webes hozzáférés az AI-nak: captcha- és blokkmentes keresés és letöltés
 
-Egyes forrásoldalak (pl. ECHO, Peace Corps, Sphere, RepRap-wiki) Cloudflare-rel blokkolják a sima `curl`-t. Az alábbi eszközökkel az AI-ágens ezeket is le tudja tölteni, és API-n keres, nem Google-scrape-pel. A verziókat és a dátumokat a PyPI és az npm registry, valamint `git ls-remote` alapján ellenőriztem (2026-11-14).
+Egyes forrásoldalak (pl. ECHO, Peace Corps, Sphere, RepRap-wiki) Cloudflare-rel blokkolják a sima `curl`-t. Az alábbi eszközökkel az AI-ágens ezeket is le tudja tölteni, és API-n keres, nem Google-scrape-pel. A verziókat és a dátumokat a PyPI és az npm registry, valamint `git ls-remote` alapján ellenőrzött (2026-11-14).
 
 ### 9.1 Lépcsőzetes stratégia: mindig a legolcsóbb működő réteggel kezdj
 
@@ -159,4 +159,4 @@ from ddgs import DDGS          # pip install -U ddgs
 hits = DDGS(timeout=10).text("peace corps manual filetype:pdf", max_results=20)
 ```
 
-A kódmintákat a projektek README-je és forráskódja alapján írtam, élesben nem futtattam őket. Verzióváltáskor ellenőrizd az API-t.
+A kódminták a projektek README-je és forráskódja alapján készültek, élesben nem futtak. Verzióváltáskor ellenőrizd az API-t.

@@ -181,6 +181,9 @@ def main():
         for l in open(f, encoding="utf-8"):
             if l.strip():
                 items.append(json.loads(l))
+    sys.path.insert(0, HERE)
+    import fixes
+    items = fixes.apply(items)
     ids = [i["id"] for i in items]
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:
@@ -239,13 +242,15 @@ def main():
     llm_items = sorted(bycat.get("ai_models", []), key=lambda x: (x["tier"], -score(x)))
 
     LLM_KEYS = ("id", "name", "cat", "tier", "group", "variant_rank", "lang", "access", "license", "bytes", "size_status", "format",
-                "download", "scores", "hw_tiers", "platform", "llm_aa", "llm_aa_est", "llm_bits", "active_b", "moe", "released")
+                "download", "scores", "hw_tiers", "platform", "llm_aa", "llm_aa_est", "llm_bits", "active_b", "moe", "released", "requires")
 
     def compact(i):
         if i["cat"].startswith("ai_models") and "llm_aa" in i:
             d = {k: i[k] for k in LLM_KEYS if k in i}
-            d["size_status"] = "measured:2026-11-14:hf-api"
-            d["license"] = str(d.get("license", ""))[:20]
+            kind = "cenzúrázatlan" if i["cat"] == "ai_models_uncensored" else "alap"
+            d["desc_hu"] = (f"{kind} LLM-kvant: {i['name'].split(' · ')[0]}; {str(i['llm_bits']).replace('.', ',')} bit, "
+                            f"AA v5 {'~' if i.get('llm_aa_est') else ''}{str(i['llm_aa']).replace('.', ',')} "
+                            f"(= {'~' if i.get('llm_aa_est') else ''}{round(100 * i['llm_aa'] / 59.1)}% Opus 5.5); részletek: 6. fejezet")
             return d
         d = dict(i)
         if d.get("bytes"):

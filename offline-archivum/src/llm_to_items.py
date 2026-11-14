@@ -126,6 +126,55 @@ def bits_of(q, fmt):
 
 
 REJ = []
+_TREES = None
+
+
+def trees():
+    global _TREES
+    if _TREES is None:
+        try:
+            _TREES = json.load(open("research/hf_trees.json", encoding="utf-8"))
+        except Exception:
+            _TREES = {}
+    return _TREES
+
+
+def exact_files(repo, quant, target=None):
+    """A kvant fájljai a repóban: (include-lista, összméret) vagy None. Alkönyvtár, darabolt és egyfájlos repókat is kezel."""
+    files = (trees().get(repo) or {}).get("files")
+    if not files:
+        return None
+    q = quant.split()[0]
+    if q.lower().endswith(".gguf"):
+        m = [(p, sz) for p, sz in files if p.split("/")[-1] == q]
+        return ([p for p, _ in m], sum(sz for _, sz in m)) if m else None
+    ql = q.lower()
+    # 1) alkönyvtár = kvantnév (unsloth: UD-Q4_K_XL/…, huihui: swift-IQ2_XS/…)
+    dirs = {p.split("/")[0] for p, _ in files if "/" in p}
+    d = [x for x in dirs if x.lower() == ql or x.lower().endswith("-" + ql) or x.lower() == ql.replace("_", "-")]
+    if len(d) == 1:
+        m = [(p, sz) for p, sz in files if p.startswith(d[0] + "/") and p.endswith(".gguf")]
+        if m:
+            return [d[0] + "/*"], sum(sz for _, sz in m)
+    # 2) fájlnév: a kvant pontosan, határolva (UD- előtag csak ha a kvantban is benne van)
+    pre = "" if ql.startswith("ud-") else r"(?<!ud-)"
+    rx = re.compile(r"(?:^|[-_.])" + pre + re.escape(ql) + r"(?=\.gguf$|-\d{5}-of-\d{5}\.gguf$|\.gguf\.part\d+of\d+$|[-_]it\.gguf$)", re.I)
+    model_files = [(p, sz) for p, sz in files if ".gguf" in p and "mmproj" not in p.lower() and not p.lower().startswith("patch")
+                   and not p.endswith(".key")]
+    m = [(p, sz) for p, sz in model_files if rx.search(p.split("/")[-1].lower())]
+    if m:
+        return sorted(p for p, _ in m), sum(sz for _, sz in m)
+    # 3) méret-egyezés (±3%): alkönyvtáranként vagy kvant-fájlcsoportonként
+    if target:
+        groups = {}
+        for p, sz in model_files:
+            key = p.split("/")[0] + "/*" if "/" in p else re.sub(r"(-\d{5}-of-\d{5})?\.gguf(\.part\d+of\d+)?$", "", p)
+            groups.setdefault(key, []).append((p, sz))
+        best = min(groups.items(), key=lambda kv: abs(sum(sz for _, sz in kv[1]) - target), default=None)
+        if best and abs(sum(sz for _, sz in best[1]) - target) <= 0.03 * target:
+            k, L = best
+            return ([k] if k.endswith("/*") else sorted(p for p, _ in L)), sum(sz for _, sz in L)
+    return None
 # aktív paraméter (milliárd) és MoE-jelző modellenként; a vegyes csoportoknál változatonként dől el (active_for)
 ACT = {"kimi-k3-1-pro": (104, True), "deepseek-v4-1-flash-1017": (16, True), "glm-5-3": (40, True), "glm-5-3-flash": (18, True),
  "mimo-v2-6-pro": (42, True), "ling-3-1-flash-1019": (25, True), "minimax-m3-1-flash": (23, True), "qwen3-8-flash-next": (6, True),
@@ -195,19 +244,28 @@ def main():
                 if not b:
                     continue
                 m = re.search(r"[\w.-]+\.gguf", quant)
-                if plat == "any" and m:
-                    inc = [m.group(0)]
-                elif plat == "any":
-                    inc = [f"*{quant.split()[0]}*"]
-                else:
-                    inc = []
-                vars_.append(dict(repo=repo, b=b, hw=hw, plat=plat, quant=quant, fmt=fmt, runtime=q.get("runtime"), inc=inc,
-                                  st=q.get("size_status"), tier_txt=q.get("tier")))
+                inc, verified = [], False
+                if plat == "any":
+                    ex = exact_files(repo, quant, b)
+                    if ex:
+                        inc, b, verified = ex[0], ex[1], True
+                        if len(inc) == 1 and inc[0].endswith("/*"):
+                            dname = inc[0][:-2]
+                            qq = quant.split()[0].lower()
+                            if not re.search(r"(^|[-_])" + re.escape(qq) + r"$", dname.lower()) or dname.lower().startswith("iq2_s-ple"):
+                                quant = dname          # pl. Q4_0 → IQ2_S-PLEQ4_0 (a valós tartalom szerint)
+                    else:
+                        inc = [m.group(0)] if m else [f"*-{quant.split()[0]}.gguf", f"*-{quant.split()[0]}-0*"]
+                if not b:
+                    continue
+                vars_.append(dict(repo=repo, b=round(b), hw=hw, plat=plat, quant=quant, fmt=fmt, runtime=q.get("runtime"), inc=inc,
+                                  st=("hf-api fájllista" if verified else q.get("size_status")), tier_txt=q.get("tier")))
         for o in model.get("ollama") or []:
             b = first_size(o.get("size"))
             if b and b > 0 and "cloud" not in str(o.get("tag")):
-                tag = str(o.get("tag")).split(",")[0].strip()
-                vars_.append(dict(repo=None, b=b, hw=["T1", "T2", "T3", "T4"] if b < 60e9 else ["T1", "T2", "T3"], plat="any",
+                tag = re.split(r"\s*[,/]\s+|\s+/\s*", str(o.get("tag")).strip())[0].strip()
+                tplat = "server" if "nvfp4" in tag.lower() else "mac" if "mlx" in tag.lower() else "any"
+                vars_.append(dict(repo=None, b=round(b), hw=["T1", "T2", "T3", "T4"] if b < 60e9 else ["T1", "T2", "T3"], plat=tplat,
                                   quant=f"ollama {tag}", fmt="ollama", runtime="Ollama", inc=[], st="verified (ollama registry)", tag=tag, tier_txt="Ollama, CPU/GPU vegyes"))
         # fizikai józansági ellenőrzés: bájt >= 0.5 * paraméter * bit/8 (egy-méretű modellnél)
         ptxt = str(model.get("params_total") or model.get("params") or "")
@@ -234,7 +292,7 @@ def main():
             dl = {"method": "ollama", "tag": v["tag"]} if v["fmt"] == "ollama" else {"method": "hf", "repo": v["repo"], "include": v["inc"]}
             gated = "gated" in json.dumps(model, ensure_ascii=False, default=str).lower() and "nem gated" not in json.dumps(model, ensure_ascii=False, default=str).lower()
             out.append({
-                "id": iid, "name": f"{model.get('name')} · {(v['repo'] or '').split('/')[-1]} · {v['quant'][:40]} ({v['fmt']})", "cat": cat, "tier": tier,
+                "id": iid, "name": f"{model.get('name')} · {(v['repo'] or 'ollama').split('/')[-1]} · {v['quant'][:40]} ({v['fmt']})", "cat": cat, "tier": tier,
                 "group": group, "variant_rank": rank,
                 "desc_hu": (model.get("strengths_hu") or model.get("notes") or "")[:400],
                 "lang": "multi", "access": "free-registration" if gated else "free", "license": str(model.get("license")),
