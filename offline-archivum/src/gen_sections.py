@@ -137,6 +137,8 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 - **Ajánlott párosítás:** egy alapmodell + egy cenzúrázatlan változat ugyanabból a családból. A szkript alapból ezt választja (`--uncensored also`). Csak cenzúrázatlan: `only`. Kihagyás: `no`.
 - **A cenzúrázatlan modell nem megbízhatóbb.** Kevesebbet utasít el, de ugyanúgy hallucinál. Életveszélyes témában (gyógyszer, vegyi anyag, robbanóanyag, statika) a forrásdokumentum dönt.
 
+{UNCRANK}
+
 ### 6.6 Futtatókörnyezetek (runtime-ok)
 
 {RUNTIMES}
@@ -212,6 +214,80 @@ git clone --mirror https://github.com/ggml-org/llama.cpp && git clone --mirror h
 - **Gyenge az AA v5-ön:** gpt-oss-120b/20b (3,8), Nemotron-3-Ultra, Command A+, Granite 4.2, Phi-4. Az ERNIE-5.5-ből csak base modell van.
 - **Archívumcélra maradt bent:** a gpt-oss heretic-változata, mert kicsi, Apache-licencű és gyors.
 """
+
+UNC_META = {  # id: (módszer, UGI / NatInt megjegyzés)
+ "A1": ("Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename)", "elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya)"),
+ "A2": ("Abliteration (huihui patch-GGUF az unsloth kvantra)", "nincs mérés"),
+ "A3": ("Abliteration (huihui)", "nincs mérés"),
+ "A4": ("Abliteration v2 (huihui)", "nincs mérés (Qwen3.8 még nincs az UGI-n)"),
+ "A5": ("Abliteration (közösségi, Uniboshi)", "minőség nem ellenőrzött; gated:auto"),
+ "A6": ("Abliteration (orcarouter)", "minőség nem ellenőrzött; gated:auto"),
+ "A7": ("Heretic (MuXodious tainted-heresy / kldzj)", "UGI 53,81; NatInt 33,68→32,25 (−1,4)"),
+ "A8": ("Heretic (darkc0de)", "az alap is engedékeny (UGI W10 4,5)"),
+ "A9": ("Abliteration (huihui) / Heretic-ARA (trohrbaugh)", "nincs mérés"),
+ "A10": ("SFT (propaganda-keretezés eltávolítása, az R1-1776 utódja)", "NEM általános elutasítás-eltávolító; propaganda 22%→0,9%"),
+ "A11": ("Heretic (coder3101 / llmfan46)", "UGI 65,69 (legjobb 40B alatt); NatInt 38,91→36,53 (−2,4)"),
+ "A12": ("Heretic, ultra (llmfan46)", "UGI 52,39; NatInt 34,44→35,71 (+1,3)"),
+ "A13": ("Heretic (llmfan46) / Abliteration-MTP (huihui)", "UGI 50,9; NatInt 31,03→31,62 (+0,6)"),
+ "A14": ("Heretic (MuXodious / p-e-w ARA)", "UGI 46,67; NatInt 27,18→22,52 (−4,7)"),
+ "A15": ("Heretic (llmfan46) / Abliteration QAT (huihui)", "nincs mérés"),
+ "A16": ("Heretic v2 (trohrbaugh)", "NatInt 30,98→24,2 (−6,8); huihui-változat: 19,8 (−11,2)"),
+ "A17": ("Heretic 2.0 (p-e-w) / SOMPOA (MuXodious)", "SOMPOA: UGI 44,73; NatInt 23,88→22,35 (−1,5)"),
+ "A18": ("Heretic (coder3101 / p-e-w)", "NatInt 18,21→18,73 (+0,5)"),
+ "A19": ("Heretic, ultra (llmfan46)", "nincs mérés"),
+}
+
+
+MEASURED = ("deepseek-v4-1", "glm-5-3", "qwen3-8-flash-next", "kimi-k3", "minimax-m3-1", "gpt-oss-120b", "qwen3-8-27b", "gemma-4-31b")
+
+
+def uncensored_ranking(items):
+    from llm_to_items import UNC_BASE, slug
+    res = load_blocks("research/llm_uncensored_runtimes.md.txt")[0]
+    llm = [i for i in items if i["cat"] == "ai_models_uncensored" and "llm_aa" in i]
+    rows = []
+    for m in res:
+        vs = sorted([i for i in llm if i["name"].split(" · ")[0] == m["name"]], key=lambda v: v["bytes"])
+        base_aa = next((v for k, v in UNC_BASE if k in slug(m["name"])), None)
+        sc = m.get("scores") or {}
+        meth, ugi = UNC_META.get(m["id"], ("?", ""))
+        best = {}
+        for v in vs:
+            for t in v["hw_tiers"]:
+                if v["platform"] == "any" and (t not in best or v["llm_bits"] > best[t]["llm_bits"] or
+                                               (v["llm_bits"] == best[t]["llm_bits"] and v["bytes"] < best[t]["bytes"])):
+                    best[t] = v
+        lowest = max(best, key=lambda t: int(t[1])) if best else None
+        rows.append(dict(m=m, vs=vs, aa=base_aa, sc=sc, meth=meth, ugi=ugi, lowest=lowest, best=best))
+    rows.sort(key=lambda r: (-(r["aa"] or 0), -float(str(r["sc"].get("uncensored") or 0))))
+    out = ["#### Rangsor: cenzúrázatlan modellek", "",
+           "- **Sorrend:** az alapmodell intelligenciája szerint (AA v5 index, 2026-11-12); egyezésnél a cenzúrázatlanság dönt.",
+           "- **„Cenz.” és „HU” oszlop:** 0–10-es kutatói becslés.",
+           "- **`~` jel az AA oszlopban:** az alapmodellnek nincs AA v5 pontja, az érték becslés.",
+           "- **UGI NatInt:** a természetes intelligencia mérése az Uncensored General Intelligence ranglistán, az alap → cenzúrázatlan változás.",
+           "- **„Leggyengébb gép”:** az a legkisebb hardverszint, amelyen még fut GGUF-változat.",
+           "- **Méretek:** a Hugging Face API-ból (2026-11-14).", "",
+           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for n, r in enumerate(rows, 1):
+        m, vs = r["m"], r["vs"]
+        repo = m.get("hf_repo") or ""
+        rname = repo.split("huggingface.co/")[-1]
+        size = f"{gb(vs[0]['bytes'])} – {gb(vs[-1]['bytes'])}" if vs else "–"
+        low = r["lowest"]
+        lowtxt = f"{low}: `{r['best'][low]['download'].get('repo','')}` {r['best'][low]['download'].get('include') or ''} ({gb(r['best'][low]['bytes'])})" if low else "csak szerver / MLX"
+        out.append(f"| {n} | **[{esc(rname)}]({repo})** | `{esc(m.get('base'))}` ({esc(m.get('base_created'))}) | {esc(m.get('params'))[:45]} | "
+                   f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{r['aa'] if r['aa'] is not None else '?'} | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
+                   f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(m.get('license'))[:28]} |")
+    out += ["",
+            "**Hogyan olvasd:**",
+            "- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.",
+            "- **Gamer PC:** a legjobb választás a 4. (Qwen3.8-Flash-Next abliterated v2, 94–111 GB) és a 6. (Qwen3.8-27B abliterated, 14–29 GB). Egyetlen videokártyán a 6. fut.",
+            "- **Laptop, telefon:** a Gemma-4 heretic változatai mért veszteség nélkül érhetők el.",
+            "- **Arete-27B:** nem általános cenzúramentesítés, csak a propaganda-keretezést távolítja el.",
+            "- **Kimi K3.1 Pro-ból nincs cenzúrázatlan változat.** A Kimi-K3 abliterated régebbi és gyengébb alapra épül (AA 17,4), a minősége nem ellenőrzött.",
+            ""]
+    return "\n".join(out)
 
 
 def manual_section(items):
@@ -302,7 +378,7 @@ def web_section():
 def main():
     items = all_items()
     table, details = llm_tables(items)
-    txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes())
+    txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items))
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
     open("sections/09_web.md", "w", encoding="utf-8").write(web_section())
