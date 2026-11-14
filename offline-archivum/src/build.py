@@ -106,7 +106,7 @@ def esc(s):
     return (s or "").replace("|", "\\|").replace("\n", " ")
 
 
-SSD_SIZES = ["1TB", "2TB", "4TB", "8TB", "16TB", "32TB"]
+SSD_SIZES = ["1TB", "2TB", "4TB", "8TB", "16TB", "32TB", "64TB", "128TB"]
 CAT_GROUP = {  # kategória → összevont csoport az SSD-bontáshoz
  "medicine": "Életmentő: orvoslás, víz, élelem, túlélés", "water_sanitation": "Életmentő: orvoslás, víz, élelem, túlélés",
  "food": "Életmentő: orvoslás, víz, élelem, túlélés", "survival": "Életmentő: orvoslás, víz, élelem, túlélés", "veterinary": "Életmentő: orvoslás, víz, élelem, túlélés",
@@ -134,8 +134,10 @@ def ssd_plans(cat_path, tmp):
     for b in SSD_SIZES:
         outp = os.path.join(tmp, f"ssd{b}.json")
         # a nagyobb meghajtó a kisebb teljes (nem LLM) tartalmát megtartja, csak bővül vagy jobb változatra cserél
-        subprocess.run([sys.executable, "-I", os.path.join(HERE, "select_items.py"), cat_path, "--budget", b, "--hw", "T2", "--mem", "300GB",
-                        "--platform", "server", "--llm-models", "4", "--include", ",".join(prev), "--out", outp], check=True, capture_output=True)
+        big = int(b[:-2]) >= 64        # 64 TB fölött: szerverszintű LLM-készlet is (pl. Kimi K3.1 Pro teljes kvantjai), több modell
+        llm = ["--hw", "T1", "--mem", "2000GB", "--llm-models", "8"] if big else ["--hw", "T2", "--mem", "300GB", "--llm-models", "4"]
+        subprocess.run([sys.executable, "-I", os.path.join(HERE, "select_items.py"), cat_path, "--budget", b, *llm,
+                        "--platform", "server", "--include", ",".join(prev), "--out", outp], check=True, capture_output=True)
         p = json.load(open(outp, encoding="utf-8"))
         out.append((b, p))
         # csoporttagot nem kötünk ki: így nagyobb meghajtón a jobb (nagyobb) változatra cserélhető
@@ -145,7 +147,7 @@ def ssd_plans(cat_path, tmp):
 
 
 def ssd_section(plans):
-    md = ["---", "", "## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16 és 32 TB-ra", "",
+    md = ["---", "", "## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16, 32, 64 és 128 TB-ra", "",
           "A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. "
           "LLM-ek: **T2-es gép alsó határa, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. "
           "A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.", "",
@@ -187,7 +189,10 @@ def ssd_section(plans):
            "- **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.",
            f"- **2 TB:** {len(plans[1][1]['items'])} tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.",
            f"- **4 TB** a teljes tudásanyaghoz: {len(plans[2][1]['items'])} tétel a lehetséges {len(plans[-1][1]['items'])}-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).",
-           "- **8 TB fölött** főleg nagy nyers adathalmazok és tükrök jönnek, ezeket HDD-n vagy NAS-on érdemes tárolni.", "",
+           "- **8–32 TB:** főleg nagy nyers adathalmazok és tükrök (Debian, F-Droid, CRAN, Wikidata, OpenAlex) jönnek. "
+           "**A katalógus teljes automatikusan letölthető tartalma kb. " + f"{sum((i.get('bytes') or i.get('bytes_est') or 0) for i in plans[5][1]['items']) / 1e12:.1f}".replace(".", ",") + " TB** – ez a „minden egyben” méret.",
+           "- **64 TB:** ugyanez + szerverszintű LLM-készlet (pl. a Kimi K3.1 Pro és a DeepSeek-V4.1 nagy kvantjai), hogy a jövőbeli erősebb géphez is meglegyen a legjobb modell.",
+           "- **128 TB:** + a teljes PyPI-tükör (51,5 TB) – csak ha Python-fejlesztés internet nélkül is fontos. Érdemi tudásanyag ezen felül már nincs.", "",
            "### Melyik meghajtót vedd", "",
            "- **Munkameghajtó (a gépben):** NVMe SSD, TLC NAND, DRAM-cache-sel, magas TBW-értékkel. A gyors SSD a modellek **betöltését** gyorsítja, a futásukat nem.",
            "- **Archív példány (fiókban):** az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (gyártófüggő, becslés). **Hosszú távra HDD** (CMR, nem SMR) vagy **M-DISC** kell. A HDD-t évente egyszer érdemes bekapcsolni és ellenőrizni.",
@@ -439,7 +444,7 @@ def main():
     readme = f"""# ARCHIVUM – offline tudásarchívum (olvass el)
 
 ## Kezdd itt
-1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–32 TB-ra.
+1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra.
 2. **Letöltés a meghajtóra:** add oda az `ARCHIVUM.md`-t egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.), és másold be neki az 1. fejezet promptját kitöltve. Vagy kézzel:
    ```bash
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh

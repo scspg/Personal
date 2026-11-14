@@ -45,7 +45,7 @@ A `--focus medicine=2` megszorozza egy kategória pontjait.
 | 4 | Oktatás és kultúra nagy méretben: Khan Academy, Gutenberg, StackOverflow. |
 | 5 | Kényelmi elemek: TED, nagy médiatartalmak. |
 
-## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16 és 32 TB-ra
+## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16, 32, 64 és 128 TB-ra
 
 A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. LLM-ek: **T2-es gép alsó határa, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro). Legfeljebb 4 modell kerül be, alap és cenzúrázatlan is; az LLM legfeljebb a keret 35%-át foglalhatja. A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.
 
@@ -59,6 +59,8 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 | **8TB** | 7,29 TB | 517 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 67,5 GB | 715 GB | 74,9 GB | 1,03 TB | 3,81 TB | 102 GB | 695 GB | 42,8 GB |
 | **16TB** | 13,6 TB | 518 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 8,26 TB | 102 GB | 694 GB | 51,9 GB |
 | **32TB** | 22,5 TB | 518 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17,1 TB | 102 GB | 694 GB | 51,9 GB |
+| **64TB** | 27,7 TB | 522 | 5,81 TB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17,1 TB | 102 GB | 694 GB | 51,9 GB |
+| **128TB** | 79,2 TB | 523 | 5,81 TB | 27,9 GB | 33,7 GB | 160 GB | 67,5 GB | 1,56 TB | 1,01 TB | 1,03 TB | 68,6 TB | 102 GB | 694 GB | 51,9 GB |
 
 ### Melyik méret mire elég – mi jön be az előző mérethez képest
 
@@ -68,12 +70,16 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 - **8TB** – összesen 517 tétel; **új: 5**, jobb változatra cserélt: 3. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); The Stack v2 (BigCode) – csak megjegyzés (427 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB). Feljavítva: Argos Translate en↔hu csomagok (140 MB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB); wikisource_en_all_nopic_2026-09 (3,91 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
 - **16TB** – összesen 518 tétel; **új: 1**, jobb változatra cserélt: 5. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); wikipedia_en_all_maxi_2026-08 (127 GB); Argos Translate / LibreTranslate + en-hu, hu-en… (9,13 GB); wikisource_en_all_maxi_2026-09 (8,62 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
 - **32TB** – összesen 518 tétel; **új: 0**, jobb változatra cserélt: 1. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **64TB** – összesen 522 tétel; **új: 7**. Legnagyobb új tételek: Kimi K3.1 Pro · moonshotai.Kimi-K3.1-Pro-GGUF · MXFP4_MOE… (1,51 TB); Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja)… (1,31 TB); Hy4 preview (Hunyuan) · Hy4-preview-FP8 · FP8 (FP8) (814 GB); GLM-5.3 · GLM-5.3 · FP8 (FP8(native)) (756 GB); DeepSeek-V4.1-Flash-1017 · DeepSeek-V4.1-Flash-1017-GGUF… (508 GB); DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF)… (508 GB); Inkling 2 Small · Inkling-2-Small-GGUF · UD-Q8_K_XL (GGUF) (387 GB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
+- **128TB** – összesen 523 tétel; **új: 1**. Legnagyobb új tételek: PyPI full mirror (bandersnatch) (51,5 TB). Életmentő (0. szintű) anyag: mind a 36 tétel bent van.
 
 **Ajánlás:**
 - **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.
 - **2 TB:** 401 tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.
-- **4 TB** a teljes tudásanyaghoz: 512 tétel a lehetséges 518-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).
-- **8 TB fölött** főleg nagy nyers adathalmazok és tükrök jönnek, ezeket HDD-n vagy NAS-on érdemes tárolni.
+- **4 TB** a teljes tudásanyaghoz: 512 tétel a lehetséges 523-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).
+- **8–32 TB:** főleg nagy nyers adathalmazok és tükrök (Debian, F-Droid, CRAN, Wikidata, OpenAlex) jönnek. **A katalógus teljes automatikusan letölthető tartalma kb. 22,5 TB** – ez a „minden egyben” méret.
+- **64 TB:** ugyanez + szerverszintű LLM-készlet (pl. a Kimi K3.1 Pro és a DeepSeek-V4.1 nagy kvantjai), hogy a jövőbeli erősebb géphez is meglegyen a legjobb modell.
+- **128 TB:** + a teljes PyPI-tükör (51,5 TB) – csak ha Python-fejlesztés internet nélkül is fontos. Érdemi tudásanyag ezen felül már nincs.
 
 ### Melyik meghajtót vedd
 
@@ -86,6 +92,8 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
   - a 0. szint kinyomtatva.
 - **Fájlrendszer:** exFAT (minden gép olvassa) vagy ext4. **FAT32-t ne használj**, mert 4 GB fölötti fájlt nem kezel.
 - **Ellenőrzés:** minden fájl SHA-256 összegét mentsd egy `manifest`-be. Évente futtasd le a `sha256sum -c` ellenőrzést, és cseréld ki a hibás példányt.
+
+
 
 
 

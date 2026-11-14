@@ -8,7 +8,7 @@
 1. [Prompt az AI-ágensnek – ezt másold be](#1-prompt-az-ai-ágensnek)
 2. [Szabályok és buktatók – mire figyeljen az AI](#2-szabályok-és-buktatók)
 3. [Pontozási rendszer](#3-pontozási-rendszer)
-4. [Előre számolt csomagok tárhely szerint](#4-előre-számolt-csomagok) · **4b. [Hány TB-os SSD kell? (1–32 TB)](#4b-hány-tb-os-ssd-kell--csomagok-1-2-4-8-16-és-32-tb-ra)**
+4. [Előre számolt csomagok tárhely szerint](#4-előre-számolt-csomagok) · **4b. [Hány TB-os SSD kell? (1–128 TB)](#4b-hány-tb-os-ssd-kell--csomagok-1-2-4-8-16-32-64-és-128-tb-ra)**
 5. [Katalógus kategóriánként (emberi nézet)](#5-katalógus-kategóriánként) · **5b. [Mindenre a legjobb nyílt forráskódú szoftver és modell](#5b-mindenre-a-legjobb-nyílt-forráskódú-szoftver-és-modell)**
 6. [NAGY FEJEZET: helyi, nyílt súlyú LLM-ek](#6-helyi-llm-ek) – 6.10: eszközönkénti ajánlás 4 változatban · 6.11: GeForce-feloldás
 7. [Letöltési receptek módszerenként](#7-letöltési-receptek)

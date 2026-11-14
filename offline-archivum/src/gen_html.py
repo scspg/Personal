@@ -452,7 +452,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 </section>
 
 <section id="ssd">
-  <h2>Hány TB-os SSD kell? – 1, 2, 4, 8, 16, 32 TB</h2>
+  <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
   <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil, T2-es LLM-gép ~300 GB memóriával, alap + cenzúrázatlan modellekkel). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
   <details><summary>Melyik meghajtót vedd</summary><div class="body"><ul>

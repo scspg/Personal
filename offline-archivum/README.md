@@ -1,7 +1,7 @@
 # ARCHIVUM – offline tudásarchívum (olvass el)
 
 ## Kezdd itt
-1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–32 TB-ra.
+1. **Nyisd meg böngészőben az `ARCHIVUM-LLM.html`-t** (internet nem kell): kalkulátor (melyik AI-modell fut a gépeiden), eszközmátrix, modelltábla, a legjobb nyílt forráskódú szoftverek és modellek kereshető listája, SSD-tervező 1–128 TB-ra.
 2. **Letöltés a meghajtóra:** add oda az `ARCHIVUM.md`-t egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.), és másold be neki az 1. fejezet promptját kitöltve. Vagy kézzel:
    ```bash
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
@@ -12,9 +12,9 @@
 ## Fájlok
 | Fájl | Méret | Mire való |
 |---|---|---|
-| `ARCHIVUM-LLM.html` | 0,7 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező |
-| `ARCHIVUM.md` | 2,0 MB | teljes katalógus: 1248 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
-| `ARCHIVUM-kompakt.md` | 1,4 MB | ugyanez kevesebb LLM-kvanttal (884 tétel) – hosszú kontextusú modellnek |
+| `ARCHIVUM-LLM.html` | 0,8 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező |
+| `ARCHIVUM.md` | 2,1 MB | teljes katalógus: 1248 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
+| `ARCHIVUM-kompakt.md` | 1,5 MB | ugyanez kevesebb LLM-kvanttal (884 tétel) – hosszú kontextusú modellnek |
 | `ARCHIVUM-chat.md` | 0,1 MB | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások, legjobb szoftverek |
 | `eszkozok/select_items.py` | – | letöltési terv a tárhelyhez (`--budget 2TB --hw T2 --mem 300GB --emit-sh dl.sh`) |
 | `eszkozok/llm_calc.py` | – | LLM-kalkulátor (`--preset all`, vagy saját: `--gpu 32:1790 --ram 128 --ram-bw 96`) |
