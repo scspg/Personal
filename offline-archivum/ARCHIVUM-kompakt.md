@@ -3298,7 +3298,7 @@ Példák:
   python3 select_items.py ARCHIVUM-kompakt.md --budget 64GB --focus medicine=2,agriculture=1.5 --exclude kx-ted
   python3 select_items.py ARCHIVUM-kompakt.md --list            # teljes katalógus pontszámokkal
 """
-import argparse, json, re, sys, shlex
+import argparse, json, math, os, re, sys, shlex
 
 PROFILES = {  # súlyok: S=túlélés R=újjáépítés A=gyakorlatiasság U=pótolhatatlanság Q=megbízhatóság O=offline-kényelem
     "balanced":  {"S": .30, "R": .25, "A": .15, "U": .15, "Q": .10, "O": .05},
@@ -3369,20 +3369,50 @@ def size_of(it):
     return it.get("bytes") or it.get("bytes_est")
 
 
+class HuFormatter(argparse.RawDescriptionHelpFormatter):
+    def add_usage(self, usage, actions, groups, prefix=None):
+        return super().add_usage(usage, actions, groups, "Használat: ")
+
+
+class HuParser(argparse.ArgumentParser):
+    """argparse magyar keretszövegekkel (súgó és hibaüzenetek)."""
+    TR = (("the following arguments are required", "hiányzó kötelező argumentum"), ("expected one argument", "egy értéket vár"),
+          ("invalid choice", "érvénytelen választás"), ("choose from", "választható"), ("unrecognized arguments", "ismeretlen argumentum"),
+          ("invalid float value", "érvénytelen szám"), ("invalid int value", "érvénytelen egész szám"), ("argument ", "argumentum: "))
+
+    def __init__(self, **k):
+        super().__init__(add_help=False, formatter_class=HuFormatter, **k)
+        self._positionals.title, self._optionals.title = "kötelező argumentum", "kapcsolók"
+        self.add_argument("-h", "--help", action="help", help="ez a súgó")
+
+    def error(self, message):
+        for a, b in self.TR:
+            message = message.replace(a, b)
+        self.print_usage(sys.stderr)
+        self.exit(2, f"{self.prog}: hiba: {message}\n")
+
+
+def run_cli(main):
+    try:
+        main()
+    except BrokenPipeError:            # pl. --list | head
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); sys.exit(1)
+
+
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = HuParser(description=__doc__)
     ap.add_argument("catalog", help="ARCHIVUM-kompakt.md vagy .jsonl katalógus")
     ap.add_argument("--budget", help="pl. 64GB, 512GB, 2TB (decimális egység, mint a meghajtók címkéje)")
     ap.add_argument("--reserve", type=float, default=0.08, help="tartalék hányad a fájlrendszernek / checksumoknak (alap 0.08)")
-    ap.add_argument("--profile", default="balanced", choices=PROFILES)
-    ap.add_argument("--langs", default="hu,en,multi", help="engedett nyelvek, vesszővel")
+    ap.add_argument("--profile", default="balanced", choices=PROFILES, help="súlyprofil (alap: %(default)s)")
+    ap.add_argument("--langs", default="hu,en,multi", help="engedett nyelvek, vesszővel (alap: %(default)s)")
     ap.add_argument("--access", default="free,free-registration,donation",
                     help="engedett hozzáférés: free,free-registration,donation,paid,gray,physical")
     ap.add_argument("--hw", default=None, choices=["T1", "T2", "T3", "T4", "T5"], help="LLM hardverszint T1..T5 (T1 szerver, T2 munkaállomás, T3 gamer PC, T4 laptop, T5 telefon); nélküle nem kerül be LLM")
-    ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra")
+    ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra (alap: %(default)s)")
     ap.add_argument("--platform", default="", help="LLM-formátumok a GGUF/Ollama mellé: mac (MLX), server (vLLM/SGLang: FP8/NVFP4/AWQ), android (LiteRT); vesszővel")
     ap.add_argument("--uncensored", choices=["no", "also", "only"], default="also", help="cenzúrázatlan LLM-változatok: no | also | only")
-    ap.add_argument("--llm-models", type=int, default=3, help="legfeljebb ennyi különböző LLM-modell (group) kerüljön be")
+    ap.add_argument("--llm-models", type=int, default=3, help="legfeljebb ennyi különböző LLM-modell (group) kerüljön be (alap: %(default)s)")
     ap.add_argument("--mem", default=None, help="LLM-re használható memória (RAM+VRAM vagy unified), pl. 48GB / 512GB; a modell max. 85%%-a lehet")
     ap.add_argument("--focus", default="", help="kategória-szorzók, pl. medicine=2,agriculture=1.5")
     ap.add_argument("--max-tier", type=int, default=5, help="legfeljebb ennyi tier (0–5) kerüljön be, alap 5")
@@ -3391,10 +3421,13 @@ def main():
     ap.add_argument("--list", action="store_true", help="katalógus listázása pontszám szerint")
     ap.add_argument("--out", default="plan.json", help="a terv JSON-fájlja (alap plan.json)")
     ap.add_argument("--emit-sh", default=None, help="letöltő bash szkript írása ide")
-    ap.add_argument("--dest", default="/mnt/archivum", help="célkönyvtár a szkriptben")
+    ap.add_argument("--dest", default="/mnt/archivum", help="célkönyvtár a szkriptben (alap: %(default)s; futáskor DEST=... felülírja)")
     a = ap.parse_args()
 
-    items = sorted(load(a.catalog), key=lambda i: i["id"])   # determinisztikus sorrend (holtversenynél is)
+    try:
+        items = sorted(load(a.catalog), key=lambda i: i["id"])
+    except (OSError, UnicodeDecodeError, ValueError, KeyError) as e:
+        sys.exit(f"Nem olvasható katalógus: {a.catalog} ({e})")   # determinisztikus sorrend (holtversenynél is)
     w = PROFILES[a.profile]
     try:
         focus = {k: float(v) for k, v in (p.split("=") for p in a.focus.split(",") if p)}
@@ -3402,6 +3435,18 @@ def main():
         ap.error("--focus formátuma: kategória=szorzó, pl. medicine=2,agriculture=1.5")
     if not 0 <= a.reserve < 1:
         ap.error("--reserve 0 és 1 közötti hányad (pl. 0.08)")
+    if not 0 <= a.llm_max <= 1:
+        ap.error("--llm-max 0 és 1 közötti hányad (alap 0.35)")
+    if a.llm_models < 0 or not 0 <= a.max_tier <= 5:
+        ap.error("--llm-models >= 0 és --max-tier 0–5 kell")
+    if any(not (math.isfinite(v) and v >= 0) for v in focus.values()):
+        ap.error("--focus szorzói véges, nemnegatív számok legyenek")
+    bad = (set(x for x in a.access.split(",") if x) - {"free", "free-registration", "donation", "paid", "gray", "physical"}) | \
+          (set(x for x in a.platform.split(",") if x) - {"mac", "server", "android"})
+    if bad or not a.access.strip(",") or not a.langs.strip(","):
+        ap.error(f"ismeretlen / üres --access, --platform vagy --langs érték: {', '.join(sorted(bad)) or '(üres)'}")
+    if a.mem and parse_size(a.mem) <= 0:
+        ap.error("--mem pozitív méret legyen (pl. 48GB)")
     if not a.hw and (a.mem or a.platform or a.uncensored != "also"):
         print("FIGYELEM: --hw nélkül nem kerül be LLM; a --mem / --platform / --uncensored hatástalan", file=sys.stderr)
     for it in items:
@@ -3415,6 +3460,8 @@ def main():
         sys.exit("--budget kötelező (vagy --list)")
 
     budget = int(parse_size(a.budget) * (1 - a.reserve))
+    if budget <= 0:
+        sys.exit("--budget pozitív méret legyen (pl. 64GB)")
     langs = set(a.langs.split(","))
     access = set(a.access.split(","))
     excl = set(x for x in a.exclude.split(",") if x)
@@ -3434,6 +3481,8 @@ def main():
             if not a.hw:
                 continue
         if it["cat"].startswith("ai_models"):
+            if it.get("moe") is False and (it.get("llm_bits") or 9) < 2.5:   # mint llm_calc.unusable_quant
+                continue
             if not a.hw or a.hw not in (it.get("hw_tiers") or []):
                 continue
             if it.get("platform", "any") not in ({"any"} | set(p for p in a.platform.split(",") if p)):
@@ -3530,7 +3579,10 @@ def main():
         nonlocal used
         def eff(v):
             b = v.get("llm_bits") or 4.5
-            q = 0.55 if b < 2 else 0.75 if b < 3 else 0.9 if b < 4 else 1.0 if b < 5 else 1.03 if b < 7 else 1.05
+            if v.get("moe") is False:   # mint llm_calc.qf(dense)
+                q = 0.15 if b < 2 else 0.6 if b < 3 else 0.85 if b < 4 else 1.0 if b < 5 else 1.03 if b < 7 else 1.05
+            else:
+                q = 0.55 if b < 2 else 0.75 if b < 3 else 0.9 if b < 4 else 1.0 if b < 5 else 1.03 if b < 7 else 1.05
             return (v.get("llm_aa") or 5) * q
         cands = sorted([v for k, g in groups.items() if is_llm(g) for v in g], key=lambda v: (-eff(v), size_of(v)))
         def take(pred):
@@ -3584,9 +3636,14 @@ def main():
             used += size_of(t)
     plan = tools + plan
 
+    try:
+        out = open(a.out, "w", encoding="utf-8")
+    except OSError as e:
+        sys.exit(f"Nem írható: {a.out} ({e})")
     json.dump({"budget_bytes": budget, "used_bytes": used, "profile": a.profile,
                "items": [{k: v[k] for k in v if not k.startswith("_")} | {"score": v["_score"]} for v in plan],
-               "manual": [v["id"] for v in manual]}, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+               "manual": [v["id"] for v in manual]}, out, ensure_ascii=False, indent=1)
+    out.close()
     if a.emit_sh:
         write_sh(plan, a.emit_sh, a.dest)
     print(f"Profil: {a.profile} | keret: {a.budget} (használható {human(budget)}) | felhasználva: {human(used)} "
@@ -3640,8 +3697,28 @@ def write_sh(plan, path, dest):
          '  local ua=${UA:-Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0}',
          '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c --content-disposition --trust-server-names -U "$ua" "$1"); fi; }',
          'ollama_pull(){ # tag célkönyvtár: külön portú ideiglenes szerver, hogy a modell a meghajtóra kerüljön',
-         '  OLLAMA_MODELS="$2" OLLAMA_HOST=127.0.0.1:11499 ollama serve >/dev/null 2>&1 & local p=$!; sleep 3',
-         '  OLLAMA_HOST=127.0.0.1:11499 ollama pull "$1"; local r=$?; kill $p 2>/dev/null; wait $p 2>/dev/null; return $r; }',
+         '  local h=127.0.0.1:11499 r',
+         '  if OLLAMA_HOST=$h ollama list >/dev/null 2>&1; then echo "FIGYELEM: a $h porton már fut egy ollama-szerver (régi futás?) – állítsd le"; return 1; fi',
+         '  OLLAMA_MODELS="$2" OLLAMA_HOST=$h ollama serve >/dev/null 2>&1 & _OP=$!',
+         "  trap 'kill $_OP 2>/dev/null' EXIT; trap 'kill $_OP 2>/dev/null; exit 130' INT TERM",
+         '  for _ in $(seq 1 60); do OLLAMA_HOST=$h ollama list >/dev/null 2>&1 && break; kill -0 $_OP 2>/dev/null || break; sleep 1; done',
+         '  kill -0 $_OP 2>/dev/null && OLLAMA_HOST=$h ollama pull "$1"; r=$?',
+         '  kill $_OP 2>/dev/null; wait $_OP 2>/dev/null; trap - EXIT INT TERM; return $r; }',
+         'git_mirror(){ # url bare-könyvtár [tag]: csak ágak+tagek; sekély (tag vagy HEAD), GIT_FULL=1: teljes történet; mindig klónozható HEAD',
+         '  local u=$1 g=$2 t=${3:-} h',
+         '  git -C "$g" remote get-url origin >/dev/null 2>&1 || { git init -q --bare "$g" && git -C "$g" remote add origin "$u"; } || return 1',
+         '  git -C "$g" config --replace-all remote.origin.fetch "+refs/heads/*:refs/heads/*" && git -C "$g" config --add remote.origin.fetch "+refs/tags/*:refs/tags/*" || return 1',
+         '  if [ -n "${GIT_FULL:-}" ]; then',
+         '    if [ -f "$g/shallow" ]; then git -C "$g" fetch -q --tags --unshallow origin; else git -C "$g" fetch -q --tags origin; fi || return 1',
+         '    h=$(git -C "$g" ls-remote --symref origin HEAD 2>/dev/null | awk \'$1=="ref:"{print $2; exit}\'); [ -n "$h" ] && git -C "$g" symbolic-ref HEAD "$h"',
+         '  else',
+         '    { [ -n "$t" ] && git -C "$g" fetch -q --depth 1 origin "refs/tags/$t:refs/tags/$t" && git -C "$g" update-ref refs/heads/snapshot "refs/tags/$t^{commit}"; } \\',
+         '      || git -C "$g" fetch -q --depth 1 origin "+HEAD:refs/heads/snapshot" || return 1',
+         '    git -C "$g" symbolic-ref HEAD refs/heads/snapshot',
+         '  fi',
+         '  if [ -n "${BUNDLE:-}" ]; then   # BUNDLE=1: +1x hely; sekély tükörből nem klónozható bundle lenne',
+         '    if [ -f "$g/shallow" ]; then echo "FIGYELEM: $g sekély – a BUNDLE-höz GIT_FULL=1 kell"; else git -C "$g" bundle create "${g%.git}.bundle" --all; fi',
+         '  fi; }',
          'hfdl(){ if have hf; then hf download "$@"; elif have huggingface-cli; then huggingface-cli download "$@"; else return 127; fi; }',
          'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból (GNU és BSD sed-del is)',
          '  local u; u=$(curl -fsSL "https://library.kiwix.org/catalog/v2/entries?name=$1&count=50" 2>/dev/null \\',
@@ -3670,8 +3747,8 @@ def write_sh(plan, path, dest):
                 L.append(f'_r=0; for _u in {" ".join(q(u) for u in us)}; do fetch "$_u" "{sub}" || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}')
         elif m == "jigdo":    # Debian BD/DVD-képek .jigdo leírókból (jigdo-file csomag), nem interaktívan
             base = d["url"].rstrip("/") + "/"
-            L.append(f'if have jigdo-lite; then _r=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
-                     f'(cd "{sub}" && jigdo-lite --noask {q(base)}"$_j") || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}; '
+            L.append(f'if have jigdo-lite; then _r=0; _n=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
+                     f'_n=$((_n+1)); (cd "{sub}" && jigdo-lite --noask {q(base)}"$_j") || _r=1; done; [ $_r = 0 ] && [ $_n -gt 0 ] && ok {vid} || fail {vid}; '
                      f'else echo {q("TODO " + v["id"] + " – jigdo-lite kell (apt install jigdo-file)")} | tee -a "$LOG" "$RUNLOG"; fi')
         elif m == "wget-mirror":
             L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {vid} || fail {vid}')
@@ -3685,11 +3762,7 @@ def write_sh(plan, path, dest):
                 n = safe(n[:-4] if n.endswith(".git") else n)
                 g, tag = f'"{sub}/{n}.git"', d.get("tag") or v.get("latest_version") or ""
                 tag = tag if re.fullmatch(r"[\w.+-]{1,60}", tag or "") else ""
-                # csak ágak+tagek (a GitHub refs/pull/* nélkül); alapból sekély (a legutóbbi kiadás / alapág), GIT_FULL=1: teljes történet
-                L.append(f'[ -d {g} ] || {{ git init -q --bare {g} && git -C {g} remote add origin {q(u)} && git -C {g} config remote.origin.fetch "+refs/heads/*:refs/heads/*" && git -C {g} config --add remote.origin.fetch "+refs/tags/*:refs/tags/*"; }}')
-                shallow = (f'git -C {g} fetch -q --depth 1 origin {q("refs/tags/" + tag + ":refs/tags/" + tag)} || ' if tag else "") + f'git -C {g} fetch -q --depth 1 origin "+HEAD:refs/heads/snapshot"'
-                L.append(f'if [ -n "${{GIT_FULL:-}}" ]; then git -C {g} fetch -q --prune --tags origin; else {shallow}; fi && ok {vid} || fail {vid}')
-                L.append(f'[ -n "${{BUNDLE:-}}" ] && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all   # BUNDLE=1: +1x hely!')
+                L.append(f'git_mirror {q(u)} {g} {q(tag)} && ok {vid} || fail {vid}')
             if d.get("release_url"):
                 L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
                 L.append(f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"')
@@ -3720,13 +3793,13 @@ def write_sh(plan, path, dest):
             L.append(f'# KÉZI ({m}): {c(d.get("note"))} {c(d.get("url"))}')
             L.append(f'echo "TODO {v["id"]} ({m})" | tee -a "$LOG" "$RUNLOG"')
         L.append("")
-    L.append('echo "Kész. Napló: $RUNLOG"; echo "FAIL ebben a futásban: $(grep -c "^FAIL" "$RUNLOG")"')
+    L.append('echo "Kész. Napló: $RUNLOG"; echo "FAIL ebben a futásban: $(grep -c "^FAIL" "$RUNLOG") | kézi/AI-teendő (TODO): $(grep -c "^TODO" "$RUNLOG")"')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    run_cli(main)
 ```
 
 
@@ -3764,7 +3837,7 @@ Használat:
   python3 llm_calc.py ARCHIVUM-kompakt.md --name "3 db Strix" --unified 192 --unified-usable 0.83 --unified-bw 273 --nodes 3 --hop-ms 3
   --min-tps 5 (alap): ennél lassabb modellt nem tekint "elfutónak". --md: Markdown-tábla kimenet.
 """
-import argparse, json, math, re, sys
+import argparse, json, math, os, re, sys
 
 EFF = 0.6
 OPUS = 59.1  # Claude Opus 5.5 (max), AA Intelligence Index v5.0.1 – a "% Opus" viszonyítási pontja
@@ -4048,13 +4121,13 @@ def team(dev, vs, mixed):
         pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
         pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
     else:
-        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or pool
+        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]]      # a "gyors segéd" tényleg gyorsabb legyen
         pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
     if not pool:
         return None
     v2, r2 = pool[0]
     why = (" – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van" if r1[2] + r2[2] > cap
-           else " – együtt nem érnék el a minimális sebességet, ezért felváltva futnak")
+           else " – együtt is elférnének, de nincs a csapatfeltételeknek (gyors, kicsi segéd / partner) megfelelő pár, ezért felváltva futnak")
     return [(v1, r1, "fő modell (váltva)"), (v2, r2, ("partner, váltva" if mixed else "gyors segéd, váltva") + why)]
 
 
@@ -4105,7 +4178,7 @@ def report(dev, res, md=False):
         out.append("")
     else:
         cap = dev.capacity()
-        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{hu(cap, 1 if cap < 20 else 0)} GB)\n    {dev.note}")
+        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{hu(cap, 1 if cap < 20 else 0)} GB)" + (f"\n    {dev.note}" if dev.note else ""))
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
             out.append(f"  {title[k]}:")
@@ -4116,8 +4189,38 @@ def report(dev, res, md=False):
     return "\n".join(out)
 
 
+class HuFormatter(argparse.RawDescriptionHelpFormatter):
+    def add_usage(self, usage, actions, groups, prefix=None):
+        return super().add_usage(usage, actions, groups, "Használat: ")
+
+
+class HuParser(argparse.ArgumentParser):
+    """argparse magyar keretszövegekkel (súgó és hibaüzenetek)."""
+    TR = (("the following arguments are required", "hiányzó kötelező argumentum"), ("expected one argument", "egy értéket vár"),
+          ("invalid choice", "érvénytelen választás"), ("choose from", "választható"), ("unrecognized arguments", "ismeretlen argumentum"),
+          ("invalid float value", "érvénytelen szám"), ("invalid int value", "érvénytelen egész szám"), ("argument ", "argumentum: "))
+
+    def __init__(self, **k):
+        super().__init__(add_help=False, formatter_class=HuFormatter, **k)
+        self._positionals.title, self._optionals.title = "kötelező argumentum", "kapcsolók"
+        self.add_argument("-h", "--help", action="help", help="ez a súgó")
+
+    def error(self, message):
+        for a, b in self.TR:
+            message = message.replace(a, b)
+        self.print_usage(sys.stderr)
+        self.exit(2, f"{self.prog}: hiba: {message}\n")
+
+
+def run_cli(main):
+    try:
+        main()
+    except BrokenPipeError:            # pl. --list | head
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); sys.exit(1)
+
+
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = HuParser(description=__doc__)
     ap.add_argument("catalog", help="ARCHIVUM-kompakt.md vagy .jsonl katalógus")
     ap.add_argument("--preset", help="profil neve vagy 'all' (" + ", ".join(PRESETS) + ")")
     ap.add_argument("--name", default="Saját eszköz", help="az eszköz neve a jelentésben")
@@ -4135,15 +4238,20 @@ def main():
     ap.add_argument("--vram-bw-mult", type=float, default=1.0, help="memória-túlhajtás szorzója (pl. 1.06)")
     ap.add_argument("--md", action="store_true", help="Markdown-táblás kimenet")
     a = ap.parse_args()
-    vs = load(a.catalog)
+    try:
+        vs = load(a.catalog)
+    except (OSError, UnicodeDecodeError, ValueError) as e:
+        sys.exit(f"Nem olvasható katalógus: {a.catalog} ({e})")
     devs = []
     if a.preset:
         keys = list(PRESETS) if a.preset == "all" else a.preset.split(",")
         unknown = [k for k in keys if k not in PRESETS]
         if unknown:
             ap.error(f"ismeretlen profil: {', '.join(unknown)} – választható: {', '.join(PRESETS)}")
-        if a.vram or a.ram or a.unified or a.gpu:
-            ap.error("--preset mellett nem adható meg --vram/--ram/--unified/--gpu (a profil adatai érvényesek); saját géphez hagyd el a --preset-et")
+        own = [f"--{k.replace('_', '-')}" for k in ("vram", "vram_bw", "gpu", "ram", "ram_usable", "ram_bw", "unified", "unified_usable", "unified_bw",
+               "nodes", "hop_ms", "formats", "min_tps", "fix_ms", "tensor_parallel", "tp_eff", "vram_bw_mult", "name") if getattr(a, k) != ap.get_default(k)]
+        if own:
+            ap.error(f"--preset mellett nem adható meg: {', '.join(own)} (a profil adatai érvényesek); saját géphez hagyd el a --preset-et")
         devs = [Device(**PRESETS[k]) for k in keys]
     else:
         try:
@@ -4164,7 +4272,11 @@ def main():
             ap.error("--unified mellé --unified-bw (GB/s) is kell")
         if not (gpus or a.vram or a.ram or a.unified):
             ap.error("adj meg legalább egy memóriát: --gpu / --vram, --ram vagy --unified (vagy használj --preset-et)")
-        if a.min_tps <= 0 or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
+        if a.vram_bw and not a.vram:
+            ap.error("--vram-bw csak --vram mellett értelmes (több kártyánál --gpu GB:GB/s)")
+        if a.tensor_parallel and len(gpus or []) < 2:
+            ap.error("--tensor-parallel legalább két --gpu kártyával értelmes")
+        if not (math.isfinite(a.min_tps) and 0 < a.min_tps <= 1000) or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
             ap.error("--min-tps > 0, --tp-eff 0,3–1,0, --nodes >= 1 kell")
         nums = [a.vram, a.vram_bw, a.ram, a.ram_bw, a.unified, a.unified_bw] + [x for g in (gpus or []) for x in g]
         if any(x is not None and not (math.isfinite(x) and x >= 0) for x in nums):
@@ -4183,5 +4295,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_cli(main)
 ```

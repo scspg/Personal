@@ -25,7 +25,7 @@ Használat:
   python3 llm_calc.py ARCHIVUM.md --name "3 db Strix" --unified 192 --unified-usable 0.83 --unified-bw 273 --nodes 3 --hop-ms 3
   --min-tps 5 (alap): ennél lassabb modellt nem tekint "elfutónak". --md: Markdown-tábla kimenet.
 """
-import argparse, json, math, re, sys
+import argparse, json, math, os, re, sys
 
 EFF = 0.6
 OPUS = 59.1  # Claude Opus 5.5 (max), AA Intelligence Index v5.0.1 – a "% Opus" viszonyítási pontja
@@ -309,13 +309,13 @@ def team(dev, vs, mixed):
         pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
         pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
     else:
-        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or pool
+        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]]      # a "gyors segéd" tényleg gyorsabb legyen
         pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
     if not pool:
         return None
     v2, r2 = pool[0]
     why = (" – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van" if r1[2] + r2[2] > cap
-           else " – együtt nem érnék el a minimális sebességet, ezért felváltva futnak")
+           else " – együtt is elférnének, de nincs a csapatfeltételeknek (gyors, kicsi segéd / partner) megfelelő pár, ezért felváltva futnak")
     return [(v1, r1, "fő modell (váltva)"), (v2, r2, ("partner, váltva" if mixed else "gyors segéd, váltva") + why)]
 
 
@@ -366,7 +366,7 @@ def report(dev, res, md=False):
         out.append("")
     else:
         cap = dev.capacity()
-        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{hu(cap, 1 if cap < 20 else 0)} GB)\n    {dev.note}")
+        out.append(f"\n=== {dev.name}  (modellnek jutó memória ~{hu(cap, 1 if cap < 20 else 0)} GB)" + (f"\n    {dev.note}" if dev.note else ""))
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
             out.append(f"  {title[k]}:")
@@ -377,8 +377,38 @@ def report(dev, res, md=False):
     return "\n".join(out)
 
 
+class HuFormatter(argparse.RawDescriptionHelpFormatter):
+    def add_usage(self, usage, actions, groups, prefix=None):
+        return super().add_usage(usage, actions, groups, "Használat: ")
+
+
+class HuParser(argparse.ArgumentParser):
+    """argparse magyar keretszövegekkel (súgó és hibaüzenetek)."""
+    TR = (("the following arguments are required", "hiányzó kötelező argumentum"), ("expected one argument", "egy értéket vár"),
+          ("invalid choice", "érvénytelen választás"), ("choose from", "választható"), ("unrecognized arguments", "ismeretlen argumentum"),
+          ("invalid float value", "érvénytelen szám"), ("invalid int value", "érvénytelen egész szám"), ("argument ", "argumentum: "))
+
+    def __init__(self, **k):
+        super().__init__(add_help=False, formatter_class=HuFormatter, **k)
+        self._positionals.title, self._optionals.title = "kötelező argumentum", "kapcsolók"
+        self.add_argument("-h", "--help", action="help", help="ez a súgó")
+
+    def error(self, message):
+        for a, b in self.TR:
+            message = message.replace(a, b)
+        self.print_usage(sys.stderr)
+        self.exit(2, f"{self.prog}: hiba: {message}\n")
+
+
+def run_cli(main):
+    try:
+        main()
+    except BrokenPipeError:            # pl. --list | head
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); sys.exit(1)
+
+
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = HuParser(description=__doc__)
     ap.add_argument("catalog", help="ARCHIVUM.md vagy .jsonl katalógus")
     ap.add_argument("--preset", help="profil neve vagy 'all' (" + ", ".join(PRESETS) + ")")
     ap.add_argument("--name", default="Saját eszköz", help="az eszköz neve a jelentésben")
@@ -396,15 +426,20 @@ def main():
     ap.add_argument("--vram-bw-mult", type=float, default=1.0, help="memória-túlhajtás szorzója (pl. 1.06)")
     ap.add_argument("--md", action="store_true", help="Markdown-táblás kimenet")
     a = ap.parse_args()
-    vs = load(a.catalog)
+    try:
+        vs = load(a.catalog)
+    except (OSError, UnicodeDecodeError, ValueError) as e:
+        sys.exit(f"Nem olvasható katalógus: {a.catalog} ({e})")
     devs = []
     if a.preset:
         keys = list(PRESETS) if a.preset == "all" else a.preset.split(",")
         unknown = [k for k in keys if k not in PRESETS]
         if unknown:
             ap.error(f"ismeretlen profil: {', '.join(unknown)} – választható: {', '.join(PRESETS)}")
-        if a.vram or a.ram or a.unified or a.gpu:
-            ap.error("--preset mellett nem adható meg --vram/--ram/--unified/--gpu (a profil adatai érvényesek); saját géphez hagyd el a --preset-et")
+        own = [f"--{k.replace('_', '-')}" for k in ("vram", "vram_bw", "gpu", "ram", "ram_usable", "ram_bw", "unified", "unified_usable", "unified_bw",
+               "nodes", "hop_ms", "formats", "min_tps", "fix_ms", "tensor_parallel", "tp_eff", "vram_bw_mult", "name") if getattr(a, k) != ap.get_default(k)]
+        if own:
+            ap.error(f"--preset mellett nem adható meg: {', '.join(own)} (a profil adatai érvényesek); saját géphez hagyd el a --preset-et")
         devs = [Device(**PRESETS[k]) for k in keys]
     else:
         try:
@@ -425,7 +460,11 @@ def main():
             ap.error("--unified mellé --unified-bw (GB/s) is kell")
         if not (gpus or a.vram or a.ram or a.unified):
             ap.error("adj meg legalább egy memóriát: --gpu / --vram, --ram vagy --unified (vagy használj --preset-et)")
-        if a.min_tps <= 0 or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
+        if a.vram_bw and not a.vram:
+            ap.error("--vram-bw csak --vram mellett értelmes (több kártyánál --gpu GB:GB/s)")
+        if a.tensor_parallel and len(gpus or []) < 2:
+            ap.error("--tensor-parallel legalább két --gpu kártyával értelmes")
+        if not (math.isfinite(a.min_tps) and 0 < a.min_tps <= 1000) or not (0.3 <= a.tp_eff <= 1.0) or a.nodes < 1:
             ap.error("--min-tps > 0, --tp-eff 0,3–1,0, --nodes >= 1 kell")
         nums = [a.vram, a.vram_bw, a.ram, a.ram_bw, a.unified, a.unified_bw] + [x for g in (gpus or []) for x in g]
         if any(x is not None and not (math.isfinite(x) and x >= 0) for x in nums):
@@ -444,4 +483,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_cli(main)

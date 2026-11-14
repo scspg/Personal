@@ -10,7 +10,7 @@ from llm_parse import load_blocks
 from llm_to_items import slug, unc_estimate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-from build import cut, hf_cmd
+from build import cut, hf_cmd, build_date
 OPUS, FABLE = 59.1, 64.6
 
 
@@ -290,9 +290,9 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   const singles=c.filter(([v])=>mixed||!v.u); if(!singles.length) return null; const [v1,r1]=singles[0];
   let pool=singles.filter(([v])=>v.g!==v1.g&&v.bits>=3.5);
   if(mixed){pool=pool.filter(([v])=>v.u!==v1.u); pool.sort((a,b)=>usable(b[0],b[1][0],dev.min_tps)-usable(a[0],a[1][0],dev.min_tps));}
-  else{const fast=pool.filter(([,r])=>r[0]>=1.5*r1[0]); pool=fast.length?fast:pool; pool.sort((a,b)=>b[1][0]-a[1][0]||smart(b[0])-smart(a[0]));}
+  else{pool=pool.filter(([,r])=>r[0]>=1.5*r1[0]); pool.sort((a,b)=>b[1][0]-a[1][0]||smart(b[0])-smart(a[0]));}
   if(!pool.length) return null; const [v2,r2]=pool[0];
-  const why=r1[2]+r2[2]>cap?' – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van':' – együtt nem érnék el a minimális sebességet, ezért felváltva futnak';
+  const why=r1[2]+r2[2]>cap?' – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van':' – együtt is elférnének, de nincs a csapatfeltételeknek (gyors, kicsi segéd / partner) megfelelő pár, ezért felváltva futnak';
   return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva'+why]];}
 function evaluate(dev){return {V1:bestSingle(dev,true),V2:bestSingle(dev,false),V3:team(dev,false),V4:team(dev,true)};}
 const TITLES={V1:['V1','Legokosabb cenzúrázatlan',1],V2:['V2','Legokosabb alap (cenzúrázott)',0],V3:['V3','Csapat – alap modellek',0],V4:['V4','Vegyes csapat – alap + cenzúrázatlan',1]};
@@ -677,7 +677,7 @@ def main():
           .replace("__STOR__", json.dumps(storage_data(), ensure_ascii=False, separators=(",", ":")))
           .replace("__SOFT__", json.dumps(software(), ensure_ascii=False, separators=(",", ":")))
           .replace("__START__", "gamer-pc-128" if "gamer-pc-128" in presets else next(iter(presets))))
-    date = datetime.date.today().isoformat()
+    date = build_date()
     frag = BODY.replace("__SSD__", ssd_html()).replace("__STORAGE__", storage_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
     open(os.path.join(HERE, "..", "ARCHIVUM-LLM.fragment.html"), "w", encoding="utf-8").write(frag)
     full = ('<!doctype html>\n<html lang="hu">\n<head>\n<meta charset="utf-8">\n'

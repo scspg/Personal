@@ -59,7 +59,13 @@ def hf_cmd(d):
     inc = d.get("include") or []
     if inc and all(not any(ch in p for ch in "*?[") for p in inc):
         return f"hf download {d['repo']}" + (" --repo-type dataset" if d.get("repo_type") == "dataset" else "") + " " + " ".join(f'"{p}"' for p in inc)
-    return f"hf download {d['repo']}" + "".join(f' --include "{p}"' for p in inc)
+    return f"hf download {d['repo']}" + (" --repo-type dataset" if d.get("repo_type") == "dataset" else "") + "".join(f' --include "{p}"' for p in inc)
+
+
+def build_date():
+    """SOURCE_DATE_EPOCH (reprodukálható build) vagy a mai nap."""
+    e = os.environ.get("SOURCE_DATE_EPOCH")
+    return (datetime.datetime.fromtimestamp(int(e), datetime.timezone.utc).date() if e else datetime.date.today()).isoformat()
 
 
 def cut(s, n):
@@ -368,7 +374,7 @@ def main():
     jsonl = "\n".join(json.dumps(compact(i), ensure_ascii=False, separators=(",", ":")) for i in
                       sorted(items, key=lambda x: (x["tier"], x["cat"], x["id"])))
     n_measured = sum(1 for i in items if (i.get("size_status") or "").startswith("measured"))
-    head = sec["01_head.md"].replace("{{BUILD_DATE}}", datetime.date.today().isoformat()).replace("{{N_ITEMS}}", f"{len(items)} ({n_measured} mért méretű)")
+    head = sec["01_head.md"].replace("{{BUILD_DATE}}", build_date()).replace("{{N_ITEMS}}", f"{len(items)} ({n_measured} mért méretű)")
     plans = ssd_plans(cat_path, tmp)
     json.dump([[b, [{k: i.get(k) for k in ("id", "name", "cat", "tier", "bytes", "bytes_est", "score", "desc_hu")} for i in p["items"]], p["used_bytes"]] for b, p in plans],
               open(os.path.join(HERE, "ssd_plans.json"), "w", encoding="utf-8"), ensure_ascii=False)
@@ -421,7 +427,7 @@ def main():
     def grab(text, start, end):
         m = _re.search(start + r".*?(?=" + end + r")", text, _re.S)
         return m.group(0).strip() if m else ""
-    chat = ["# ARCHIVUM – chat-összefoglaló (" + datetime.date.today().isoformat() + ")", "",
+    chat = ["# ARCHIVUM – chat-összefoglaló (" + build_date() + ")", "",
             f"> Ez a rövid változat chatbe tölthető. A teljes katalógus ({len(items)} tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben,"
             " az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.", "",
             "## 0. Hogyan használd ezt a fájlt\n\n"
