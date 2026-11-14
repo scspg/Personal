@@ -73,12 +73,32 @@ UNC_BASE = [("deepseek-v4-1", 32.6), ("glm-5-3-flash", 27.8), ("glm-5-3", 31.7),
  ("qwen3-5-9b", 3.0), ("qwen3-5-4b", 2.0), ("gemma-4-e4b", 2.5), ("gemma-4-e2b", 1.5)]
 
 
+# cenzúrázatlan változat / alapmodell intelligencia-arány. "M" = mért (UGI NatInt, uncensored/base), "B" = becslés (módszer + méret alapján)
+UNC_RATIO = [("deepseek-v4-1", 0.97, "B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE"), ("glm-5-3-flash", 0.95, "B: abliteration, nagy MoE"),
+ ("glm-5-3", 0.95, "B: abliteration (patch), nagy MoE"), ("qwen3-8-flash-next", 0.95, "B: abliteration v2, nagy MoE"),
+ ("kimi-k3", 0.93, "B: közösségi abliteration, minőség nem ellenőrzött"), ("minimax-m3-1", 0.93, "B: közösségi abliteration, nem ellenőrzött"),
+ ("gpt-oss-120b", 0.958, "M: NatInt 33,68→32,25"), ("mistral-small-4", 0.95, "B: heretic, MoE"),
+ ("qwen3-8-27b", 0.93, "B: abliteration, közepes dense"), ("arete-27b", 1.0, "B: SFT, csak propaganda-szűrés"),
+ ("gemma-4-31b", 0.939, "M: NatInt 38,91→36,53"), ("gemma-4-26b", 1.0, "M: NatInt 34,44→35,71 (nincs veszteség)"),
+ ("qwen3-6-35b", 1.0, "M: NatInt 31,03→31,62 (nincs veszteség)"), ("gpt-oss-20b", 0.829, "M: NatInt 27,18→22,52"),
+ ("gemma-4-12b", 0.93, "B: heretic, kis dense"), ("qwen3-5-9b", 0.781, "M: NatInt 30,98→24,2"),
+ ("qwen3-5-4b", 0.936, "M: NatInt 23,88→22,35 (SOMPOA-változat)"), ("gemma-4-e4b", 1.0, "M: NatInt 18,21→18,73 (nincs veszteség)"),
+ ("gemma-4-e2b", 0.93, "B: heretic, nagyon kis modell")]
+UNC_BASE_EST = {"mistral-small-4", "arete-27b", "qwen3-6-35b", "gemma-4-26b", "gemma-4-12b", "qwen3-5-9b", "qwen3-5-4b", "gemma-4-e4b", "gemma-4-e2b", "gpt-oss-20b"}
+
+
+def unc_estimate(mid):
+    """(becsült AA, alap AA, arány, magyarázat, becslés-e) egy cenzúrázatlan modellcsoportra."""
+    base = next((v for k, v in UNC_BASE if k in mid), 5.0)
+    r, why = next(((r, w) for k, r, w in UNC_RATIO if k in mid), (0.93, "B: alapértelmezett"))
+    est = why.startswith("B") or any(k in mid for k in UNC_BASE_EST)
+    return round(base * r, 1), base, r, why, est
+
+
 def aa_for(mid, name, quant, b, kind):
     if kind == "uncensored":
-        for k, v in UNC_BASE:
-            if k in mid:
-                return round(v * 0.95, 2), True
-        return 5.0, True
+        aa, _, _, _, est = unc_estimate(mid)
+        return aa, est
     if mid == "gemma-4":
         for tok, v in (("E2B", 1.5), ("E4B", 2.5), ("12B", 3.0), ("26B", 3.5), ("31B", 4.4)):
             if tok.lower() in quant.lower():

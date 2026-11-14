@@ -34,6 +34,60 @@
 
 **Viszonyítási pont – Claude Opus 5.5 (max): 59,1 pont = 100%** (AA Intelligence Index v5.0.1, 2026-11-12). Az index csúcsa ugyanekkor a Claude Fable 5.2 (64,6 = 109%).
 
+| # | Modell | Típus | AA v5 | % Opus 5.5 | Forrás / számítás |
+|---|---|---|---|---|---|
+| – | *Claude Fable 5.2 (zárt, viszonyítás)* | zárt | 64.6 | 109% | mért |
+| – | *Claude Opus 5.5 (zárt, viszonyítás)* | zárt | 59.1 | 100% | mért |
+| 1 | Kimi K3.1 Pro | alap | 46.5 | 79% | mért AA v5 |
+| 2 | Hy4 preview (Hunyuan) | alap | ~34.6 | ~59% | becslés |
+| 3 | Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja) | alap | ~33.7 | ~57% | becslés |
+| 4 | DeepSeek-V4.1-Flash-1017 | alap | 32.6 | 55% | mért AA v5 |
+| 5 | GLM-5.3 | alap | 31.7 | 54% | mért AA v5 |
+| 6 | DeepSeek-V4.1-Flash-1017 abliterated (cenz.-mentes) | **cenzúrázatlan** | ~31.6 | ~53% | alap 32.6 × 0.97 – B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE |
+| 7 | Inkling 2 Small | alap | 30.6 | 52% | mért AA v5 |
+| 8 | GLM-5.3 abliterated (cenz.-mentes) | **cenzúrázatlan** | ~30.1 | ~51% | alap 31.7 × 0.95 – B: abliteration (patch), nagy MoE |
+| 9 | LongCat-2.5 (csak megjegyzésként) | alap | ~30.0 | ~51% | becslés |
+| 10 | MiMo-V2.6-Pro | alap | 29.9 | 51% | mért AA v5 |
+| 11 | Ling-3.1-flash-1019 | alap | 29.6 | 50% | mért AA v5 |
+| 12 | MiniMax-M3.1-Flash | alap | 29.1 | 49% | mért AA v5 |
+| 13 | Qwen3.8-Flash-Next | alap | 28.6 | 48% | mért AA v5 |
+| 14 | Step 5 Preview | alap | 28.5 | 48% | mért AA v5 |
+| 15 | GLM-5.3-Flash | alap | 27.8 | 47% | mért AA v5 |
+| 16 | Qwen3.8-Flash-Next abliterated v2 (cenz.-mentes) | **cenzúrázatlan** | ~27.2 | ~46% | alap 28.6 × 0.95 – B: abliteration v2, nagy MoE |
+| 17 | MiniMax-M3.1-Flash abliterated (cenz.-mentes) | **cenzúrázatlan** | ~27.1 | ~46% | alap 29.1 × 0.93 – B: közösségi abliteration, nem ellenőrzött |
+| 18 | MiMo-V2.6-Flash | alap | 26.7 | 45% | mért AA v5 |
+| 19 | GLM-5.3-Flash abliterated (cenz.-mentes) | **cenzúrázatlan** | ~26.4 | ~45% | alap 27.8 × 0.95 – B: abliteration, nagy MoE |
+| 20 | Mistral Large 4 (1T-A52B) | alap | 25.3 | 43% | mért AA v5 |
+| 21 | Muse Spark Open (816B-A42B) | alap | 24.9 | 42% | mért AA v5 |
+| 22 | Qwen3.8-27B (dense) | alap | 20.1 | 34% | mért AA v5 |
+| 23 | NousResearch Arete-27B (cenz.-mentes) | **cenzúrázatlan** | ~19.0 | ~32% | alap 19.0 × 1 – B: SFT, csak propaganda-szűrés |
+| 24 | Qwen3.8-27B abliterated (cenz.-mentes) | **cenzúrázatlan** | ~18.7 | ~32% | alap 20.1 × 0.93 – B: abliteration, közepes dense |
+| 25 | Kimi-K3 Abliterated V1 (cenz.-mentes) | **cenzúrázatlan** | ~16.2 | ~27% | alap 17.4 × 0.93 – B: közösségi abliteration, minőség nem ellenőrzött |
+| 26 | Nemotron-3.5-Super-VL-120B | alap | 13.6 | 23% | mért AA v5 |
+| 27 | Qwen3.6-35B-A3B uncensored-heretic (cenz.-mentes) | **cenzúrázatlan** | ~8.0 | ~14% | alap 8.0 × 1 – M: NatInt 31,03→31,62 (nincs veszteség) |
+| 28 | Mistral-Small-4-119B-2603 heretic (cenz.-mentes) | **cenzúrázatlan** | ~7.6 | ~13% | alap 8.0 × 0.95 – B: heretic, MoE |
+| 29 | Muse Glimmer 30B | alap | 6.3 | 11% | mért AA v5 |
+| 30 | Nemotron-3.5-Lightning-30B | alap | 5.5 | 9% | mért AA v5 |
+| 31 | Gemma-4-31B | alap | 4.4 | 7% | mért AA v5 |
+| 32 | gemma-4-31B-it heretic (cenz.-mentes) | **cenzúrázatlan** | 4.1 | 7% | alap 4.4 × 0.939 – M: NatInt 38,91→36,53 |
+| 33 | gpt-oss-120b heretic (cenz.-mentes) | **cenzúrázatlan** | 3.6 | 6% | alap 3.8 × 0.958 – M: NatInt 33,68→32,25 |
+| 34 | Gemma-4-26B-A4B | alap | ~3.5 | ~6% | becslés (nincs AA-pont) |
+| 35 | gemma-4-26B-A4B-it ultra-uncensored-heretic (cenz.-mentes) | **cenzúrázatlan** | ~3.5 | ~6% | alap 3.5 × 1 – M: NatInt 34,44→35,71 (nincs veszteség) |
+| 36 | Gemma-4-12B | alap | ~3.0 | ~5% | becslés (nincs AA-pont) |
+| 37 | Qwen3.5-9B | alap | ~3.0 | ~5% | becslés (nincs AA-pont) |
+| 38 | gemma-4-12B-it uncensored-heretic (cenz.-mentes) | **cenzúrázatlan** | ~2.8 | ~5% | alap 3.0 × 0.93 – B: heretic, kis dense |
+| 39 | Gemma-4-E4B | alap | ~2.5 | ~4% | becslés (nincs AA-pont) |
+| 40 | Nemotron-3.5-Bolt-E4B | alap | ~2.5 | ~4% | becslés (nincs AA-pont) |
+| 41 | gemma-4-E4B-it heretic (cenz.-mentes) | **cenzúrázatlan** | ~2.5 | ~4% | alap 2.5 × 1 – M: NatInt 18,21→18,73 (nincs veszteség) |
+| 42 | Qwen3.5-9B heretic-v2 (cenz.-mentes) | **cenzúrázatlan** | ~2.3 | ~4% | alap 3.0 × 0.781 – M: NatInt 30,98→24,2 |
+| 43 | gpt-oss-20b heretic (cenz.-mentes) | **cenzúrázatlan** | ~2.1 | ~4% | alap 2.5 × 0.829 – M: NatInt 27,18→22,52 |
+| 44 | Qwen3.5-4B | alap | ~2.0 | ~3% | becslés (nincs AA-pont) |
+| 45 | Qwen3.5-4B heretic-2.0 (cenz.-mentes) | **cenzúrázatlan** | ~1.9 | ~3% | alap 2.0 × 0.936 – M: NatInt 23,88→22,35 (SOMPOA-változat) |
+| 46 | Gemma-4-E2B | alap | ~1.5 | ~3% | becslés (nincs AA-pont) |
+| 47 | gemma-4-E2B-it ultra-uncensored-heretic (cenz.-mentes) | **cenzúrázatlan** | ~1.4 | ~2% | alap 1.5 × 0.93 – B: heretic, nagyon kis modell |
+
+Az alapmodellek pontjai (csak alap, mért):
+
 | Nyílt modell | AA v5.0.1 | % Opus 5.5 |
 |---|---|---|
 | Kimi K3.1 Pro | 46.5 | 79% |
@@ -110,25 +164,25 @@ Az AA-index a modell legjobb változatára vonatkozik. A HW oszlop azt mutatja, 
 | Muse Glimmer 30B | alap | 2026-08-09 | 6.3 | 11% | Apache-2.0 | 6.5 GB – 57.1 GB | 33 | any, mac, server | T4–T1 | `llm-muse-glimmer-30b` |
 | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) | alap | E2B/E4B 20 | ~4.4 | ~7% | Apache-2.0 | 2.3 GB – 62.6 GB | 100 | android, any, mac, server | T5–T1 | `llm-gemma-4` |
 | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) | alap | 2026-02-27 | ~3.0 | ~5% | Apache-2.0 (Qwen3.5); MI | 1.8 GB – 10.4 GB | 22 | any | T5–T1 | `llm-qwen3-5-small` |
-| DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) | cenz.-mentes | 2026-10-17 | ~30.97 | ~52% | MIT | 233.0 GB – 510.3 GB | 5 | any, mac, server | T2–T1 | `llm-deepseek-v4-1-flash-1017-abliterated-hui` |
-| GLM-5.3 abliterated (huihui GGUF) | cenz.-mentes | 2026-08-25 | ~30.11 | ~51% | other (glm-5.3) | 216.7 GB – 216.7 GB | 1 | any | T2–T1 | `llm-glm-5-3-abliterated-huihui-gguf` |
-| MiniMax-M3.1-Flash abliterated (orcarouter GGUF) | cenz.-mentes | 2026-10-17 | ~27.64 | ~47% | other (minimax-community | 111.9 GB – 111.9 GB | 1 | any | T3–T1 | `llm-minimax-m3-1-flash-abliterated-orcaroute` |
-| Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) | cenz.-mentes | 2026-08-24 | ~27.17 | ~46% | other (qwen-community-1. | 68.2 GB – 188.2 GB | 9 | any, mac | T3–T1 | `llm-qwen3-8-flash-next-abliterated-v2-huihui` |
-| GLM-5.3-Flash abliterated (huihui GGUF) | cenz.-mentes | 2026-08-25 | ~26.41 | ~45% | MIT | 93.1 GB – 291.8 GB | 10 | any, mac | T3–T1 | `llm-glm-5-3-flash-abliterated-huihui-gguf` |
-| Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) | cenz.-mentes | 2026-08-05 | ~19.09 | ~32% | Apache-2.0 | 10.9 GB – 29.1 GB | 6 | any, mac | T4–T1 | `llm-qwen3-8-27b-abliterated-huihui-heretic-a` |
-| NousResearch Arete-27B (a "R1-1776 utód") | cenz.-mentes | 2026-08-05 | ~18.05 | ~31% | Apache-2.0 | 15.2 GB – 17.2 GB | 2 | any | T4–T1 | `llm-nousresearch-arete-27b-a-r1-1776-ut-d` |
-| Kimi-K3 Abliterated V1 (Uniboshi) | cenz.-mentes | 2026-06-13 | ~16.53 | ~28% | other (kimi-k3) | 1.51 TB – 1.51 TB | 1 | any | T1–T1 | `llm-kimi-k3-abliterated-v1-uniboshi` |
+| DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) | cenz.-mentes | 2026-10-17 | ~31.6 | ~53% | MIT | 233.0 GB – 510.3 GB | 5 | any, mac, server | T2–T1 | `llm-deepseek-v4-1-flash-1017-abliterated-hui` |
+| GLM-5.3 abliterated (huihui GGUF) | cenz.-mentes | 2026-08-25 | ~30.1 | ~51% | other (glm-5.3) | 216.7 GB – 216.7 GB | 1 | any | T2–T1 | `llm-glm-5-3-abliterated-huihui-gguf` |
+| Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) | cenz.-mentes | 2026-08-24 | ~27.2 | ~46% | other (qwen-community-1. | 68.2 GB – 188.2 GB | 9 | any, mac | T3–T1 | `llm-qwen3-8-flash-next-abliterated-v2-huihui` |
+| MiniMax-M3.1-Flash abliterated (orcarouter GGUF) | cenz.-mentes | 2026-10-17 | ~27.1 | ~46% | other (minimax-community | 111.9 GB – 111.9 GB | 1 | any | T3–T1 | `llm-minimax-m3-1-flash-abliterated-orcaroute` |
+| GLM-5.3-Flash abliterated (huihui GGUF) | cenz.-mentes | 2026-08-25 | ~26.4 | ~45% | MIT | 93.1 GB – 291.8 GB | 10 | any, mac | T3–T1 | `llm-glm-5-3-flash-abliterated-huihui-gguf` |
+| NousResearch Arete-27B (a "R1-1776 utód") | cenz.-mentes | 2026-08-05 | ~19.0 | ~32% | Apache-2.0 | 15.2 GB – 17.2 GB | 2 | any | T4–T1 | `llm-nousresearch-arete-27b-a-r1-1776-ut-d` |
+| Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) | cenz.-mentes | 2026-08-05 | ~18.7 | ~32% | Apache-2.0 | 10.9 GB – 29.1 GB | 6 | any, mac | T4–T1 | `llm-qwen3-8-27b-abliterated-huihui-heretic-a` |
+| Kimi-K3 Abliterated V1 (Uniboshi) | cenz.-mentes | 2026-06-13 | ~16.2 | ~27% | other (kimi-k3) | 1.51 TB – 1.51 TB | 1 | any | T1–T1 | `llm-kimi-k3-abliterated-v1-uniboshi` |
+| Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) | cenz.-mentes | 2026-04-15 | ~8.0 | ~14% | Apache-2.0 | 16.9 GB – 21.2 GB | 2 | any | T4–T1 | `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa` |
 | Mistral-Small-4-119B-2603 heretic (darkc0de, GGUF: Rioky) | cenz.-mentes | 2026-01-23 | ~7.6 | ~13% | Apache-2.0 (bázis); a he | 43.4 GB – 126.5 GB | 6 | any | T3–T1 | `llm-mistral-small-4-119b-2603-heretic-darkc0` |
-| Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) | cenz.-mentes | 2026-04-15 | ~7.6 | ~13% | Apache-2.0 | 16.9 GB – 21.2 GB | 2 | any | T4–T1 | `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa` |
-| gemma-4-31B-it heretic (coder3101) / uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-11 | ~4.18 | ~7% | Apache-2.0, NEM gated | 16.9 GB – 25.2 GB | 4 | any, mac | T4–T1 | `llm-gemma-4-31b-it-heretic-coder3101-uncenso` |
-| gpt-oss-120b heretic (MuXodious tainted-heresy / kldzj heretic) | cenz.-mentes | 2025-08-04 | ~3.61 | ~6% | Apache-2.0 | 62.2 GB – 63.4 GB | 3 | any, mac | T4–T1 | `llm-gpt-oss-120b-heretic-muxodious-tainted-h` |
-| gemma-4-26B-A4B-it ultra-uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-11 | ~3.32 | ~6% | Apache-2.0 | 13.3 GB – 16.8 GB | 2 | any | T4–T1 | `llm-gemma-4-26b-a4b-it-ultra-uncensored-here` |
-| gemma-4-12B-it uncensored-heretic (llmfan46) / abliterated QAT (huihui) | cenz.-mentes | 2026-05-23 | ~2.85 | ~5% | Apache-2.0 | 8.5 GB – 8.5 GB | 1 | any | T4–T1 | `llm-gemma-4-12b-it-uncensored-heretic-llmfan` |
-| Qwen3.5-9B heretic-v2 (trohrbaugh) | cenz.-mentes | 2026-02-27 | ~2.85 | ~5% | Apache-2.0 | 5.6 GB – 9.5 GB | 2 | any | T5–T1 | `llm-qwen3-5-9b-heretic-v2-trohrbaugh` |
-| gpt-oss-20b heretic (MuXodious RichardErkhov-heresy / p-e-w heretic) | cenz.-mentes | 2025-08-04 | ~2.38 | ~4% | Apache-2.0 | 12.7 GB – 12.7 GB | 1 | any | T4–T1 | `llm-gpt-oss-20b-heretic-muxodious-richarderk` |
-| gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) | cenz.-mentes | 2026-03-02 | ~2.38 | ~4% | Apache-2.0 | 5.3 GB – 5.3 GB | 1 | any | T5–T1 | `llm-gemma-4-e4b-it-heretic-coder3101-gguf-ab` |
+| gemma-4-31B-it heretic (coder3101) / uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-11 | 4.1 | 7% | Apache-2.0, NEM gated | 16.9 GB – 25.2 GB | 4 | any, mac | T4–T1 | `llm-gemma-4-31b-it-heretic-coder3101-uncenso` |
+| gpt-oss-120b heretic (MuXodious tainted-heresy / kldzj heretic) | cenz.-mentes | 2025-08-04 | 3.6 | 6% | Apache-2.0 | 62.2 GB – 63.4 GB | 3 | any, mac | T4–T1 | `llm-gpt-oss-120b-heretic-muxodious-tainted-h` |
+| gemma-4-26B-A4B-it ultra-uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-11 | ~3.5 | ~6% | Apache-2.0 | 13.3 GB – 16.8 GB | 2 | any | T4–T1 | `llm-gemma-4-26b-a4b-it-ultra-uncensored-here` |
+| gemma-4-12B-it uncensored-heretic (llmfan46) / abliterated QAT (huihui) | cenz.-mentes | 2026-05-23 | ~2.8 | ~5% | Apache-2.0 | 8.5 GB – 8.5 GB | 1 | any | T4–T1 | `llm-gemma-4-12b-it-uncensored-heretic-llmfan` |
+| gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) | cenz.-mentes | 2026-03-02 | ~2.5 | ~4% | Apache-2.0 | 5.3 GB – 5.3 GB | 1 | any | T5–T1 | `llm-gemma-4-e4b-it-heretic-coder3101-gguf-ab` |
+| Qwen3.5-9B heretic-v2 (trohrbaugh) | cenz.-mentes | 2026-02-27 | ~2.3 | ~4% | Apache-2.0 | 5.6 GB – 9.5 GB | 2 | any | T5–T1 | `llm-qwen3-5-9b-heretic-v2-trohrbaugh` |
+| gpt-oss-20b heretic (MuXodious RichardErkhov-heresy / p-e-w heretic) | cenz.-mentes | 2025-08-04 | ~2.1 | ~4% | Apache-2.0 | 12.7 GB – 12.7 GB | 1 | any | T4–T1 | `llm-gpt-oss-20b-heretic-muxodious-richarderk` |
 | Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) | cenz.-mentes | 2026-02-27 | ~1.9 | ~3% | Apache-2.0 | 2.5 GB – 4.5 GB | 4 | any | T5–T1 | `llm-qwen3-5-4b-heretic-2-0-p-e-w-sompoa-here` |
-| gemma-4-E2B-it ultra-uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-02 | ~1.42 | ~2% | Apache-2.0 | 3.4 GB – 3.6 GB | 2 | any | T5–T1 | `llm-gemma-4-e2b-it-ultra-uncensored-heretic-` |
+| gemma-4-E2B-it ultra-uncensored-heretic (llmfan46) | cenz.-mentes | 2026-03-02 | ~1.4 | ~2% | Apache-2.0 | 3.4 GB – 3.6 GB | 2 | any | T5–T1 | `llm-gemma-4-e2b-it-ultra-uncensored-heretic-` |
 
 ### 6.4 Minden kvantált változat linkkel és letöltési paranccsal
 
@@ -818,13 +872,6 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-glm-5-3-abliterated-huihui-gguf-gguf-ud-iq1-s` | Huihui-GLM-5.3-abliterated-GGUF · UD-IQ1_S (GGUF) | 216.7 GB | 1.7 | 249 GB | T1,T2 | any | `hf download huihui-ai/Huihui-GLM-5.3-abliterated-GGUF --include "*UD-IQ1_S*"` |
 </details>
 
-<details><summary><b>MiniMax-M3.1-Flash abliterated (orcarouter GGUF)</b> – 1 változat</summary>
-
-| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
-|---|---|---|---|---|---|---|---|
-| `llm-minimax-m3-1-flash-abliterated-orcaroute-gguf-mix-128g` | MiniMax-M3.1-Flash-abliterated-GGUF · Mix-128G (GGUF) | 111.9 GB | 4.5 | 129 GB | T1,T2,T3 | any | `hf download orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF --include "*Mix-128G*"` |
-</details>
-
 <details><summary><b>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)</b> – 9 változat</summary>
 
 | id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
@@ -838,6 +885,13 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-qwen3-8-flash-next-abliterated-v2-huihui-gguf-ud-q5-k-xl` | Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF · UD-Q5_K_XL (GGUF) | 158.3 GB | 5.5 | 182 GB | T1,T2 | any | `hf download huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF --include "*UD-Q5_K_XL*"` |
 | `llm-qwen3-8-flash-next-abliterated-v2-huihui-gguf-ud-q6-k-xl` | Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF · UD-Q6_K_XL (GGUF) | 169.2 GB | 6.5 | 195 GB | T1,T2 | any | `hf download huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF --include "*UD-Q6_K_XL*"` |
 | `llm-qwen3-8-flash-next-abliterated-v2-huihui-gguf-q8-0` | Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF · Q8_0 (GGUF) | 188.2 GB | 8.5 | 216 GB | T1,T2 | any | `hf download huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF --include "*Q8_0*"` |
+</details>
+
+<details><summary><b>MiniMax-M3.1-Flash abliterated (orcarouter GGUF)</b> – 1 változat</summary>
+
+| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
+|---|---|---|---|---|---|---|---|
+| `llm-minimax-m3-1-flash-abliterated-orcaroute-gguf-mix-128g` | MiniMax-M3.1-Flash-abliterated-GGUF · Mix-128G (GGUF) | 111.9 GB | 4.5 | 129 GB | T1,T2,T3 | any | `hf download orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF --include "*Mix-128G*"` |
 </details>
 
 <details><summary><b>GLM-5.3-Flash abliterated (huihui GGUF)</b> – 10 változat</summary>
@@ -856,6 +910,14 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-glm-5-3-flash-abliterated-huihui-gguf-gguf-ud-q6-k-xl` | Huihui-GLM-5.3-Flash-abliterated-GGUF · UD-Q6_K_XL (GGUF) | 291.8 GB | 6.5 | 336 GB | T1,T2 | any | `hf download huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF --include "*UD-Q6_K_XL*"` |
 </details>
 
+<details><summary><b>NousResearch Arete-27B (a "R1-1776 utód")</b> – 2 változat</summary>
+
+| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
+|---|---|---|---|---|---|---|---|
+| `llm-nousresearch-arete-27b-a-r1-1776-ut-d-gguf-iq4-xs` | NousResearch_Arete-27B-GGUF · IQ4_XS (GGUF) | 15.2 GB | 4.5 | 18 GB | T1,T2,T3,T4 | any | `hf download bartowski/NousResearch_Arete-27B-GGUF --include "*IQ4_XS*"` |
+| `llm-nousresearch-arete-27b-a-r1-1776-ut-d-gguf-q4-k-m` | NousResearch_Arete-27B-GGUF · Q4_K_M (GGUF) | 17.2 GB | 4.5 | 20 GB | T1,T2,T3 | any | `hf download bartowski/NousResearch_Arete-27B-GGUF --include "*Q4_K_M*"` |
+</details>
+
 <details><summary><b>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh)</b> – 6 változat</summary>
 
 | id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
@@ -868,19 +930,19 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-qwen3-8-27b-abliterated-huihui-heretic-a-gguf-q8-0` | Huihui-Qwen3.8-27B-abliterated-GGUF · Q8_0 (GGUF) | 29.1 GB | 8.5 | 33 GB | T1,T2,T3 | any | `hf download huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF --include "*Q8_0*"` |
 </details>
 
-<details><summary><b>NousResearch Arete-27B (a "R1-1776 utód")</b> – 2 változat</summary>
-
-| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
-|---|---|---|---|---|---|---|---|
-| `llm-nousresearch-arete-27b-a-r1-1776-ut-d-gguf-iq4-xs` | NousResearch_Arete-27B-GGUF · IQ4_XS (GGUF) | 15.2 GB | 4.5 | 18 GB | T1,T2,T3,T4 | any | `hf download bartowski/NousResearch_Arete-27B-GGUF --include "*IQ4_XS*"` |
-| `llm-nousresearch-arete-27b-a-r1-1776-ut-d-gguf-q4-k-m` | NousResearch_Arete-27B-GGUF · Q4_K_M (GGUF) | 17.2 GB | 4.5 | 20 GB | T1,T2,T3 | any | `hf download bartowski/NousResearch_Arete-27B-GGUF --include "*Q4_K_M*"` |
-</details>
-
 <details><summary><b>Kimi-K3 Abliterated V1 (Uniboshi)</b> – 1 változat</summary>
 
 | id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
 |---|---|---|---|---|---|---|---|
 | `llm-kimi-k3-abliterated-v1-uniboshi-gguf-mxfp4-moe` | Kimi-K3-Abliterated-V1-GGUF · MXFP4_MOE (GGUF) | 1.51 TB | 4.5 | 1735 GB | T1 | any | `hf download Uniboshi/Kimi-K3-Abliterated-V1-GGUF --include "*MXFP4_MOE*"` |
+</details>
+
+<details><summary><b>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui)</b> – 2 változat</summary>
+
+| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
+|---|---|---|---|---|---|---|---|
+| `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa-gguf-q3-k-m` | Qwen3.6-35B-A3B-uncensored-heretic-GGUF · Q3_K_M (GGUF) | 16.9 GB | 3.5 | 19 GB | T1,T2,T3,T4 | any | `hf download llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF --include "*Q3_K_M*"` |
+| `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa-gguf-q4-k-m` | Qwen3.6-35B-A3B-uncensored-heretic-GGUF · Q4_K_M (GGUF) | 21.2 GB | 4.5 | 24 GB | T1,T2,T3,T4 | any | `hf download llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF --include "*Q4_K_M*"` |
 </details>
 
 <details><summary><b>Mistral-Small-4-119B-2603 heretic (darkc0de, GGUF: Rioky)</b> – 6 változat</summary>
@@ -893,14 +955,6 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-mistral-small-4-119b-2603-heretic-darkc0-gguf-q4-k-m` | Mistral-Small-4-119B-2603-heretic-gguf · Q4_K_M (GGUF) | 72.2 GB | 4.5 | 83 GB | T1,T2,T3 | any | `hf download Rioky/Mistral-Small-4-119B-2603-heretic-gguf --include "*Q4_K_M*"` |
 | `llm-mistral-small-4-119b-2603-heretic-darkc0-gguf-q5-k-m` | Mistral-Small-4-119B-2603-heretic-gguf · Q5_K_M (GGUF) | 84.5 GB | 5.5 | 97 GB | T1,T2 | any | `hf download Rioky/Mistral-Small-4-119B-2603-heretic-gguf --include "*Q5_K_M*"` |
 | `llm-mistral-small-4-119b-2603-heretic-darkc0-gguf-q8-0` | Mistral-Small-4-119B-2603-heretic-gguf · Q8_0 (GGUF) | 126.5 GB | 8.5 | 145 GB | T1,T2 | any | `hf download Rioky/Mistral-Small-4-119B-2603-heretic-gguf --include "*Q8_0*"` |
-</details>
-
-<details><summary><b>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui)</b> – 2 változat</summary>
-
-| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
-|---|---|---|---|---|---|---|---|
-| `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa-gguf-q3-k-m` | Qwen3.6-35B-A3B-uncensored-heretic-GGUF · Q3_K_M (GGUF) | 16.9 GB | 3.5 | 19 GB | T1,T2,T3,T4 | any | `hf download llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF --include "*Q3_K_M*"` |
-| `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa-gguf-q4-k-m` | Qwen3.6-35B-A3B-uncensored-heretic-GGUF · Q4_K_M (GGUF) | 21.2 GB | 4.5 | 24 GB | T1,T2,T3,T4 | any | `hf download llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF --include "*Q4_K_M*"` |
 </details>
 
 <details><summary><b>gemma-4-31B-it heretic (coder3101) / uncensored-heretic (llmfan46)</b> – 4 változat</summary>
@@ -937,6 +991,13 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | `llm-gemma-4-12b-it-uncensored-heretic-llmfan-gguf-q4-k-m` | gemma-4-12B-it-uncensored-heretic-GGUF · Q4_K_M (GGUF) | 8.5 GB | 4.5 | 10 GB | T1,T2,T3,T4 | any | `hf download llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF --include "*Q4_K_M*"` |
 </details>
 
+<details><summary><b>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46)</b> – 1 változat</summary>
+
+| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
+|---|---|---|---|---|---|---|---|
+| `llm-gemma-4-e4b-it-heretic-coder3101-gguf-ab-gguf-q4-k-m` | gemma-4-E4B-it-heretic-GGUF · Q4_K_M (GGUF) | 5.3 GB | 4.5 | 6 GB | T1,T2,T3,T4,T5 | any | `hf download Abiray/gemma-4-E4B-it-heretic-GGUF --include "*Q4_K_M*"` |
+</details>
+
 <details><summary><b>Qwen3.5-9B heretic-v2 (trohrbaugh)</b> – 2 változat</summary>
 
 | id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
@@ -950,13 +1011,6 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 | id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
 |---|---|---|---|---|---|---|---|
 | `llm-gpt-oss-20b-heretic-muxodious-richarderk-gguf-mxfp4-moe` | gpt-oss-20b-RichardErkhov-heresy-GGUF · MXFP4_MoE (GGUF) | 12.7 GB | 4.5 | 15 GB | T1,T2,T3,T4 | any | `hf download MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF --include "*MXFP4_MoE*"` |
-</details>
-
-<details><summary><b>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46)</b> – 1 változat</summary>
-
-| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |
-|---|---|---|---|---|---|---|---|
-| `llm-gemma-4-e4b-it-heretic-coder3101-gguf-ab-gguf-q4-k-m` | gemma-4-E4B-it-heretic-GGUF · Q4_K_M (GGUF) | 5.3 GB | 4.5 | 6 GB | T1,T2,T3,T4,T5 | any | `hf download Abiray/gemma-4-E4B-it-heretic-GGUF --include "*Q4_K_M*"` |
 </details>
 
 <details><summary><b>Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious)</b> – 4 változat</summary>
@@ -988,34 +1042,36 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 
 #### Rangsor: cenzúrázatlan modellek
 
-- **Sorrend:** az alapmodell intelligenciája szerint (AA v5 index, 2026-11-12); egyezésnél a cenzúrázatlanság dönt.
+- **Sorrend:** a cenzúrázatlan változat *számolt* intelligenciája szerint (AA v5 skálán).
+- **Számolt pont:** az alapmodell AA v5 pontja × (cenzúrázatlan/alap) arány. Az arány „M” jelnél a UGI ranglista NatInt-méréséből jön. „B” jelnél becslés: nagy MoE abliteration 0,95–0,97, közösségi és nem ellenőrzött 0,93, kis dense 0,93.
+- **% Opus 5.5:** a számolt pont / 59,1 (Claude Opus 5.5 max, AA v5.0.1).
 - **„Cenz.” és „HU” oszlop:** 0–10-es kutatói becslés.
 - **`~` jel az AA oszlopban:** az alapmodellnek nincs AA v5 pontja, az érték becslés.
 - **UGI NatInt:** a természetes intelligencia mérése az Uncensored General Intelligence ranglistán, az alap → cenzúrázatlan változás.
 - **„Leggyengébb gép”:** az a legkisebb hardverszint, amelyen még fut GGUF-változat.
 - **Méretek:** a Hugging Face API-ból (2026-11-14).
 
-| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | % Opus 5.5 | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed expert | 32.6 | 55% | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['*UD-IQ1_S*'] (233.0 GB) | MIT |
-| 2 | **[huihui-ai/Huihui-GLM-5.3-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-abliterated-GGUF)** | `zai-org/GLM-5.3` (2026-08-25) | 753.3B (safetensors); ctx 1M | 31.7 | 54% | Abliteration (huihui patch-GGUF az unsloth kvantra) | 8.5 | 7.5 | nincs mérés | 1 | 216.7 GB – 216.7 GB | T2: `huihui-ai/Huihui-GLM-5.3-abliterated-GGUF` ['*UD-IQ1_S*'] (216.7 GB) | other (glm-5.3) |
-| 3 | **[orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF](https://huggingface.co/orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF)** | `MiniMaxAI/MiniMax-M3.1-Flash` (2026-10-17) | kb. 428B / 23B active (kártya); ctx 1M | 29.1 | 49% | Abliteration (orcarouter) | 7 | 6.5 | minőség nem ellenőrzött; gated:auto | 1 | 111.9 GB – 111.9 GB | T3: `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF` ['*Mix-128G*'] (111.9 GB) | other (minimax-community) |
-| 4 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding + | 28.6 | 48% | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['*unsloth-UD-IQ4_XS*'] (93.7 GB) | other (qwen-community-1.0) |
-| 5 | **[huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF)** | `zai-org/GLM-5.3-Flash` (2026-08-25) | 320B total / 18B active (kártya); VL; ctx 1M | 27.8 | 47% | Abliteration (huihui) | 8.5 | 7.5 | nincs mérés | 10 | 93.1 GB – 291.8 GB | T3: `huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF` ['*UD-IQ3_XXS*'] (120.4 GB) | MIT |
-| 6 | **[huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.8B dense; VL; ctx 262k → 1M | 20.1 | 34% | Abliteration (huihui) / Heretic-ARA (trohrbaugh) | 8.5 | 8.5 | nincs mérés | 6 | 10.9 GB – 29.1 GB | T4: `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF` ['*UD-IQ4_XS*'] (14.4 GB) | Apache-2.0 |
-| 7 | **[NousResearch/Arete-27B](https://huggingface.co/NousResearch/Arete-27B)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.4B | ~19.0 | ~32% | SFT (propaganda-keretezés eltávolítása, az R1-1776 utódja) | 4 | 8 | NEM általános elutasítás-eltávolító; propaganda 22%→0,9% | 2 | 15.2 GB – 17.2 GB | T4: `bartowski/NousResearch_Arete-27B-GGUF` ['*IQ4_XS*'] (15.2 GB) | Apache-2.0 |
-| 8 | **[Uniboshi/Kimi-K3-Abliterated-V1](https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1)** | `moonshotai/Kimi-K3` (2026-06-13) | 2.8T total / 104B active (kártya); ctx 1M | 17.4 | 29% | Abliteration (közösségi, Uniboshi) | 7 | 8 | minőség nem ellenőrzött; gated:auto | 1 | 1.51 TB – 1.51 TB | T1: `Uniboshi/Kimi-K3-Abliterated-V1-GGUF` ['*MXFP4_MOE*'] (1.51 TB) | other (kimi-k3) |
-| 9 | **[llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF)** | `Qwen/Qwen3.6-35B-A3B` (2026-04-15) | 36B MoE, 3B aktív; VL; ctx 262k | ~8.0 | ~14% | Heretic (llmfan46) / Abliteration-MTP (huihui) | 10 | 8 | UGI 50,9; NatInt 31,03→31,62 (+0,6) | 2 | 16.9 GB – 21.2 GB | T4: `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF` ['*Q4_K_M*'] (21.2 GB) | Apache-2.0 |
-| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | ~14% | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['*Q4_K_S*'] (67.7 GB) | Apache-2.0 (bázis); a hereti |
-| 11 | **[coder3101/gemma-4-31B-it-heretic](https://huggingface.co/coder3101/gemma-4-31B-it-heretic)** | `google/gemma-4-31B-it` (2026-03-11) | 31.3B dense; VL; ctx 256k | 4.4 | 7% | Heretic (coder3101 / llmfan46) | 10 | 8.5 | UGI 65,69 (legjobb 40B alatt); NatInt 38,91→36,53 (−2,4) | 4 | 16.9 GB – 25.2 GB | T4: `mradermacher/gemma-4-31B-it-heretic-GGUF` ['*IQ4_XS*'] (16.9 GB) | Apache-2.0, NEM gated |
-| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B (OpenAI release, it | 3.8 | 6% | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['*MXFP4_MoE*'] (63.4 GB) | Apache-2.0 |
-| 13 | **[llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-26B-A4B-it` (2026-03-11) | 25.8B MoE, kb. 4B aktív; VL | ~3.5 | ~6% | Heretic, ultra (llmfan46) | 10 | 8 | UGI 52,39; NatInt 34,44→35,71 (+1,3) | 2 | 13.3 GB – 16.8 GB | T4: `llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF` ['*Q4_K_M*'] (16.8 GB) | Apache-2.0 |
-| 14 | **[trohrbaugh/Qwen3.5-9B-heretic-v2](https://huggingface.co/trohrbaugh/Qwen3.5-9B-heretic-v2)** | `Qwen/Qwen3.5-9B` (2026-02-27) | 9.4–9.65B; VL | ~3.0 | ~5% | Heretic v2 (trohrbaugh) | 9.5 | 7.5 | NatInt 30,98→24,2 (−6,8); huihui-változat: 19,8 (−11,2) | 2 | 5.6 GB – 9.5 GB | T5: `filvyb/Qwen3.5-9B-heretic-v2-GGUF` ['*Q4_K_M*'] (5.6 GB) | Apache-2.0 |
-| 15 | **[llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF)** | `google/gemma-4-12B-it` (2026-05-23) | 11.96B; any-to-any | ~3.0 | ~5% | Heretic (llmfan46) / Abliteration QAT (huihui) | 9 | 8 | nincs mérés | 1 | 8.5 GB – 8.5 GB | T4: `llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF` ['*Q4_K_M*'] (8.5 GB) | Apache-2.0 |
-| 16 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE (az aktív kb. 3.6B, itt nem API-ból | ~2.5 | ~4% | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['*MXFP4_MoE*'] (12.7 GB) | Apache-2.0 |
-| 17 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any ( | ~2.5 | ~4% | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['*Q4_K_M*'] (5.3 GB) | Apache-2.0 |
-| 18 | **[p-e-w/Qwen3.5-4B-heretic-2.0](https://huggingface.co/p-e-w/Qwen3.5-4B-heretic-2.0)** | `Qwen/Qwen3.5-4B` (2026-02-27) | 4.5–4.66B; VL | ~2.0 | ~3% | Heretic 2.0 (p-e-w) / SOMPOA (MuXodious) | 9.5 | 6.5 | SOMPOA: UGI 44,73; NatInt 23,88→22,35 (−1,5) | 4 | 2.5 GB – 4.5 GB | T5: `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF` ['*Q8_0*'] (4.5 GB) | Apache-2.0 |
-| 19 | **[llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-E2B-it` (2026-03-02) | 5.1B összesen (kb. 2B effektív) | ~1.5 | ~3% | Heretic, ultra (llmfan46) | 9 | 6.5 | nincs mérés | 2 | 3.4 GB – 3.6 GB | T5: `llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF` ['*Q5_K_M*'] (3.6 GB) | Apache-2.0 |
+| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenz.-mentes (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed expert | 32.6 | **~31.6** | **~53%** | × 0.97 (B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE) | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['*UD-IQ1_S*'] (233.0 GB) | MIT |
+| 2 | **[huihui-ai/Huihui-GLM-5.3-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-abliterated-GGUF)** | `zai-org/GLM-5.3` (2026-08-25) | 753.3B (safetensors); ctx 1M | 31.7 | **~30.1** | **~51%** | × 0.95 (B: abliteration (patch), nagy MoE) | Abliteration (huihui patch-GGUF az unsloth kvantra) | 8.5 | 7.5 | nincs mérés | 1 | 216.7 GB – 216.7 GB | T2: `huihui-ai/Huihui-GLM-5.3-abliterated-GGUF` ['*UD-IQ1_S*'] (216.7 GB) | other (glm-5.3) |
+| 3 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding + | 28.6 | **~27.2** | **~46%** | × 0.95 (B: abliteration v2, nagy MoE) | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['*unsloth-UD-IQ4_XS*'] (93.7 GB) | other (qwen-community-1.0) |
+| 4 | **[orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF](https://huggingface.co/orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF)** | `MiniMaxAI/MiniMax-M3.1-Flash` (2026-10-17) | kb. 428B / 23B active (kártya); ctx 1M | 29.1 | **~27.1** | **~46%** | × 0.93 (B: közösségi abliteration, nem ellenőrzött) | Abliteration (orcarouter) | 7 | 6.5 | minőség nem ellenőrzött; gated:auto | 1 | 111.9 GB – 111.9 GB | T3: `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF` ['*Mix-128G*'] (111.9 GB) | other (minimax-community) |
+| 5 | **[huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF)** | `zai-org/GLM-5.3-Flash` (2026-08-25) | 320B total / 18B active (kártya); VL; ctx 1M | 27.8 | **~26.4** | **~45%** | × 0.95 (B: abliteration, nagy MoE) | Abliteration (huihui) | 8.5 | 7.5 | nincs mérés | 10 | 93.1 GB – 291.8 GB | T3: `huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF` ['*UD-IQ3_XXS*'] (120.4 GB) | MIT |
+| 6 | **[NousResearch/Arete-27B](https://huggingface.co/NousResearch/Arete-27B)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.4B | ~19.0 | **~19.0** | **~32%** | × 1 (B: SFT, csak propaganda-szűrés) | SFT (propaganda-keretezés eltávolítása, az R1-1776 utódja) | 4 | 8 | NEM általános elutasítás-eltávolító; propaganda 22%→0,9% | 2 | 15.2 GB – 17.2 GB | T4: `bartowski/NousResearch_Arete-27B-GGUF` ['*IQ4_XS*'] (15.2 GB) | Apache-2.0 |
+| 7 | **[huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.8B dense; VL; ctx 262k → 1M | 20.1 | **~18.7** | **~32%** | × 0.93 (B: abliteration, közepes dense) | Abliteration (huihui) / Heretic-ARA (trohrbaugh) | 8.5 | 8.5 | nincs mérés | 6 | 10.9 GB – 29.1 GB | T4: `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF` ['*UD-IQ4_XS*'] (14.4 GB) | Apache-2.0 |
+| 8 | **[Uniboshi/Kimi-K3-Abliterated-V1](https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1)** | `moonshotai/Kimi-K3` (2026-06-13) | 2.8T total / 104B active (kártya); ctx 1M | 17.4 | **~16.2** | **~27%** | × 0.93 (B: közösségi abliteration, minőség nem ellenőrzött) | Abliteration (közösségi, Uniboshi) | 7 | 8 | minőség nem ellenőrzött; gated:auto | 1 | 1.51 TB – 1.51 TB | T1: `Uniboshi/Kimi-K3-Abliterated-V1-GGUF` ['*MXFP4_MOE*'] (1.51 TB) | other (kimi-k3) |
+| 9 | **[llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF)** | `Qwen/Qwen3.6-35B-A3B` (2026-04-15) | 36B MoE, 3B aktív; VL; ctx 262k | ~8.0 | **~8.0** | **~14%** | × 1 (M: NatInt 31,03→31,62 (nincs veszteség)) | Heretic (llmfan46) / Abliteration-MTP (huihui) | 10 | 8 | UGI 50,9; NatInt 31,03→31,62 (+0,6) | 2 | 16.9 GB – 21.2 GB | T4: `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF` ['*Q4_K_M*'] (21.2 GB) | Apache-2.0 |
+| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | **~7.6** | **~13%** | × 0.95 (B: heretic, MoE) | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['*Q4_K_S*'] (67.7 GB) | Apache-2.0 (bázis); a hereti |
+| 11 | **[coder3101/gemma-4-31B-it-heretic](https://huggingface.co/coder3101/gemma-4-31B-it-heretic)** | `google/gemma-4-31B-it` (2026-03-11) | 31.3B dense; VL; ctx 256k | 4.4 | **4.1** | **7%** | × 0.939 (M: NatInt 38,91→36,53) | Heretic (coder3101 / llmfan46) | 10 | 8.5 | UGI 65,69 (legjobb 40B alatt); NatInt 38,91→36,53 (−2,4) | 4 | 16.9 GB – 25.2 GB | T4: `mradermacher/gemma-4-31B-it-heretic-GGUF` ['*IQ4_XS*'] (16.9 GB) | Apache-2.0, NEM gated |
+| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B (OpenAI release, it | 3.8 | **3.6** | **6%** | × 0.958 (M: NatInt 33,68→32,25) | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['*MXFP4_MoE*'] (63.4 GB) | Apache-2.0 |
+| 13 | **[llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-26B-A4B-it` (2026-03-11) | 25.8B MoE, kb. 4B aktív; VL | ~3.5 | **~3.5** | **~6%** | × 1 (M: NatInt 34,44→35,71 (nincs veszteség)) | Heretic, ultra (llmfan46) | 10 | 8 | UGI 52,39; NatInt 34,44→35,71 (+1,3) | 2 | 13.3 GB – 16.8 GB | T4: `llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF` ['*Q4_K_M*'] (16.8 GB) | Apache-2.0 |
+| 14 | **[llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF)** | `google/gemma-4-12B-it` (2026-05-23) | 11.96B; any-to-any | ~3.0 | **~2.8** | **~5%** | × 0.93 (B: heretic, kis dense) | Heretic (llmfan46) / Abliteration QAT (huihui) | 9 | 8 | nincs mérés | 1 | 8.5 GB – 8.5 GB | T4: `llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF` ['*Q4_K_M*'] (8.5 GB) | Apache-2.0 |
+| 15 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any ( | ~2.5 | **~2.5** | **~4%** | × 1 (M: NatInt 18,21→18,73 (nincs veszteség)) | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['*Q4_K_M*'] (5.3 GB) | Apache-2.0 |
+| 16 | **[trohrbaugh/Qwen3.5-9B-heretic-v2](https://huggingface.co/trohrbaugh/Qwen3.5-9B-heretic-v2)** | `Qwen/Qwen3.5-9B` (2026-02-27) | 9.4–9.65B; VL | ~3.0 | **~2.3** | **~4%** | × 0.781 (M: NatInt 30,98→24,2) | Heretic v2 (trohrbaugh) | 9.5 | 7.5 | NatInt 30,98→24,2 (−6,8); huihui-változat: 19,8 (−11,2) | 2 | 5.6 GB – 9.5 GB | T5: `filvyb/Qwen3.5-9B-heretic-v2-GGUF` ['*Q4_K_M*'] (5.6 GB) | Apache-2.0 |
+| 17 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE (az aktív kb. 3.6B, itt nem API-ból | ~2.5 | **~2.1** | **~4%** | × 0.829 (M: NatInt 27,18→22,52) | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['*MXFP4_MoE*'] (12.7 GB) | Apache-2.0 |
+| 18 | **[p-e-w/Qwen3.5-4B-heretic-2.0](https://huggingface.co/p-e-w/Qwen3.5-4B-heretic-2.0)** | `Qwen/Qwen3.5-4B` (2026-02-27) | 4.5–4.66B; VL | ~2.0 | **~1.9** | **~3%** | × 0.936 (M: NatInt 23,88→22,35 (SOMPOA-változat)) | Heretic 2.0 (p-e-w) / SOMPOA (MuXodious) | 9.5 | 6.5 | SOMPOA: UGI 44,73; NatInt 23,88→22,35 (−1,5) | 4 | 2.5 GB – 4.5 GB | T5: `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF` ['*Q8_0*'] (4.5 GB) | Apache-2.0 |
+| 19 | **[llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-E2B-it` (2026-03-02) | 5.1B összesen (kb. 2B effektív) | ~1.5 | **~1.4** | **~2%** | × 0.93 (B: heretic, nagyon kis modell) | Heretic, ultra (llmfan46) | 9 | 6.5 | nincs mérés | 2 | 3.4 GB – 3.6 GB | T5: `llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF` ['*Q5_K_M*'] (3.6 GB) | Apache-2.0 |
 
 **Hogyan olvasd:**
 - **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.
@@ -1209,10 +1265,10 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.4 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~11 tok/s, unified] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
+| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~11 tok/s, unified] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~7 tok/s, unified] – egyedül – `unsloth/Qwen3.5-4B-GGUF *Q8_0*` |
 | **V3 csapat (alap modellek)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1.5 = ~3% Opus 5.5 · 4.5 bit, 3.1 GB, ~19 tok/s, unified] – gyors segéd, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `unsloth/gemma-4-E2B-it-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~12 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.4 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~11 tok/s, unified] – partner, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~11 tok/s, unified] – partner, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
 
 #### iPhone 15 Pro (8 GB, A17 Pro)
 
@@ -1233,7 +1289,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.4 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
+| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
 | **V2 legokosabb alap (cenzúrázott)** | NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.1 GB, ~7 tok/s, hibrid GPU+RAM (dense)] – egyedül – `unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF *UD-Q4_K_XL*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~2.5 = ~4% Opus 5.5 · 6.5 bit, 6.2 GB, ~4 tok/s, hibrid GPU+RAM (dense)] – közel azonos alternatíva – `lmstudio-community/gemma-4-E4B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~16 GB |
 | **V3 csapat (alap modellek)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1.5 = ~3% Opus 5.5 · 2.6 bit, 2.3 GB, ~41 tok/s, csak GPU] – fő modell – `unsloth/gemma-4-E2B-it-GGUF *UD-IQ2_M*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2.0 = ~3% Opus 5.5 · 3.5 bit, 2.4 GB, ~22 tok/s, csak GPU] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *UD-Q3_K_XL*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~8 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) [AA v5 ~1.9 = ~3% Opus 5.5 · 4.5 bit, 2.5 GB, ~19 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF *IQ4_XS*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2.0 = ~3% Opus 5.5 · 3.5 bit, 2.4 GB, ~22 tok/s, csak GPU] – partner (alap) – `unsloth/Qwen3.5-4B-GGUF *UD-Q3_K_XL*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~9 GB |
@@ -1244,10 +1300,10 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | Qwen3.5-9B heretic-v2 (trohrbaugh) [AA v5 ~2.9 = ~5% Opus 5.5 · 4.5 bit, 5.6 GB, ~5 tok/s, hibrid GPU+RAM (dense)] – egyedül – `filvyb/Qwen3.5-9B-heretic-v2-GGUF *Q4_K_M*` |
+| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~10 tok/s, hibrid GPU+RAM (dense)] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
 | **V2 legokosabb alap (cenzúrázott)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~3.5 = ~6% Opus 5.5 · 3.5 bit, 12.9 GB, ~15 tok/s, hibrid GPU+RAM] – egyedül – `unsloth/gemma-4-26B-A4B-it-GGUF *UD-Q3_K_XL*` |
 | **V3 csapat (alap modellek)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~3.0 = ~5% Opus 5.5 · 4.5 bit, 7.0 GB, ~4 tok/s, hibrid GPU+RAM (dense)] – fő modell – `google/gemma-4-12B-it-qat-q4_0-gguf *q4_0*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2.0 = ~3% Opus 5.5 · 4.5 bit, 2.7 GB, ~12 tok/s, hibrid GPU+RAM (dense)] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – fő modell – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.4 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~10 tok/s, hibrid GPU+RAM (dense)] – partner (cenzúrázatlan) – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – fő modell – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2.5 = ~4% Opus 5.5 · 4.5 bit, 5.3 GB, ~10 tok/s, hibrid GPU+RAM (dense)] – partner (cenzúrázatlan) – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
 
 #### HP ZBook Ultra G3a (192 GB unified, Ryzen AI Max+ PRO 495)
 
@@ -1258,7 +1314,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~31 tok/s, unified] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~27 tok/s, unified] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~31 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5.5 = 9% Opus 5.5 · 8.5 bit, 33.6 GB, ~33 tok/s, unified] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~31 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [AA v5 ~19.1 = ~32% Opus 5.5 · 6.5 bit, 22.4 GB, ~6 tok/s, unified] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1.5 = ~3% Opus 5.5 · 6.5 bit, 3.9 GB, ~49 tok/s, unified] – gyors segéd / router – `lmstudio-community/gemma-4-E2B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~146 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~31 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~9 tok/s, unified] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8.0 = ~14% Opus 5.5 · 4.5 bit, 21.2 GB, ~48 tok/s, unified] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~158 GB |
 
 #### AI workstation – MINISFORUM MS-S1 MAX-P495 (1, 2, 4 gép)
 
@@ -1271,7 +1327,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~33 tok/s, unified] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~28 tok/s, unified] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5.5 = 9% Opus 5.5 · 8.5 bit, 33.6 GB, ~34 tok/s, unified] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [AA v5 ~19.1 = ~32% Opus 5.5 · 8.5 bit, 29.1 GB, ~5 tok/s, unified] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q8_0*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1.5 = ~3% Opus 5.5 · 6.5 bit, 3.9 GB, ~50 tok/s, unified] – gyors segéd / router – `lmstudio-community/gemma-4-E2B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~10 tok/s, unified] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8.0 = ~14% Opus 5.5 · 4.5 bit, 21.2 GB, ~49 tok/s, unified] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~158 GB |
 
 #### 2× MS-S1 MAX-P495 (2×192 GB, USB4 v2 80 Gbps)
 
@@ -1282,7 +1338,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~26 tok/s, unified ×2] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5.5 = 9% Opus 5.5 · 8.5 bit, 33.6 GB, ~31 tok/s, unified ×2] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~196 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~11 tok/s, unified ×2] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~7.6 = ~13% Opus 5.5 · 4.5 bit, 21.2 GB, ~43 tok/s, unified ×2] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~311 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~11 tok/s, unified ×2] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8.0 = ~14% Opus 5.5 · 4.5 bit, 21.2 GB, ~43 tok/s, unified ×2] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~311 GB |
 
 #### 4× MS-S1 MAX-P495 (4×192 GB, USB4 v2 gyűrű)
 
@@ -1290,7 +1346,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.0 = ~52% Opus 5.5 · 8.5 bit, 507.9 GB, ~8 tok/s, unified ×4] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.6 = ~53% Opus 5.5 · 8.5 bit, 507.9 GB, ~8 tok/s, unified ×4] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
 | **V2 legokosabb alap (cenzúrázott)** | DeepSeek-V4.1-Flash-1017 [AA v5 32.6 = 55% Opus 5.5 · 8.5 bit, 508.4 GB, ~8 tok/s, unified ×4] – egyedül – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Hy4 preview (Hunyuan) [AA v5 ~34.6 = ~59% Opus 5.5 · 4.5 bit, 467.3 GB, ~5 tok/s, unified ×4] – közel azonos alternatíva – `AngelSlim/Hy4-preview-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1125 GB |
 | **V3 csapat (alap modellek)** | DeepSeek-V4.1-Flash-1017 [AA v5 32.6 = 55% Opus 5.5 · 8.5 bit, 508.4 GB, ~8 tok/s, unified ×4] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5.5 = 9% Opus 5.5 · 8.5 bit, 33.6 GB, ~26 tok/s, unified ×4] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~626 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Hy4 preview (Hunyuan) [AA v5 ~34.6 = ~59% Opus 5.5 · 4.5 bit, 467.3 GB, ~5 tok/s, unified ×4] – fő modell – `AngelSlim/Hy4-preview-GGUF *Q4_K_M*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 3.5 bit, 76.0 GB, ~29 tok/s, unified ×4] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Swift*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3.0 = ~5% Opus 5.5 · 8.5 bit, 4.5 GB, ~20 tok/s, unified ×4] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~634 GB |
@@ -1306,7 +1362,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~27 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 3.5 bit, 10.1 GB, ~58 tok/s, csak GPU] – gyors segéd / router – `ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF *IQ3_XXS*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 3.5 bit, 75.8 GB, ~35 tok/s, hibrid GPU+RAM] – fő modell – `ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF *IQ3_XXS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [AA v5 ~19.1 = ~32% Opus 5.5 · 4.5 bit, 16.6 GB, ~49 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *UD-DW-Q4_K_M*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2.0 = ~3% Opus 5.5 · 4.5 bit, 2.7 GB, ~119 tok/s, csak GPU] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 3.5 bit, 75.8 GB, ~35 tok/s, hibrid GPU+RAM] – fő modell – `ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF *IQ3_XXS*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~49 tok/s, csak GPU] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 ~2.5 = ~4% Opus 5.5 · 3.5 bit, 4.2 GB, ~131 tok/s, csak GPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF *UD-Q3_K_XL*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
 
 #### Gamer PC – RTX 6090 32 GB + 128 GB DDR5
 
@@ -1317,7 +1373,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~27 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~124 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [AA v5 ~19.1 = ~32% Opus 5.5 · 6.5 bit, 22.4 GB, ~37 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 3.5 bit, 12.8 GB, ~58 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *IQ3_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~143 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~49 tok/s, csak GPU] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~142 GB |
 
 #### Gamer PC – RTX 6090 32 GB + 192 GB DDR5
 
@@ -1328,7 +1384,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [AA v5 ~19.1 = ~32% Opus 5.5 · 6.5 bit, 22.4 GB, ~37 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 4.5 bit, 16.9 GB, ~49 tok/s, csak GPU] – gyors segéd / router – `ubergarm/Qwen3.8-27B-GGUF *IQ4_KS*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~203 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~49 tok/s, csak GPU] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~198 GB |
 
 #### Gamer PC – RTX 6090 32 GB + 256 GB DDR5
 
@@ -1339,7 +1395,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~25 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~7 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~254 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~25 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~7 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~254 GB |
 
 #### Gamer PC – RTX 6090 + következő generációs RTX Pro (két kártya)
 
@@ -1349,10 +1405,10 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~99 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~99 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~40 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~137 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~244 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~244 GB |
 
 #### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 128 GB (B: valószínű) + 256 GB DDR5
 
@@ -1360,10 +1416,10 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~56 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~314 GB |
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~56 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~314 GB |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~46 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
 
 #### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 192 GB (C: optimista) + 256 GB DDR5
 
@@ -1371,10 +1427,10 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 8.5 bit, 188.2 GB, ~90 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~348 GB |
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 8.5 bit, 188.2 GB, ~90 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*` |
 | **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – egyedül – `Qwen/Qwen3.8-Flash-Next-FP8` |
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~38 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~252 GB |
-| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.6 = ~47% Opus 5.5 · 4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~345 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~345 GB |
 
 #### Linux szerverek
 
@@ -1384,7 +1440,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.0 = ~52% Opus 5.5 · 8.5 bit, 507.9 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.6 = ~53% Opus 5.5 · 8.5 bit, 507.9 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
 | **V2 legokosabb alap (cenzúrázott)** | DeepSeek-V4.1-Flash-1017 [AA v5 32.6 = 55% Opus 5.5 · 8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Hy4 preview (Hunyuan) [AA v5 ~34.6 = ~59% Opus 5.5 · 4.5 bit, 467.3 GB, ~12 tok/s, hibrid GPU+RAM] – közel azonos alternatíva – `AngelSlim/Hy4-preview-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1125 GB |
 | **V3 csapat (alap modellek)** | DeepSeek-V4.1-Flash-1017 [AA v5 32.6 = 55% Opus 5.5 · 8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~39 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~610 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | DeepSeek-V4.1-Flash-1017 [AA v5 32.6 = 55% Opus 5.5 · 8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~64 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~39 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~719 GB |
@@ -1395,7 +1451,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
-| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.0 = ~52% Opus 5.5 · 8.5 bit, 507.9 GB, ~108 tok/s, csak GPU] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [AA v5 ~31.6 = ~53% Opus 5.5 · 8.5 bit, 507.9 GB, ~108 tok/s, csak GPU] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
 | **V2 legokosabb alap (cenzúrázott)** | Kimi K3.1 Pro [AA v5 46.5 = 79% Opus 5.5 · 4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – egyedül – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*` |
 | **V3 csapat (alap modellek)** | Kimi K3.1 Pro [AA v5 46.5 = 79% Opus 5.5 · 4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – fő modell – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~99 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1774 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Kimi K3.1 Pro [AA v5 46.5 = 79% Opus 5.5 · 4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – fő modell – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 8.5 bit, 188.2 GB, ~118 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~99 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1991 GB |

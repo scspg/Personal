@@ -97,6 +97,10 @@ LLM_TEXT = """---
 
 **Viszonyítási pont – Claude Opus 5.5 (max): 59,1 pont = 100%** (AA Intelligence Index v5.0.1, 2026-11-12). Az index csúcsa ugyanekkor a Claude Fable 5.2 (64,6 = 109%).
 
+{COMBINED}
+
+Az alapmodellek pontjai (csak alap, mért):
+
 | Nyílt modell | AA v5.0.1 | % Opus 5.5 |
 |---|---|---|
 | Kimi K3.1 Pro | 46.5 | 79% |
@@ -288,17 +292,21 @@ def uncensored_ranking(items):
                                                (v["llm_bits"] == best[t]["llm_bits"] and v["bytes"] < best[t]["bytes"])):
                     best[t] = v
         lowest = max(best, key=lambda t: int(t[1])) if best else None
-        rows.append(dict(m=m, vs=vs, aa=base_aa, sc=sc, meth=meth, ugi=ugi, lowest=lowest, best=best))
-    rows.sort(key=lambda r: (-(r["aa"] or 0), -float(str(r["sc"].get("uncensored") or 0))))
+        from llm_to_items import unc_estimate
+        u_aa, _b, ratio, why, u_est = unc_estimate(slug(m["name"]))
+        rows.append(dict(m=m, vs=vs, aa=base_aa, sc=sc, meth=meth, ugi=ugi, lowest=lowest, best=best, uaa=u_aa, ratio=ratio, why=why, uest=u_est))
+    rows.sort(key=lambda r: (-(r["uaa"] or 0), -float(str(r["sc"].get("uncensored") or 0))))
     out = ["#### Rangsor: cenzúrázatlan modellek", "",
-           "- **Sorrend:** az alapmodell intelligenciája szerint (AA v5 index, 2026-11-12); egyezésnél a cenzúrázatlanság dönt.",
+           "- **Sorrend:** a cenzúrázatlan változat *számolt* intelligenciája szerint (AA v5 skálán).",
+           "- **Számolt pont:** az alapmodell AA v5 pontja × (cenzúrázatlan/alap) arány. Az arány „M” jelnél a UGI ranglista NatInt-méréséből jön. „B” jelnél becslés: nagy MoE abliteration 0,95–0,97, közösségi és nem ellenőrzött 0,93, kis dense 0,93.",
+           "- **% Opus 5.5:** a számolt pont / 59,1 (Claude Opus 5.5 max, AA v5.0.1).",
            "- **„Cenz.” és „HU” oszlop:** 0–10-es kutatói becslés.",
            "- **`~` jel az AA oszlopban:** az alapmodellnek nincs AA v5 pontja, az érték becslés.",
            "- **UGI NatInt:** a természetes intelligencia mérése az Uncensored General Intelligence ranglistán, az alap → cenzúrázatlan változás.",
            "- **„Leggyengébb gép”:** az a legkisebb hardverszint, amelyen még fut GGUF-változat.",
            "- **Méretek:** a Hugging Face API-ból (2026-11-14).", "",
-           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | % Opus 5.5 | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
-           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+           "| # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenz.-mentes (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for n, r in enumerate(rows, 1):
         m, vs = r["m"], r["vs"]
         repo = m.get("hf_repo") or ""
@@ -308,7 +316,7 @@ def uncensored_ranking(items):
         lowtxt = f"{low}: `{r['best'][low]['download'].get('repo','')}` {r['best'][low]['download'].get('include') or ''} ({gb(r['best'][low]['bytes'])})" if low else "csak szerver / MLX"
         out.append(f"| {n} | **[{esc(rname)}]({repo})** | `{esc(m.get('base'))}` ({esc(m.get('base_created'))}) | {esc(m.get('params'))[:45]} | "
                    f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{r['aa'] if r['aa'] is not None else '?'} | "
-                   f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{pct(r['aa']) if r['aa'] else '?'} | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
+                   f"**{'~' if r['uest'] else ''}{r['uaa']}** | **{'~' if r['uest'] else ''}{pct(r['uaa'])}** | × {r['ratio']:.3g} ({esc(r['why'])}) | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
                    f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(m.get('license'))[:28]} |")
     out += ["",
             "**Hogyan olvasd:**",
@@ -556,10 +564,39 @@ def device_section():
     return "\n".join(out)
 
 
+def combined_ranking():
+    """6.1: közös rangsor – alap (mért AA) + cenzúrázatlan (számolt AA)."""
+    from llm_to_items import unc_estimate, slug, AA, AA_EST
+    fr = load_blocks("research/llm_frontier.md.txt")[0]
+    un = load_blocks("research/llm_uncensored_runtimes.md.txt")[0]
+    rows = []
+    small = {"gemma-4": [("Gemma-4-31B", 4.4, False), ("Gemma-4-26B-A4B", 3.5, True), ("Gemma-4-12B", 3.0, True), ("Gemma-4-E4B", 2.5, True), ("Gemma-4-E2B", 1.5, True)],
+             "nemotron-3-5": [("Nemotron-3.5-Super-VL-120B", 13.6, False), ("Nemotron-3.5-Lightning-30B", 5.5, False), ("Nemotron-3.5-Bolt-E4B", 2.5, True)],
+             "qwen3-5-small": [("Qwen3.5-9B", 3.0, True), ("Qwen3.5-4B", 2.0, True)],
+             "mimo-v2-6-pro": [("MiMo-V2.6-Pro", 29.9, False), ("MiMo-V2.6-Flash", 26.7, False)]}
+    for m in fr:
+        mid = slug(m.get("id"))
+        if mid in small:
+            for n, a, e in small[mid]:
+                rows.append((a, e, n, "alap", "mért AA v5" if not e else "becslés (nincs AA-pont)"))
+        elif mid in AA:
+            rows.append((AA[mid], mid in AA_EST, m["name"], "alap", "mért AA v5" if mid not in AA_EST else "becslés"))
+    for m in un:
+        a, base, r, why, e = unc_estimate(slug(m["name"]))
+        rows.append((a, e, m["name"].split(" (")[0] + " (cenz.-mentes)", "**cenzúrázatlan**", f"alap {base} × {r:.3g} – {why}"))
+    rows.sort(key=lambda x: -x[0])
+    out = ["| # | Modell | Típus | AA v5 | % Opus 5.5 | Forrás / számítás |", "|---|---|---|---|---|---|",
+           f"| – | *Claude Fable 5.2 (zárt, viszonyítás)* | zárt | 64.6 | 109% | mért |",
+           f"| – | *Claude Opus 5.5 (zárt, viszonyítás)* | zárt | 59.1 | 100% | mért |"]
+    for i, (a, e, n, t, src) in enumerate(rows, 1):
+        out.append(f"| {i} | {esc(n)} | {t} | {'~' if e else ''}{a} | {'~' if e else ''}{pct(a)} | {esc(src)} |")
+    return "\n".join(out)
+
+
 def main():
     items = all_items()
     table, details = llm_tables(items)
-    txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items) + "\n\n" + hardware_table(items))
+    txt = LLM_TEXT.replace("{COMBINED}", combined_ranking()).replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items) + "\n\n" + hardware_table(items))
     txt = txt.replace("### 6.9 Kihagyott", device_section() + "\n### 6.9 Kihagyott")
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
