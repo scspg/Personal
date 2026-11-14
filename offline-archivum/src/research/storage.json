@@ -1200,12 +1200,19 @@
    "konkluzio": "Az 1 elsődleges + 1 offline (más helyen, más gyártótól) másolat ~20%-ról ~0,3%-ra viszi le a 10 éves adatvesztési kockázatot (~70x javulás), és csak +1 lemezbe kerül. Ez a minimum logikus kompromisszum. A korrelált hibák (azonos gyártási sorozat, közös lakás, közös villám) ezt rontják, ezért: két különböző gyártó, két helyszín, az offline lemez Faraday-tasakban."
   },
   "kompakt_2_eszkoz": {
+   "28_TB": {
+    "eszkoz_1_elsodleges": "Seagate Exos M 28TB (ipon, 578 590 Ft, mért, előrendelés) dokkolóban; ZFS, havi scrub",
+    "eszkoz_2_offline": "Seagate IronWolf Pro 32TB (alza, ~575 890 Ft, becsült) vagy második Exos M 28TB; Faraday-tasak + lőszerláda, másik épületben",
+    "vedelem": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP, zsarolóvírus. 28 TB fölött ma Magyarországon csak Seagate kapható: ezért két különböző termékcsalád / gyártási sorozat.",
+    "osszesen": "~1 200 000–1 210 000 Ft"
+   },
    "24_TB": {
     "eszkoz_1_elsodleges": "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft, mért) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS egylemezes pool, havi scrub",
-    "eszkoz_2_offline": "WD Ultrastar DC HC590 24TB (ipon, 527 889 Ft, mért; SAS – SAS-HBA vagy SAS-dokkoló kell) VAGY egy második IronWolf Pro 24TB; antisztatikus tasak + hab + Faraday Defense NEST-Z (27 797 Ft) + MFH .50 cal lőszerláda (~11 570 Ft, becsült), másik épületben",
+    "eszkoz_2_offline": "WD Ultrastar DC HC590 24TB (ipon, 527 889 Ft, mért; SAS – SAS-HBA vagy SAS-dokkoló kell) – MÁS GYÁRTÓ; antisztatikus tasak + hab + Faraday Defense NEST-Z (27 797 Ft) + MFH .50 cal lőszerláda (~11 570 Ft, becsült), másik épületben",
     "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline)",
     "plusz_opcionalis_mag": "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen.",
-    "osszesen": "~1 037 000 Ft (2× IronWolf Pro 24TB + dokkoló + védelem); M-DISC maggal ~1 127 000 Ft"
+    "osszesen": "~1 085 000 Ft (+ M-DISC mag ~90 000 Ft)",
+    "megjegyzes": "Csak a 16 TB-os tervhez (13,6 TB) vagy a teljes archívum kissé megvágott változatához (pl. a 9 TB-os Debian-tükör nélkül) – a teljes 22,5 TB-hoz 8% tartalékkal ≥28 TB kell."
    },
    "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tüzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.",
    "32_TB": {
@@ -1273,7 +1280,8 @@
      "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-dokkoló kell) vagy második IronWolf Pro 24TB; NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
-    "osszesen": "~1 040 000–1 125 000 Ft"
+    "osszesen": "~1 040 000–1 125 000 Ft",
+    "megjegyzes": "A teljes 22,5 TB-hoz kevés (24 TB-on 94%-os telítettség); a teljes archívumhoz a 28 TB-os kételemes változat kell (~1,2 M Ft)."
    },
    "~3–3,7 millió Ft – 64–66 TB, NAS + offline szett": {
     "elemek": [
@@ -2044,7 +2052,7 @@
   {
    "id": "icydock-mb307u-1vb",
    "kategoria": "enclosure",
-   "nev": "ICY DOCK EZ-Adapter Ex MB307U-1VB - USB4 (40 Gbps) / TB3/4 -> 1x U.2/U.3 (SFF-8639), max. 15mm",
+   "nev": "ICY DOCK EZ-Adapter Ex MB307U-1VB - USB4 (40 Gbps) / TB3/4 → 1x U.2/U.3 (SFF-8639), max. 15mm",
    "kapacitas_tb": null,
    "tipus": "Külső USB4 ház enterprise U.2/U.3 SSD-hez; 12V/2.5A (30 W) tápegység; passzív alumínium hűtőlap, nincs ventilátor",
    "tartossag": {
@@ -2058,12 +2066,11 @@
     "olvasas": "kb. 3 800 (40 Gbps gazdagépen)",
     "iras": null
    },
-   "ar_huf": 70890,
-   "ar_eur": 193.9,
+   "ar_huf": 66137,
+   "ar_eur": 180.9,
    "ar_per_tb": null,
    "ar_forras": [
-    "alternate.de, 2026-11-14, mért: 193.90 EUR",
-    "ldlc.com 199.95 EUR, galador.ee 205.10 EUR (keresőtalálat, becsült)"
+    "alternate.de, 2026-11-14, mért: 180,90 EUR (akciós; listaár 193,90 EUR)"
    ],
    "linkek": [
     {
@@ -2093,7 +2100,7 @@
   {
    "id": "icydock-mb931u-1vb-r1",
    "kategoria": "enclosure",
-   "nev": "ICY DOCK EZ-Adapter Ex MB931U-1VB R1 - USB 3.2 Gen2 (10 Gbps) -> U.2",
+   "nev": "ICY DOCK EZ-Adapter Ex MB931U-1VB R1 - USB 3.2 Gen2 (10 Gbps) → U.2",
    "kapacitas_tb": null,
    "tipus": "Külső U.2 adapter, olcsóbb, 10 Gbps",
    "tartossag": {
@@ -2130,7 +2137,7 @@
   {
    "id": "u2-desktop-adapters",
    "kategoria": "other",
-   "nev": "U.2 asztali bekötés: Delock M.2 Key M -> U.2 SFF-8639 adapter 20 cm kábellel / Delock PCIe x16 -> 1x U.2 kártya",
+   "nev": "U.2 asztali bekötés: Delock M.2 Key M → U.2 SFF-8639 adapter 20 cm kábellel / Delock PCIe x16 → 1x U.2 kártya",
    "kapacitas_tb": null,
    "tipus": "Belső adapter. Az M.2 változat a Crosshair X870E egyik M.2 slotjába kerül; a kártya PCIe slotba. Az SSD 12 V tápot a SATA-tápcsatlakozóról kap.",
    "tartossag": {
@@ -2144,19 +2151,19 @@
     "olvasas": "a meghajtó sebessége (Gen4/Gen5 x4)",
     "iras": null
    },
-   "ar_huf": 27383,
-   "ar_eur": 74.9,
+   "ar_huf": 17180,
+   "ar_eur": 46.99,
    "ar_per_tb": null,
    "ar_forras": [
-    "alternate.de, 2026-11-14, mért: M.2->U.2 adapter 74.90 EUR; PCIe x16 -> 1x U.2 kártya 64.90 EUR; Delock PCIe 4.0 x16 -> 4x SFF-8639 vezérlő 599 EUR; HighPoint Rocket 1628A (PCIe Gen5 x16, 4x MCIOx8) 1 679 EUR"
+    "alternate.de, 2026-11-14, mért (akciós árak): M.2→U.2 adapter 46,99 EUR; PCIe x16 → 1× U.2 kártya 44,99 EUR; Delock PCIe 4.0 x16 → 4× SFF-8639 vezérlő 292 EUR"
    ],
    "linkek": [
     {
-     "bolt": "alternate.de (M.2->U.2)",
+     "bolt": "alternate.de (M.2→U.2)",
      "url": "https://www.alternate.de/DeLOCK/M-2-Key-M-zu-U-2-SFF-8639-NVMe-Adapter-gewinkelt-mit-20-cm-Kabel-Schnittstellenkarte/html/product/1781473"
     },
     {
-     "bolt": "alternate.de (PCIe->U.2)",
+     "bolt": "alternate.de (PCIe→U.2)",
      "url": "https://www.alternate.de/DeLOCK/PCI-Express-x16-Karte-zu-1-x-intern-U-2-NVMe-SFF-8639-Schnittstellenkarte/html/product/1784136"
     },
     {
@@ -2422,8 +2429,8 @@
    "ar_eur": 868,
    "ar_per_tb": "79 335 Ft/TB (4TB, alternate) / 99 196 Ft/TB (2TB, ipon)",
    "ar_forras": [
-    "alternate.de, 2026-11-14, mért: 4TB 868 EUR",
-    "ipon.hu, 2026-11-14, mért: 2TB fekete 198 391 Ft (kb. 1 nap); 4TB-ot nem listáz"
+    "becsült (EUR-átváltás): alternate.de 4TB 868 EUR × 365,6 (német áfával)",
+    "ipon.hu, 2026-11-14, mért: 2TB 198 391 Ft; 4TB-ot nem listáz"
    ],
    "linkek": [
     {
@@ -2770,7 +2777,7 @@
    "ar_per_tb": null,
    "ar_forras": [
     "ipon.hu, 2026-11-14, mért: 56 590 Ft (kb. 9 nap)",
-    "alternate.de, 2026-11-14, mért: 119.90 EUR"
+    "alternate.de, 2026-11-14, mért: 103,90 EUR (akciós)"
    ],
    "linkek": [
     {
@@ -2813,7 +2820,7 @@
    "ar_per_tb": null,
    "ar_forras": [
     "ipon.hu, 2026-11-14, mért: 77 390 Ft (kb. 9 nap)",
-    "alternate.de, 2026-11-14, mért: 199.90 EUR"
+    "alternate.de, 2026-11-14, mért: 189,90 EUR (akciós)"
    ],
    "linkek": [
     {
@@ -3022,8 +3029,8 @@
     "Backblaze HDD, 2024-es negyedéves AFR 1.35-1.89%: https://backblaze.com/blog/backblaze-drive-stats-for-2024",
     "JEDEC kikapcsolt megőrzés: kliens 1 év / enterprise 3 hónap (élettartam végén)"
    ],
-   "egy_ssd": "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1-(1-0.009)^5). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, ransomware, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év.",
-   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Együtt kb. 0.0023%/év, azaz kb. 0.01% 5 év alatt. Ez kb. 400-szor kisebb kockázat, és a másolat offline volta a ransomware, a túlfeszültség és a véletlen törlés ellen is véd.",
+   "egy_ssd": "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1 − (1 − 0,009)⁵). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, zsarolóvírus, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év.",
+   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Ha bármelyik példány hibázhat elsőként: ≈0,005%/év, azaz ≈0,02% 5 év alatt. Ez kb. 200-szor kisebb kockázat (mindkét sorrendet számolva: ≈0,005%/év, ≈0,02% 5 év alatt), és a másolat offline volta a zsarolóvírus, a túlfeszültség és a véletlen törlés ellen is véd.",
    "kovetkeztetes": "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). 'Soha ne vesszen el' = minimum 2 példány, ebből 1 offline + checksum + scrub."
   },
   "ket_eszkozos_minimal_setup": {
@@ -3051,7 +3058,7 @@
     "kozep_olcso": "SanDisk Extreme 8TB, ipon 565 589 Ft (70 699 Ft/TB, IP65, 3 m). A telefonokhoz elég (iPhone 15 Pro 10 Gbps, kb. 1 GB/s; S24 Ultra 5 Gbps, kb. 450 MB/s). Vásárlás után azonnal firmware-frissítés. Legolcsóbb kis tétel: Kingston XS2000 2TB, 109 090 Ft."
    },
    "enterprise_30_120tb_all_flash": {
-    "olcsobb_qlc": "Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 -> U.2 kártya (64.90 EUR) / M.2 -> U.2 adapter (74.90 EUR), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (193.90 EUR).",
+    "olcsobb_qlc": "Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 → U.2 kártya (64.90 EUR) / M.2 → U.2 adapter (74.90 EUR), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (193.90 EUR).",
     "profi_tlc": "Kioxia CD8-P 15.36TB (ipon, rendelhető, 4 137 890 Ft/db, mért): 2 db = 30.72TB, kb. 8.3 M Ft; 8 db = 122.88TB, kb. 33.1 M Ft. TLC + PLP + Gen5, de ZFS RAIDZ/tükör és ventilátoros ház kell.",
     "oszinte_ertekeles": "2026 novemberében az all-flash 30TB fölött TB-onként a fogyasztói Gen5 2.5-szerese, a HDD-nek pedig a sokszorosa. Ajánlás: 8TB Gen5 forró réteg + HDD tömegtár + második offline másolat. All-flash csak akkor, ha a költségvetés ezt indokolja."
    }

@@ -175,6 +175,47 @@ def _style(t):
         t = _r.sub(a, b, t)
     return t
 
+# --- 4. adat-átnézés (2026-11-14): mért értékek ---
+OSMAND = [("budapest", 50700592), ("eszak-magyarorszag", 71024960), ("del-alfold", 61816441), ("kozep-dunantul", 71895326),
+          ("eszak-alfold", 57575935), ("nyugat-dunantul", 63927851), ("del-dunantul", 57166149), ("pest", 112792975)]
+PATCH3 = {
+    "msf-essential-drugs": {"download": {"method": "http", "urls": [f"https://medicalguidelines.msf.org/sites/default/files/pdf/guideline-339-{l}.pdf" for l in ("en", "fr", "es", "ar")]},
+                            "notes": "Angol, francia, spanyol és arab kiadás.", "bytes": 2_798_456 + 2_946_935 + 2_922_550 + 4_114_820, "size_status": M + ":content-length (4 nyelv)"},
+    "open-library": {"download": {"method": "http", "urls": ["https://openlibrary.org/data/ol_dump_latest.txt.gz"]}, "bytes": 18_205_492_645,
+                     "size_status": M + ":content-length"},
+    "neets-navy-electricity-electronics": {"bytes": 132_000_000, "bytes_est": None, "size_status": M + ":archive.org metadata (*.pdf)"},
+    **{i: {"subsumed_by": ["mek-oszk", "mek-oszk-szakmai"]} for i in ["pallas-nagy-lexikona", "revai-nagy-lexikona", "magyar-neprajzi-lexikon", "magyar-eletrajzi-lexikon"]},
+    "whisper-cpp-models": {"download": {"method": "hf", "repo": "ggerganov/whisper.cpp", "include": ["ggml-medium.bin", "ggml-small.bin"]},
+                           "bytes": 1_533_763_059 + 487_601_967, "size_status": M + ":hf-tree (medium + small; a turbo a hub-whisper tételben)"},
+    "python-source-and-docs": {"download": {"method": "http", "urls": ["https://www.python.org/ftp/python/3.15.2/Python-3.15.2.tar.xz",
+                               "https://docs.python.org/3.15/archives/python-3.15-docs-html.zip"]}, "bytes": 27_960_396 + 16_094_031, "size_status": M + ":content-length"},
+    "linux-kernel-source": {"download": {"method": "http", "urls": ["https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.3.4.tar.xz"]}, "bytes": 162_439_264, "size_status": M + ":content-length"},
+    "calibre": {"download": {"method": "http", "urls": ["https://download.calibre-ebook.com/9.18.0/calibre-9.18.0-x86_64.txz"],
+                "note": "Windows/macOS telepítő: https://calibre-ebook.com/download"}, "bytes": 240_948_148, "size_status": M + ":content-length (Linux)", "tier": 2},
+    "osmand-hungary-maps": {"download": {"method": "http", "urls": [f"https://download.osmand.net/download?standard=yes&file=Hungary_{r}_europe_2.obf.zip" for r, _ in OSMAND]},
+                            "bytes": sum(b for _, b in OSMAND), "size_status": M + ":osmand get_indexes (8 régió)"},
+    "freecad-and-parts-library": {"tier": 2}, "kicad-eda-and-libraries": {"tier": 2}, "arduino-ide-offline": {"tier": 2},
+    "devdocs-offline": {"tier": 2}, "zim-tools": {"tier": 2},
+    "hub-tesseract-hun-best": {"bytes_est": None},
+    "us-army-atp-4-02-11-first-aid": {"bytes": 14_300_000, "size_status": M + ":content-length (2 fájl összege)"},
+    "oss-7zip": {"download": {"method": "http", "urls": ["https://www.7-zip.org/a/7z2606-x64.exe",
+                 "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-linux-x64.tar.xz", "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-src.tar.xz"]},
+                 "bytes": 1_659_704 + 1_575_552 + 1_567_328},
+    "oss-memtest-smart": {"download": {"method": "http", "urls": ["https://memtest.org/download/v9.00/mt86plus_9.00.binaries.zip",
+                          "https://github.com/smartmontools/smartmontools/releases/download/RELEASE_7_5/smartmontools-7.5.tar.gz"]}, "bytes": 383_461 + 1_122_317},
+    "internet-in-a-box": {"bytes_est": 50_000_000},
+}
+for _k, _v in PATCH3.items():
+    _d = PATCH.setdefault(_k, {})
+    for _kk, _vv in _v.items():
+        if _kk == "download":
+            _d["download"] = _vv
+        else:
+            _d[_kk] = _vv
+MULTI_FILE_DONE = {"linux-kernel-source", "calibre"}
+_STYLE += [(r"cross-platform", "többplatformos"), (r"drag-and-drop", "fogd és vidd"), (r"all-in-one", "mindent egyben"), (r"\bdiskless\b", "lemez nélküli"),
+           (r"\bsnapshot", "pillanatkép"), (r"\branswomware\b", "zsarolóvírus"), (r"\bransomware\b", "zsarolóvírus"), (r"(\d)\.(\d)B-s\b", r"\1,\2B-s")]
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {
@@ -215,21 +256,25 @@ def apply(items):
                     it.pop(k, None)
                 else:
                     it[k] = v
-        if it["id"].startswith(("oss-", "hub-")):
+        if (it.get("download") or {}).get("method") == "archive.org" and not it["download"].get("glob") and "PDF" in str(it.get("format", "")).upper():
+            it["download"]["glob"] = "*.pdf"
+        if not it["cat"].startswith("ai_models"):
             for k in ("desc_hu", "need_hu", "alternatives"):
                 if isinstance(it.get(k), str):
                     it[k] = _style(it[k])
             if isinstance(it.get("need_hu"), str):
                 it["need_hu"] = it["need_hu"].rstrip(". ")
         dm = (it.get("download") or {}).get("method")
-        if dm in ("s3", "jigdo") or it["id"] == "debian-full-archive-ftpsync":
+        if dm == "jigdo":      # automatikus: a select_items jigdo-lite --noask ciklust ír (a könyvtár .jigdo fájljaira)
+            it["download"] = {"method": "jigdo", "url": it["download"].get("url")}
+        elif dm == "s3" or it["id"] == "debian-full-archive-ftpsync":
             src = it["download"].get("url") or ""
             how = {"s3": "AWS CLI-vel (aws s3 sync … --no-sign-request; fizetős vödörnél --request-payer requester, előtte költségbecslés)",
                    "jigdo": "jigdo-lite-tal (apt install jigdo-file; jigdo-lite <…>.jigdo) – a .jigdo fájlok a megadott könyvtárban vannak",
                    "rsync": "Debian ftpsync-kel (https://salsa.debian.org/mirror-team/archvsync) – helyi tükör beállítása, nem egyszerű rsync"}[
                    "rsync" if it["id"] == "debian-full-archive-ftpsync" else dm]
             it["download"] = {"method": "agent", "note": f"Letöltés {how}. Forrás/parancs: {src}", "seed_urls": [u for u in re.findall(r"(?:https?|s3)://\S+", str(src))]}
-        if it["id"] in MULTI_FILE and it.get("download", {}).get("method") == "http":
+        if it["id"] in MULTI_FILE and it["id"] not in MULTI_FILE_DONE and it.get("download", {}).get("method") == "http":
             urls = it["download"].get("urls") or []
             it["download"] = {"method": "agent", "note": "Több fájlból álló készlet: a kiinduló URL mellett a megjegyzésben (notes) és a forrásoldalon felsorolt további fájlok is kellenek.",
                               "seed_urls": urls + ([it["info_url"]] if it.get("info_url") else [])}

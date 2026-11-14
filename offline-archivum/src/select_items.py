@@ -21,7 +21,7 @@ PROFILES = {  # súlyok: S=túlélés R=újjáépítés A=gyakorlatiasság U=pó
     "computing": {"S": .05, "R": .40, "A": .20, "U": .15, "Q": .10, "O": .10},
 }
 MEM_CAP = {"T5": 10e9, "T4": 100e9, "T3": 220e9, "T2": 900e9, "T1": 1e18}  # alapértelmezett max. modellméret hardverszintenként
-AUTO_METHODS = {"agent", "kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent"}
+AUTO_METHODS = {"agent", "jigdo", "kiwix", "http", "wget-mirror", "rsync", "git", "hf", "ollama", "archive.org", "torrent"}
 UNITS = {"B": 1, "KB": 1e3, "MB": 1e6, "GB": 1e9, "TB": 1e12, "PB": 1e15, "K": 1e3, "M": 1e6, "G": 1e9, "T": 1e12, "P": 1e15,
          "KIB": 2**10, "MIB": 2**20, "GIB": 2**30, "TIB": 2**40}
 LANG_WORDS = {"hu": "hungarian", "en": "english"}
@@ -311,7 +311,7 @@ def main():
     ag = sum(size_of(v) or 0 for v in plan if v["download"]["method"] == "agent")
     if ag:
         print(f"Ebből AI-feladat (nem automatikus, a dl.sh TODO-ként jelzi): {human(ag)} – "
-              f"{sum(1 for v in plan if v['download']['method'] == 'agent')} tétel (API/OAI-PMH-lista, S3, jigdo, több fájlos készletek)")
+              f"{sum(1 for v in plan if v['download']['method'] == 'agent')} tétel (API/OAI-PMH-lista, S3, több fájlos készletek)")
     miss = sorted(x for x in incl if x not in {v["id"] for v in plan})
     if miss:
         known = {it["id"] for it in items}
@@ -341,7 +341,7 @@ def write_sh(plan, path, dest):
     safe = lambda x: re.sub(r"[^A-Za-z0-9._+-]", "_", str(x))            # "..."-be ágyazott útvonalelemekhez
     methods = {v["download"]["method"] for v in plan}
     need_tools = sorted({"curl"} | {t for m, ts in {"kiwix": ["curl"], "http": ["aria2c|wget"], "wget-mirror": ["wget"], "rsync": ["rsync"],
-                         "git": ["git"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
+                         "git": ["git"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
          "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
@@ -376,9 +376,16 @@ def write_sh(plan, path, dest):
             L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
             L.append('fi')
         elif m == "http":
-            for u in (d.get("urls") or [d.get("url")]):
-                if u:
-                    L.append(f'fetch {q(u)} "{sub}" && ok {vid} || fail {vid}')
+            us = [u for u in (d.get("urls") or [d.get("url")]) if u]
+            if len(us) == 1:
+                L.append(f'fetch {q(us[0])} "{sub}" && ok {vid} || fail {vid}')
+            elif us:      # több fájl: mind letöltődik, tételenként egy ítélet (részleges hiba = FAIL)
+                L.append(f'_r=0; for _u in {" ".join(q(u) for u in us)}; do fetch "$_u" "{sub}" || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}')
+        elif m == "jigdo":    # Debian BD/DVD-képek .jigdo leírókból (jigdo-file csomag), nem interaktívan
+            base = d["url"].rstrip("/") + "/"
+            L.append(f'if have jigdo-lite; then _r=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
+                     f'(cd "{sub}" && jigdo-lite --noask {q(base)}"$_j") || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}; '
+                     f'else echo {q("TODO " + v["id"] + " – jigdo-lite kell (apt install jigdo-file)")} | tee -a "$LOG" "$RUNLOG"; fi')
         elif m == "wget-mirror":
             L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {vid} || fail {vid}')
         elif m == "rsync":
