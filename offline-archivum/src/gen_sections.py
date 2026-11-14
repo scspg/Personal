@@ -517,6 +517,7 @@ def device_section():
               ("AI workstation – MINISFORUM MS-S1 MAX-P495 (1, 2, 4 gép)", ["ms-s1-x1", "ms-s1-x2", "ms-s1-x4"]),
               ("Gamer PC – RTX 6090 + RAM-változatok", ["gamer-pc-96", "gamer-pc-128", "gamer-pc-192", "gamer-pc-256"]),
               ("Gamer PC – RTX 6090 + következő generációs RTX Pro (két kártya)", ["gamer-2gpu-pro96", "gamer-2gpu-pro128", "gamer-2gpu-pro192"]),
+              ("Gamer PC – FELOLDVA (memória-OC; két kártyánál P2P + tensor parallel) – lásd 6.11", ["gamer-pc-128-unl", "gamer-pc-256-unl", "gamer-2gpu-pro96-unl", "gamer-2gpu-pro128-unl", "gamer-2gpu-pro192-unl"]),
               ("Linux szerverek", ["srv-epyc", "srv-8xh200"])]
     out = ["### 6.10 Eszköz-kalkulátor: mi a legokosabb, ami elfér és elfut (4 változat)", "",
            "A `llm_calc.py` (11. fejezet után, a **12. fejezetben**) bármely eszközre kiszámolja a négy változatot:",

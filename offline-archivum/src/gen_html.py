@@ -168,6 +168,11 @@ details .body{display:grid;gap:8px;margin-top:10px;font-size:14px}
 ul{margin:0;padding-left:20px;display:grid;gap:4px}
 a{color:var(--base)}
 footer{font-size:12px;color:var(--muted)}
+.stack{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--bar-bg)}
+.stack span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend .lg{display:inline-flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 """
 
@@ -183,6 +188,11 @@ function qf(bits,moe){ if(moe!==false) return bits<2?0.55:bits<3?0.75:bits<4?0.9
 const smart=v=>v.aa*qf(v.bits,v.moe);
 const unusableQ=v=>v.moe===false&&v.bits<2.5;
 const usable=(v,t,mn)=>smart(v)*(1+Math.min(0.2,0.05*Math.max(0,Math.log2(t/mn))));
+function tpFractions(gpus,need){const n=gpus.length,frac=new Array(n).fill(0),free=new Set([...Array(n).keys()]);let rest=need;
+  while(free.size&&rest>1e-9){const tot=[...free].reduce((s,i)=>s+gpus[i][1],0);const capped=[...free].filter(i=>rest*gpus[i][1]/tot>gpus[i][0]);
+    if(!capped.length){for(const i of free) frac[i]=rest*gpus[i][1]/tot/need;break;}
+    for(const i of capped){frac[i]=gpus[i][0]/need;rest-=gpus[i][0];free.delete(i);}}
+  return frac;}
 class Device{constructor(k){
   this.name=k.name||'Saját eszköz'; this.note=k.note||'';
   let gpus=k.gpus||(k.vram?[[k.vram,k.vram_bw]]:[]); const m=k.vram_bw_mult||1; gpus=gpus.map(([g,b])=>[g,b*m]);
@@ -197,7 +207,8 @@ class Device{constructor(k){
     const act=(v.act||30)*1e9*v.bits/8, fix=this.fix_ms/1000, o=[];
     if(this.uni&&need<=Math.min(this.uni,cap)&&fmtp!=='server'){const t=act/(EFF*this.uni_bw*1e9)+fix+(this.nodes-1)*this.hop_ms/1000; o.push([1/t,'unified'+(this.nodes>1?' ×'+this.nodes:'')]);}
     if(this.vram&&need<=this.vram){let bw=this.vram_bw,how='csak GPU';
-      if(this.tp&&this.gpus.length>1){const tot=this.gpus.reduce((s,[,b])=>s+b,0); if(this.gpus.every(([g,b])=>need*b/tot<=g)){bw=tot*this.tp_eff;how='csak GPU, tensor parallel ×'+this.gpus.length+' (P2P)';}}
+      if(this.tp&&this.gpus.length>1){const fr=tpFractions(this.gpus,need); const tRel=Math.max(...fr.map((f,i)=>f/this.gpus[i][1])); const bwTp=this.tp_eff/tRel;
+        if(bwTp>bw){bw=bwTp;how='csak GPU, tensor parallel ×'+this.gpus.length+' (P2P)';}}
       o.push([1/(act/(EFF*bw*1e9)+fix),how]);}
     if(fmtp!=='server'&&this.vram&&this.ram&&need<=this.vram+this.ram&&need>this.vram){const share=Math.max(0,(this.vram-2)/need);
       const f=Math.min(1,v.moe!==false?0.3+0.7*share:share); const t=act*f/(EFF*this.vram_bw*1e9)+act*(1-f)/(EFF*this.ram_bw*1e9)+fix;
@@ -315,7 +326,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <span class="chip est">~ = becsült érték</span>
   </div>
 </header>
-<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#modszertan">Módszertan</a></nav>
+<nav class="tabs"><a href="#kalkulator">Kalkulátor</a><a href="#eszkozok">Eszközmátrix</a><a href="#modellek">Modelltábla</a><a href="#ssd">SSD-tervező</a><a href="#modszertan">Módszertan</a></nav>
 
 <section id="kalkulator">
   <h2>Kalkulátor</h2>
@@ -366,6 +377,18 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
   <div class="tablebox" id="models"></div>
 </section>
 
+<section id="ssd">
+  <h2>Hány TB-os SSD kell? – 1, 2, 4, 8, 16, 32 TB</h2>
+  <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil, T2-es LLM-gép ~300 GB memóriával, alap + cenzúrázatlan modellekkel). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
+  __SSD__
+  <details><summary>Melyik meghajtót vedd</summary><div class="body"><ul>
+    <li><b>A gépben:</b> NVMe SSD (TLC, DRAM-cache, magas TBW). A modellek <b>betöltését</b> gyorsítja, a futásukat nem.</li>
+    <li><b>Archív példány:</b> az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (becslés). Hosszú távra HDD (CMR) vagy M-DISC kell; a HDD-t évente kapcsold be és ellenőrizd.</li>
+    <li><b>3-2-1:</b> 3 példány, 2 különböző adathordozón, 1 máshol tárolva. Az életmentő anyag legyen kinyomtatva is.</li>
+    <li><b>Fájlrendszer:</b> exFAT vagy ext4, <b>nem FAT32</b> (4 GB-os fájlméret-korlát).</li>
+  </ul></div></details>
+</section>
+
 <section id="modszertan">
   <h2>Módszertan és feltételezések</h2>
   <details open><summary>Hogyan számol a kalkulátor</summary><div class="body"><ul>
@@ -391,6 +414,44 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 """
 
 
+def ssd_html():
+    import html as H
+    P = json.load(open(os.path.join(HERE, "ssd_plans.json"), encoding="utf-8"))
+    sys.path.insert(0, HERE)
+    from build import CAT_GROUP
+    sz = lambda i: (i.get("bytes") or i.get("bytes_est") or 0)
+    def hb(b):
+        return f"{b/1e12:.2f} TB" if b >= 1e12 else f"{b/1e9:.1f} GB"
+    groups = ["Életmentő: orvoslás, víz, élelem, túlélés", "Mezőgazdaság, megfelelő technológia, energia", "Lexikonok, szótárak", "Magyar források",
+              "Mérnöki tudás, gyártás, kémia, elektronika", "Tudomány, oktatás, könyvtárak", "Térképek, geoadatok", "Szoftver, OS, forráskód",
+              "LLM-ek (alap)", "LLM-ek (cenzúrázatlan)", "Olvasók, futtatók"]
+    colors = ["#b03a2e", "#2f7d4f", "#22607a", "#b4581a", "#6b6f2a", "#4a5fa8", "#2a8a8a", "#7a6a55", "#3d6fa8", "#6b3fa0", "#8a8a8a"]
+    rows, cards = [], []
+    prev = set()
+    for b, items, used in P:
+        tot = {g: 0 for g in groups}
+        for i in items:
+            tot[CAT_GROUP.get(i["cat"], "Olvasók, futtatók")] = tot.get(CAT_GROUP.get(i["cat"], "Olvasók, futtatók"), 0) + sz(i)
+        cap = float(b.replace("TB", "")) * 1e12
+        bar = "".join(f'<span title="{H.escape(g)}: {hb(tot[g])}" style="width:{100*tot[g]/cap:.2f}%;background:{c}"></span>' for g, c in zip(groups, colors) if tot[g])
+        rows.append(f'<tr><td><b>{b}</b></td><td class="num">{hb(used)}</td><td class="num">{len(items)}</td><td style="min-width:260px"><div class="stack">{bar}</div></td>'
+                    + "".join(f'<td class="num">{hb(tot[g]) if tot[g] else "–"}</td>' for g in groups[:10]) + "</tr>")
+        new = sorted([i for i in items if i["id"] not in prev], key=lambda i: -sz(i))
+        by = {}
+        for i in items:
+            by.setdefault(CAT_GROUP.get(i["cat"], "Olvasók, futtatók"), []).append(i)
+        det = "".join(f'<p><b>{H.escape(g)}</b> – {hb(sum(sz(i) for i in by[g]))}: ' + "; ".join(
+            f'{H.escape((i.get("name") or i["id"])[:70])} <span class="muted">({hb(sz(i))})</span>' for i in sorted(by[g], key=lambda i: (i["tier"], -sz(i)))) + "</p>"
+            for g in groups if g in by)
+        cards.append(f'<details><summary><b>{b} SSD</b> – {len(items)} elem, {hb(used)} · újdonság az előzőhöz képest: '
+                     + H.escape(", ".join((i.get("name") or i["id"])[:40] for i in new[:5])) + f'</summary><div class="body">{det}</div></details>')
+        prev = {i["id"] for i in items}
+    legend = "".join(f'<span class="lg"><i style="background:{c}"></i>{H.escape(g)}</span>' for g, c in zip(groups, colors))
+    head = "".join(f'<th class="num">{H.escape(g.split(":")[0].split(",")[0])}</th>' for g in groups[:10])
+    return (f'<div class="legend">{legend}</div><div class="tablebox"><table><thead><tr><th>SSD</th><th class="num">Felhasználva</th><th class="num">Elem</th><th>Tartalom aránya</th>{head}</tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>' + "".join(cards))
+
+
 def main():
     vs = variants()
     ms = models(vs)
@@ -400,7 +461,7 @@ def main():
           .replace("__PRESETS__", json.dumps(presets, ensure_ascii=False, separators=(",", ":")))
           .replace("__START__", "gamer-pc-128" if "gamer-pc-128" in presets else next(iter(presets))))
     date = datetime.date.today().isoformat()
-    frag = BODY.replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
+    frag = BODY.replace("__SSD__", ssd_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
     open(os.path.join(HERE, "..", "ARCHIVUM-LLM.fragment.html"), "w", encoding="utf-8").write(frag)
     full = ('<!doctype html>\n<html lang="hu">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +

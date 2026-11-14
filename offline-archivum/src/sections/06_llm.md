@@ -1432,6 +1432,63 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~38 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~252 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~345 GB |
 
+#### Gamer PC – FELOLDVA (memória-OC; két kártyánál P2P + tensor parallel) – lásd 6.11
+
+#### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 128 GB DDR5
+
+*Modellnek jutó memória: ~143 GB · Egy kártya: a P2P irreleváns; a tensor-felezés feloldása Blackwell/Rubinon nem várható → csak memória-OC ×1,06.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~27 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~44 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~124 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19.0 = ~32% Opus 5.5 · 4.5 bit, 15.2 GB, ~51 tok/s, csak GPU] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF *IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~44 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~142 GB |
+
+#### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 256 GB DDR5
+
+*Modellnek jutó memória: ~262 GB · Memória-OC ×1,06.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~44 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~25 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~7 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 5.5 bit, 19.5 GB, ~44 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~254 GB |
+
+#### RTX 6090 + köv. RTX Pro 96 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+
+*Modellnek jutó memória: ~358 GB · A két kártya párhuzamosan (tensor parallel, P2P patch: aikitoria open-gpu-kernel-modules); vegyes generációnál libcuda-patch is kell.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 4.5 bit, 93.7 GB, ~105 tok/s, csak GPU, tensor parallel ×2 (P2P)] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~43 tok/s, hibrid GPU+RAM] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 85.7 GB, ~106 tok/s, csak GPU, tensor parallel ×2 (P2P)] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~104 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~44 tok/s, csak GPU, tensor parallel ×2 (P2P)] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~150 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 4.5 bit, 97.5 GB, ~104 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~43 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~244 GB |
+
+#### RTX 6090 + köv. RTX Pro 128 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+
+*Modellnek jutó memória: ~390 GB · B forgatókönyv, feloldva.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 5.5 bit, 158.3 GB, ~57 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~66 tok/s, csak GPU, tensor parallel ×2 (P2P)] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~314 GB |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~103 tok/s, csak GPU, tensor parallel ×2 (P2P)] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~103 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~48 tok/s, csak GPU, tensor parallel ×2 (P2P)] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~193 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 5.5 bit, 134.1 GB, ~103 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~66 tok/s, csak GPU, tensor parallel ×2 (P2P)] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
+
+#### RTX 6090 + köv. RTX Pro 192 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+
+*Modellnek jutó memória: ~454 GB · C forgatókönyv, feloldva.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27.2 = ~46% Opus 5.5 · 8.5 bit, 188.2 GB, ~93 tok/s, csak GPU, tensor parallel ×2 (P2P)] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 162.6 GB, ~94 tok/s, csak GPU, tensor parallel ×2 (P2P)] – egyedül – `ggml-org/Qwen3.8-Flash-Next-GGUF *Q8_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~93 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>Qwen3.8-27B (dense) [AA v5 20.1 = 34% Opus 5.5 · 8.5 bit, 30.9 GB, ~52 tok/s, csak GPU, tensor parallel ×2 (P2P)] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~252 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28.6 = 48% Opus 5.5 · 8.5 bit, 185.6 GB, ~93 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27.1 = ~46% Opus 5.5 · 4.5 bit, 111.9 GB, ~73 tok/s, csak GPU, tensor parallel ×2 (P2P)] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~345 GB |
+
 #### Linux szerverek
 
 #### Linux szerver – EPYC 12 csatornás DDR5 768 GB + 1× RTX 6090 32 GB

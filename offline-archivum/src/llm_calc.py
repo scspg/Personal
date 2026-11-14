@@ -101,6 +101,22 @@ PRESETS = {
  "gamer-2gpu-pro192": dict(name="Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 192 GB (C: optimista) + 256 GB DDR5", kind="gamer PC",
                            gpus=[(32, 1790), (192, 2800)], ram=256, ram_usable=0.9, ram_bw=83, formats="any,server", fix_ms=7, min_tps=5,
                            note="C: 192 GB, ~2,8 TB/s (optimista becslés). Összesen 224 GB VRAM."),
+ # FELOLDVA: memória-túlhajtás ×1,06 (+5–10% decode [becslés]); két kártyánál tensor parallel + P2P (aikitoria patch), hatásfok 0,82
+ "gamer-pc-128-unl": dict(name="Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 128 GB DDR5", kind="gamer PC", vram=32, vram_bw=1790, vram_bw_mult=1.06,
+                          ram=128, ram_usable=0.87, ram_bw=96, formats="any,server", fix_ms=6, min_tps=5,
+                          note="Egy kártya: a P2P irreleváns; a tensor-felezés feloldása Blackwell/Rubinon nem várható → csak memória-OC ×1,06."),
+ "gamer-pc-256-unl": dict(name="Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 256 GB DDR5", kind="gamer PC", vram=32, vram_bw=1790, vram_bw_mult=1.06,
+                          ram=256, ram_usable=0.9, ram_bw=83, formats="any,server", fix_ms=6, min_tps=5, note="Memória-OC ×1,06."),
+ "gamer-2gpu-pro96-unl": dict(name="RTX 6090 + köv. RTX Pro 96 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB", kind="gamer PC",
+                              gpus=[(32, 1790), (96, 1800)], vram_bw_mult=1.06, tensor_parallel=True, tp_eff=0.82, ram=256, ram_usable=0.9,
+                              ram_bw=83, formats="any,server", fix_ms=7, min_tps=5,
+                              note="A két kártya párhuzamosan (tensor parallel, P2P patch: aikitoria open-gpu-kernel-modules); vegyes generációnál libcuda-patch is kell."),
+ "gamer-2gpu-pro128-unl": dict(name="RTX 6090 + köv. RTX Pro 128 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB", kind="gamer PC",
+                               gpus=[(32, 1790), (128, 2300)], vram_bw_mult=1.06, tensor_parallel=True, tp_eff=0.82, ram=256, ram_usable=0.9,
+                               ram_bw=83, formats="any,server", fix_ms=7, min_tps=5, note="B forgatókönyv, feloldva."),
+ "gamer-2gpu-pro192-unl": dict(name="RTX 6090 + köv. RTX Pro 192 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB", kind="gamer PC",
+                               gpus=[(32, 1790), (192, 2800)], vram_bw_mult=1.06, tensor_parallel=True, tp_eff=0.82, ram=256, ram_usable=0.9,
+                               ram_bw=83, formats="any,server", fix_ms=7, min_tps=5, note="C forgatókönyv, feloldva."),
  # Linux szerverek
  "srv-epyc": dict(name="Linux szerver – EPYC 12 csatornás DDR5 768 GB + 1× RTX 6090 32 GB", kind="szerver", vram=32, vram_bw=1790,
                   ram=768, ram_usable=0.92, ram_bw=460, formats="any,server", fix_ms=8, min_tps=5,
@@ -109,6 +125,21 @@ PRESETS = {
                     ram=1024, ram_usable=0.9, ram_bw=460, formats="any,server", fix_ms=8, min_tps=5,
                     note="vLLM/SGLang TP=8; az összesített sávszélesség ~60%-át számolom (kommunikációs veszteség)."),
 }
+
+
+def tp_fractions(gpus, need):
+    """A modell hányadai kártyánként: sávszélesség-arányos, de legfeljebb a kártya kapacitásáig (iteratív kitöltés)."""
+    n = len(gpus); frac = [0.0] * n; free = set(range(n)); rest = need
+    while free and rest > 1e-9:
+        tot = sum(gpus[i][1] for i in free)
+        capped = [i for i in free if rest * gpus[i][1] / tot > gpus[i][0]]
+        if not capped:
+            for i in free:
+                frac[i] = rest * gpus[i][1] / tot / need
+            break
+        for i in capped:
+            frac[i] = gpus[i][0] / need; rest -= gpus[i][0]; free.discard(i)
+    return frac
 
 
 class Device:
@@ -150,9 +181,13 @@ class Device:
         if self.vram and need <= self.vram:
             bw, how = self.vram_bw, "csak GPU"
             if self.tp and len(self.gpus) > 1:
-                tot = sum(b for _, b in self.gpus)
-                if all(need * b / tot <= g for g, b in self.gpus):   # a sávszélességgel arányos felosztás belefér
-                    bw, how = tot * self.tp_eff, f"csak GPU, tensor parallel ×{len(self.gpus)} (P2P)"
+                # tensor parallel eltérő kártyákkal: "vízszint-kitöltés" – a kártyák egyszerre dolgoznak, a lassabbik dönt;
+                # a kis kártya megtelik (capacity cap), a maradék a többire kerül sávszélesség-arányosan
+                fr = tp_fractions(self.gpus, need)
+                t_rel = max(f / b for f, (g, b) in zip(fr, self.gpus))            # idő / (aktív bájt), 1/(GB/s)
+                bw_tp = self.tp_eff / t_rel
+                if bw_tp > bw:
+                    bw, how = bw_tp, f"csak GPU, tensor parallel ×{len(self.gpus)} (P2P)"
             opts.append((1 / (act / (EFF * bw * 1e9) + fix), how))
         if fmt != "server" and self.vram and self.ram and need <= self.vram + self.ram and need > self.vram:
             share = max(0.0, (self.vram - 2) / need)

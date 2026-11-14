@@ -9,3 +9,8 @@ OVERRIDES = {
  "enwiki-pages-articles-xml": {"subsumed_by": ["kx-wp-en-maxi", "kx-wp-en-nopic"]},
  "huwiki-pages-articles-xml": {"subsumed_by": ["kx-wp-hu-maxi", "kx-wp-hu-nopic"]},
 }
+OVERRIDES.update({
+ "rachel-world-possible": {"tier": 4, "notes": "Nagyrészt átfedés a Kiwix-anyagokkal (Wikipedia, Khan, Gutenberg) – csak nagy tárhelyen érdemes."},
+ "protomaps-planet-pmtiles": {"tier": 3},
+ "fdroid-repo-mirror": {"tier": 5, "notes": "Az összes app minden verziója; a fontos APK-k a tool-fdroid-repo-apks tételben vannak."},
+})
