@@ -85,7 +85,7 @@ Az AA-index a modell legjobb változatára vonatkozik. A HW oszlop azt mutatja, 
 | Mistral Large 4 (1T-A52B) | alap | 2026-09-30 | ~27.0 | Mistral Ecosystem Open-W | 233.0 GB – 2.10 TB | 21 | any, mac, server | T2–T1 | `llm-mistral-large-4` |
 | Muse Spark Open (816B-A42B) | alap | 2026-09-15 | 24.9 | Muse Model License; GATE | 175.6 GB – 1.64 TB | 17 | any, mac, server | T3–T1 | `llm-muse-spark-open` |
 | Qwen3.8-27B (dense) | alap | 2026-08-05 | 20.1 | Apache-2.0 | 6.2 GB – 55.6 GB | 58 | any, mac, server | T4–T1 | `llm-qwen3-8-27b` |
-| NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) | alap | Super-VL 2 | 13.6 | OpenMDW-1.1 (nyílt súlyo | 3.5 GB – 241.5 GB | 45 | any, mac, server | T5–T1 | `llm-nemotron-3-5` |
+| NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) | alap | Super-VL 2 | ~13.6 | OpenMDW-1.1 (nyílt súlyo | 3.5 GB – 241.5 GB | 45 | any, mac, server | T5–T1 | `llm-nemotron-3-5` |
 | Muse Glimmer 30B | alap | 2026-08-09 | 6.3 | Apache-2.0 | 6.5 GB – 57.1 GB | 33 | any, mac, server | T4–T1 | `llm-muse-glimmer-30b` |
 | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) | alap | E2B/E4B 20 | ~4.4 | Apache-2.0 | 2.3 GB – 62.6 GB | 100 | android, any, mac, server | T5–T1 | `llm-gemma-4` |
 | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) | alap | 2026-02-27 | ~3.0 | Apache-2.0 (Qwen3.5); MI | 1.8 GB – 10.4 GB | 22 | any | T5–T1 | `llm-qwen3-5-small` |
@@ -1145,6 +1145,249 @@ git clone --mirror https://github.com/ggml-org/llama.cpp && git clone --mirror h
    - vagy `Qwen3-Embedding` 0.6B/4B/8B;
    - vagy `EmbeddingGemma 2`.
 4. Open WebUI *Knowledge*: töltsd fel a 0. szintű PDF-eket (Hesperian, MSF, WHO), és a válaszok forráshivatkozással jönnek.
+
+### 6.10 Eszköz-kalkulátor: mi a legokosabb, ami elfér és elfut (4 változat)
+
+A `llm_calc.py` (11. fejezet után, a **12. fejezetben**) bármely eszközre kiszámolja a négy változatot:
+- **V1:** a legokosabb **cenzúrázatlan** modell, ami épp elfér és elfut.
+- **V2:** a legokosabb **alap (cenzúrázott)** modell, ami épp elfér és elfut.
+- **V3 – csapat alap modellekből:** egy nagy fő modell és egy kicsi, gyors segéd egyszerre a memóriában. A segéd routerként, gyors válaszolóként vagy draftként dolgozik. Mellettük egy RAG-embedding is fut (bge-m3).
+- **V4 – vegyes csapat:** egy alap és egy cenzúrázatlan modell együtt. Ha még befér, egy gyors segéd és a RAG-embedding is.
+
+**Ha két modell nem fér el egyszerre** (például telefonon), a kalkulátor *váltott csapatot* ad: a tárhelyen mindkét modell ott van, és mindig az éppen szükséges töltődik be (néhány másodperc).
+
+**Becslés, nem mérés:**
+- **Memória:** fájl × 1,15 + 1 GB.
+- **Sebesség:** a memória-sávszélességből és az aktív paraméterszámból (lásd 6.5).
+- **„Okosság”:** az AA v5 index × a kvantminőség szorzója. A dense modelleket 2,5 bit alatt kizárja.
+- **Döntés:** a legokosabb modell nyer, kis sebesség-bónusszal (legfeljebb +20%).
+- **„Elfut”:** legalább 5 tok/s (telefonon és régi laptopon 4).
+- **Közel azonos alternatíva:** a legjobb pontszám ≥95%-a, más modellcsaládból.
+
+**Saját eszközre:**
+```bash
+sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py
+python3 llm_calc.py ARCHIVUM.md --name "Saját PC" --gpu 24:1008 --ram 128 --ram-bw 90 --formats any,server --md
+python3 llm_calc.py ARCHIVUM.md --name "Mac Studio" --unified 512 --unified-usable 0.92 --unified-bw 819 --formats any,mac
+python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
+```
+
+**Hardveradatok és feltételezések:**
+- **MS-S1 MAX-P495 és ZBook Ultra G3a:** 192 GB LPDDR5X; a GPU-nak legfeljebb 160 GB adható (gyártói adat). A ~256–273 GB/s sávszélességet a memóriasebességből és a 256 bites buszból számoltam.
+- **RTX 6090:** még nincs bejelentve. A pletykák szerint 32 GB GDDR7 és ~1,79 TB/s.
+- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért három forgatókönyvvel számolok: 96, 128 és 192 GB.
+- **Pavilion 15-bc504ur:** az i5-9300H + GTX 1050 4 GB a bc504TX testvérmodell adatlapjából jön.
+- **Telefonok:** a modellnek jutó memória becslés (az OS és az appok levonva).
+- **Klaszter (2 vagy 4 MS-S1):** llama.cpp RPC vagy exo pipeline-párhuzamosítás USB4 v2 (80 Gbps) gyűrűn. A kapacitás összeadódik, a sebesség nagyjából egy gépé, plusz ~3 ms hálózati késleltetés gépenként.
+
+#### Telefonok
+
+#### Samsung Galaxy S24 Ultra (12 GB, Snapdragon 8 Gen 3)
+
+*Modellnek jutó memória: ~7 GB · Android: PocketPal / ChatterUI (GGUF). Kb. 7,5 GB jut a modellnek. Sávszélesség ~68 GB/s (LPDDR5X, becslés).*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [4.5 bit, 5.3 GB, ~11 tok/s, unified] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [8.5 bit, 4.5 GB, ~7 tok/s, unified] – egyedül – `unsloth/Qwen3.5-4B-GGUF *Q8_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [8.5 bit, 4.5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [4.5 bit, 3.1 GB, ~19 tok/s, unified] – gyors segéd, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `unsloth/gemma-4-E2B-it-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~12 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [8.5 bit, 4.5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [4.5 bit, 5.3 GB, ~11 tok/s, unified] – partner, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
+
+#### iPhone 15 Pro (8 GB, A17 Pro)
+
+*Modellnek jutó memória: ~5 GB · iOS: PocketPal / LLM Farm (GGUF), Locally AI (MLX). Kb. 5 GB jut a modellnek (iOS app-memórialimit).*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) [4.5 bit, 2.5 GB, ~9 tok/s, unified] – egyedül – `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF *IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [4.5 bit, 2.7 GB, ~9 tok/s, unified] – egyedül – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [4.5 bit, 2.7 GB, ~9 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [4.5 bit, 3.1 GB, ~16 tok/s, unified] – gyors segéd, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `unsloth/gemma-4-E2B-it-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~10 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [4.5 bit, 2.7 GB, ~9 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) [4.5 bit, 2.5 GB, ~9 tok/s, unified] – partner, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF *IQ4_XS*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~9 GB |
+
+#### Laptopok
+
+#### HP Pavilion 15-bc504ur (8 GB DDR4, GTX 1050 4 GB) – mostani
+
+*Modellnek jutó memória: ~9 GB · i5-9300H + GTX 1050 4 GB (a bc504TX testvérmodell adatai alapján). Egycsatornás DDR4-2666 ~21 GB/s.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [4.5 bit, 5.3 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – egyedül – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*` |
+| **V2 legokosabb alap (cenzúrázott)** | NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [4.5 bit, 5.1 GB, ~7 tok/s, hibrid GPU+RAM (dense)] – egyedül – `unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF *UD-Q4_K_XL*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [6.5 bit, 6.2 GB, ~4 tok/s, hibrid GPU+RAM (dense)] – közel azonos alternatíva – `lmstudio-community/gemma-4-E4B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~16 GB |
+| **V3 csapat (alap modellek)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [2.6 bit, 2.3 GB, ~41 tok/s, csak GPU] – fő modell – `unsloth/gemma-4-E2B-it-GGUF *UD-IQ2_M*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [3.5 bit, 2.4 GB, ~22 tok/s, csak GPU] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *UD-Q3_K_XL*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~8 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) [4.5 bit, 2.5 GB, ~19 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF *IQ4_XS*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [3.5 bit, 2.4 GB, ~22 tok/s, csak GPU] – partner (alap) – `unsloth/Qwen3.5-4B-GGUF *UD-Q3_K_XL*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~9 GB |
+
+#### HP Pavilion 15-bc504ur (16 GB DDR4 dual channel, GTX 1050 4 GB)
+
+*Modellnek jutó memória: ~16 GB · +8 GB → kétcsatornás DDR4-2666 ~42 GB/s. A gyors SSD a modell betöltését gyorsítja, a futást nem.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.5-9B heretic-v2 (trohrbaugh) [4.5 bit, 5.6 GB, ~5 tok/s, hibrid GPU+RAM (dense)] – egyedül – `filvyb/Qwen3.5-9B-heretic-v2-GGUF *Q4_K_M*` |
+| **V2 legokosabb alap (cenzúrázott)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [3.5 bit, 12.9 GB, ~15 tok/s, hibrid GPU+RAM] – egyedül – `unsloth/gemma-4-26B-A4B-it-GGUF *UD-Q3_K_XL*` |
+| **V3 csapat (alap modellek)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [4.5 bit, 7.0 GB, ~4 tok/s, hibrid GPU+RAM (dense)] – fő modell – `google/gemma-4-12B-it-qat-q4_0-gguf *q4_0*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [4.5 bit, 2.7 GB, ~12 tok/s, hibrid GPU+RAM (dense)] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [8.5 bit, 4.5 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – fő modell – `unsloth/Qwen3.5-4B-GGUF *Q8_0*`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [4.5 bit, 5.3 GB, ~10 tok/s, hibrid GPU+RAM (dense)] – partner (cenzúrázatlan) – `Abiray/gemma-4-E4B-it-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
+
+#### HP ZBook Ultra G3a (192 GB unified, Ryzen AI Max+ PRO 495)
+
+*Modellnek jutó memória: ~159 GB · A GPU-nak max. 160 GB adható (HP). LPDDR5X-8000 × 256 bit ≈ 256 GB/s (számolt). Linux + llama.cpp Vulkan/ROCm ajánlott.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~31 tok/s, unified] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~27 tok/s, unified] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~31 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [8.5 bit, 33.6 GB, ~33 tok/s, unified] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~31 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [6.5 bit, 22.4 GB, ~6 tok/s, unified] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [6.5 bit, 3.9 GB, ~49 tok/s, unified] – gyors segéd / router – `lmstudio-community/gemma-4-E2B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~146 GB |
+
+#### AI workstation – MINISFORUM MS-S1 MAX-P495 (1, 2, 4 gép)
+
+#### 1× MINISFORUM MS-S1 MAX-P495 (192 GB)
+
+*Modellnek jutó memória: ~159 GB · LPDDR5X-8533 × 256 bit ≈ 273 GB/s (számolt); GPU-ra max. 160 GB.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~33 tok/s, unified] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~28 tok/s, unified] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [8.5 bit, 33.6 GB, ~34 tok/s, unified] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [8.5 bit, 29.1 GB, ~5 tok/s, unified] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q8_0*`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [6.5 bit, 3.9 GB, ~50 tok/s, unified] – gyors segéd / router – `lmstudio-community/gemma-4-E2B-it-GGUF *Q6_K*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~154 GB |
+
+#### 2× MS-S1 MAX-P495 (2×192 GB, USB4 v2 80 Gbps)
+
+*Modellnek jutó memória: ~319 GB · llama.cpp RPC / exo pipeline-párhuzamosítás: a kapacitás összeadódik, a sebesség ~1 gépé + hálózati késleltetés.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [5.5 bit, 158.3 GB, ~26 tok/s, unified ×2] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [8.5 bit, 33.6 GB, ~31 tok/s, unified ×2] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~196 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~26 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~11 tok/s, unified ×2] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [4.5 bit, 21.2 GB, ~43 tok/s, unified ×2] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~311 GB |
+
+#### 4× MS-S1 MAX-P495 (4×192 GB, USB4 v2 gyűrű)
+
+*Modellnek jutó memória: ~637 GB · Gépenként 2 db USB4 v2 port → gyűrű topológia; alternatíva 2×10GbE. 640 GB GPU-memória összesen.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [8.5 bit, 507.9 GB, ~8 tok/s, unified ×4] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V2 legokosabb alap (cenzúrázott)** | DeepSeek-V4.1-Flash-1017 [8.5 bit, 508.4 GB, ~8 tok/s, unified ×4] – egyedül – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*` |
+| **V3 csapat (alap modellek)** | DeepSeek-V4.1-Flash-1017 [8.5 bit, 508.4 GB, ~8 tok/s, unified ×4] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [8.5 bit, 33.6 GB, ~26 tok/s, unified ×4] – gyors segéd / router – `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF *Q8_0*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~626 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | GLM-5.3 [4.5 bit, 367.2 GB, ~6 tok/s, unified ×4] – fő modell – `AesSedai/GLM-5.3-GGUF *IQ4_XS*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [5.5 bit, 158.3 GB, ~23 tok/s, unified ×4] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [4.5 bit, 21.2 GB, ~34 tok/s, unified ×4] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~633 GB |
+
+#### Gamer PC – RTX 6090 + RAM-változatok
+
+#### Gamer PC – RTX 6090 32 GB + 96 GB DDR5-6000
+
+*Modellnek jutó memória: ~114 GB · RTX 6090 adatai nem hivatalosak (pletyka). 2 DIMM DDR5-6000 kétcsatornás ≈ 96 GB/s.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~27 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B (dense) [3.5 bit, 10.1 GB, ~58 tok/s, csak GPU] – gyors segéd / router – `ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF *IQ3_XXS*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [3.5 bit, 75.8 GB, ~35 tok/s, hibrid GPU+RAM] – fő modell – `ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF *IQ3_XXS*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [4.5 bit, 16.6 GB, ~49 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *UD-DW-Q4_K_M*`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [4.5 bit, 2.7 GB, ~119 tok/s, csak GPU] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF *Q4_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
+
+#### Gamer PC – RTX 6090 32 GB + 128 GB DDR5
+
+*Modellnek jutó memória: ~143 GB · 2×64 GB, DDR5-6000 feltételezve.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~27 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – egyedül – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~124 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~28 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [6.5 bit, 22.4 GB, ~37 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Qwen3.8-27B (dense) [3.5 bit, 12.8 GB, ~58 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *IQ3_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~143 GB |
+
+#### Gamer PC – RTX 6090 32 GB + 192 GB DDR5
+
+*Modellnek jutó memória: ~205 GB · 4×48 GB → kb. DDR5-5400 (4 DIMM-mel lassabb) ≈ 86 GB/s.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [5.5 bit, 158.3 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) [6.5 bit, 22.4 GB, ~37 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF *Q6_K*`<br>Qwen3.8-27B (dense) [4.5 bit, 16.9 GB, ~49 tok/s, csak GPU] – gyors segéd / router – `ubergarm/Qwen3.8-27B-GGUF *IQ4_KS*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~203 GB |
+
+#### Gamer PC – RTX 6090 32 GB + 256 GB DDR5
+
+*Modellnek jutó memória: ~262 GB · 4×64 GB (AM5 maximum) → kb. DDR5-5200 ≈ 83 GB/s.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [5.5 bit, 158.3 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*` |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [4.5 bit, 85.7 GB, ~25 tok/s, hibrid GPU+RAM] – fő modell – `AesSedai/Qwen3.8-Flash-Next-GGUF *Q4_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~7 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~42 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~254 GB |
+
+#### Gamer PC – RTX 6090 + következő generációs RTX Pro (két kártya)
+
+#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 96 GB (A: konzervatív) + 256 GB DDR5
+
+*Modellnek jutó memória: ~358 GB · A: az utód a mostani RTX PRO 6000 Blackwell szintjén (96 GB, ~1,8 TB/s). Összesen 128 GB VRAM.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~99 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~40 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~137 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [4.5 bit, 97.5 GB, ~99 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-IQ4_XS*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~42 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~244 GB |
+
+#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 128 GB (B: valószínű) + 256 GB DDR5
+
+*Modellnek jutó memória: ~390 GB · B: 128 GB, ~2,3 TB/s (becslés). Összesen 160 GB VRAM.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [5.5 bit, 158.3 GB, ~56 tok/s, hibrid GPU+RAM] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *UD-Q5_K_XL*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~314 GB |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – egyedül – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~46 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~179 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [5.5 bit, 134.1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF *i1-Q5_K_M*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~59 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
+
+#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 192 GB (C: optimista) + 256 GB DDR5
+
+*Modellnek jutó memória: ~454 GB · C: 192 GB, ~2,8 TB/s (optimista becslés). Összesen 224 GB VRAM.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [8.5 bit, 188.2 GB, ~90 tok/s, csak GPU] – egyedül – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – közel azonos alternatíva – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~348 GB |
+| **V2 legokosabb alap (cenzúrázott)** | Qwen3.8-Flash-Next [8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – egyedül – `Qwen/Qwen3.8-Flash-Next-FP8` |
+| **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>Qwen3.8-27B (dense) [8.5 bit, 30.9 GB, ~38 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~252 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [8.5 bit, 185.6 GB, ~90 tok/s, csak GPU] – fő modell – `Qwen/Qwen3.8-Flash-Next-FP8`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [4.5 bit, 111.9 GB, ~65 tok/s, csak GPU] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF *Mix-128G*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~345 GB |
+
+#### Linux szerverek
+
+#### Linux szerver – EPYC 12 csatornás DDR5 768 GB + 1× RTX 6090 32 GB
+
+*Modellnek jutó memória: ~739 GB · ik_llama.cpp / KTransformers: MoE-szakértők RAM-ban, figyelem a GPU-n.*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [8.5 bit, 507.9 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V2 legokosabb alap (cenzúrázott)** | DeepSeek-V4.1-Flash-1017 [8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – egyedül – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*` |
+| **V3 csapat (alap modellek)** | DeepSeek-V4.1-Flash-1017 [8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~39 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~610 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | DeepSeek-V4.1-Flash-1017 [8.5 bit, 508.4 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF *UD-Q8_K_XL*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [4.5 bit, 93.7 GB, ~64 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *unsloth-UD-IQ4_XS*`<br>Qwen3.8-27B (dense) [5.5 bit, 19.5 GB, ~39 tok/s, csak GPU] – gyors segéd / router – `mradermacher/Qwen3.8-27B-i1-GGUF *Q5_K_M*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~719 GB |
+
+#### Linux szerver – 8× H200 141 GB (tensor parallel)
+
+*Modellnek jutó memória: ~2050 GB · vLLM/SGLang TP=8; az összesített sávszélesség ~60%-át számolom (kommunikációs veszteség).*
+
+| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
+|---|---|
+| **V1 legokosabb cenzúrázatlan** | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) [8.5 bit, 507.9 GB, ~108 tok/s, csak GPU] – egyedül – `pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF *Q8_0*` |
+| **V2 legokosabb alap (cenzúrázott)** | Kimi K3.1 Pro [4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – egyedül – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*` |
+| **V3 csapat (alap modellek)** | Kimi K3.1 Pro [4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – fő modell – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*`<br>Qwen3.8-27B (dense) [8.5 bit, 30.9 GB, ~99 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1774 GB |
+| **V4 vegyes csapat (alap + cenzúrázatlan)** | Kimi K3.1 Pro [4.5 bit, 1508.9 GB, ~16 tok/s, hibrid GPU+RAM] – fő modell – `DevQuasar/moonshotai.Kimi-K3.1-Pro-GGUF *MXFP4_MOE*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [8.5 bit, 188.2 GB, ~118 tok/s, csak GPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF *Q8_0*`<br>Qwen3.8-27B (dense) [8.5 bit, 30.9 GB, ~99 tok/s, csak GPU] – gyors segéd / router – `Qwen/Qwen3.8-27B-FP8`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~1991 GB |
+
+**Gyakorlati tanácsok a csapathoz:**
+- **Futtatás:** minden modell külön `llama-server` példányként fut, külön porton (pl. 8080 = fő, 8081 = partner, 8082 = segéd, 8083 = embedding).
+- **Közös felület:** az Open WebUI mindet egy felületen kezeli, és modellenként választható. Router-logika: egyszerű kérdés → gyors segéd; nehéz → fő modell; elutasított vagy érzékeny téma → cenzúrázatlan partner.
+- **Ellenőrzés:** a fontos válaszokat érdemes a másik modellel is ellenőriztetni („második vélemény”). Orvosi, vegyi és szerkezeti témában a RAG-forrásdokumentum dönt.
+- **Klaszter:** gépenként `rpc-server`, a fő gépen pedig `llama-server --rpc host2:50052,host3:50052 …`. A gépek USB4 v2 (Thunderbolt-hálózat) vagy 10GbE kapcsolaton át kommunikálnak.
+- **Két különböző videokártya:**
+  - Rétegenként osztja szét a modellt a `-ts 32,96` (tensor-split, a VRAM arányában) és a `-sm layer` kapcsoló.
+  - A nagyobb kártya legyen a `--main-gpu`.
+  - A két kártya nem kell, hogy azonos generációjú legyen (CUDA mindkettő).
 
 ### 6.9 Kihagyott (régi vagy gyenge) modellek
 

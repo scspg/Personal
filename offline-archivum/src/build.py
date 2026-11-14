@@ -113,7 +113,7 @@ def main():
     llm_items = sorted(bycat.get("ai_models", []), key=lambda x: (x["tier"], -score(x)))
 
     LLM_KEYS = ("id", "name", "cat", "tier", "group", "variant_rank", "lang", "access", "license", "bytes", "size_status", "format",
-                "download", "scores", "hw_tiers", "platform", "llm_aa", "llm_aa_est", "llm_bits", "released")
+                "download", "scores", "hw_tiers", "platform", "llm_aa", "llm_aa_est", "llm_bits", "active_b", "moe", "released")
 
     def compact(i):
         if i["cat"].startswith("ai_models") and "llm_aa" in i:
@@ -135,7 +135,9 @@ def main():
              "`variant_rank`, `variant_role` (`pref` = ajánlott, `luxury`), `desc_hu`, `lang`, `access` (free | free-registration | donation | paid | gray | physical), `price`, "
              "`license`, `bytes` (mért vagy hivatalos), `bytes_est` (becsült), `size_status`, `format`, `info_url`, `download` {method, …}, `url_status`, "
              "`scores` {S,R,A,U,Q,O}, `requires`, `subsumed_by`, `hw_tiers` (LLM: T1–T5), `notes`.\n\n```jsonl\n" + jsonl + "\n```\n",
-             "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n"]
+             "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n",
+             "---\n\n## 12. llm_calc.py\n\nEszköz-kalkulátor (lásd 6.10). Kibontás: `sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py`\n\n```python llm_calc.py\n"
+             + open(os.path.join(HERE, "llm_calc.py"), encoding="utf-8").read() + "```\n"]
     open(OUT, "w", encoding="utf-8").write("\n\n".join(p.strip("\n") + "\n" for p in parts if p))
     print(f"OK: {OUT}  elemek={len(items)}  méret={os.path.getsize(OUT)/1e3:.0f} KB")
     # --- kompakt változat chatbe töltéshez ---

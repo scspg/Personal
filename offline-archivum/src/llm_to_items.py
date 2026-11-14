@@ -85,7 +85,8 @@ def aa_for(mid, name, quant, b, kind):
                 return v, tok != "31B"
         return 4.4 if b > 18e9 else 2.5, True
     if mid == "nemotron-3-5":
-        return (13.6, False) if b > 40e9 else (5.5, False)
+        if b > 40e9: return 13.6, False
+        return (2.5, True) if "bolt" in quant.lower() else (5.5, False)   # Bolt-E4B: nincs AA-pont, E4B-szintű becslés
     if mid == "qwen3-5-small":
         return (2.0, True) if b < 4e9 else (3.0, True)
     return AA.get(mid, 5.0), mid in AA_EST or mid not in AA
@@ -105,6 +106,41 @@ def bits_of(q, fmt):
 
 
 REJ = []
+# aktív paraméter (milliárd) és MoE-jelző modellenként; a vegyes csoportoknál változatonként dől el (active_for)
+ACT = {"kimi-k3-1-pro": (104, True), "deepseek-v4-1-flash-1017": (16, True), "glm-5-3": (40, True), "glm-5-3-flash": (18, True),
+ "mimo-v2-6-pro": (42, True), "ling-3-1-flash-1019": (25, True), "minimax-m3-1-flash": (23, True), "qwen3-8-flash-next": (6, True),
+ "qwen3-8-2-4t-a95b": (95, True), "step-5-preview": (27, True), "inkling-2-small": (17, True), "hy4-preview": (49, True),
+ "mistral-large-4": (52, True), "muse-spark-open": (42, True), "qwen3-8-27b": (27.8, False), "muse-glimmer-30b": (29.6, False),
+ "longcat-2-5": (48, True)}
+UNC_ACT = [("deepseek-v4-1", 16, True), ("glm-5-3-flash", 18, True), ("glm-5-3", 40, True), ("qwen3-8-flash-next", 6, True),
+ ("kimi-k3", 104, True), ("minimax-m3-1", 23, True), ("gpt-oss-120b", 5.1, True), ("mistral-small-4", 6.5, True),
+ ("qwen3-8-27b", 27.8, False), ("arete-27b", 27.4, False), ("gemma-4-31b", 31.3, False), ("gemma-4-26b", 4, True),
+ ("qwen3-6-35b", 3, True), ("gpt-oss-20b", 3.6, True), ("gemma-4-12b", 12, False), ("qwen3-5-9b", 9.5, False),
+ ("qwen3-5-4b", 4.6, False), ("gemma-4-e4b", 4.5, False), ("gemma-4-e2b", 2, False)]
+
+
+def active_for(mid, kind, quant_repo, b):
+    q = quant_repo.lower()
+    if kind == "uncensored":
+        for k, a, moe in UNC_ACT:
+            if k in mid:
+                return a, moe
+        return None, True
+    if mid == "gemma-4":
+        for tok, a, moe in (("e2b", 2, False), ("e4b", 4.5, False), ("12b", 12, False), ("26b", 4, True), ("31b", 31.3, False)):
+            if tok in q:
+                return a, moe
+        return (31.3, False) if b > 18e9 else (4.5, False)
+    if mid == "nemotron-3-5":
+        if b > 40e9: return 12, True
+        return (3, True) if "lightning" in q else (4, False)
+    if mid == "qwen3-5-small":
+        for tok, a in (("0.8b", 0.9), ("2b-", 2.3), ("4b", 4.6), ("9b", 9.5)):
+            if tok in q: return a, False
+        return (4.6, False) if b < 4e9 else (9.5, False)
+    if mid == "mimo-v2-6-pro" and "flash" in q:
+        return 15, True
+    return ACT.get(mid, (None, True))
 
 
 def main():
@@ -170,6 +206,9 @@ def main():
         for rank, v in enumerate(vars_, 1):
             iid = uid(f"llm-{mid}-{slug(v['fmt'])}-{slug(v['quant'].split()[0])}")
             aa, est = aa_for(mid, str(model.get("name")), f"{v['quant']} {v['repo'] or ''}", v["b"], kind)
+            if mid == "mimo-v2-6-pro" and "flash" in f"{v['quant']} {v['repo'] or ''}".lower():
+                aa = 26.7  # MiMo-V2.6-Flash (AA v5)
+            act, moe = active_for(mid, kind, f"{v['quant']} {v['repo'] or ''}", v["b"])
             bits = bits_of(v["quant"], v["fmt"])
             S = {"S": 4, "R": round(4 + 6 * (aa / 46.5) ** 0.5), "A": 6, "U": 7 if kind == "uncensored" else 6, "Q": 5, "O": O}
             dl = {"method": "ollama", "tag": v["tag"]} if v["fmt"] == "ollama" else {"method": "hf", "repo": v["repo"], "include": v["inc"]}
@@ -185,7 +224,7 @@ def main():
                 "hw_tiers": v["hw"], "platform": v["plat"], "runtime": v["runtime"],
                 "notes": f"Hardver: {v['tier_txt']}. Runtime: {v['runtime']}. " + str(model.get("notes") or "")[:300],
                 "released": str(model.get("released") or model.get("base_created") or ""),
-                "llm_aa": aa, "llm_aa_est": est, "llm_bits": bits,
+                "llm_aa": aa, "llm_aa_est": est, "llm_bits": bits, "active_b": act, "moe": moe,
             })
 
     fr = load_blocks("research/llm_frontier.md.txt")[0]

@@ -470,10 +470,66 @@ def web_section():
     return "\n".join(out)
 
 
+def device_section():
+    import llm_calc
+    vs = llm_calc.load("../ARCHIVUM.md")
+    groups = [("Telefonok", ["s24-ultra", "iphone-15-pro"]),
+              ("Laptopok", ["pavilion-8", "pavilion-16", "zbook-g3a-192"]),
+              ("AI workstation – MINISFORUM MS-S1 MAX-P495 (1, 2, 4 gép)", ["ms-s1-x1", "ms-s1-x2", "ms-s1-x4"]),
+              ("Gamer PC – RTX 6090 + RAM-változatok", ["gamer-pc-96", "gamer-pc-128", "gamer-pc-192", "gamer-pc-256"]),
+              ("Gamer PC – RTX 6090 + következő generációs RTX Pro (két kártya)", ["gamer-2gpu-pro96", "gamer-2gpu-pro128", "gamer-2gpu-pro192"]),
+              ("Linux szerverek", ["srv-epyc", "srv-8xh200"])]
+    out = ["### 6.10 Eszköz-kalkulátor: mi a legokosabb, ami elfér és elfut (4 változat)", "",
+           "A `llm_calc.py` (11. fejezet után, a **12. fejezetben**) bármely eszközre kiszámolja a négy változatot:",
+           "- **V1:** a legokosabb **cenzúrázatlan** modell, ami épp elfér és elfut.",
+           "- **V2:** a legokosabb **alap (cenzúrázott)** modell, ami épp elfér és elfut.",
+           "- **V3 – csapat alap modellekből:** egy nagy fő modell és egy kicsi, gyors segéd egyszerre a memóriában. A segéd routerként, gyors válaszolóként vagy draftként dolgozik. Mellettük egy RAG-embedding is fut (bge-m3).",
+           "- **V4 – vegyes csapat:** egy alap és egy cenzúrázatlan modell együtt. Ha még befér, egy gyors segéd és a RAG-embedding is.",
+           "",
+           "**Ha két modell nem fér el egyszerre** (például telefonon), a kalkulátor *váltott csapatot* ad: a tárhelyen mindkét modell ott van, és mindig az éppen szükséges töltődik be (néhány másodperc).", "",
+           "**Becslés, nem mérés:**",
+           "- **Memória:** fájl × 1,15 + 1 GB.",
+           "- **Sebesség:** a memória-sávszélességből és az aktív paraméterszámból (lásd 6.5).",
+           "- **„Okosság”:** az AA v5 index × a kvantminőség szorzója. A dense modelleket 2,5 bit alatt kizárja.",
+           "- **Döntés:** a legokosabb modell nyer, kis sebesség-bónusszal (legfeljebb +20%).",
+           "- **„Elfut”:** legalább 5 tok/s (telefonon és régi laptopon 4).",
+           "- **Közel azonos alternatíva:** a legjobb pontszám ≥95%-a, más modellcsaládból.", "",
+           "**Saját eszközre:**",
+           "```bash",
+           "sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py",
+           "python3 llm_calc.py ARCHIVUM.md --name \"Saját PC\" --gpu 24:1008 --ram 128 --ram-bw 90 --formats any,server --md",
+           "python3 llm_calc.py ARCHIVUM.md --name \"Mac Studio\" --unified 512 --unified-usable 0.92 --unified-bw 819 --formats any,mac",
+           "python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil",
+           "```", "",
+           "**Hardveradatok és feltételezések:**",
+           "- **MS-S1 MAX-P495 és ZBook Ultra G3a:** 192 GB LPDDR5X; a GPU-nak legfeljebb 160 GB adható (gyártói adat). A ~256–273 GB/s sávszélességet a memóriasebességből és a 256 bites buszból számoltam.",
+           "- **RTX 6090:** még nincs bejelentve. A pletykák szerint 32 GB GDDR7 és ~1,79 TB/s.",
+           "- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért három forgatókönyvvel számolok: 96, 128 és 192 GB.",
+           "- **Pavilion 15-bc504ur:** az i5-9300H + GTX 1050 4 GB a bc504TX testvérmodell adatlapjából jön.",
+           "- **Telefonok:** a modellnek jutó memória becslés (az OS és az appok levonva).",
+           "- **Klaszter (2 vagy 4 MS-S1):** llama.cpp RPC vagy exo pipeline-párhuzamosítás USB4 v2 (80 Gbps) gyűrűn. A kapacitás összeadódik, a sebesség nagyjából egy gépé, plusz ~3 ms hálózati késleltetés gépenként.", ""]
+    for title, keys in groups:
+        out.append(f"#### {title}\n")
+        for k in keys:
+            d = llm_calc.Device(**llm_calc.PRESETS[k])
+            out.append(llm_calc.report(d, llm_calc.evaluate(d, vs), md=True))
+    out += ["**Gyakorlati tanácsok a csapathoz:**",
+            "- **Futtatás:** minden modell külön `llama-server` példányként fut, külön porton (pl. 8080 = fő, 8081 = partner, 8082 = segéd, 8083 = embedding).",
+            "- **Közös felület:** az Open WebUI mindet egy felületen kezeli, és modellenként választható. Router-logika: egyszerű kérdés → gyors segéd; nehéz → fő modell; elutasított vagy érzékeny téma → cenzúrázatlan partner.",
+            "- **Ellenőrzés:** a fontos válaszokat érdemes a másik modellel is ellenőriztetni („második vélemény”). Orvosi, vegyi és szerkezeti témában a RAG-forrásdokumentum dönt.",
+            "- **Klaszter:** gépenként `rpc-server`, a fő gépen pedig `llama-server --rpc host2:50052,host3:50052 …`. A gépek USB4 v2 (Thunderbolt-hálózat) vagy 10GbE kapcsolaton át kommunikálnak.",
+            "- **Két különböző videokártya:**\n"
+            "  - Rétegenként osztja szét a modellt a `-ts 32,96` (tensor-split, a VRAM arányában) és a `-sm layer` kapcsoló.\n"
+            "  - A nagyobb kártya legyen a `--main-gpu`.\n"
+            "  - A két kártya nem kell, hogy azonos generációjú legyen (CUDA mindkettő).", ""]
+    return "\n".join(out)
+
+
 def main():
     items = all_items()
     table, details = llm_tables(items)
     txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items) + "\n\n" + hardware_table(items))
+    txt = txt.replace("### 6.9 Kihagyott", device_section() + "\n### 6.9 Kihagyott")
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
     open("sections/09_web.md", "w", encoding="utf-8").write(web_section())

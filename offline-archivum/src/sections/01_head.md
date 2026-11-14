@@ -10,12 +10,13 @@
 3. [Pontozási rendszer](#3-pontozási-rendszer)
 4. [Előre számolt csomagok tárhely szerint](#4-előre-számolt-csomagok)
 5. [Katalógus kategóriánként (emberi nézet)](#5-katalógus-kategóriánként)
-6. [NAGY FEJEZET: helyi, nyílt súlyú LLM-ek](#6-helyi-llm-ek)
+6. [NAGY FEJEZET: helyi, nyílt súlyú LLM-ek](#6-helyi-llm-ek) – a 6.10-ben eszközönkénti ajánlás 4 változatban
 7. [Letöltési receptek módszerenként](#7-letöltési-receptek)
 8. [Fizetős, regisztrációs és fizikai beszerzések](#8-fizetős-regisztrációs-és-fizikai-beszerzések)
 9. [Webes hozzáférés az AI-nak: captcha- és blokkmentes keresés és letöltés (Camoufox és társai)](#9-webes-hozzáférés-az-ai-nak-captcha--és-blokkmentes-keresés-és-letöltés)
 10. [Gépi katalógus (JSONL) – a szkript ezt olvassa](#10-gépi-katalógus)
 11. [select_items.py – kiválasztó és letöltő-generátor](#11-select_itemspy)
+12. [llm_calc.py – LLM-eszközkalkulátor (melyik modell fut a gépeden)](#12-llm_calcpy)
 
 ---
 
