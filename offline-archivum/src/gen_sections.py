@@ -40,12 +40,12 @@ def llm_tables(items):
         rows.append(f"| {esc(name)} | {kind} | {esc(h.get('released'))[:10]} | {est}{aa} | {esc(h.get('license'))[:24]} | "
                     f"{gb(g[0]['bytes'])} – {gb(g[-1]['bytes'])} | {len(g)} | {plats} | {tiers[0]}–{tiers[-1]} | `{h['group']}` |")
         det = [f"<details><summary><b>{esc(name)}</b> – {len(g)} változat</summary>\n",
-               "| id | Fájl / repó | Méret | Bit | HW | Platform | Letöltés |", "|---|---|---|---|---|---|---|"]
+               "| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |", "|---|---|---|---|---|---|---|---|"]
         for v in g:
             d = v["download"]
             cmd = (f"`hf download {d['repo']}" + "".join(f' --include "{p}"' for p in d.get("include") or []) + "`") if d["method"] == "hf" \
                 else f"`ollama pull {d.get('tag')}`"
-            det.append(f"| `{v['id']}` | {esc(v['name'].split(' · ', 1)[1])} | {gb(v['bytes'])} | {v['llm_bits']} | "
+            det.append(f"| `{v['id']}` | {esc(v['name'].split(' · ', 1)[1])} | {gb(v['bytes'])} | {v['llm_bits']} | {v['bytes'] * 1.15 / 1e9:.0f} GB | "
                        f"{','.join(v['hw_tiers'])} | {v['platform']} | {cmd} |")
         details.append("\n".join(det) + "\n</details>\n")
     head = ("| Modell | Típus | Kiadva | AA-index | Licenc | Méret (min–max) | Változat | Platform | HW | group |\n"
@@ -289,6 +289,101 @@ def uncensored_ranking(items):
             ""]
     return "\n".join(out)
 
+# --- gépigény-számítás (becslés: memória = fájl x 1,15 + kontextus; sebesség = sávszélesség / aktív bájt tokenenként) ---
+ACTIVE = {  # aktív paraméter (milliárd) a modellkártyák / kutatás alapján; None = ismeretlen
+ "A1": 16, "A2": 40, "A3": 18, "A4": 6, "A5": 104, "A6": 23, "A7": 5.1, "A8": None, "A9": 27.8, "A10": 27.4,
+ "A11": 31.3, "A12": 4, "A13": 3, "A14": 3.6, "A15": 12, "A16": 9.5, "A17": 4.6, "A18": 4.5, "A19": 2}
+MOE = {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A12", "A13", "A14"}
+BW = {"RTX 4090": 1008, "RTX 5090": 1792, "M3 Ultra": 819, "M4 Max": 546, "EPYC 12ch DDR5": 460, "PC DDR5 2ch": 90, "telefon LPDDR5X": 70}
+
+
+OVERHEAD_MS = {"RTX 4090": 6, "RTX 5090": 5, "M3 Ultra": 9, "M4 Max": 10, "EPYC 12ch DDR5": 12, "PC DDR5 2ch": 12, "telefon LPDDR5X": 25}
+
+
+def tps(bw, active_b, bits, dev=None):
+    """tok/s ≈ 1 / (aktív bájt / (0,6 x sávszél.) + fix tokenenkénti többletidő) – becslés, nem mérés."""
+    if not active_b:
+        return None
+    dev = dev or next((k for k, v in BW.items() if v == bw), None)
+    t = (active_b * 1e9 * bits / 8) / (0.6 * bw * 1e9) + OVERHEAD_MS.get(dev, 10) / 1000
+    return 1 / t
+
+
+def fmt_tps(x):
+    return "–" if x is None else (f"~{x:.0f}" if x >= 3 else f"~{x:.1f}")
+
+
+def hardware_table(items):
+    from llm_to_items import slug
+    res = load_blocks("research/llm_uncensored_runtimes.md.txt")[0]
+    llm = [i for i in items if i["cat"] == "ai_models_uncensored" and "llm_aa" in i]
+    rows = []
+    for m in res:
+        vs = sorted([i for i in llm if i["name"].split(" · ")[0] == m["name"]], key=lambda v: v["bytes"])
+        if not vs:
+            continue
+        gg = [v for v in vs if v["platform"] == "any"] or vs
+        q4 = [v for v in gg if 4 <= v["llm_bits"] <= 5]
+        rec = max(q4, key=lambda v: v["bytes"]) if q4 else min(gg, key=lambda v: (abs(v["llm_bits"] - 4.5), v["bytes"]))
+        other = sorted({f"{v['platform'].replace('server', 'szerver (vLLM/SGLang)').replace('mac', 'MLX')}: {gb(v['bytes'])} ({v['llm_bits']} bit)"
+                        for v in vs if v["platform"] != "any"})
+        small = gg[0]
+        a = ACTIVE.get(m["id"]); moe = m["id"] in MOE
+        mem = rec["bytes"] * 1.15 / 1e9
+        vram_h = max(12, min(32, 0.12 * rec["bytes"] / 1e9 + 6)) if moe else None
+        ram_h = mem - vram_h + 8 if moe else None
+        gpu = f"{mem:.0f} GB VRAM" + (" (1 kártya)" if mem <= 32 else f" (pl. {int(-(-mem // 80))}×80 GB)" if mem > 48 else " (2 kártya)")
+        hyb = f"{vram_h:.0f} GB VRAM + {ram_h:.0f} GB RAM" if moe else "dense: nem ajánlott (lassú)"
+        mac = f"{max(16, mem * 1.05):.0f} GB unified" + (" (2× Mac, exo)" if mem > 480 else "")
+        cpu = f"{mem + 8:.0f} GB RAM"
+        b = rec["llm_bits"]
+        sp_gpu = fmt_tps(tps(BW["RTX 4090"], a, b)) if mem <= 24 else (fmt_tps(tps(BW["RTX 5090"], a, b)) + " (5090)" if mem <= 32 else "–")
+        sp_hyb = fmt_tps(tps(BW["PC DDR5 2ch"], a, b) * 1.6) if moe and a else "–"   # ~40% az aktív súlyból GPU-n (figyelem, shared expert)
+        sp_mac = fmt_tps(tps(BW["M3 Ultra"], a, b)) if mem <= 500 else fmt_tps(tps(BW["M3 Ultra"], a, b) * 0.6) + " (2× Mac)"
+        sp_epyc = fmt_tps(tps(BW["EPYC 12ch DDR5"], a, b))
+        sp_phone = fmt_tps(tps(BW["telefon LPDDR5X"], a, b)) if mem <= 12 else "–"
+        sc = m.get("scores") or {}
+        from llm_to_items import UNC_BASE
+        base_aa = next((v for k, v in UNC_BASE if k in slug(m["name"])), 0)
+        rows.append((m, rec, small, a, moe, mem, gpu, hyb, mac, cpu, sp_gpu, sp_hyb, sp_mac, sp_epyc, sp_phone, "; ".join(other) or "–",
+                     (-base_aa, -float(str(sc.get("uncensored") or 0)))))
+    rows.sort(key=lambda r: r[-1])
+    out = ["#### Gépigény: cenzúrázatlan modellek", "",
+           "A számok **becslések** az alábbi szabályokkal:",
+           "- **Memória:** fájlméret × 1,15 (KV cache ~16–32k kontextusig, futtatói overhead).",
+           "- **Hibrid MoE:** a figyelmi rétegek és a KV cache a videokártyán, a szakértők a RAM-ban (`--n-cpu-moe`).",
+           "- **Sebesség (generálás, 1 felhasználó):** tokenenként az aktív paraméterek bájtjait kell beolvasni. Képlet: tok/s ≈ 1 / (aktív bájt / (0,6 × sávszélesség) + fix többletidő). A többletidő GPU-n 5–6 ms, Macen 9, CPU-n 12, telefonon 25 ms.",
+           "- **Sávszélességek:** RTX 4090 1008 GB/s, RTX 5090 1792, M3 Ultra 819, EPYC 12 csatornás DDR5 460, otthoni PC DDR5 kétcsatornás 90, telefon LPDDR5X 70.",
+           "- **Mért adat:** nem mértem. A valós érték prompt-feldolgozáskor és hosszú kontextusnál alacsonyabb, MTP/speculative decodinggal magasabb lehet.",
+           "- **Mac:** a macOS alapból a unified memória kb. 75%-át adja a GPU-nak. Ez emelhető: `sudo sysctl iogpu.wired_limit_mb=<MB>`.", "",
+           "| # | Modell | Ajánlott GGUF-kvant (méret) | Archit. (aktív) | Csak GPU | Hibrid MoE (GPU+RAM) | Mac | Csak CPU | tok/s GPU | tok/s hibrid (DDR5 PC) | tok/s M3 Ultra | tok/s EPYC | tok/s telefon | Legkisebb kvant → min. memória | Egyéb formátum |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    from_rank = {}
+    for n, (m, rec, small, a, moe, mem, gpu, hyb, mac, cpu, s1, s2, s3, s4, s5, oth, _k) in enumerate(rows, 1):
+        inc = (rec["download"].get("include") or [""])[0]
+        out.append(f"| {n} | **{esc(m['name'].split(' (')[0])}** | `{esc(inc) or 'teljes repó'}` {gb(rec['bytes'])} ({rec['llm_bits']} bit) | "
+                   f"{'MoE' if moe else 'dense'}, {a if a else '?'}B aktív | {gpu} | {hyb} | {mac} | {cpu} | {s1} | {s2} | {s3} | {s4} | {s5} | "
+                   f"`{esc((small['download'].get('include') or ['?'])[0])}` {gb(small['bytes'])} → {small['bytes'] * 1.15 / 1e9:.0f} GB | {esc(oth)} |")
+    out += ["",
+            "**Gyakorlati gépkonfigurációk:**",
+            "",
+            "| Gép | Memória | Mi fut rajta jól (cenzúrázatlan) |",
+            "|---|---|---|",
+            "| Telefon 8 GB | ~5 GB használható | Qwen3.5-4B heretic Q4_K_M (2,7 GB), Gemma-4-E2B heretic (3,4 GB) |",
+            "| Telefon 12–16 GB | ~8–10 GB | Gemma-4-E4B heretic (5,3 GB), Qwen3.5-9B heretic Q4 (5,6 GB), Gemma-4-12B heretic (8,5 GB, 16 GB-on) |",
+            "| Laptop 16 GB RAM + 8 GB VRAM | 24 GB | Gemma-4-26B-A4B heretic Q3_K_M (13,3 GB, MoE, gyors), gpt-oss-20b heresy (12,7 GB) |",
+            "| MacBook 36–48 GB | 27–36 GB a GPU-nak | Gemma-4-31B heretic IQ4_XS (16,9 GB), Qwen3.8-27B abliterated Q4 (16,6 GB), Qwen3.6-35B-A3B heretic (21 GB) |",
+            "| Gamer PC 24 GB VRAM + 64 GB RAM | 88 GB | Qwen3.8-27B abliterated Q6_K (22,4 GB, csak GPU), gpt-oss-120b heresy (63 GB, hibrid) |",
+            "| Gamer PC 24–32 GB VRAM + 128 GB RAM | 152–160 GB | **Qwen3.8-Flash-Next abliterated v2 UD-IQ4_XS / UD-Q4_K_XL (94–111 GB, hibrid, 6B aktív → gyors)**; MiniMax-M3.1 abliterated (112 GB) |",
+            "| Gamer PC 32 GB VRAM + 192 GB RAM | 224 GB | Qwen3.8-Flash-Next abliterated Q8_0 (188 GB) vagy GLM-5.3-Flash abliterated UD-Q4_K_XL (200 GB) |",
+            "| Mac Studio 256 GB | ~240 GB (sysctl után) | GLM-5.3-Flash abliterated UD-Q4_K_XL (200 GB), Qwen3.8-Flash-Next abliterated Q8_0 (188 GB) |",
+            "| Mac Studio 512 GB | ~490 GB | **DeepSeek-V4.1-Flash abliterated MLX (423 GB)**, GLM-5.3 abliterated (217 GB) |",
+            "| EPYC 768 GB RAM + 1–2 GPU | 768+ GB | DeepSeek-V4.1-Flash heretic Q8_0 (508 GB), ik_llama.cpp vagy KTransformers |",
+            "| 8×H100 (640 GB VRAM) | 640 GB | DeepSeek-V4.1-Flash abliterated FP8 (510 GB, vLLM/SGLang, a leggyorsabb) |",
+            "| ≥1,6 TB RAM szerver | 1,6 TB+ | Kimi-K3 abliterated MXFP4 (1,51 TB); gyengébb, mint a DeepSeek-V4.1 |",
+            ""]
+    return "\n".join(out)
+
 
 def manual_section(items):
     man = [i for i in items if i.get("access") in ("paid", "physical", "free-registration") or (i.get("download") or {}).get("method") == "manual"]
@@ -378,7 +473,7 @@ def web_section():
 def main():
     items = all_items()
     table, details = llm_tables(items)
-    txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items))
+    txt = LLM_TEXT.replace("{TIMELINE}", timeline()).replace("{TABLE}", table).replace("{DETAILS}", details).replace("{RUNTIMES}", runtimes()).replace("{UNCRANK}", uncensored_ranking(items) + "\n\n" + hardware_table(items))
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
     open("sections/09_web.md", "w", encoding="utf-8").write(web_section())

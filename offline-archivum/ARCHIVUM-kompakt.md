@@ -358,6 +358,56 @@ A kompakt változatban modellenként és platformonként bitszintenként egy vá
 - **Kimi K3.1 Pro-ból nincs cenzúrázatlan változat.** A Kimi-K3 abliterated régebbi és gyengébb alapra épül (AA 17,4), a minősége nem ellenőrzött.
 
 
+#### Gépigény: cenzúrázatlan modellek
+
+A számok **becslések** az alábbi szabályokkal:
+- **Memória:** fájlméret × 1,15 (KV cache ~16–32k kontextusig, futtatói overhead).
+- **Hibrid MoE:** a figyelmi rétegek és a KV cache a videokártyán, a szakértők a RAM-ban (`--n-cpu-moe`).
+- **Sebesség (generálás, 1 felhasználó):** tokenenként az aktív paraméterek bájtjait kell beolvasni. Képlet: tok/s ≈ 1 / (aktív bájt / (0,6 × sávszélesség) + fix többletidő). A többletidő GPU-n 5–6 ms, Macen 9, CPU-n 12, telefonon 25 ms.
+- **Sávszélességek:** RTX 4090 1008 GB/s, RTX 5090 1792, M3 Ultra 819, EPYC 12 csatornás DDR5 460, otthoni PC DDR5 kétcsatornás 90, telefon LPDDR5X 70.
+- **Mért adat:** nem mértem. A valós érték prompt-feldolgozáskor és hosszú kontextusnál alacsonyabb, MTP/speculative decodinggal magasabb lehet.
+- **Mac:** a macOS alapból a unified memória kb. 75%-át adja a GPU-nak. Ez emelhető: `sudo sysctl iogpu.wired_limit_mb=<MB>`.
+
+| # | Modell | Ajánlott GGUF-kvant (méret) | Archit. (aktív) | Csak GPU | Hibrid MoE (GPU+RAM) | Mac | Csak CPU | tok/s GPU | tok/s hibrid (DDR5 PC) | tok/s M3 Ultra | tok/s EPYC | tok/s telefon | Legkisebb kvant → min. memória | Egyéb formátum |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | **DeepSeek-V4.1-Flash-1017 abliterated** | `*UD-IQ1_S*` 233.0 GB (1.7 bit) | MoE, 16B aktív | 268 GB VRAM (pl. 4×80 GB) | 32 GB VRAM + 244 GB RAM | 281 GB unified | 276 GB RAM | – | ~21 | ~63 | ~41 | – | `*UD-IQ1_S*` 233.0 GB → 268 GB | MLX: 422.6 GB (4.5 bit); szerver (vLLM/SGLang): 510.3 GB (8.5 bit) |
+| 2 | **GLM-5.3 abliterated** | `*UD-IQ1_S*` 216.7 GB (1.7 bit) | MoE, 40B aktív | 249 GB VRAM (pl. 4×80 GB) | 32 GB VRAM + 225 GB RAM | 262 GB unified | 257 GB RAM | – | ~9 | ~38 | ~23 | – | `*UD-IQ1_S*` 216.7 GB → 249 GB | – |
+| 3 | **MiniMax-M3.1-Flash abliterated** | `*Mix-128G*` 111.9 GB (4.5 bit) | MoE, 23B aktív | 129 GB VRAM (pl. 2×80 GB) | 19 GB VRAM + 117 GB RAM | 135 GB unified | 137 GB RAM | – | ~6 | ~28 | ~17 | – | `*Mix-128G*` 111.9 GB → 129 GB | – |
+| 4 | **Qwen3.8-Flash-Next abliterated v2** | `*unsloth-UD-Q4_K_XL*` 111.3 GB (4.5 bit) | MoE, 6B aktív | 128 GB VRAM (pl. 2×80 GB) | 19 GB VRAM + 117 GB RAM | 134 GB unified | 136 GB RAM | – | ~21 | ~63 | ~41 | – | `*Swift*` 68.2 GB → 78 GB | MLX: 128.6 GB (5.5 bit) |
+| 5 | **GLM-5.3-Flash abliterated** | `*UD-Q4_K_XL*` 199.7 GB (4.5 bit) | MoE, 18B aktív | 230 GB VRAM (pl. 3×80 GB) | 30 GB VRAM + 208 GB RAM | 241 GB unified | 238 GB RAM | – | ~8 | ~34 | ~21 | – | `*UD-IQ1_S*` 93.1 GB → 107 GB | MLX: 185.9 GB (4.5 bit) |
+| 6 | **Qwen3.8-27B abliterated** | `*UD-DW-Q4_K_M*` 16.6 GB (4.5 bit) | dense, 27.8B aktív | 19 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 20 GB unified | 27 GB RAM | ~31 | – | ~24 | ~15 | – | `*Q2_K*` 10.9 GB → 12 GB | MLX: 19.8 GB (4.5 bit) |
+| 7 | **NousResearch Arete-27B** | `*Q4_K_M*` 17.2 GB (4.5 bit) | dense, 27.4B aktív | 20 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 21 GB unified | 28 GB RAM | ~32 | – | ~25 | ~15 | – | `*IQ4_XS*` 15.2 GB → 18 GB | – |
+| 8 | **Kimi-K3 Abliterated V1** | `*MXFP4_MOE*` 1.51 TB (4.5 bit) | MoE, 104B aktív | 1735 GB VRAM (pl. 22×80 GB) | 32 GB VRAM + 1711 GB RAM | 1821 GB unified (2× Mac, exo) | 1743 GB RAM | – | ~1.5 | ~5 (2× Mac) | ~4 | – | `*MXFP4_MOE*` 1.51 TB → 1735 GB | – |
+| 9 | **Qwen3.6-35B-A3B uncensored-heretic** | `*Q4_K_M*` 21.2 GB (4.5 bit) | MoE, 3B aktív | 24 GB VRAM (1 kártya) | 12 GB VRAM + 20 GB RAM | 26 GB unified | 32 GB RAM | ~152 (5090) | ~37 | ~80 | ~55 | – | `*Q3_K_M*` 16.9 GB → 19 GB | – |
+| 10 | **Mistral-Small-4-119B-2603 heretic** | `*Q4_K_M*` 72.2 GB (4.5 bit) | MoE, ?B aktív | 83 GB VRAM (pl. 2×80 GB) | 15 GB VRAM + 76 GB RAM | 87 GB unified | 91 GB RAM | – | – | – | – | – | `*Q2_K*` 43.4 GB → 50 GB | – |
+| 11 | **gemma-4-31B-it heretic** | `*Q4_K_M*` 18.7 GB (4.5 bit) | dense, 31.3B aktív | 21 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 23 GB unified | 29 GB RAM | ~28 | – | ~22 | ~13 | – | `*IQ4_XS*` 16.9 GB → 19 GB | MLX: 17.3 GB (4.5 bit) |
+| 12 | **gpt-oss-120b heretic** | `*MXFP4_MoE*` 63.4 GB (4.5 bit) | MoE, 5.1B aktív | 73 GB VRAM (pl. 1×80 GB) | 14 GB VRAM + 67 GB RAM | 77 GB unified | 81 GB RAM | – | ~25 | ~67 | ~45 | – | `*MXFP4_MoE*` 63.4 GB → 73 GB | MLX: 62.2 GB (4.5 bit) |
+| 13 | **gemma-4-26B-A4B-it ultra-uncensored-heretic** | `*Q4_K_M*` 16.8 GB (4.5 bit) | MoE, 4B aktív | 19 GB VRAM (1 kártya) | 12 GB VRAM + 15 GB RAM | 20 GB unified | 27 GB RAM | ~103 | ~30 | ~74 | ~50 | – | `*Q3_K_M*` 13.3 GB → 15 GB | – |
+| 14 | **Qwen3.5-9B heretic-v2** | `*Q4_K_M*` 5.6 GB (4.5 bit) | dense, 9.5B aktív | 6 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 16 GB unified | 14 GB RAM | ~67 | – | ~50 | ~32 | ~7 | `*Q4_K_M*` 5.6 GB → 6 GB | – |
+| 15 | **gemma-4-12B-it uncensored-heretic** | `*Q4_K_M*` 8.5 GB (4.5 bit) | dense, 12B aktív | 10 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 16 GB unified | 18 GB RAM | ~58 | – | ~44 | ~27 | ~5 | `*Q4_K_M*` 8.5 GB → 10 GB | – |
+| 16 | **gpt-oss-20b heretic** | `*MXFP4_MoE*` 12.7 GB (4.5 bit) | MoE, 3.6B aktív | 15 GB VRAM (1 kártya) | 12 GB VRAM + 11 GB RAM | 16 GB unified | 23 GB RAM | ~107 | ~32 | ~76 | ~52 | – | `*MXFP4_MoE*` 12.7 GB → 15 GB | – |
+| 17 | **gemma-4-E4B-it heretic** | `*Q4_K_M*` 5.3 GB (4.5 bit) | dense, 4.5B aktív | 6 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 16 GB unified | 14 GB RAM | ~98 | – | ~71 | ~47 | ~12 | `*Q4_K_M*` 5.3 GB → 6 GB | – |
+| 18 | **Qwen3.5-4B heretic-2.0** | `*Q4_K_M*` 2.7 GB (4.5 bit) | dense, 4.6B aktív | 3 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 16 GB unified | 11 GB RAM | ~97 | – | ~70 | ~47 | ~12 | `*IQ4_XS*` 2.5 GB → 3 GB | – |
+| 19 | **gemma-4-E2B-it ultra-uncensored-heretic** | `*Q4_K_M*` 3.4 GB (4.5 bit) | dense, 2B aktív | 4 GB VRAM (1 kártya) | dense: nem ajánlott (lassú) | 16 GB unified | 12 GB RAM | ~127 | – | ~89 | ~62 | ~19 | `*Q4_K_M*` 3.4 GB → 4 GB | – |
+
+**Gyakorlati gépkonfigurációk:**
+
+| Gép | Memória | Mi fut rajta jól (cenzúrázatlan) |
+|---|---|---|
+| Telefon 8 GB | ~5 GB használható | Qwen3.5-4B heretic Q4_K_M (2,7 GB), Gemma-4-E2B heretic (3,4 GB) |
+| Telefon 12–16 GB | ~8–10 GB | Gemma-4-E4B heretic (5,3 GB), Qwen3.5-9B heretic Q4 (5,6 GB), Gemma-4-12B heretic (8,5 GB, 16 GB-on) |
+| Laptop 16 GB RAM + 8 GB VRAM | 24 GB | Gemma-4-26B-A4B heretic Q3_K_M (13,3 GB, MoE, gyors), gpt-oss-20b heresy (12,7 GB) |
+| MacBook 36–48 GB | 27–36 GB a GPU-nak | Gemma-4-31B heretic IQ4_XS (16,9 GB), Qwen3.8-27B abliterated Q4 (16,6 GB), Qwen3.6-35B-A3B heretic (21 GB) |
+| Gamer PC 24 GB VRAM + 64 GB RAM | 88 GB | Qwen3.8-27B abliterated Q6_K (22,4 GB, csak GPU), gpt-oss-120b heresy (63 GB, hibrid) |
+| Gamer PC 24–32 GB VRAM + 128 GB RAM | 152–160 GB | **Qwen3.8-Flash-Next abliterated v2 UD-IQ4_XS / UD-Q4_K_XL (94–111 GB, hibrid, 6B aktív → gyors)**; MiniMax-M3.1 abliterated (112 GB) |
+| Gamer PC 32 GB VRAM + 192 GB RAM | 224 GB | Qwen3.8-Flash-Next abliterated Q8_0 (188 GB) vagy GLM-5.3-Flash abliterated UD-Q4_K_XL (200 GB) |
+| Mac Studio 256 GB | ~240 GB (sysctl után) | GLM-5.3-Flash abliterated UD-Q4_K_XL (200 GB), Qwen3.8-Flash-Next abliterated Q8_0 (188 GB) |
+| Mac Studio 512 GB | ~490 GB | **DeepSeek-V4.1-Flash abliterated MLX (423 GB)**, GLM-5.3 abliterated (217 GB) |
+| EPYC 768 GB RAM + 1–2 GPU | 768+ GB | DeepSeek-V4.1-Flash heretic Q8_0 (508 GB), ik_llama.cpp vagy KTransformers |
+| 8×H100 (640 GB VRAM) | 640 GB | DeepSeek-V4.1-Flash abliterated FP8 (510 GB, vLLM/SGLang, a leggyorsabb) |
+| ≥1,6 TB RAM szerver | 1,6 TB+ | Kimi-K3 abliterated MXFP4 (1,51 TB); gyengébb, mint a DeepSeek-V4.1 |
+
+
 ### 6.6 Futtatókörnyezetek (runtime-ok)
 
 | Runtime | Repó / forrás | Verzió | HW-szint | Megjegyzés |
