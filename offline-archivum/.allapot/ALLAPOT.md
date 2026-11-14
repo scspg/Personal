@@ -50,6 +50,8 @@ A kompaktálás után ELŐSZÖR ezt a fájlt kell elolvasni.
 
 ## Folyamatban / következő lépések
 
+0. SSD-kutatás KÉSZ: src/research/storage_ssd.yaml (38 termék, PyYAML-lel olvasható, 2 dokumentum). HDD-kutatás még fut.
+
 1. **Két tároló-kutató ágens fut** (HDD/archív, illetve SSD).
    - Kimenet: `scratchpad/storage_hdd.yaml`, `storage_ssd.yaml`.
    - Továbbítva nekik: „egy eszköz vs 1+1 másolat” számszerűen, a legsűrűbb egyeszközös megoldás 8–128 TB-ra, és a legkompaktabb kételemes, víz-, ütés- és EMP-álló összeállítás.
@@ -69,7 +71,7 @@ A kompaktálás után ELŐSZÖR ezt a fájlt kell elolvasni.
    6. `make_zip` (UTOLSÓ lépés)
    - Utána commit és push.
    - A ZIP-et SendUserFile-lal küldöm, és pontszámtáblával válaszolok.
-5. **UTÁNA – más hozzáállások profiljai** (a felhasználó kérése; a blackout-változat után):
+5. **UTÁNA – JÖVŐ KIADÁS (fő fókusz, lásd JOVO_KONCEPCIO.md: AI, technológia, energia, űr/világegyetem, spirituális, földön kívüli + az emberiség öröksége), majd a többi hozzáállás profiljai** (a felhasználó kérése; a blackout-változat után):
    - kutatás/tudomány;
    - AI-fejlesztés;
    - szoftverfejlesztés/építés;
