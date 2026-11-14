@@ -126,7 +126,15 @@ def convert(x, ov):
         dl["urls"] = seen
     elif method == "wget-mirror":
         dl["url"] = dl_url or x.get("url_info")
-    elif method in ("rsync", "torrent", "jigdo", "s3", "ollama", "hf"):
+    elif method == "hf":
+        repo = x.get("hf_repo") or (re.search(r"huggingface\.co/(?:datasets/)?([\w.-]+/[\w.-]+)", str(dl_url or "")) or [None, None])[1]
+        inc = x.get("include")
+        dl = {"method": "hf", "repo": repo, "include": [str(i) for i in inc] if isinstance(inc, list) else ([str(inc)] if inc else [])}
+        if "datasets/" in str(dl_url or "") or str(x.get("category", "")).endswith("dataset"):
+            dl["repo_type"] = "dataset"
+        if not repo:
+            dl = {"method": "manual", "note": str(dl_url or "")}
+    elif method in ("rsync", "torrent", "jigdo", "s3", "ollama"):
         dl["url"] = dl_url
     elif method == "kiwix":
         m = re.search(r"book=([\w.\-]+)(?:\s+flavour=(\w+))?", notes)
@@ -184,6 +192,9 @@ def convert(x, ov):
         it["lang"] = "multi" if ("," in it["lang"] or "multi" in it["lang"]) else it["lang"]
     if it["format"] and re.search(r"pdf|epub|djvu", str(it["format"]), re.I):
         it["requires"] = []
+    for k in ("need_hu", "alternatives", "release_url", "latest_version"):
+        if x.get(k):
+            it[k] = str(x[k])
     for k in ("hw_tiers", "group", "variant_rank", "variant_role", "subsumed_by", "requires"):
         if x.get(k) is not None:
             it[k] = x[k]

@@ -324,7 +324,8 @@ def write_sh(plan, path, dest):
                          f'git -C "{sub}/{n}.git" remote update && git -C "{sub}/{n}.git" bundle create "{sub}/{n}.bundle" --all && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "hf":
             inc = " ".join(f"--include {q(p)}" for p in (d.get("include") or []))
-            L.append(f'hf download {q(d["repo"])} {inc} --local-dir "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
+            rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""
+            L.append(f'hf download {q(d["repo"])}{rt} {inc} --local-dir "{sub}" && ok {q(v["id"])} || fail {q(v["id"])}')
         elif m == "ollama":
             L.append(f'ollama pull {q(d["tag"])} && ok {q(v["id"])} || fail {q(v["id"])}   # tárolás: ~/.ollama/models (vagy $OLLAMA_MODELS)')
         elif m == "archive.org":
