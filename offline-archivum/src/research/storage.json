@@ -627,7 +627,7 @@
      "Évtizedekig bekapcsolás nélkül tárolható"
     ],
     "hatranyok": [
-     "~2,6x drágább/TB, mint a HDD; 128 TB = 1280 lemez (~6,2M Ft)",
+     "~2,6x drágább/TB, mint a HDD; 128 TB = 1280 lemez (~6,2 millió Ft)",
      "A 2022-es összetétel-váltás bizonytalanná teszi a hosszú élettartamot",
      "Lassú írás"
     ],
@@ -755,7 +755,7 @@
     "kategoria": "tape",
     "nev": "Quantum LTO-9 Tape Drive TC-L93CN-AR (fél magas, SAS, 1U rack)",
     "kapacitas_tb": 18,
-    "tipus": "LTO-9 HH SAS 12 Gb/s, titkosítás, WORM – SAS HBA kell hozzá (becsült +40-100e Ft)",
+    "tipus": "LTO-9 HH SAS 12 Gb/s, titkosítás, WORM – SAS HBA kell hozzá (becsült +40–100 ezer Ft)",
     "tartossag": {
      "megjegyzes": "LTO-8 kazettát is olvas/ír (LTO-9 drive spec)"
     },
@@ -779,7 +779,7 @@
      "3 vagy több másolat esetén 128 TB-tól már olcsóbb a HDD-nél"
     ],
     "hatranyok": [
-     "~4M Ft belépő",
+     "~4 millió Ft belépő",
      "SAS kártya és Linux (LTFS) tudás kell hozzá",
      "Magánszemélynek 128 TB alatt nem éri meg"
     ],
@@ -1065,7 +1065,7 @@
     "sebesseg_mb_s": "1000+ (becsült)",
     "ar_huf": null,
     "ar_eur": null,
-    "ar_per_tb": "alap (lemezek nélkül) kb. 300-600e Ft – becsült, nincs konkrét termékár-ellenőrzés",
+    "ar_per_tb": "alap (lemezek nélkül) kb. 300–600 ezer Ft – becsült, nincs konkrét termékár-ellenőrzés",
     "ar_forras": "becsült",
     "linkek": [],
     "elonyok": [
@@ -1204,14 +1204,15 @@
     "eszkoz_1_elsodleges": "Seagate Exos M 28TB (ipon, 578 590 Ft, mért, előrendelés) dokkolóban; ZFS, havi scrub",
     "eszkoz_2_offline": "Seagate IronWolf Pro 32TB (alza, ~575 890 Ft, becsült) vagy második Exos M 28TB; Faraday-tasak + lőszerláda, másik épületben",
     "vedelem": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP, zsarolóvírus. 28 TB fölött ma Magyarországon csak Seagate kapható: ezért két különböző termékcsalád / gyártási sorozat.",
-    "osszesen": "~1 200 000–1 210 000 Ft"
+    "osszesen": "~1 214 887 Ft (Exos M 28 + IronWolf Pro 32, becsült ár) – 1 217 587 Ft (2× Exos M 28, mért ár)",
+    "megjegyzes": "A HAMR új technológia, nincs még hosszú távú Backblaze-adata, ezért a B példányt félévente végig kell olvasni. Ha nincs készleten: 2× Toshiba MG10 22TB (pcx, 376 290 Ft/db, két gyártó helyett két sorozat) és a 9 TB-os Debian-tükör nélküli archívum (~13,5 TB)."
    },
    "24_TB": {
     "eszkoz_1_elsodleges": "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft, mért) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS egylemezes pool, havi scrub",
     "eszkoz_2_offline": "WD Ultrastar DC HC590 24TB (ipon, 527 889 Ft, mért; SAS – SAS-HBA vagy SAS-dokkoló kell) – MÁS GYÁRTÓ; antisztatikus tasak + hab + Faraday Defense NEST-Z (27 797 Ft) + MFH .50 cal lőszerláda (~11 570 Ft, becsült), másik épületben",
-    "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline)",
+    "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline).",
     "plusz_opcionalis_mag": "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen.",
-    "osszesen": "~1 085 000 Ft (+ M-DISC mag ~90 000 Ft)",
+    "osszesen": "~1 037 086 Ft + SAS-HBA vagy SAS-dokkoló (becsült 40–100 ezer Ft); M-DISC maggal + ~90 ezer Ft",
     "megjegyzes": "Csak a 16 TB-os tervhez (13,6 TB) vagy a teljes archívum kissé megvágott változatához (pl. a 9 TB-os Debian-tükör nélkül) – a teljes 22,5 TB-hoz 8% tartalékkal ≥28 TB kell."
    },
    "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tüzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.",
@@ -1219,7 +1220,7 @@
     "eszkoz_1": "Seagate Exos M 32TB (ipon, 784 390 Ft)",
     "eszkoz_2": "Seagate IronWolf Pro 32TB (alza snapshot 575 890 Ft, becsült) – azonos gyártó, de más termékcsalád és gyártási sorozat (32 TB-ban ma nincs WD/Toshiba)",
     "vedelem": "ugyanaz: NEST-Z + lőszerláda + szilikagél + külön helyszín",
-    "osszesen": "~1 420 000 Ft (becsült, az IronWolf Pro ára nem ellenőrzött); csak ipon-ról: 2x Exos M 32TB = 1 568 780 Ft + kb. 60e Ft tartozék"
+    "osszesen": "~1 420 000 Ft (becsült, az IronWolf Pro ára nem ellenőrzött); csak ipon-ról: 2x Exos M 32TB = 1 568 780 Ft + kb. 60 ezer Ft tartozék"
    },
    "5_TB_mag": {
     "eszkoz_1": "LaCie Rugged USB-C 5TB (81 309 Ft)",
@@ -1272,7 +1273,7 @@
      "3. példány: a meglévő PC/laptop, vagy később M-DISC mag"
     ],
     "osszesen": "~375 187 Ft",
-    "megjegyzes": "A 2026-os HDD-árakon 400e Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül."
+    "megjegyzes": "A 2026-os HDD-árakon 400 ezer Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül."
    },
    "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
     "elemek": [
@@ -1294,8 +1295,8 @@
    "Extrém 128 TB (~6–8 millió Ft)": {
     "elemek": [
      "1. Synology DS1825+ + 8x Toshiba MG10 22TB RAID6 = 132 TB hasznos – 3 631 110 Ft",
-     "2a. Offline HDD-szett: 6x MG10 22TB = 132 TB, 2 lőszerládában – 2 257 740 Ft (összesen ~5,9M Ft), VAGY",
-     "2b. LTO-9: Quantum TC-L93CN-AR (3 967 890 Ft) + SAS HBA (becsült ~50-100e Ft) + másolatonként 8 kazetta (8x36 690 = 293 520 Ft). 2 szalagmásolattal ~8,3M Ft; minden további 128 TB-os másolat csak ~294e Ft (HDD-n ~2,26M Ft)."
+     "2a. Offline HDD-szett: 6x MG10 22TB = 132 TB, 2 lőszerládában – 2 257 740 Ft (összesen ~5,9 millió Ft), VAGY",
+     "2b. LTO-9: Quantum TC-L93CN-AR (3 967 890 Ft) + SAS HBA (becsült ~50–100 ezer Ft) + másolatonként 8 kazetta (8x36 690 = 293 520 Ft). 2 szalagmásolattal ~8,3 millió Ft; minden további 128 TB-os másolat csak ~294 ezer Ft (HDD-n ~2,26 millió Ft)."
     ],
     "megjegyzes": "A szalag 3+ másolatnál, vagy ha a 30 éves, bekapcsolás nélküli tárolás a cél, előzi meg a HDD-t. Ilyenkor a meghajtót is őrizd meg tartaléknak."
    }
@@ -2224,7 +2225,7 @@
     "Zsebméretű, 10 Gbps: mindkét telefonnal és laptoppal működik"
    ],
    "hatranyok": [
-    "2023-as hibasorozat (lásd a sandisk-2023 tételt); csak frissített firmware-rel használd, és sose legyen ez az egyetlen példány",
+    "2023-as hibasorozat (lásd a SanDisk-figyelmeztetést a terméktábla fölött); csak frissített firmware-rel használd, és sose legyen ez az egyetlen példány",
     "1 GB/s: 8TB végigolvasása kb. 2.3 óra"
    ],
    "ajanlas_szint": "kozep"
@@ -2315,7 +2316,7 @@
    "hatranyok": [
     "2023 tavaszán az Extreme / Extreme PRO V2 (főleg 4TB és 2TB) és a My Passport SSD hirtelen adatvesztéssel, csatolhatatlansággal hibázott",
     "A WD 2023 májusában firmware-frissítést adott ki. Az Attingo adatmentő cég hardverhibát (forrasztás, alkatrész) állított, a WD ezt tagadja. Később erősebb epoxis rögzítés is jött.",
-    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. Mai keresésem alapján NEM találtam megerősített ítéletet vagy egyezséget, így jogilag nincs lezárva.",
+    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. A 2026-11-14-i keresés alapján NEM találtam megerősített ítéletet vagy egyezséget, így jogilag nincs lezárva.",
     "Gyakorlati következtetés: a mostani gyártás valószínűleg rendben van, de vásárlás után azonnal frissítsd a firmware-t (SanDisk Dashboard), és SanDisk soha ne legyen az egyetlen példány. A második másolat legyen más gyártótól."
    ],
    "ajanlas_szint": "kozep"
@@ -3030,7 +3031,7 @@
     "JEDEC kikapcsolt megőrzés: kliens 1 év / enterprise 3 hónap (élettartam végén)"
    ],
    "egy_ssd": "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1 − (1 − 0,009)⁵). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, zsarolóvírus, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év.",
-   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Ha bármelyik példány hibázhat elsőként: ≈0,005%/év, azaz ≈0,02% 5 év alatt. Ez kb. 200-szor kisebb kockázat (mindkét sorrendet számolva: ≈0,005%/év, ≈0,02% 5 év alatt), és a másolat offline volta a zsarolóvírus, a túlfeszültség és a véletlen törlés ellen is véd.",
+   "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Ha bármelyik példány hibázhat elsőként: ≈0,005%/év, azaz ≈0,02% 5 év alatt. Ez kb. 200-szor kisebb kockázat, és a másolat offline volta a zsarolóvírus, a túlfeszültség és a véletlen törlés ellen is véd.",
    "kovetkeztetes": "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). 'Soha ne vesszen el' = minimum 2 példány, ebből 1 offline + checksum + scrub."
   },
   "ket_eszkozos_minimal_setup": {

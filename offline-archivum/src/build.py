@@ -349,7 +349,7 @@ def main():
     preset_md = ["---\n\n## 4. Előre számolt csomagok\n",
                  "`select_items.py --budget <X> --hw <T>`, `balanced` profil, nyelv: hu, en, multi, hozzáférés: free, free-registration, donation. "
                  "Ez csak tájékoztató, a pontos tervet az ágens futtatja a saját keretével. "
-                 "*A 4b fejezet ugyanazokra a méretekre nagyobb LLM-géppel (T2, ~300 GB) számol, ezért ott több hely jut LLM-re és kevesebb a többi tétel.*\n",
+                 "*A 4b fejezet más beállítással számol (T2/T1 LLM-gép, szerverformátum is, és a nagyobb méret a kisebb teljes tartalmát megtartja), ezért a tételszám eltérhet.*\n",
                  "| Keret | Tipikus eszköz | LLM-szint | Elemek | Felhasznált | LLM | 4 legnagyobb tartalmi elem |",
                  "|---|---|---|---|---|---|---|", *preset_rows]
 
@@ -469,7 +469,7 @@ def main():
 ## Fájlok
 | Fájl | Méret | Mire való |
 |---|---|---|
-| `ARCHIVUM-LLM.html` | {mb('ARCHIVUM-LLM.html')} | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező |
+| `ARCHIVUM-LLM.html` | {mb('ARCHIVUM-LLM.html')} | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező, tárolóválasztó (Tárolók fül) |
 | `ARCHIVUM.md` | {mb('ARCHIVUM.md')} | teljes katalógus: {len(items)} tétel (ebből {n_llm} LLM-kvant), prompt, szabályok, receptek, szkriptek |
 | `ARCHIVUM-kompakt.md` | {mb('ARCHIVUM-kompakt.md')} | ugyanez kevesebb LLM-kvanttal ({len(keep)} tétel) – hosszú kontextusú modellnek |
 | `ARCHIVUM-chat.md` | {mb('ARCHIVUM-chat.md')} | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások, legjobb szoftverek |
@@ -478,8 +478,8 @@ def main():
 | `forras/` | – | generátorok és a kutatási nyersanyag |
 
 ## A katalógus fejezetei
-1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
-4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
+1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
+5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
 6 LLM-ek (6.1 rangsor + % Opus · 6.5 cenzúrázatlanok és gépigény · 6.10 eszközönként 4 változat · 6.11 GeForce-feloldás) ·
 7 letöltési receptek · 8 fizetős/fizikai beszerzések · 9 captcha-mentes web · 10 gépi JSONL · 11–12 szkriptek
 

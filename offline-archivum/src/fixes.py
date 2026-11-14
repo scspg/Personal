@@ -216,6 +216,19 @@ MULTI_FILE_DONE = {"linux-kernel-source", "calibre"}
 _STYLE += [(r"cross-platform", "többplatformos"), (r"drag-and-drop", "fogd és vidd"), (r"all-in-one", "mindent egyben"), (r"\bdiskless\b", "lemez nélküli"),
            (r"\bsnapshot", "pillanatkép"), (r"\branswomware\b", "zsarolóvírus"), (r"\bransomware\b", "zsarolóvírus"), (r"(\d)\.(\d)B-s\b", r"\1,\2B-s")]
 
+# kézi fordítás a fordítás után módosult / kimaradt szövegekre
+NOTES_FIX = {
+    "osm-europe-pbf": {"notes": "A Geofabrik (download.geofabrik.de) a kutatáskor nem volt elérhető innen (kapcsolat bontva), ezért az OSM France tükör szerepel. A nyers adathoz megjelenítő/útvonaltervező szoftver kell (OsmAnd, Organic Maps, tilemaker, OSRM)."},
+    "us-army-tm-9-237-welding": {"notes": "Újabb kiadás (1993/2004, TC 9-237) is létezhet, ezt nem ellenőriztük. Kiegészítő tétel: TM9-237-1MaterialsUsedforBrazingWeldingSoldering (1960)."},
+    "survivor-library": {"size_human": "~200 GB+ (2021-es tükör: ~200 GB / 13 763 PDF; azóta bővült)"},
+    "foxfire-book-series": {"notes": "Az archive.org-on kölcsönözhető példányok vannak (pl. foxfire-5-by-eliot-wigginton; a szerzői jogi helyzet tisztázatlan, szürke zónaként kezeld). Nyomtatott példányt érdemes venni."},
+    "cheesbrough-district-laboratory-practice": {"notes": "ISBN: 1. rész 9780521676304, 2. rész 9780521676311. Az archive.org-on vannak feltöltések (district-laboratory-practice-in-tropical-countries-part-1: 6 768 991 B; -part-2: 7 357 296 B; „PD Mark” jelöléssel, ami szinte biztosan téves) – szürke zóna. Ajánlott: a nyomtatott kötetek megvásárlása. A cambridge.org termékoldala innen 403-at adott."},
+    "unicef-practica-manual-drilling-toolkit": {"notes": "Fájlok (bájt): manual-drilling-series-augering 4 018 970; -jetting 3 080 303; -percussion 2 845 872; understanding-groundwater-wells-in-manual-drilling 2 701 878; Manual-Drilling-Techniques 384 671; Selection-of-Well-Construction-Methods 359 531 (mind a /content/uploads/2019/08/ alatt). Francia változatok is elérhetők."},
+    "rachel-plus": {"size_human": "az alap tárhely nincs megadva; bővítés 880 GB / 1760 GB"},
+}
+for _k, _v in NOTES_FIX.items():
+    PATCH.setdefault(_k, {}).update(_v)
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {

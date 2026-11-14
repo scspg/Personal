@@ -39,7 +39,8 @@ def lab(k):
 def hunum(t):
     """angol tizedespont → vessző, csak mértékegység / százalék előtt (típusszámokat nem bánt)."""
     import re
-    return re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|EUR|€|USD|-szer|x\b|°C|év))", r"\1,\2\3", t)
+    t = re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|GbE|EUR|€|USD|-szer|x\b|°C|év))", r"\1,\2\3", t)
+    return re.sub(r"(?<![\w.])(\d+)\.(\d+)(?=\s?(?:[-–/]\s?\d+(?:[.,]\d+)?\s?(?:TB|GB|GbE)))", r"\1,\2", t)   # „30.72 / 61,44TB”, „1-2.5 GbE” bal oldala
 
 
 def _e(s):
@@ -107,7 +108,7 @@ def section(plans):
           "Ezért a logikus, legkompaktabb megoldás: 2 db 28–32 TB-os HDD (egy használatban, egy Faraday-tasakban, lőszerládában, másik helyen) + egy kicsi, strapabíró SSD a létfontosságú maggal.**", "",
           "### Mi hova kerüljön – rétegek", "",
           "| Réteg | Mi kerül rá | Méret (32 TB-os terv) | Ajánlott eszköz | Miért |", "|---|---|---|---|---|",
-          f"| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~{c(t01 + 0.05)} TB | strapabíró SSD 2–4 TB, alapajánlat: **Samsung T7 Shield 4TB** (IP65, 3 m esés, 317 341 Ft, mért) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken; olcsóbb HDD-s változat: LaCie Rugged 5TB (nem vízálló) vagy ADATA HD710 Pro (IP68) | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |",
+          f"| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~{c(t01 + 0.05)} TB | strapabíró SSD 2–4 TB, alapajánlat: **Samsung T7 Shield 4TB** (IP65, 3 m esés, ~317 ezer Ft, becsült; a 2 TB-os ipon 198 391 Ft, mért) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken; olcsóbb HDD-s változat: LaCie Rugged 5TB (nem vízálló) vagy ADATA HD710 Pro (IP68) | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |",
           f"| **2. Munka** (gyors, a gépben) | az LLM-modellek + amit naponta használsz | ~{c(sz(llm))} TB + tartalék | NVMe PCIe 5.0 SSD 4–8 TB a gamer PC-ben | a modell betöltése 8 TB-os Gen5-ről ~50 s; ez NEM archívum, mindenről van másolat |",
           f"| **3. Teljes archívum** (A példány, használatban) | minden: 2–5. szint, nagy tükrök, térképek, lexikonok | ~{c(tot)} TB | 1 db 28–32 TB HDD (CMR) dokkolóban, ZFS-sel | a legolcsóbb TB-ár, havi ellenőrzéssel önjavító |",
           f"| **4. Offline másolat** (B példány) | ugyanaz, mint a 3. | ~{c(tot)} TB | 1 db 28–32 TB HDD, **más gyártótól vagy termékcsaládtól**, antisztatikus tasak + Faraday-tasak + tömített acél lőszerláda + szilikagél, **másik épületben** | tűz, víz, lopás, villám, EMP, zsarolóvírus, rossz parancs ellen; félévente be kell kapcsolni és végigolvasni |",
@@ -121,7 +122,7 @@ def section(plans):
         md.append(f"| **{_e(k)}** | " + "<br>".join(_e(x) for x in el) + f" | {BUNDLE_CAP.get(key, '–')} | {_e(BUNDLE_PRICE.get(key) or v.get('osszesen'))} | "
                   f"{BUNDLE_SURV.get(key, '–')} | {_e(v.get('megjegyzes') or v.get('alternativa') or '–')} |")
     K2 = hd.get("kompakt_2_eszkoz") or {}
-    md += ["", "### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre)", "",
+    md += ["", "### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre; a B példány vizet, ütést, EMP-t is túlél)", "",
            "| Változat | 1. eszköz | 2. eszköz (offline) | Védelem | Összesen |", "|---|---|---|---|---|"]
     for k, v in K2.items():
         if not isinstance(v, dict):

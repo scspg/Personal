@@ -169,9 +169,9 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models td.date{white-space:nowrap}
 .soft td{vertical-align:top}.soft .sd{font-size:.86em;color:var(--muted);max-width:420px}.soft td:first-child{min-width:160px}
 #models,#soft,#stor{max-height:80vh;overflow:auto}
-.bund td{vertical-align:top}.bund ul{margin:0;padding-left:16px}.bund td:nth-child(2){min-width:260px}
+.bund{width:100%}.bund td{vertical-align:top}.bund td:last-child{max-width:240px}.bund ul{margin:0;padding-left:16px}.bund td:nth-child(2){min-width:260px}
 .stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:240px;max-width:320px;white-space:normal;overflow-wrap:anywhere}.stortab td:nth-child(3){min-width:0;max-width:220px}.stortab td:last-child{min-width:240px;max-width:340px}
-.soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){max-width:110px;overflow-wrap:anywhere}
+.soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){min-width:90px;white-space:nowrap}
 #ssd td:first-child{white-space:nowrap}
 .tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
 #models td:first-child,#models th:first-child{position:sticky;left:0;background:var(--surface);z-index:2}#models th:first-child{background:var(--sunk);z-index:3}
@@ -200,6 +200,10 @@ tr:hover td{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
   .soft td{display:block;min-width:0!important;max-width:none!important;border:0;padding:2px 10px}
   .soft td[data-l]::before{content:attr(data-l) ": ";font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   #soft{max-height:none}
+  .bund thead{display:none}.bund tr{display:grid;gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .bund td{display:block;min-width:0!important;max-width:none!important;border:0;padding:2px 10px}
+  .bund td[data-l]::before{content:attr(data-l) ": ";font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .stortab td:first-child a{overflow-wrap:anywhere;white-space:normal}
   .soft td.num{text-align:left}
   #models td:first-child{min-width:150px;max-width:170px}
   input,select{font-size:16px}
@@ -296,6 +300,7 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva'+why]];}
 function evaluate(dev){return {V1:bestSingle(dev,true),V2:bestSingle(dev,false),V3:team(dev,false),V4:team(dev,true)};}
 const TITLES={V1:['V1','Legokosabb cenzúrázatlan',1],V2:['V2','Legokosabb alap (cenzúrázott)',0],V3:['V3','Csapat – alap modellek',0],V4:['V4','Vegyes csapat – alap + cenzúrázatlan',1]};
+const huft=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+'\u00a0Ft';
 const norm=s=>String(s??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function meter(aa,u,est){const p=Math.min(110,100*aa/OPUS);return `<div class="meter" title="AA v5 ${fmt(aa)} / Opus 5.5 ${OPUS}"><div class="track"><div class="fill${u?' u':''}" style="width:${Math.min(100,p)}%"></div></div><span class="val">${est?'~':''}${pct(aa)}%</span></div>`;}
@@ -364,10 +369,10 @@ function softTable(){const q=norm(F('sq').value), c=F('scat').value;
 const ST=__STOR__;
 function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=norm(F('stq').value);
   const so=F('stsort').value, L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||norm(x.n+' '+x.k+' '+x.d+' '+x.pro+' '+x.con+' '+x.l.map(l=>l[0]).join(' ')).includes(q)));
-  if(so){const key=x=>so==='tb'?-(x.tb||0):(x[so]??1e15); L.sort((a,b)=>key(a)-key(b));}
+  if(so){const enc=x=>/ház|NAS|DAS|adapter/i.test(x.k); const key=x=>so==='tb'?(enc(x)?Infinity:-(x.tb||0)):(x[so]??Infinity); L.sort((a,b)=>key(a)-key(b));}
   const lv={olcso:'olcsó',kozep:'közép',profi:'profi',extrem:'extrém'};
-  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${x.tb??'–'}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
-    <td class="num" data-l="Ár">${x.ar?Math.round(x.ar).toLocaleString('hu-HU')+' Ft':'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)||'–'}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
+  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${/ház|NAS|DAS|adapter/i.test(x.k)?'≤'+(x.tb??'–'):(x.tb??'–')}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
+    <td class="num" data-l="Ár">${x.ar?huft(x.ar):'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)||'–'}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
     <td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Nincs találat.</td></tr>';
   F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
   F('stcount').textContent=L.length+' termék';}
@@ -471,7 +476,10 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
   <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
   <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil; LLM: 1–32 TB-ig T2-es gép ~300 GB memóriával és max. 4 modell, 64–128 TB-nál T1 szerver ~2 TB memóriával és max. 8 modell). A nagyobb méret a kisebb teljes tartalmát megtartja. A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
-  <h3 id="tarolok">Tárolók – mit vegyél, hogy soha ne vesszen el</h3>
+</section>
+
+<section id="tarolok">
+  <h2>Tárolók – mit vegyél, hogy soha ne vesszen el</h2>
   __STORAGE__
   <div class="filters">
     <label>Kategória<select id="stcat"><option value="">mind</option></select></label>
@@ -524,7 +532,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <li><b>CMR / SMR:</b> hagyományos / átfedő sávos HDD-írás; archívumra CMR kell (az SMR nagy írásnál lelassul, újraépítésnél kockázatos).</li>
     <li><b>AFR:</b> éves meghibásodási arány (Backblaze-mérés); 1% = 100 lemezből évente 1 hal meg.</li>
     <li><b>TBW / DWPD:</b> SSD-élettartam: összesen írható terabájt / naponta hányszor írható tele 5 évig.</li>
-    <li><b>IP65 / IP68:</b> por- és vízállóság; IP65 = fröccsenő víz, IP68 = tartós víz alá merülés (a megadott mélységig).</li>
+    <li><b>IP65 / IP68:</b> por- és vízállóság; IP65 = vízsugár ellen védett, IP68 = tartós víz alá merülés (a megadott mélységig).</li>
     <li><b>TLC / QLC:</b> cellánként 3 / 4 bit; a TLC tartósabb és áram nélkül tovább őrzi az adatot.</li>
     <li><b>ZFS scrub:</b> a fájlrendszer végigolvas mindent, ellenőrzőösszeggel felismeri és (másolatból) javítja a sérült blokkokat.</li>
     <li><b>par2:</b> javító paritásfájl; pl. 10%-kal a sérült adat 10%-a visszaállítható.</li>
@@ -586,11 +594,11 @@ def storage_html():
             ("3. Teljes archívum – A példány", "minden (~22,5 TB)", "1× 28–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
             ("4. Offline másolat – B példány", "ugyanaz", "1× 28–32 TB HDD más gyártótól / termékcsaládtól, Faraday-tasak + tömített lőszerláda, másik épületben, félévente ellenőrizve"),
             ("5. 30 éves réteg (opcionális)", "harmadik példány", "LTO-9 szalag – csak ~260 TB felett vagy 3+ másolatnál éri meg")]
-    t = "".join(f"<tr><td><b>{a}</b></td><td>{b}</td><td>{c}</td></tr>" for a, b, c in rows)
+    t = "".join(f"<tr><td><b>{a}</b></td><td data-l='Mi kerül rá'>{b}</td><td data-l='Ajánlott eszköz'>{c}</td></tr>" for a, b, c in rows)
     return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 28–32 TB-os HDD-re ráfér (24 TB-on már nem marad tartalék), de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
             'Egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3% (becslés a Backblaze Q2 2026 adataiból). '
             '<b>Legkompaktabb ajánlás:</b> 2 db 28–32 TB-os HDD + 1 kis strapabíró SSD a maggal. Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
-            f'<div class="tablebox"><table><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>'
+            f'<div class="tablebox"><table class="bund"><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>'
             + storage_bundles_html())
 
 
@@ -602,22 +610,24 @@ def storage_bundles_html():
     rows = []
     for k, v in (hd.get("javaslat") or {}).items():
         key = next((b for b in G.BUNDLE_CAP if k.startswith(b)), "")
-        rows.append(f"<tr><td><b>{E(k)}</b></td><td><ul>" + "".join(f"<li>{E(x)}</li>" for x in v.get("elemek") or []) + "</ul></td>"
-                    f"<td>{E(G.BUNDLE_CAP.get(key, '–'))}</td><td class='num'>{E(G.BUNDLE_PRICE.get(key) or v.get('osszesen'))}</td><td>{E(G.BUNDLE_SURV.get(key, '–'))}</td></tr>")
+        rows.append(f"<tr><td><b>{E(k)}</b></td><td data-l='Összeállítás'><ul>" + "".join(f"<li>{E(x)}</li>" for x in v.get("elemek") or []) + "</ul></td>"
+                    f"<td data-l='Kapacitás'>{E(G.BUNDLE_CAP.get(key, '–'))}</td><td data-l='Ár'>{E(G.BUNDLE_PRICE.get(key) or v.get('osszesen'))}</td><td data-l='Mit bír ki'>{E(G.BUNDLE_SURV.get(key, '–'))}</td></tr>")
     k2 = []
     for k, v in (hd.get("kompakt_2_eszkoz") or {}).items():
         if isinstance(v, dict):
-            k2.append(f"<tr><td><b>{E(G.lab(k))}</b></td><td>{E(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))}</td>"
-                      f"<td>{E(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))}</td><td class='num'>{E(v.get('osszesen'))}</td></tr>")
+            k2.append(f"<tr><td><b>{E(G.lab(k))}</b></td><td data-l='1. eszköz'>{E(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))}</td>"
+                      f"<td data-l='2. eszköz (offline)'>{E(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))}</td>"
+                      f"<td data-l='Védelem, megjegyzés'>{E(v.get('vedelem') or v.get('plusz_opcionalis_mag') or '')}{(' ' + E(v['megjegyzes'])) if v.get('megjegyzes') else ''}</td>"
+                      f"<td data-l='Összesen'>{E(v.get('osszesen'))}</td></tr>")
     one = []
     for k, v in (hd.get("egyeszkozos_opciok") or {}).items():
         if isinstance(v, list):
-            one.append(f"<tr><td><b>{E(G.lab(k + '_e' if k == '32_TB' else k))}</b></td><td><ul>" + "".join(f"<li>{E(x)}</li>" for x in v) + "</ul></td></tr>")
+            one.append(f"<tr><td><b>{E(G.lab(k + '_e' if k == '32_TB' else k))}</b></td><td data-l='Lehetőségek'><ul>" + "".join(f"<li>{E(x)}</li>" for x in v) + "</ul></td></tr>")
     note = next((p for p in prods if p.get("kategoria") == "other" and not p.get("ar_huf")), None)
     nt = (f'<p class="hint"><b>{E(note.get("nev"))}</b> – ' + E(" ".join((note.get("hatranyok") or []) + (note.get("elonyok") or []))) + "</p>") if note else ""
-    return ('<h3>Ajánlott összeállítások árszintenként</h3><div class="tablebox"><table class="bund"><thead><tr><th>Keret</th><th>Összeállítás</th><th>Kapacitás</th><th class="num">Ár</th><th>Mit bír ki</th></tr></thead><tbody>'
+    return ('<h3>Ajánlott összeállítások árszintenként</h3><div class="tablebox"><table class="bund"><thead><tr><th>Keret</th><th>Összeállítás</th><th>Kapacitás</th><th>Ár</th><th>Mit bír ki</th></tr></thead><tbody>'
             + "".join(rows) + '</tbody></table></div>'
-            '<h3>A legkompaktabb kételemes megoldás („minden egyben”, 1 lemezhibát, vizet, ütést, EMP-t is túlél)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th class="num">Összesen</th></tr></thead><tbody>'
+            '<h3>A legkompaktabb kételemes megoldás („minden egyben”; 1 lemezhibát túlél, a B példány vizet, ütést, EMP-t is)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th>Védelem, megjegyzés</th><th>Összesen</th></tr></thead><tbody>'
             + "".join(k2) + '</tbody></table></div>'
             '<details><summary>Ha mégis egyetlen eszköz kell – méretenként</summary><div class="tablebox"><table class="bund"><tbody>' + "".join(one) + '</tbody></table></div>'
             '<p class="hint">Egy doboz közös ponton hibázik (táp, túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs) – a RAID nem mentés.</p></details>'

@@ -60,7 +60,7 @@ MUNKAMENET:
 9. Második példány (ha van második meghajtó – lásd 4c fejezet):
    - `rsync -a --checksum <cél>/ <második>/` az offline példányra (más gyártó, utána leválasztva, Faraday-tasakba);
    - `par2 create -r10` a 0–1. szintű mappákra (10% javító paritás);
-   - sha256 manifest mindkét példányon (`find . -type f -exec sha256sum {} + > MANIFEST.sha256`), és ellenőrzés: `sha256sum -c`.
+   - sha256 manifest mindkét példányon (`find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256`), és ellenőrzés: `sha256sum -c`.
 10. Zárójelentés:
    - mi jött le (OK), mi bukott (FAIL), mennyi hely maradt;
    - a KÉZI TEENDŐK listája linkkel és árral (fizetős, regisztrációs, fizikai könyv);

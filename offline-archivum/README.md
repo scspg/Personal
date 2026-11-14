@@ -12,7 +12,7 @@
 ## Fájlok
 | Fájl | Méret | Mire való |
 |---|---|---|
-| `ARCHIVUM-LLM.html` | 0,9 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező |
+| `ARCHIVUM-LLM.html` | 0,9 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező, tárolóválasztó (Tárolók fül) |
 | `ARCHIVUM.md` | 2,2 MB | teljes katalógus: 1261 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
 | `ARCHIVUM-kompakt.md` | 1,6 MB | ugyanez kevesebb LLM-kvanttal (897 tétel) – hosszú kontextusú modellnek |
 | `ARCHIVUM-chat.md` | 0,1 MB | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások, legjobb szoftverek |
@@ -21,8 +21,8 @@
 | `forras/` | – | generátorok és a kutatási nyersanyag |
 
 ## A katalógus fejezetei
-1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
-4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
+1 AI-prompt · 2 szabályok · 3 pontozás · 4/4b csomagok tárhely és SSD-méret szerint · 4c tárolók (termékek árral és bolti linkkel, 2 példányos stratégia, kockázatszámítás) ·
+5 katalógus kategóriánként · 5b mindenre a legjobb nyílt forráskódú szoftver és modell (GitHub, GitLab, Codeberg, Hugging Face stb.) ·
 6 LLM-ek (6.1 rangsor + % Opus · 6.5 cenzúrázatlanok és gépigény · 6.10 eszközönként 4 változat · 6.11 GeForce-feloldás) ·
 7 letöltési receptek · 8 fizetős/fizikai beszerzések · 9 captcha-mentes web · 10 gépi JSONL · 11–12 szkriptek
 
