@@ -21,13 +21,8 @@ PATCH = {
     "openinverter-stm32-sine": {"download": {"method": "git", "repos": ["https://github.com/jsphuebner/stm32-sine", "https://github.com/jsphuebner/libopeninv"]}},
     "respiraworks-ventilator": {"download": {"method": "git", "repos": ["https://github.com/RespiraWorks/Ventilator"]}},
     # --- hf-blokkok repo nélkül → pontos repo + include, mért méret ---
-    "whisper-cpp-models": {"download": {"method": "hf", "repo": "ggerganov/whisper.cpp",
-                                        "include": ["ggml-large-v3-turbo-q5_0.bin", "ggml-medium.bin", "ggml-small.bin"]},
-                           "bytes": 2595406221, "size_status": "measured:2026-11-14:hf-api"},
     "nllb-200": {"download": {"method": "agent", "note": "Két HF-repó: hf download facebook/nllb-200-distilled-600M ; hf download facebook/nllb-200-3.3B",
                               "seed_urls": ["https://huggingface.co/facebook/nllb-200-distilled-600M", "https://huggingface.co/facebook/nllb-200-3.3B"]}},
-    "piper-tts-hu": {"download": {"method": "hf", "repo": "rhasspy/piper-voices", "include": ["hu/*"]}, "bytes": 189988337,
-                     "size_status": "measured:2026-11-14:hf-api (hu/ mappa, 12 fájl)", "size_human": "190 MB"},
     # --- egyéb használhatatlan blokkok ---
     "babcock-wilcox-steam-1913": {"download": {"method": "archive.org", "ids": ["steamitsgenerati22657gut"]}, "bytes": 13296398,
                                   "size_status": "measured:2026-11-14:archive.org metadata"},
@@ -54,6 +49,17 @@ PATCH = {
     **{i: {"subsumed_by": ["mek-oszk"]} for i in ["pallas-nagy-lexikona", "revai-nagy-lexikona", "magyar-neprajzi-lexikon", "magyar-eletrajzi-lexikon"]},
     "cd3wd-2012-dvd-isos": {"cat": "appropriate_tech"}, "survivor-library": {"cat": "library"},
     "kx-khan": {"tier": 2},
+    # --- Hugging Face / platform tételek: átfedések és apró hibák ---
+    "hub-whisper-cpp-large-v3-turbo": {"bytes": 1624555275 + 574041195, "size_status": "measured:2026-11-14:hf-api (2 fájl)"},
+    "hub-paddleocr-vl-1-6": {"download": {"method": "hf", "repo": "PaddlePaddle/PaddleOCR-VL-1.6", "include": []}},
+    "hub-indra-ocr": {"download": {"method": "hf", "repo": "datalab-to/indra-ocr", "include": []}},
+    "whisper-cpp-models": {"download": {"method": "hf", "repo": "ggerganov/whisper.cpp", "include": ["ggml-large-v3-turbo-q5_0.bin", "ggml-medium.bin", "ggml-small.bin"]},
+                           "bytes": 2595406221, "size_status": "measured:2026-11-14:hf-api", "subsumed_by": ["hub-whisper-cpp-large-v3-turbo"]},
+    "piper-tts-hu": {"download": {"method": "hf", "repo": "rhasspy/piper-voices", "include": ["hu/*"]}, "bytes": 189988337,
+                     "size_status": "measured:2026-11-14:hf-api (hu/ mappa, 12 fájl)", "size_human": "190 MB", "subsumed_by": ["hub-piper-hu-voices"]},
+    "argos-translate-hu": {"subsumed_by": ["hub-argos-translate-hu"]},
+    **{i: {"bytes_est": 50_000_000, "size_status": "estimated:git mirror (Markdown lista)"} for i in
+       ["hub-awesome-selfhosted", "hub-awesome-sysadmin", "hub-awesome-open-hardware", "hub-awesome-public-datasets", "hub-awesome-meta"]},
     # --- tier/pont-javítások ---
     "tool-vlc": {"tier": 2}, "internet-archive-ia-cli": {"tier": 3}, "organic-syntheses": {"tier": 2},
 }
@@ -106,6 +112,9 @@ def apply(items):
         if it["id"] in DELETE:
             continue
         it = _clean_null(it)
+        dl = it.get("download") or {}
+        if isinstance(dl.get("include"), list):
+            dl["include"] = [x for x in dl["include"] if x not in ("null", "None", None, "")]
         if it.get("bytes", 0) is None:
             it.pop("bytes")
         if it["id"] in LANG:
