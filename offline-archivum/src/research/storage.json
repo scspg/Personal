@@ -1278,7 +1278,7 @@
    "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
     "elemek": [
      "1. (online): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
-     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-dokkoló kell) vagy második IronWolf Pro 24TB; NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
+     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-dokkoló kell) (ugyanaz a gyártó nem ajánlott); NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
     "osszesen": "~1 040 000–1 125 000 Ft",
@@ -3021,7 +3021,7 @@
     ]
    },
    {
-    "usb4_u2_haz_letezik": "IGEN: ICY DOCK MB307U-1VB (USB4 40 Gbps, U.2/U.3, 15mm), alternate.de 193.90 EUR, mért: https://www.alternate.de/Icy-Dock/MB307U-1VB-Adapter/html/product/100194424"
+    "usb4_u2_haz_letezik": "IGEN: ICY DOCK MB307U-1VB (USB4 40 Gbps, U.2/U.3, 15mm), alternate.de 180,90 EUR (akciós), mért: https://www.alternate.de/Icy-Dock/MB307U-1VB-Adapter/html/product/100194424"
    }
   ],
   "egy_vs_ket_peldany": {
@@ -3059,7 +3059,7 @@
     "kozep_olcso": "SanDisk Extreme 8TB, ipon 565 589 Ft (70 699 Ft/TB, IP65, 3 m). A telefonokhoz elég (iPhone 15 Pro 10 Gbps, kb. 1 GB/s; S24 Ultra 5 Gbps, kb. 450 MB/s). Vásárlás után azonnal firmware-frissítés. Legolcsóbb kis tétel: Kingston XS2000 2TB, 109 090 Ft."
    },
    "enterprise_30_120tb_all_flash": {
-    "olcsobb_qlc": "Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 → U.2 kártya (64.90 EUR) / M.2 → U.2 adapter (74.90 EUR), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (193.90 EUR).",
+    "olcsobb_qlc": "Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 → U.2 kártya (44,99 EUR, akciós) / M.2 → U.2 adapter (46,99 EUR, akciós), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (180,90 EUR, akciós).",
     "profi_tlc": "Kioxia CD8-P 15.36TB (ipon, rendelhető, 4 137 890 Ft/db, mért): 2 db = 30.72TB, kb. 8.3 M Ft; 8 db = 122.88TB, kb. 33.1 M Ft. TLC + PLP + Gen5, de ZFS RAIDZ/tükör és ventilátoros ház kell.",
     "oszinte_ertekeles": "2026 novemberében az all-flash 30TB fölött TB-onként a fogyasztói Gen5 2.5-szerese, a HDD-nek pedig a sokszorosa. Ajánlás: 8TB Gen5 forró réteg + HDD tömegtár + második offline másolat. All-flash csak akkor, ha a költségvetés ezt indokolja."
    }

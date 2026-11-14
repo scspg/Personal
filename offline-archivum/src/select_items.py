@@ -142,6 +142,11 @@ def main():
     except (OSError, UnicodeDecodeError, ValueError, KeyError) as e:
         sys.exit(f"Nem olvasható katalógus: {a.catalog} ({e})")   # determinisztikus sorrend (holtversenynél is)
     w = PROFILES[a.profile]
+    cats, ids = {it["cat"] for it in items}, {it["id"] for it in items}
+    unk = sorted({p.split("=")[0] for p in a.focus.split(",") if p} - cats) + sorted(
+        x for x in a.exclude.split(",") if x and (x[4:] not in cats if x.startswith("cat:") else x not in ids))
+    if unk:
+        print(f"FIGYELEM: ismeretlen kategória / azonosító (--focus / --exclude): {', '.join(unk)}", file=sys.stderr)
     try:
         focus = {k: float(v) for k, v in (p.split("=") for p in a.focus.split(",") if p)}
     except ValueError:
@@ -358,7 +363,10 @@ def main():
                "manual": [v["id"] for v in manual]}, out, ensure_ascii=False, indent=1)
     out.close()
     if a.emit_sh:
-        write_sh(plan, a.emit_sh, a.dest)
+        try:
+            write_sh(plan, a.emit_sh, a.dest)
+        except OSError as e:
+            sys.exit(f"Nem írható: {a.emit_sh} ({e})")
     print(f"Profil: {a.profile} | keret: {a.budget} (használható {human(budget)}) | felhasználva: {human(used)} "
           f"| elemek: {len(plan)} | LLM: {human(llm_used())} (max {human(llm_cap)})\n")
     print(f"{'#':>3} {'T':>2} {'pont':>5} {'méret':>10}  {'mód':<11} id")
@@ -401,7 +409,7 @@ def write_sh(plan, path, dest):
                          "git": ["git"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
-         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
+         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in ""|/|/bin*|/boot*|/etc*|/usr*|/proc*|/sys*|/dev*) echo "Hibás célkönyvtár: DEST=\"$DEST\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
          'anyhave(){ local t; for t in ${1//|/ }; do have "$t" && return 0; done; return 1; }',
          "for t in " + " ".join(q(t) for t in need_tools) + '; do anyhave "$t" || echo "FIGYELEM: hiányzó eszköz: $t – az ezt igénylő tételek FAIL-lel végződnek"; done',
@@ -413,15 +421,15 @@ def write_sh(plan, path, dest):
          '  local h=127.0.0.1:11499 r',
          '  if OLLAMA_HOST=$h ollama list >/dev/null 2>&1; then echo "FIGYELEM: a $h porton már fut egy ollama-szerver (régi futás?) – állítsd le"; return 1; fi',
          '  OLLAMA_MODELS="$2" OLLAMA_HOST=$h ollama serve >/dev/null 2>&1 & _OP=$!',
-         "  trap 'kill $_OP 2>/dev/null' EXIT; trap 'kill $_OP 2>/dev/null; exit 130' INT TERM",
+         "  trap 'kill $_OP 2>/dev/null' EXIT; trap 'kill $_OP 2>/dev/null; exit 130' INT; trap 'kill $_OP 2>/dev/null; exit 143' TERM",
          '  for _ in $(seq 1 60); do OLLAMA_HOST=$h ollama list >/dev/null 2>&1 && break; kill -0 $_OP 2>/dev/null || break; sleep 1; done',
          '  kill -0 $_OP 2>/dev/null && OLLAMA_HOST=$h ollama pull "$1"; r=$?',
          '  kill $_OP 2>/dev/null; wait $_OP 2>/dev/null; trap - EXIT INT TERM; return $r; }',
          'git_mirror(){ # url bare-könyvtár [tag]: csak ágak+tagek; sekély (tag vagy HEAD), GIT_FULL=1: teljes történet; mindig klónozható HEAD',
          '  local u=$1 g=$2 t=${3:-} h',
-         '  git -C "$g" remote get-url origin >/dev/null 2>&1 || { git init -q --bare "$g" && git -C "$g" remote add origin "$u"; } || return 1',
+         '  if git -C "$g" remote get-url origin >/dev/null 2>&1; then git -C "$g" remote set-url origin "$u"; else git init -q --bare "$g" && git -C "$g" remote add origin "$u"; fi || return 1',
          '  git -C "$g" config --replace-all remote.origin.fetch "+refs/heads/*:refs/heads/*" && git -C "$g" config --add remote.origin.fetch "+refs/tags/*:refs/tags/*" || return 1',
-         '  if [ -n "${GIT_FULL:-}" ]; then',
+         '  if [ -n "${GIT_FULL:-}" ] || { [ ! -f "$g/shallow" ] && git -C "$g" rev-parse -q --verify HEAD >/dev/null; }; then   # egyszer teljes → teljes marad',
          '    if [ -f "$g/shallow" ]; then git -C "$g" fetch -q --tags --unshallow origin; else git -C "$g" fetch -q --tags origin; fi || return 1',
          '    h=$(git -C "$g" ls-remote --symref origin HEAD 2>/dev/null | awk \'$1=="ref:"{print $2; exit}\'); [ -n "$h" ] && git -C "$g" symbolic-ref HEAD "$h"',
          '  else',
@@ -460,7 +468,7 @@ def write_sh(plan, path, dest):
                 L.append(f'_r=0; for _u in {" ".join(q(u) for u in us)}; do fetch "$_u" "{sub}" || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}')
         elif m == "jigdo":    # Debian BD/DVD-képek .jigdo leírókból (jigdo-file csomag), nem interaktívan
             base = d["url"].rstrip("/") + "/"
-            L.append(f'if have jigdo-lite; then _r=0; _n=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
+            L.append(f'if have jigdo-lite; then _r=0; _n=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="{d.get("match") or "debian-[0-9]"}[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
                      f'_n=$((_n+1)); (cd "{sub}" && jigdo-lite --noask {q(base)}"$_j") || _r=1; done; [ $_r = 0 ] && [ $_n -gt 0 ] && ok {vid} || fail {vid}; '
                      f'else echo {q("TODO " + v["id"] + " – jigdo-lite kell (apt install jigdo-file)")} | tee -a "$LOG" "$RUNLOG"; fi')
         elif m == "wget-mirror":
@@ -468,14 +476,17 @@ def write_sh(plan, path, dest):
         elif m == "rsync":
             L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {vid} || fail {vid}')
         elif m == "git":
-            for u in (d.get("repos") or [d.get("url")]):
-                if not u:
-                    continue
+            calls = []
+            for k_, u in enumerate([u for u in (d.get("repos") or [d.get("url")]) if u]):
                 n = u.rstrip("/").split("/")[-1]
                 n = safe(n[:-4] if n.endswith(".git") else n)
-                g, tag = f'"{sub}/{n}.git"', d.get("tag") or v.get("latest_version") or ""
+                g, tag = f'"{sub}/{n}.git"', (d.get("tag") or v.get("latest_version") or "") if k_ == 0 else ""
                 tag = tag if re.fullmatch(r"[\w.+-]{1,60}", tag or "") else ""
-                L.append(f'git_mirror {q(u)} {g} {q(tag)} && ok {vid} || fail {vid}')
+                calls.append(f'git_mirror {q(u)} {g} {q(tag)}')
+            if len(calls) == 1:
+                L.append(f'{calls[0]} && ok {vid} || fail {vid}')
+            elif calls:   # több repó: tételenként egy ítélet
+                L.append("_r=0; " + "; ".join(f"{c_} || _r=1" for c_ in calls) + f"; [ $_r = 0 ] && ok {vid} || fail {vid}")
             if d.get("release_url"):
                 L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
                 L.append(f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"')
@@ -489,9 +500,11 @@ def write_sh(plan, path, dest):
             L.append(f'ollama_pull {q(tag)} "{sub}" && ok {vid} || fail {vid}   # ideiglenes ollama-szerver, a modell a $DEST alá kerül')
         elif m == "archive.org":
             glob = f' --glob={q(d["glob"])}' if d.get("glob") else ""
-            for ident in (d.get("ids") or [d.get("id")]):
-                if ident:
-                    L.append(f'ia download {q(ident)}{glob} --checksum --destdir "{sub}" && ok {vid} || fail {vid}')
+            ids = [x for x in (d.get("ids") or [d.get("id")]) if x]
+            if len(ids) == 1:
+                L.append(f'ia download {q(ids[0])}{glob} --checksum --destdir "{sub}" && ok {vid} || fail {vid}')
+            elif ids:
+                L.append("_r=0; " + "; ".join(f'ia download {q(x)}{glob} --checksum --destdir "{sub}" || _r=1' for x in ids) + f"; [ $_r = 0 ] && ok {vid} || fail {vid}")
         elif m == "torrent":
             u = d.get("url") or d.get("magnet")
             if u:

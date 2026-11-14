@@ -215,6 +215,47 @@ for _k, _v in PATCH3.items():
 MULTI_FILE_DONE = {"linux-kernel-source", "calibre"}
 _STYLE += [(r"cross-platform", "többplatformos"), (r"drag-and-drop", "fogd és vidd"), (r"all-in-one", "mindent egyben"), (r"\bdiskless\b", "lemez nélküli"),
            (r"\bsnapshot", "pillanatkép"), (r"\branswomware\b", "zsarolóvírus"), (r"\bransomware\b", "zsarolóvírus"), (r"(\d)\.(\d)B-s\b", r"\1,\2B-s")]
+# --- 5. adat-átnézés (2026-11-14): mért értékek ---
+GH = "https://github.com"
+PATCH5 = {
+    "ose-wiki-dump-gvcs": {"download": {"method": "archive.org", "ids": ["wiki-wiki.opensourceecology.org-20250809"], "glob": "*.7z"},
+                           "bytes": 10_254_612_473, "size_status": M + ":archive.org metadata (images.7z)"},
+    "devdocs-offline": {"download": {"method": "agent", "note": "Az alkalmazás: git clone https://github.com/freeCodeCamp/devdocs (Docker-képpel futtatható). A dokumentációk listája: https://documents.devdocs.io/docs.json → minden kért dokumentációhoz a <slug>/db.json és index.json letöltése; vagy a futó app „Offline” menüjéből.",
+                        "seed_urls": ["https://github.com/freeCodeCamp/devdocs", "https://documents.devdocs.io/docs.json"]}},
+    "primary-surgery-king-vol1-2": {"download_ids_add": ["primary-surgery-vol-2-trauma-2nd-edition"], "bytes": 188_418_039, "size_status": M + ":archive.org metadata (2 kötet)"},
+    "pd-craft-classics-tanning-pottery-weaving-glass": {"download_ids_add": ["potterscraftprac00binnuoft", "handloomweavingp00hooprich", "glassblowing00shenrich"],
+                                                        "bytes": 109_451_725, "size_status": M + ":archive.org metadata (4 könyv)"},
+    "usbr-design-of-small-dams": {"glob": "designofsmalldam00unit.pdf", "bytes": 49_663_550},
+    "practical-blacksmithing-richardson": {"glob": "practicalblacksm00richrich.pdf", "bytes": 15_585_506},
+    "foundry-work-wendt-1923": {"glob": "foundryworktexto00wend.pdf", "bytes": 13_598_969},
+    "rogers-industrial-chemistry-1912": {"glob": "2015.141919.Rogers-Industrial-Chemistry.pdf", "bytes": 50_576_173},
+    "thomssen-soap-making-manual-1922": {"glob": "soapmakingmanua00thomgoog_text.pdf", "bytes": 9_961_906},
+    "gebco-2026-grid": {"download": {"method": "http", "urls": ["https://dap.ceda.ac.uk/bodc/gebco/global/gebco_2026/ice_surface_elevation/netcdf/GEBCO_2026.zip?download=1"]},
+                        "bytes": 4_252_016_343, "size_status": M + ":content-length (jégfelszíni rács, NetCDF)"},
+    "freedos-14": {"download": {"method": "http", "urls": [f"https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.4/FD14-{x}.zip" for x in ("FullUSB", "LiveCD")]},
+                   "bytes": 668_803_454 + 293_950_337, "size_status": M + ":content-length"},
+    "arduino-ide-offline": {"download": {"method": "http", "urls": ["https://downloads.arduino.cc/arduino-1.8.19-linux64.tar.xz", "https://downloads.arduino.cc/arduino-1.8.19-windows.zip"]},
+                            "bytes": 128_583_740 + 210_670_368, "size_status": M + ":content-length (Linux + Windows)"},
+    "kicad-eda-and-libraries": {"download": {"method": "http", "urls": [f"{GH}/KiCad/kicad-source-mirror/releases/download/10.0.8/kicad-10.0.8-x86_64.exe"],
+                                "note": "Linuxon a disztribúció csomagja; a könyvtárak a Windows-telepítőben vannak."}, "bytes": 969_079_176, "size_status": M + ":content-length (Windows, könyvtárakkal)"},
+    "freecad-and-parts-library": {"download": {"method": "http", "urls": [f"{GH}/FreeCAD/FreeCAD/releases/download/1.1.4/FreeCAD_1.1.4-Linux-x86_64-py311.AppImage",
+                                  f"{GH}/FreeCAD/FreeCAD/releases/download/1.1.4/FreeCAD_1.1.4-Windows-x86_64-py311-installer.exe"]},
+                                  "bytes": 820_812_280 + 519_314_976, "size_status": M + ":content-length",
+                                  "notes": "Az alkatrészkönyvtár külön, nagy git-repó: https://github.com/FreeCAD/FreeCAD-library (git clone --depth 1 elég)."},
+    "ventoy": {"download": {"method": "http", "urls": [f"{GH}/ventoy/Ventoy/releases/download/v1.1.18/ventoy-1.1.18-linux.tar.gz",
+               f"{GH}/ventoy/Ventoy/releases/download/v1.1.18/ventoy-1.1.18-windows.zip"]}, "bytes": 20_320_548 + 16_680_699, "size_status": M + ":content-length"},
+    "hu-radioamator-vizsga-anyagok": {"bytes": 5_394_642, "size_status": M + ":content-length"},
+    "npm-go-registries-note": {"info_url": "https://replicate.npmjs.com/"},
+    "oss-yt-dlp": {"bytes_est": 3_500_000}, "oss-imagemagick": {"bytes_est": 14_000_000}, "oss-openscad": {"bytes_est": 23_100_000}, "oss-wireshark": {"bytes_est": 92_400_000},
+    "oss-podman": {"bytes": None, "bytes_est": 21_400_000, "size_status": M + ":sekély klón (du)"},
+}
+MULTI_FILE_DONE |= {"gebco-2026-grid", "freedos-14", "arduino-ide-offline", "kicad-eda-and-libraries", "freecad-and-parts-library"}
+for _k, _v in PATCH5.items():
+    _d = PATCH.setdefault(_k, {})
+    for _kk, _vv in _v.items():
+        _d[_kk] = _vv
+_STYLE += [(r"(\d)\.(\d+)B\b", r"\1,\2B"), (r"(\d+)\.(\d+) pont", r"\1,\2 pont"), (r"offline-first", "elsősorban offline"), (r"\bworkflow", "munkafolyamat")]
+
 
 # kézi fordítás a fordítás után módosult / kimaradt szövegekre
 NOTES_FIX = {
@@ -251,6 +292,32 @@ def _notes_hu():
             _NHU = {"notes": {}, "size_human": {}}
     return _NHU
 
+# kézi tételek: az URL-mezőben csak URL, a magyarázat a note-ba (magyarul)
+MANUAL_URL = {
+    "apt-mirror-debmirror": ("https://github.com/apt-mirror/apt-mirror", "git: https://github.com/apt-mirror/apt-mirror ; Debianon: apt install debmirror"),
+    "kiwix-hotspot": ("https://get.kiwix.org/en/shop/", "csak az OS-képek, fizetős letöltés"),
+    "rachel-plus": ("https://rachel.worldpossible.org/", "az ingyenes tartalommodulok itt érhetők el"),
+    "hathitrust": ("https://babel.hathitrust.org/", "kötetenként; a teljes PDF többnyire csak tagintézményi belépéssel"),
+    "google-books-pd": ("https://books.google.com/", "könyvenként „PDF letöltése” a teljes nézetű (közkincs) tételeknél"),
+    "hungaricana": ("https://library.hungaricana.hu/", "oldalankénti / dokumentumonkénti PDF-export (a korlátok nem ellenőrzöttek)"),
+    "tankonyvkatalogus-oh": ("https://www.tankonyvkatalogus.hu/", "címenkénti PDF-letöltés a katalógusban (az OH tulajdonában lévő tankönyvek)"),
+    "digitalis-tankonyvtar": ("https://www.tankonyvtar.hu/", "könyvenkénti PDF-letöltés (bejelentkezés kellhet, nem ellenőrzött)"),
+    "voroskereszt-kiadvanyok": ("https://voroskereszt.hu/kiadvanyaink/", "valamint: https://voroskereszt.hu/katasztrofak/felkeszules-a-katasztrofakra/"),
+    "lechner-terkepek": ("https://map.lechnerkozpont.hu/", "nézegető; az adatok a Lechner Tudásközponttól rendelhetők (fizetős)"),
+}
+_SS_KIND = {"measured": "measured", "estimated": "estimated", "official": "official", "mért": "measured", "becsült": "estimated"}
+
+
+def _norm_size_status(v):
+    """size_status egységesítése: <measured|estimated|official>:<dátum>:<forrás>."""
+    v = str(v or "")
+    if v in ("measured", "estimated", "official"):
+        return f"{v}:2026-11-14:forrás nincs megadva"
+    m = re.match(r"^(measured|estimated|official)[:(]\s*(\d{4}-\d{2}-\d{2})?:?(.*?)\)?$", v, re.S)
+    if m:
+        return f"{m.group(1)}:{m.group(2) or '2026-11-14'}:{(m.group(3) or '').strip(' :()') or 'forrás nincs megadva'}"
+    return v
+
 
 def apply(items):
     out, seen = [], set()
@@ -282,6 +349,16 @@ def apply(items):
                     it.pop(k, None)
                 else:
                     it[k] = v
+        if it["id"] in MANUAL_URL and (it.get("download") or {}).get("method") == "manual":
+            u, note = MANUAL_URL[it["id"]]
+            it["download"] = {**it["download"], "url": u, "note": note}
+        if it.get("size_status"):
+            it["size_status"] = _norm_size_status(it["size_status"])
+        if p and "glob" in p:
+            it["download"]["glob"] = it.pop("glob")
+        if p and "download_ids_add" in p:
+            ids = it["download"].setdefault("ids", [])
+            ids += [x for x in it.pop("download_ids_add") if x not in ids]
         if (it.get("download") or {}).get("method") == "archive.org" and not it["download"].get("glob") and "PDF" in str(it.get("format", "")).upper():
             it["download"]["glob"] = "*.pdf"
         if not it["cat"].startswith("ai_models"):

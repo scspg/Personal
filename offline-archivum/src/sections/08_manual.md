@@ -100,7 +100,7 @@ Ezeket az AI nem tölti le automatikusan. Listázza őket, a döntés és a vás
 | 5 | 3.3 | **SourceForge – régi szabad szoftverek, telepítők** | Sok régi projekt (pl. a 7-Zip korábbi kiadásai, PortableApps, régi driverek) csak itt maradt fenn. Tükörszerverhálózatról, rsync-kel vagy a FRS-en keresztül tölthető le. |  | [link](https://sourceforge.net) |
 | 5 | 2.7 | **LibriVox public-domain audiobooks** | Önkéntesek által felolvasott közkincs hangoskönyvek 49 nyelven. Analfabéták, gyerekek és gyengénlátók számára, valamint szórakoztatásra és erkölcsi tartásra hasznos. |  | [link](https://librivox.org/) |
 | 5 | 1.9 | **Wikimedia Commons media (note: impractical)** | A Wikipédia képeit, hangjait, videóit tartalmazó médiatár. Teljes mérete petabájt nagyságrendű, csak szűk válogatás menthető. |  | [link](https://commons.wikimedia.org/wiki/Special:MediaStatistics) |
-| 5 | 1.8 | **npm and Go module registries (note: impractical to mirror fully)** | Az npm (4,6 millió csomag) és a Go modulproxy teljes tükrözése nem reális. Csak projekt-specifikus függőségeket érdemes elmenteni (npm pack, go mod vendor). |  | [link](https://replicate.npmjs.com/ ; https://proxy.golang.org/) |
+| 5 | 1.8 | **npm and Go module registries (note: impractical to mirror fully)** | Az npm (4,6 millió csomag) és a Go modulproxy teljes tükrözése nem reális. Csak projekt-specifikus függőségeket érdemes elmenteni (npm pack, go mod vendor). |  | [link](https://replicate.npmjs.com/) |
 | 5 | 0.95 | **Common Crawl (note: impractical)** | Havi webarchívum több milliárd oldallal. Csak tudomásul vételre: túl nagy, és válogatás nélkül alacsony értékű. |  | [link](https://data.commoncrawl.org/crawl-data/index.html) |
 
 ### Jogi szürke zóna (alapból kizárva)

@@ -309,7 +309,7 @@ def team(dev, vs, mixed):
         pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
         pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
     else:
-        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]]      # a "gyors segéd" tényleg gyorsabb legyen
+        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or [c for c in pool if c[1][0] > r1[0]]   # a "gyors segéd" tényleg gyorsabb legyen
         pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
     if not pool:
         return None
@@ -460,6 +460,8 @@ def main():
             ap.error("--unified mellé --unified-bw (GB/s) is kell")
         if not (gpus or a.vram or a.ram or a.unified):
             ap.error("adj meg legalább egy memóriát: --gpu / --vram, --ram vagy --unified (vagy használj --preset-et)")
+        if (a.unified_bw and not a.unified) or (a.ram_bw and not a.ram):
+            ap.error("--unified-bw csak --unified, --ram-bw csak --ram mellett értelmes")
         if a.vram_bw and not a.vram:
             ap.error("--vram-bw csak --vram mellett értelmes (több kártyánál --gpu GB:GB/s)")
         if a.tensor_parallel and len(gpus or []) < 2:
