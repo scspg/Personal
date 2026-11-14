@@ -2,21 +2,12 @@
 
 > Ez a rövid változat chatbe tölthető. A teljes katalógus (1230 tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben, az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.
 
-## 0. Gyorsindítás embernek
+## 0. Hogyan használd ezt a fájlt
 
-1. Szerezz egy meghajtót. Ajánlott: **exFAT** (Windows/Mac/Linux mind olvassa) vagy **ext4** (csak Linux). **FAT32-t ne használj**, mert nem kezel 4 GB-nál nagyobb fájlt, a Wikipedia ZIM pedig 127 GB.
-2. Add ezt a fájlt egy olyan AI-ágensnek, amely parancsot tud futtatni. Írd mellé például ezt: *„Van egy 1 TB-os meghajtóm a /media/usb alatt, RTX 4090 + 128 GB RAM gépem, magyar és angol anyag kell, főleg orvosi és mezőgazdasági. Csináld meg.”*
-3. Ha kézzel csinálnád:
-   ```bash
-   # a szkript a 11. fejezetből bontható ki, és magát az .md fájlt olvassa (10. fejezet):
-   sed -n '/^```python select_items.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > select_items.py
-   python3 select_items.py ARCHIVUM.md --budget 1TB --profile balanced --langs hu,en,multi --hw T3 --mem 160GB --emit-sh dl.sh
-   less dl.sh && DEST=/media/usb/archivum bash dl.sh
-   ```
-4. **Fontos:**
-   - Két példány legyen, két külön helyen.
-   - A 0. szint (orvoslás, víz) **legyen kinyomtatva** is.
-   - Az olvasóprogramok telepítői (Kiwix, VLC, PDF-olvasó, llama.cpp) is kerüljenek fel a meghajtóra (a `tool-*` elemek).
+- **Ez a chat-változat** döntéshez és tervezéshez való: mit érdemes letölteni, melyik SSD kell, melyik AI-modell fut a gépeiden.
+- **A letöltéshez** a teljes `ARCHIVUM.md` kell egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.); annak 1. fejezetében van a kész prompt, a 11. fejezetben a `select_items.py`.
+- **Interaktív kalkulátor, modelltábla, szoftverkönyvtár és SSD-tervező:** `ARCHIVUM-LLM.html` (böngészőben, internet nélkül).
+- **Kérdezz rá bátran:** pl. „mi férjen fel egy 2 TB-os SSD-re, ha az orvoslás és a mezőgazdaság a fontos?” vagy „melyik cenzúrázatlan modell fut a 128 GB RAM-os gamer PC-men?”
 
 ## 3. Pontozási rendszer
 
@@ -63,24 +54,25 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 | SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | **1TB** | 920 GB | 289 | 310 GB | 24,1 GB | 32,5 GB | 69,4 GB | 33,5 GB | 270 GB | 67,8 GB | 1 GB | 6,61 GB | 48,3 GB | 42,7 GB | 14,7 GB |
-| **2TB** | 1,84 TB | 368 | 615 GB | 25,6 GB | 33,5 GB | 69,4 GB | 38 GB | 485 GB | 72,8 GB | 199 GB | 149 GB | 86,7 GB | 50,9 GB | 14,8 GB |
-| **4TB** | 3,68 TB | 308 | 615 GB | 24,1 GB | 32,5 GB | 69,4 GB | 33,5 GB | 480 GB | 67,8 GB | 55,2 GB | 142 GB | 2,1 TB | 45 GB | 14,7 GB |
-| **8TB** | 7,36 TB | 473 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 56,7 GB | 748 GB | 73,9 GB | 971 GB | 2,15 TB | 2,23 TB | 329 GB | 39 GB |
-| **16TB** | 14,5 TB | 480 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 752 GB | 1,01 TB | 1,03 TB | 8,26 TB | 2,23 TB | 329 GB | 39 GB |
-| **32TB** | 24,1 TB | 479 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17 TB | 2,23 TB | 329 GB | 39 GB |
+| **2TB** | 1,84 TB | 364 | 615 GB | 25,6 GB | 33,5 GB | 69,4 GB | 38 GB | 485 GB | 72,8 GB | 199 GB | 149 GB | 86,7 GB | 50,9 GB | 14,7 GB |
+| **4TB** | 3,64 TB | 479 | 615 GB | 27,9 GB | 33,7 GB | 85,4 GB | 56,7 GB | 804 GB | 74,9 GB | 971 GB | 402 GB | 202 GB | 329 GB | 39 GB |
+| **8TB** | 7,12 TB | 484 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 752 GB | 74,9 GB | 1,03 TB | 3,81 TB | 202 GB | 329 GB | 39 GB |
+| **16TB** | 13,3 TB | 485 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 1,56 TB | 1,01 TB | 1,03 TB | 8,26 TB | 202 GB | 329 GB | 39 GB |
+| **32TB** | 22,2 TB | 485 | 615 GB | 27,9 GB | 33,7 GB | 160 GB | 56,7 GB | 1,56 TB | 1,01 TB | 1,03 TB | 17,1 TB | 202 GB | 329 GB | 39 GB |
 
 ### Melyik méret mire elég – mi jön be az előző mérethez képest
 
 - **1TB** – összesen 289 tétel; **új: 289**. Legnagyobb új tételek: Survivor Library full mirror on Internet Archive… (218 GB); Qwen3.8-Flash-Next · Qwen3.8-Flash-Next-GGUF · Q8_0 (GGUF) (167 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (93,7 GB); MEK szakmai válogatás… (60 GB); wikipedia_en_all_nopic_2026-06 (52,7 GB); Open Textbook Library (University of Minnesota) (40 GB); Qwen3.8-27B abliterated (huihui) / heretic-ara… (29 GB); CD3WD – Collection of Development Documents… (27,9 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **2TB** – összesen 368 tétel; **új: 80**, jobb változatra cserélt: 3. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); code_aster (Salome-Meca) (8 GB); TeX Live (6,78 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **4TB** – összesen 308 tétel; **új: 1**. Legnagyobb új tételek: Internet-in-a-Box (IIAB) (2,03 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **8TB** – összesen 473 tétel; **új: 165**. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); gutenberg_en_all_2025-11 (221 GB); Protomaps daily planet basemap (PMTiles) (140 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); stackoverflow.com_en_all_2026-07 (115 GB); FineWeb-2 – magyar (hun_Latn) (98,5 GB); Linked OpenStreetMap × Wikidata × Wikipedia × Wikivoyage… (97,3 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **16TB** – összesen 480 tétel; **új: 12**, jobb változatra cserélt: 6. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB); ted_mul_all_2026-09 (91,2 GB); Open Library (catalog dumps + lending) (42 GB); Standard Ebooks (10 GB); libretexts.org_en_human_2026-07 (4,43 GB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); wikipedia_en_all_maxi_2026-08 (127 GB); Kolibri v0.19.5 + Khan Academy… (186 GB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
-- **32TB** – összesen 479 tétel; **új: 0**, jobb változatra cserélt: 2. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB); Project Gutenberg full mirror (rsync) (1,06 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **2TB** – összesen 364 tétel; **új: 76**, jobb változatra cserélt: 3. Legnagyobb új tételek: MiniMax-M3.1-Flash · MiniMax-M3.1-Flash-Quark-MXFP4… (240 GB); khanacademy_en_all_2023-03 (180 GB); Protomaps daily planet basemap (PMTiles) (140 GB); MIT OpenCourseWare (per-course ZIP downloads) (30 GB); SoilGrids 2.0 aggregated 1000 m (ISRIC) (13,4 GB); code_aster (Salome-Meca) (8 GB); TeX Live (6,78 GB); Ubuntu 26.04.1 LTS Desktop amd64 ISO (6,48 GB). Feljavítva: Debian 13.7.0 (trixie) amd64 full Blu-ray set… (130 GB); OpenStreetMap Europe extract (.osm.pbf) (41,2 GB); Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)… (188 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **4TB** – összesen 479 tétel; **új: 115**. Legnagyobb új tételek: Copernicus DEM GLO-30 / GLO-90 (AWS Open Data) (725 GB); gutenberg_en_all_2025-11 (221 GB); Debian 13.7.0 source Blu-ray set (jigdo, 5 images) (126 GB); stackoverflow.com_en_all_2026-07 (115 GB); FineWeb-2 – magyar (hun_Latn) (98,5 GB); Linked OpenStreetMap × Wikidata × Wikipedia × Wikivoyage… (97,3 GB); osmium-tool (95,8 GB); Open Library (catalog dumps + lending) (42 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **8TB** – összesen 484 tétel; **új: 5**, jobb változatra cserélt: 5. Legnagyobb új tételek: RACHEL (World Possible) offline content modules (1,75 TB); OpenAlex snapshot (scholarly metadata, CC0) (756 GB); CRAN full mirror (R packages, rsync) (410 GB); Wikidata full entity dump (JSON) / truthy N-Triples (304 GB); ted_mul_all_2026-09 (91,2 GB). Feljavítva: wikipedia_en_all_maxi_2026-08 (127 GB); Kolibri v0.19.5 + Khan Academy… (186 GB); OpenStreetMap planet (teljes Föld, .osm.pbf) (95,8 GB); wikisource_en_all_maxi_2026-09 (8,62 GB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **16TB** – összesen 485 tétel; **új: 1**, jobb változatra cserélt: 2. Legnagyobb új tételek: F-Droid main repository mirror (rsync) (4,46 TB). Feljavítva: MEK – Magyar Elektronikus Könyvtár (OSZK) (1 TB); Project Gutenberg full mirror (rsync) (1,06 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
+- **32TB** – összesen 485 tétel; **új: 0**, jobb változatra cserélt: 1. Feljavítva: Debian full archive mirror (ftpsync / archvsync) (9,01 TB). Életmentő (0. szintű) anyag: mind a 37 tétel bent van.
 
 **Ajánlás:**
 - **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.
-- **2–4 TB** a teljes tudásanyaghoz.
+- **2 TB:** 364 tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.
+- **4 TB** a teljes tudásanyaghoz: 479 tétel a lehetséges 485-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).
 - **8 TB fölött** főleg nagy nyers adathalmazok és tükrök jönnek, ezeket HDD-n vagy NAS-on érdemes tárolni.
 
 ### Melyik meghajtót vedd
@@ -102,29 +94,70 @@ A `select_items.py` az alábbi beállítással számolt minden méretre: **balan
 
 
 
+## 5b. Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)
+
+> Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.
+
+- **Szoftver: automatizálás, energia:** mpp-solar, OpenEMS, Node-RED, OpenPLC Runtime v3, Eclipse Mosquitto, Frigate NVR, Zigbee2MQTT, Grafana OSS (+1)
+- **Szoftver: biztonság, titkosítás:** OpenSSH, GnuPG, KeePassXC, cryptsetup, Vaultwarden, VeraCrypt, Tor, ClamAV
+- **Szoftver: CAD/CAM, mérnöki:** EPANET, grblHAL, pcb2gcode, LibreCAD, Universal G-code Sender, code_aster, OpenModelica, OpenFOAM
+- **Szoftver: egészségügy:** Community Health Toolkit, OpenMRS 3, GNU Health, DHIS2, OpenELIS Global, openFDA, Orthanc DICOM szerver, OHIF Viewer
+- **Szoftver: elektronika, beágyazott:** MicroPython, ESPHome, PlatformIO Core, ESP-IDF, ngspice, sigrok / PulseView, Zephyr RTOS
+- **Szoftver: fejlesztés:** Git, GCC, SQLite, CPython, Zeal, VSCodium, Rust toolchain, Go (+1)
+- **Szoftver: fordítás, OCR, beszéd, keresés:** Tesseract OCR, LibreTranslate, whisper.cpp, Piper TTS, Meilisearch, SearXNG
+- **Szoftver: hálózat:** OpenWrt, Syncthing, OPNsense, rsync, WireGuard, Pi-hole, Transmission
+- **Szoftver: iroda, dokumentumok:** OsmAnd, LibreOffice, QGIS, FreeCAD, KiCad, PrusaSlicer, calibre, KOReader (+5)
+- **Szoftver: kommunikáció, mesh:** Meshtastic, Reticulum Network Stack, Briar, Matrix Synapse + Element, Asterisk, ejabberd + Conversations, Mumble, Delta Chat (+2)
+- **Szoftver: mezőgazdaság:** farmOS, OpenSprinkler firmware, WeeWX, FarmBot, Grocy
+- **Szoftver: média, grafika:** FFmpeg, VLC media player, Jellyfin, Inkscape, OBS Studio, Blender, Audacity, GIMP (+2)
+- **Szoftver: oktatás:** Anki, GCompris, Scratch 3
+- **Szoftver: operációs rendszer, rendszereszközök:** Debian GNU/Linux, Ventoy, Alpine Linux, SystemRescue, F-Droid, aptly, LineageOS, Clonezilla (+1)
+- **Szoftver: rádió, SDR:** CHIRP, Pat, fldigi, JS8Call, Dire Wolf, rtl-sdr, FreeDV, GNU Radio (+2)
+- **Szoftver: szerver, virtualizáció:** OpenEMR, Proxmox VE, LinuxCNC, Home Assistant, Arduino IDE, Forgejo, QEMU/KVM, Caddy (+2)
+- **Szoftver: tárolás, mentés:** OpenZFS, restic, TrueNAS SCALE, rclone, par2cmdline, Nextcloud, TestDisk & PhotoRec
+- **Szoftver: térkép, navigáció:** Organic Maps, osmium-tool, Planetiler, GraphHopper, Martin csempeszerver, Nominatim
+- **Szoftver: tudásszerverek, wiki:** kiwix-tools, Internet-in-a-Box, Kolibri, MediaWiki, Moodle, BookStack
+- **Szoftver: tudomány, adat:** Miniforge + SciPy stack, Fiji, GNU Octave, R + RStudio Desktop, Stellarium, Cantera, Maxima, JupyterLab
+- **Szoftver: üzlet, közösség:** ODK, InvenTree, Ushahidi Platform, GnuCash, ERPNext, Koha ILS, Decidim, Gibbon (+1)
+- **Szoftver: 3D-nyomtatás:** Klipper, OctoPrint, Mainsail
+- **Adathalmazok:** Magyar Wikipédia parquet, Angol Wikipédia parquet, OpenStax tankönyvek szövege, PlantVillage növénybetegség-képek, Pl@ntNet-300K képadatkészlet, Wikiforrás magyar + angol, FineWeb-Edu sample-10BT, FineWeb-2 (+8)
+- **Gyűjtőlisták (awesome):** awesome-open-hardware, awesome-selfhosted, sindresorhus/awesome, awesome-sysadmin, awesome-public-datasets
+- **Modellek: beszéd (STT/TTS):** whisper.cpp ggml, Piper TTS magyar hangok, NVIDIA Parakeet-TDT 0.6B v3, faster-whisper large-v3-turbo, Qwen3-ASR 0.6B, Coqui XTTS-v2
+- **Modellek: embedding, RAG:** BAAI bge-m3, EmbeddingGemma 2, Qwen3-Embedding 0.6B, BAAI bge-reranker-v2-m3
+- **Modellek: fordítás:** NLLB-200 distilled 600M, MADLAD-400 3B MT, OPUS-MT tc-big hu→en, Argos Translate en↔hu csomagok
+- **Modellek: hang:** BirdNET v2.4, Silero VAD, Demucs v4 hangforrás-szétválasztás
+- **Modellek: képfelismerés:** Pl@ntNet PlantCLEF2024 ViT-B DINOv2, BioCLIP 2, FungiTastic gombahatározó ViT-B/16, RF-DETR Medium, SAM 2.1 Hiera-Large, Microsoft Florence-2 base, Depth Anything 3
+- **Modellek: képgenerálás:** Real-ESRGAN ncnn-vulkan, FLUX.2 [klein] 4B
+- **Modellek: OCR, dokumentum:** Tesseract tessdata_best, Datalab Indra OCR, PaddleOCR-VL 1.6, Docling layout + TableFormer modellek, GLM-OCR
+- **Modellek: orvosi képelemzés:** TorchXRayVision, Google MedSigLIP-448, SkinTag SigLIP bőrelváltozás-osztályozó, Fundus diabéteszes retinopátia osztályozó
+- **Platformok, gyűjtőhelyek:** Zenodo, Instructables, OSHWA Open Source Hardware tanúsított lista, Hackaday.io, Kaggle Datasets, Codeberg és GitLab.com, ModelScope, SourceForge (+1)
+- **3D-nyomtatható tárgyak:** e-NABLE Hub, Printables, NIH 3D, Thingiverse, MyMiniFactory
+
+## 6. Helyi LLM-ek (offline AI)
+
 ### 6.1 Kiadási idővonal: mi a legújabb gyártónként
 
 | Gyártó | Legújabb nyílt modell | Kiadva (HF) | Paraméter (össz./aktív) | Kontextus | Licenc |
 |---|---|---|---|---|---|
-| Moonshot AI | [Kimi K3.1 Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro) | 2026-11-02 | 2.8T / 104B | 1048576 | Kimi K3.1 Pro Licens |
-| DeepSeek | [DeepSeek-V4.1-Flash-1017](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) | 2026-10-17 | 552B backbone + 196B Engram memória (763 / ~16B (harmadik fél,  | 1000000 | MIT |
-| Zhipu AI (Z.ai) | [GLM-5.3](https://huggingface.co/zai-org/GLM-5.3) | 2026-08-25 | 753B / ~40B (harmadik fél) | 1M (eval-beállítások és harmadik fél alapján) | GLM-5.3 custom licen |
+| Moonshot AI | [Kimi K3.1 Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro) | 2026-11-02 | 2.8T / 104B | 1048576 | Kimi K3.1 Pro… |
+| DeepSeek | [DeepSeek-V4.1-Flash-1017](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) | 2026-10-17 | 552B backbone + 196B Engram memória… / ~16B… | 1000000 | MIT |
+| Zhipu AI (Z.ai) | [GLM-5.3](https://huggingface.co/zai-org/GLM-5.3) | 2026-08-25 | 753B / ~40B (harmadik fél) | 1M (eval-beállítások és harmadik fél alapján) | GLM-5.3 custom… |
 | Zhipu AI | [GLM-5.3-Flash](https://huggingface.co/zai-org/GLM-5.3-Flash) | 2026-08-25 | 320B (321.3B) / 18B | ~1M (eval 1M kontextussal; a kártyán nincs explicit tábla) | MIT |
-| Xiaomi | [MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL) | 2026-09-21 (RL), 2026- | Pro 1.02T; Flash 309B / Pro 42B; Flash 15B | 1000000 | MIT |
+| Xiaomi | [MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL) | 2026-09-21 (RL)… | Pro 1.02T; Flash 309B / Pro 42B; Flash 15B | 1000000 | MIT |
 | inclusionAI (Ant Group) | [Ling-3.1-flash-1019](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019) | 2026-10-27 | 560B (572B tárolt) / 25B | 1000000 | MIT |
-| MiniMax | [MiniMax-M3.1-Flash](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) | 2026-10-17 | ~428B / 23B | 1000000 | MiniMax Community Li |
-| Alibaba Qwen | [Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) | 2026-08-24 | 180B = 125B MoE + 51B n-gram embedding + / 6B | 262144 natív, 1M-ig bővíthető | Qwen Community Licen |
-| Alibaba Qwen | [Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja)](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B) | 2026-08-08 | 2.4T / 95B | 262144 natív, 1,010,000-ig bővíthető | Qwen3.8-Max license  |
-| StepFun | [Step 5 Preview](https://huggingface.co/stepfun-ai/Step-5-Preview) | 2026-09-20 | 600B / 27B | 1M-ig | StepFun Model Licens |
+| MiniMax | [MiniMax-M3.1-Flash](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) | 2026-10-17 | ~428B / 23B | 1000000 | MiniMax Community… |
+| Alibaba Qwen | [Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) | 2026-08-24 | 180B = 125B MoE + 51B n-gram embedding… / 6B | 262144 natív, 1M-ig bővíthető | Qwen Community… |
+| Alibaba Qwen | [Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja)](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B) | 2026-08-08 | 2.4T / 95B | 262144 natív, 1,010,000-ig bővíthető | Qwen3.8-Max… |
+| StepFun | [Step 5 Preview](https://huggingface.co/stepfun-ai/Step-5-Preview) | 2026-09-20 | 600B / 27B | 1M-ig | StepFun Model… |
 | Thinking Machines Lab | [Inkling 2 Small](https://huggingface.co/thinkingmachines/Inkling-2-Small) | 2026-11-04 | 594B / 17B | 1000000 | Apache-2.0 |
 | Tencent | [Hy4 preview (Hunyuan)](https://huggingface.co/tencent/Hy4-preview) | 2026-08-27 | 770B (+10B MTP) / 49B | 1000000 | Apache-2.0 |
-| Mistral AI | [Mistral Large 4 (1T-A52B)](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B) | 2026-09-30 | ~1T / 49B (52B embeddingek | 1000000 | Mistral Ecosystem Op |
-| Meta (meta-models) | [Muse Spark Open (816B-A42B)](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B) | 2026-09-15 (HF repó);  | 816B / 42B | 1000000 | Muse Model License;  |
+| Mistral AI | [Mistral Large 4 (1T-A52B)](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B) | 2026-09-30 | ~1T / 49B… | 1000000 | Mistral Ecosystem… |
+| Meta (meta-models) | [Muse Spark Open (816B-A42B)](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B) | 2026-09-15… | 816B / 42B | 1000000 | Muse Model… |
 | Alibaba Qwen | [Qwen3.8-27B (dense)](https://huggingface.co/Qwen/Qwen3.8-27B) | 2026-08-05 | 27.8B / 27.8B (dense) | 262144 natív, 1M-ig bővíthető | Apache-2.0 |
 | Meta | [Muse Glimmer 30B](https://huggingface.co/meta-models/Muse-Glimmer-30B) | 2026-08-09 | 29.6B (dense, vision encoderrel együtt) / 29.6B | 131072+ | Apache-2.0 |
-| Google DeepMind | [Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B)](https://huggingface.co/google/gemma-4-31B-it) | E2B/E4B 2026-03-02; 26 | 31B dense (30.7B); 26B MoE (A4B); 11.95B / 31B; ~4B; 12B; 4.5B; | 256K (12B/26B/31B), 128K (E2B/E4B) | Apache-2.0 |
-| NVIDIA | [NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16) | Super-VL 2026-10-12; B | 124B; 31.6B; 8B (4B eff., Gemma 4 alapú) / 12B; 3B; 4B | Super-VL: [nem ellenőrzött]; Lightning: 1M-ig (H100-on 256K); Bolt-E4B: 64K | OpenMDW-1.1 (nyílt s |
-| Alibaba Qwen / Xiaomi | [Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B)](https://huggingface.co/Qwen/Qwen3.5-4B) | 2026-02-27 (Qwen3.5);  | 4B; 9B / dense | [nem ellenőrzött] | Apache-2.0 (Qwen3.5) |
+| Google DeepMind | [Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B)](https://huggingface.co/google/gemma-4-31B-it) | E2B/E4B 2026-03-02… | 31B dense (30.7B); 26B MoE (A4B)… / 31B; ~4B; 12B… | 256K (12B/26B/31B), 128K (E2B/E4B) | Apache-2.0 |
+| NVIDIA | [NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16) | Super-VL 2026-10-12… | 124B; 31.6B; 8B (4B eff., Gemma 4 alapú) / 12B; 3B; 4B | Super-VL: [nem ellenőrzött]; Lightning: 1M-ig (H100-on 256K); Bolt-E4B: 64K | OpenMDW-1.1… |
+| Alibaba Qwen / Xiaomi | [Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B)](https://huggingface.co/Qwen/Qwen3.5-4B) | 2026-02-27 (Qwen3.5)… | 4B; 9B / dense | [nem ellenőrzött] | Apache-2.0… |
 | Meituan | [LongCat-2.5 (csak megjegyzésként)](https://huggingface.co/meituan-longcat/LongCat-2.5) | 2026-11-04 | 1.6T (1.78T tárolt) / ~48B | [nem ellenőrzött] | MIT |
 
 **Viszonyítási pont – Claude Opus 5.5 (max): 59,1 pont = 100%** (AA Intelligence Index v5.0.1, 2026-11-12). Az index csúcsa ugyanekkor a Claude Fable 5.2 (64,6 = 109%).
@@ -233,6 +266,8 @@ Az alapmodellek pontjai (csak alap, mért):
 - **Kódban:** `--hw T3 --mem 160GB` szűr, a `--platform mac|server` engedi az MLX vagy a vLLM-formátumokat. Alapból csak a mindenhol futó GGUF és Ollama formátum szerepel.
 - **Magyar nyelv:** a Mistral Large 4 az egyetlen nagy modell, amelynek a kártyája kifejezetten az EU-nyelveket célozza. Kisebb gépen a Gemma 4 és a Qwen3.8-27B jó magyarul (becslés, magyar benchmark nincs).
 
+### 6.5 Cenzúrázatlan modellek
+
 #### Rangsor: cenzúrázatlan modellek
 
 - **Sorrend:** a cenzúrázatlan változat *számolt* intelligenciája szerint (AA v5 skálán).
@@ -246,28 +281,28 @@ Az alapmodellek pontjai (csak alap, mért):
 
 | # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenzúrázatlan (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed expert | 32.6 | **~31.6** | **~53%** | × 0.97 (B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE) | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['UD-IQ1_S/*'] (233.0 GB) | MIT |
+| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed… | 32.6 | **~31.6** | **~53%** | × 0.97 (B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE) | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['UD-IQ1_S/*'] (233.0 GB) | MIT |
 | 2 | **[huihui-ai/Huihui-GLM-5.3-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-abliterated-GGUF)** | `zai-org/GLM-5.3` (2026-08-25) | 753.3B (safetensors); ctx 1M | 31.7 | **~30.1** | **~51%** | × 0.95 (B: abliteration (patch), nagy MoE) | Abliteration (huihui patch-GGUF az unsloth kvantra) | 8.5 | 7.5 | nincs mérés | 1 | 216.7 GB – 216.7 GB | T2: `huihui-ai/Huihui-GLM-5.3-abliterated-GGUF` ['UD-IQ1_S/*'] (216.7 GB) | other (glm-5.3) |
-| 3 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding + | 28.6 | **~27.2** | **~46%** | × 0.95 (B: abliteration v2, nagy MoE) | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['unsloth-UD-IQ4_XS/*'] (93.7 GB) | other (qwen-community-1.0) |
+| 3 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding… | 28.6 | **~27.2** | **~46%** | × 0.95 (B: abliteration v2, nagy MoE) | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['unsloth-UD-IQ4_XS/*'] (93.7 GB) | other (qwen-community-1.0) |
 | 4 | **[orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF](https://huggingface.co/orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF)** | `MiniMaxAI/MiniMax-M3.1-Flash` (2026-10-17) | kb. 428B / 23B active (kártya); ctx 1M | 29.1 | **~27.1** | **~46%** | × 0.93 (B: közösségi abliteration, nem ellenőrzött) | Abliteration (orcarouter) | 7 | 6.5 | minőség nem ellenőrzött; gated:auto | 1 | 111.9 GB – 111.9 GB | T3: `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF` ['Mix-128G/*'] (111.9 GB) | other (minimax-community) |
 | 5 | **[huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF)** | `zai-org/GLM-5.3-Flash` (2026-08-25) | 320B total / 18B active (kártya); VL; ctx 1M | 27.8 | **~26.4** | **~45%** | × 0.95 (B: abliteration, nagy MoE) | Abliteration (huihui) | 8.5 | 7.5 | nincs mérés | 10 | 93.1 GB – 291.8 GB | T3: `huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF` ['UD-IQ3_XXS/*'] (120.4 GB) | MIT |
 | 6 | **[NousResearch/Arete-27B](https://huggingface.co/NousResearch/Arete-27B)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.4B | ~19.0 | **~19.0** | **~32%** | × 1 (B: SFT, csak propaganda-szűrés) | SFT (propaganda-keretezés eltávolítása, az R1-1776 utódja) | 4 | 8 | NEM általános elutasítás-eltávolító; propaganda 22%→0,9% | 2 | 15.2 GB – 17.2 GB | T4: `bartowski/NousResearch_Arete-27B-GGUF` ['NousResearch_Arete-27B-IQ4_XS.gguf'] (15.2 GB) | Apache-2.0 |
 | 7 | **[huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.8B dense; VL; ctx 262k → 1M | 20.1 | **~18.7** | **~32%** | × 0.93 (B: abliteration, közepes dense) | Abliteration (huihui) / Heretic-ARA (trohrbaugh) | 8.5 | 8.5 | nincs mérés | 6 | 10.9 GB – 29.0 GB | T4: `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF` ['Huihui-Qwen3.8-27B-abliterated-UD-IQ4_XS.gguf'] (14.4 GB) | Apache-2.0 |
 | 8 | **[Uniboshi/Kimi-K3-Abliterated-V1](https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1)** | `moonshotai/Kimi-K3` (2026-06-13) | 2.8T total / 104B active (kártya); ctx 1M | 17.4 | **~16.2** | **~27%** | × 0.93 (B: közösségi abliteration, minőség nem ellenőrzött) | Abliteration (közösségi, Uniboshi) | 7 | 8 | minőség nem ellenőrzött; gated:auto | 1 | 1.51 TB – 1.51 TB | T1: `Uniboshi/Kimi-K3-Abliterated-V1-GGUF` ['MXFP4_MOE/*'] (1.51 TB) | other (kimi-k3) |
 | 9 | **[llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF)** | `Qwen/Qwen3.6-35B-A3B` (2026-04-15) | 36B MoE, 3B aktív; VL; ctx 262k | ~8.0 | **~8.0** | **~14%** | × 1 (M: NatInt 31,03→31,62 (nincs veszteség)) | Heretic (llmfan46) / Abliteration-MTP (huihui) | 10 | 8 | UGI 50,9; NatInt 31,03→31,62 (+0,6) | 2 | 16.9 GB – 21.2 GB | T4: `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF` ['Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf'] (21.2 GB) | Apache-2.0 |
-| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | **~7.6** | **~13%** | × 0.95 (B: heretic, MoE) | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['Mistral-Small-4-119B-2603-heretic-Q4_K_S.gguf'] (67.7 GB) | Apache-2.0 (bázis); a hereti |
+| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | **~7.6** | **~13%** | × 0.95 (B: heretic, MoE) | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['Mistral-Small-4-119B-2603-heretic-Q4_K_S.gguf'] (67.7 GB) | Apache-2.0 (bázis); a… |
 | 11 | **[coder3101/gemma-4-31B-it-heretic](https://huggingface.co/coder3101/gemma-4-31B-it-heretic)** | `google/gemma-4-31B-it` (2026-03-11) | 31.3B dense; VL; ctx 256k | 4.4 | **4.1** | **7%** | × 0.939 (M: NatInt 38,91→36,53) | Heretic (coder3101 / llmfan46) | 10 | 8.5 | UGI 65,69 (legjobb 40B alatt); NatInt 38,91→36,53 (−2,4) | 4 | 16.9 GB – 25.2 GB | T4: `mradermacher/gemma-4-31B-it-heretic-GGUF` ['gemma-4-31B-it-heretic.IQ4_XS.gguf'] (16.9 GB) | Apache-2.0, NEM gated |
-| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B (OpenAI release, it | 3.8 | **3.6** | **6%** | × 0.958 (M: NatInt 33,68→32,25) | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['gpt-oss-120B-tainted-heresy-MXFP4_MoE.gguf'] (63.4 GB) | Apache-2.0 |
+| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B… | 3.8 | **3.6** | **6%** | × 0.958 (M: NatInt 33,68→32,25) | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['gpt-oss-120B-tainted-heresy-MXFP4_MoE.gguf'] (63.4 GB) | Apache-2.0 |
 | 13 | **[llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-26B-A4B-it` (2026-03-11) | 25.8B MoE, kb. 4B aktív; VL | ~3.5 | **~3.5** | **~6%** | × 1 (M: NatInt 34,44→35,71 (nincs veszteség)) | Heretic, ultra (llmfan46) | 10 | 8 | UGI 52,39; NatInt 34,44→35,71 (+1,3) | 2 | 13.3 GB – 16.8 GB | T4: `llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF` ['gemma-4-26B-A4B-it-ultra-uncensored-heretic-Q4_K_M.gguf'] (16.8 GB) | Apache-2.0 |
 | 14 | **[llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF)** | `google/gemma-4-12B-it` (2026-05-23) | 11.96B; any-to-any | ~3.0 | **~2.8** | **~5%** | × 0.93 (B: heretic, kis dense) | Heretic (llmfan46) / Abliteration QAT (huihui) | 9 | 8 | nincs mérés | 1 | 8.5 GB – 8.5 GB | T4: `llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF` ['gemma-4-12B-it-uncensored-heretic-Q4_K_M.gguf'] (8.5 GB) | Apache-2.0 |
-| 15 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any ( | ~2.5 | **~2.5** | **~4%** | × 1 (M: NatInt 18,21→18,73 (nincs veszteség)) | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['gemma-4-E4B-it-heretic-Q4_K_M.gguf'] (5.3 GB) | Apache-2.0 |
+| 15 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any… | ~2.5 | **~2.5** | **~4%** | × 1 (M: NatInt 18,21→18,73 (nincs veszteség)) | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['gemma-4-E4B-it-heretic-Q4_K_M.gguf'] (5.3 GB) | Apache-2.0 |
 | 16 | **[trohrbaugh/Qwen3.5-9B-heretic-v2](https://huggingface.co/trohrbaugh/Qwen3.5-9B-heretic-v2)** | `Qwen/Qwen3.5-9B` (2026-02-27) | 9.4–9.65B; VL | ~3.0 | **~2.3** | **~4%** | × 0.781 (M: NatInt 30,98→24,2) | Heretic v2 (trohrbaugh) | 9.5 | 7.5 | NatInt 30,98→24,2 (−6,8); huihui-változat: 19,8 (−11,2) | 2 | 5.6 GB – 9.5 GB | T5: `filvyb/Qwen3.5-9B-heretic-v2-GGUF` ['Qwen3.5-9B-heretic-v2-Q4_K_M.gguf'] (5.6 GB) | Apache-2.0 |
-| 17 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE (az aktív kb. 3.6B, itt nem API-ból | ~2.5 | **~2.1** | **~4%** | × 0.829 (M: NatInt 27,18→22,52) | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['gpt-oss-20B-RichardErkhov-heresy-MXFP4_MoE.gguf'] (12.7 GB) | Apache-2.0 |
+| 17 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE… | ~2.5 | **~2.1** | **~4%** | × 0.829 (M: NatInt 27,18→22,52) | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['gpt-oss-20B-RichardErkhov-heresy-MXFP4_MoE.gguf'] (12.7 GB) | Apache-2.0 |
 | 18 | **[p-e-w/Qwen3.5-4B-heretic-2.0](https://huggingface.co/p-e-w/Qwen3.5-4B-heretic-2.0)** | `Qwen/Qwen3.5-4B` (2026-02-27) | 4.5–4.66B; VL | ~2.0 | **~1.9** | **~3%** | × 0.936 (M: NatInt 23,88→22,35 (SOMPOA-változat)) | Heretic 2.0 (p-e-w) / SOMPOA (MuXodious) | 9.5 | 6.5 | SOMPOA: UGI 44,73; NatInt 23,88→22,35 (−1,5) | 4 | 2.5 GB – 4.5 GB | T5: `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF` ['Qwen3.5-4B-heretic-2.0.Q8_0.gguf'] (4.5 GB) | Apache-2.0 |
 | 19 | **[llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-E2B-it` (2026-03-02) | 5.1B összesen (kb. 2B effektív) | ~1.5 | **~1.4** | **~2%** | × 0.93 (B: heretic, nagyon kis modell) | Heretic, ultra (llmfan46) | 9 | 6.5 | nincs mérés | 2 | 3.4 GB – 3.6 GB | T5: `llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF` ['gemma-4-E2B-it-ultra-uncensored-heretic-Q5_K_M.gguf'] (3.6 GB) | Apache-2.0 |
 
 **Hogyan olvasd:**
-- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.
+- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy munkaállomás kell.
 - **Gamer PC:** a legjobb választás a Qwen3.8-Flash-Next abliterated v2 (94–111 GB) és a Qwen3.8-27B abliterated (14–29 GB). Egyetlen videokártyán a Qwen3.8-27B abliterated fut.
 - **Laptop, telefon:** a Gemma-4 heretic változatai mért veszteség nélkül érhetők el.
 - **Arete-27B:** nem általános cenzúramentesítés, csak a propaganda-keretezést távolítja el.
@@ -326,6 +361,8 @@ A `llm_calc.py` (**12. fejezet**) bármely eszközre kiszámolja a négy változ
 
 
 
+### 6.11 GeForce-korlátozások és feloldásuk – a lényeg
+
 **A lényeg:**
 1. **Decode (egy felhasználó, szöveggenerálás):** a memória-sávszélesség korlátozza, nem a letiltott számítási teljesítmény. Erre egyik feloldás sem ad sokat:
    - memória-túlhajtás: **+5–10%** [B];
@@ -342,6 +379,8 @@ A `llm_calc.py` (**12. fejezet**) bármely eszközre kiszámolja a négy változ
    - vLLM TP vagy llama.cpp `-sm row`.
    - P2P nélkül is működik (~80% hatásfok [B]); a P2P ehhez ad ~+3%-ot.
    - A kalkulátor alap profiljai rétegenkénti felosztással számolnak (llama.cpp alapbeállítás). A „FELOLDVA” profilok TP + P2P + memória-túlhajtás együttesével.
+
+## 9. Captcha-mentes webes keresés és letöltés
 
 ### 9.1 Lépcsőzetes stratégia: mindig a legolcsóbb működő réteggel kezdj
 
@@ -365,42 +404,3 @@ A `llm_calc.py` (**12. fejezet**) bármely eszközre kiszámolja a négy változ
    - naplózd a forrást, a dátumot, a SHA-256-ot és a licencet.
 7. **Elavult, modern Cloudflare ellen nem működik:** cloudscraper, puppeteer-extra-plugin-stealth, undetected-chromedriver, playwright-stealth, hrequests.
 8. **MITM (TLS-t bontó) vállalati proxy mögött** a TLS-utánzás hatástalan. Ilyenkor böngésző vagy másik hálózat kell.
-
-## Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)
-
-> Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.
-
-- **3D-nyomtatható tárgyak:** e-NABLE Hub, Printables, NIH 3D, Thingiverse, MyMiniFactory
-- **Adathalmazok:** Magyar Wikipédia parquet, Angol Wikipédia parquet, OpenStax tankönyvek szövege, PlantVillage növénybetegség-képek, Pl@ntNet-300K képadatkészlet, Wikiforrás magyar + angol, FineWeb-Edu sample-10BT, FineWeb-2 (+8)
-- **Gyűjtőlisták (awesome):** awesome-open-hardware, awesome-selfhosted, sindresorhus/awesome, awesome-sysadmin, awesome-public-datasets
-- **Modellek: OCR, dokumentum:** Tesseract tessdata_best, Datalab Indra OCR, PaddleOCR-VL 1.6, Docling layout + TableFormer modellek, GLM-OCR
-- **Modellek: beszéd (STT/TTS):** whisper.cpp ggml, Piper TTS magyar hangok, NVIDIA Parakeet-TDT 0.6B v3, faster-whisper large-v3-turbo, Qwen3-ASR 0.6B, Coqui XTTS-v2
-- **Modellek: embedding, RAG:** BAAI bge-m3, EmbeddingGemma 2, Qwen3-Embedding 0.6B, BAAI bge-reranker-v2-m3
-- **Modellek: fordítás:** NLLB-200 distilled 600M, MADLAD-400 3B MT, OPUS-MT tc-big hu→en, Argos Translate en↔hu csomagok
-- **Modellek: hang:** BirdNET v2.4, Silero VAD, Demucs v4 hangforrás-szétválasztás
-- **Modellek: képfelismerés:** Pl@ntNet PlantCLEF2024 ViT-B DINOv2, BioCLIP 2, FungiTastic gombahatározó ViT-B/16, RF-DETR Medium, SAM 2.1 Hiera-Large, Microsoft Florence-2 base, Depth Anything 3
-- **Modellek: képgenerálás:** Real-ESRGAN ncnn-vulkan, FLUX.2 [klein] 4B
-- **Modellek: orvosi képelemzés:** TorchXRayVision, Google MedSigLIP-448, SkinTag SigLIP bőrelváltozás-osztályozó, Fundus diabéteszes retinopátia osztályozó
-- **Platformok, gyűjtőhelyek:** Zenodo, Instructables, OSHWA Open Source Hardware tanúsított lista, Hackaday.io, Kaggle Datasets, Codeberg és GitLab.com, ModelScope, SourceForge (+1)
-- **Szoftver: 3D-nyomtatás:** Klipper, OctoPrint, Mainsail
-- **Szoftver: CAD/CAM, mérnöki:** EPANET, grblHAL, pcb2gcode, LibreCAD, Universal G-code Sender, code_aster, OpenModelica, OpenFOAM
-- **Szoftver: automatizálás, energia:** mpp-solar, OpenEMS, Node-RED, OpenPLC Runtime v3, Eclipse Mosquitto, Frigate NVR, Zigbee2MQTT, Grafana OSS (+1)
-- **Szoftver: biztonság, titkosítás:** OpenSSH, GnuPG, KeePassXC, cryptsetup, Vaultwarden, VeraCrypt, Tor, ClamAV
-- **Szoftver: egészségügy:** Community Health Toolkit, OpenMRS 3, GNU Health, DHIS2, OpenELIS Global, openFDA, Orthanc DICOM szerver, OHIF Viewer
-- **Szoftver: elektronika, beágyazott:** MicroPython, ESPHome, PlatformIO Core, ESP-IDF, ngspice, sigrok / PulseView, Zephyr RTOS
-- **Szoftver: fejlesztés:** Git, GCC, SQLite, CPython, Zeal, VSCodium, Rust toolchain, Go (+1)
-- **Szoftver: fordítás, OCR, beszéd, keresés:** Tesseract OCR, LibreTranslate, whisper.cpp, Piper TTS, Meilisearch, SearXNG
-- **Szoftver: hálózat:** OpenWrt, Syncthing, OPNsense, rsync, WireGuard, Pi-hole, Transmission
-- **Szoftver: iroda, dokumentumok:** OsmAnd, LibreOffice, QGIS, FreeCAD, KiCad, PrusaSlicer, calibre, KOReader (+5)
-- **Szoftver: kommunikáció, mesh:** Meshtastic, Reticulum Network Stack, Briar, Matrix Synapse + Element, Asterisk, ejabberd + Conversations, Mumble, Delta Chat (+2)
-- **Szoftver: mezőgazdaság:** farmOS, OpenSprinkler firmware, WeeWX, FarmBot, Grocy
-- **Szoftver: média, grafika:** FFmpeg, VLC media player, Jellyfin, Inkscape, OBS Studio, Blender, Audacity, GIMP (+2)
-- **Szoftver: oktatás:** Anki, GCompris, Scratch 3
-- **Szoftver: operációs rendszer, rendszereszközök:** Debian GNU/Linux, Ventoy, Alpine Linux, SystemRescue, F-Droid, aptly, LineageOS, Clonezilla (+1)
-- **Szoftver: rádió, SDR:** CHIRP, Pat, fldigi, JS8Call, Dire Wolf, rtl-sdr, FreeDV, GNU Radio (+2)
-- **Szoftver: szerver, virtualizáció:** OpenEMR, Proxmox VE, LinuxCNC, Home Assistant, Arduino IDE, Forgejo, QEMU/KVM, Caddy (+2)
-- **Szoftver: tudomány, adat:** Miniforge + SciPy stack, Fiji, GNU Octave, R + RStudio Desktop, Stellarium, Cantera, Maxima, JupyterLab
-- **Szoftver: tudásszerverek, wiki:** kiwix-tools, Internet-in-a-Box, Kolibri, MediaWiki, Moodle, BookStack
-- **Szoftver: tárolás, mentés:** OpenZFS, restic, TrueNAS SCALE, rclone, par2cmdline, Nextcloud, TestDisk & PhotoRec
-- **Szoftver: térkép, navigáció:** Organic Maps, osmium-tool, Planetiler, GraphHopper, Martin csempeszerver, Nominatim
-- **Szoftver: üzlet, közösség:** ODK, InvenTree, Ushahidi Platform, GnuCash, ERPNext, Koha ILS, Decidim, Gibbon (+1)

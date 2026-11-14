@@ -109,8 +109,10 @@ nav.tabs{scrollbar-width:none}
 nav.tabs::-webkit-scrollbar{display:none}
 nav.tabs a{white-space:nowrap;flex:none;font:600 13px var(--f-body);color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:6px}
 nav.tabs a:hover,nav.tabs a:focus-visible{background:var(--sunk);outline:none}
+nav.tabs a[aria-current]{background:var(--sunk);box-shadow:inset 0 -2px var(--accent)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-section{display:grid;gap:14px;scroll-margin-top:60px}
+section{display:grid;gap:14px}
+section,[id]{scroll-margin-top:60px}
 .calc{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:20px;align-items:start}
 .calc>*{min-width:0}
 @media (max-width:900px){.calc{grid-template-columns:minmax(0,1fr)}}
@@ -166,6 +168,11 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models th button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #models td.date{white-space:nowrap}
 .soft td{vertical-align:top}.soft .sd{font-size:.86em;color:var(--muted);max-width:420px}.soft td:first-child{min-width:160px}
+#models,#soft{max-height:80vh;overflow:auto}
+.soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){max-width:110px;overflow-wrap:anywhere}
+#ssd td:first-child{white-space:nowrap}
+.tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
+#models td:first-child,#models th:first-child{position:sticky;left:0;background:var(--surface);z-index:2}#models th:first-child{background:var(--sunk);z-index:3}
 #models td.det{max-width:380px}
 #models td.det div{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 th[aria-sort="ascending"]::after{content:" ▲"} th[aria-sort="descending"]::after{content:" ▼"}
@@ -185,6 +192,14 @@ tr:hover td{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
   .matrix td[data-l]::before{content:attr(data-l);display:block;font:600 11px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
   #ssd td.num:nth-child(n+4),#ssd th.num:nth-child(n+4){display:none}
   #ssd td:nth-child(4){min-width:160px!important}
+  .soft thead{display:none}
+  .soft tr{display:grid;gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .soft td{display:block;min-width:0!important;max-width:none!important;border:0;padding:2px 10px}
+  .soft td[data-l]::before{content:attr(data-l) ": ";font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  #soft{max-height:none}
+  .soft td.num{text-align:left}
+  #models td:first-child{min-width:150px;max-width:170px}
+  input,select{font-size:16px}
 }
 .matrix td.dev{min-width:180px;font-weight:600}
 .mcell{display:grid;gap:3px}
@@ -285,6 +300,8 @@ function memberHTML([v,r,role]){return `<div class="member"><div class="mname">$
   <div class="cmdrow"><code class="cmd">${esc(v.dl)}</code><button type="button" data-copy="${esc(v.dl)}">Másolás</button></div></div>`;}
 function render(dev,res,el){const cap=dev.capacity();
   if(cap<=0){el.innerHTML='<p class="empty">Adj meg VRAM-ot, RAM-ot vagy unified memóriát (és a hozzá tartozó sávszélességet), vagy válassz egy eszközprofilt.</p>';return;}
+  const miss=[dev.vram&&!dev.vram_bw?'a videokártya (GPU)':'',dev.uni&&!dev.uni_bw?'az egyesített (unified) memória':'',dev.ram&&!dev.uni&&!dev.ram_bw?'a RAM':''].filter(Boolean);
+  if(miss.length){el.innerHTML=`<p class="empty">Add meg ${miss.join(' és ')} sávszélességét (GB/s) – enélkül a sebesség nem számolható. Tipp: DDR5-6000 kétcsatornás ≈ 96 GB/s, RTX 5090 ≈ 1790 GB/s.</p>`;return;}
   el.innerHTML=`<div class="sum"><span>Eszköz: <b>${esc(dev.name)}</b></span><span>Modellnek jutó memória: <b>~${fmt(cap,cap<20?1:0)} GB</b></span>${dev.vram?`<span>VRAM: <b>${fmt(dev.vram,0)} GB</b> @ <b>${fmt(dev.vram_bw,0)} GB/s</b>${dev.tp?' (P2P tensor parallel)':''}</span>`:''}${dev.uni?`<span>Unified: <b>${fmt(dev.uni,dev.uni<20?1:0)} GB</b> @ <b>${fmt(dev.uni_bw,0)} GB/s</b></span>`:''}${dev.ram&&!dev.uni?`<span>RAM: <b>${fmt(dev.ram,0)} GB</b> @ <b>${fmt(dev.ram_bw,0)} GB/s</b></span>`:''}<span>Min. sebesség: <b>${dev.min_tps} tok/s</b></span></div>
   ${dev.note?`<p class="hint">${esc(dev.note)}</p>`:''}
   <div class="vcards">${['V1','V2','V3','V4'].map(k=>{const [t,label,u]=TITLES[k],r=res[k];
@@ -327,18 +344,19 @@ function modelTable(){const q=F('mq').value.toLowerCase(), typ=F('mtyp').value, 
     <td>${m.plats.map(p=>({any:'GGUF',mac:'MLX',server:'vLLM',android:'LiteRT'}[p]||p)).join(', ')}</td><td>${esc(m.hw.join(' '))}</td><td>${esc(m.lic)}</td>
     <td class="det" style="min-width:260px"><div title="${esc(m.u?(m.why||''):(m.strength||''))}">${m.u?`alap: ${esc(m.base||'')} (AA ${fmt(m.base_aa)}) × ${fmt(m.ratio,3)} – ${esc(m.why||'')}`:esc(m.strength||'')}</div></td></tr>`).join('')||'<tr><td colspan="13" class="empty">Nincs a szűrésnek megfelelő modell.</td></tr>';
   F('models').innerHTML=`<table><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`; F('mcount').textContent=L.length+' modell';
-  F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable();}));}
+  F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable(); F('models').querySelector('th[data-k="'+k+'"] button')?.focus();}));}
 /* ---------- szoftverek és modellek ---------- */
 const S=__SOFT__;
 function softTable(){const q=F('sq').value.toLowerCase(), c=F('scat').value;
   const L=S.filter(x=>(!c||x.c===c)&&(!q||(x.n+' '+x.need+' '+x.d+' '+x.alt).toLowerCase().includes(q)));
   const link=(u,l)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`:'';
   const tr=L.map(x=>`<tr><td>${esc(x.need)}<br><small class="muted">${esc(x.c)}</small></td><td><b>${esc(x.n)}</b><div class="sd">${esc(x.d)}</div><small>${[link(x.w,'web'),link(x.r,'repó'),link(x.rel,'letöltés')].filter(Boolean).join(' · ')}</small></td>
-    <td class="num">${x.t}</td><td>${esc(x.v)||'–'}</td><td>${esc(x.lic)}</td><td class="num">${x.b?gb(x.b):'–'}</td><td class="sd">${esc(x.alt)||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
-  F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Tier</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
+    <td class="num" data-l="Szint">${x.t}</td><td data-l="Verzió">${esc(x.v)||'–'}</td><td data-l="Licenc">${esc(x.lic)}</td><td class="num" data-l="Méret">${x.b?gb(x.b):'–'}</td><td class="sd" data-l="Alternatívák">${esc(x.alt)||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
+  F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Szint</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
   F('scount').textContent=L.length+' tétel';}
-(()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].sort((a,b)=>a.localeCompare(b,'hu')).forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
+(()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
 /* ---------- indítás ---------- */
+if('IntersectionObserver' in window){const navA=[...document.querySelectorAll('nav.tabs a')];const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navA.forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-45% 0px -50% 0px'});navA.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t);});}
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-copy]'); if(!b) return; const t=b.dataset.copy;
   const done=()=>{b.textContent='Másolva';setTimeout(()=>b.textContent='Másolás',1500)};
   const sel=()=>{const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Kijelölve – Ctrl+C';setTimeout(()=>b.textContent='Másolás',2500);};
@@ -359,7 +377,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 <style>__CSS__</style>
 <div class="wrap">
 <header class="top">
-  <span class="eyebrow">ARCHIVUM · offline LLM-tervező · állapot: __DATE__</span>
+  <span class="eyebrow">ARCHIVUM · offline LLM-tervező · állapot: <span style="white-space:nowrap">__DATE__</span></span>
   <h1>Melyik nyílt modell fut a gépeden – és milyen okos?</h1>
   <p class="muted">Add meg az eszközöd memóriáját és sávszélességét: a kalkulátor kiszámolja a legokosabb cenzúrázatlan és alap modellt, ami elfér és elfut, valamint a két csapat-változatot. Minden szám becslés (AA Intelligence Index v5 + memória-sávszélesség modell), lásd a módszertant alul. Internet nélkül is működik.</p>
   <div class="refs">
@@ -423,7 +441,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 
 <section id="szoftverek">
   <h2>Mindenre a legjobb nyílt forráskódú szoftver, modell és adathalmaz</h2>
-  <p class="muted">Igényenként a legjobb választás: GitHub/GitLab/Codeberg-repók (git ls-remote-tal ellenőrizve, 2026-11-14), Hugging Face-modellek és -adathalmazok (HF API-val ellenőrzött méret). A „Tier” 0 = életmentő … 5 = luxus.</p>
+  <p class="muted">Igényenként a legjobb választás: GitHub/GitLab/Codeberg-repók (git ls-remote-tal ellenőrizve, 2026-11-14), Hugging Face-modellek és -adathalmazok (HF API-val ellenőrzött méret). A „Szint” 0 = életmentő … 5 = luxus.</p>
   <div class="filters">
     <label>Keresés<input id="sq" type="search" placeholder="pl. térkép, orvosi, rádió, whisper"></label>
     <label>Kategória<select id="scat"><option value="">mind</option></select></label>
@@ -449,10 +467,15 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
   <details open id="fogalmak"><summary>Fogalmak</summary><div class="body"><ul>
     <li><b>V1</b> = legokosabb cenzúrázatlan modell · <b>V2</b> = legokosabb alap (cenzúrázott) modell · <b>V3</b> = alap fő modell + gyors segédmodell egyszerre · <b>V4</b> = alap + cenzúrázatlan modell együtt (+ segéd).</li>
     <li><b>AA v5</b> = Artificial Analysis Intelligence Index v5.0.1 (nehéz, részben titkos feladatsor). <b>% Opus</b> = a modell pontja a Claude Opus 5.5 (legmagasabb gondolkodási beállítás) 59,1 pontjához képest. 50% nem azt jelenti, hogy „fele olyan okos”: nehéz feladatoknál kb. a felét hozza, hétköznapiaknál jóval közelebb van.</li>
-    <li><b>Gépszint:</b> T1 szerver (≥1 TB) · T2 workstation 256–1000 GB · T3 gamer PC 24–32 GB VRAM + RAM · T4 laptop · T5 telefon.</li>
+    <li><b>Gépszint:</b> T1 szerver (≥1 TB) · T2 munkaállomás 256–1000 GB · T3 gamer PC 24–32 GB VRAM + RAM · T4 laptop · T5 telefon.</li>
     <li><b>tok/s</b> = token másodpercenként (magyar szövegnél kb. 0,5–0,7 szó/token). 5 tok/s még olvasható, 20+ tok/s kényelmes.</li>
     <li><b>Kvant</b> = tömörített modellváltozat; kevesebb bit → kisebb és gyorsabb, de butább (4–5 bit a jó kompromisszum). <b>GGUF</b> = mindenhol futó formátum (llama.cpp, Ollama), <b>MLX</b> = Apple, <b>vLLM</b> = NVIDIA-szerver formátum.</li>
     <li><b>MoE</b> = sok „szakértőből” álló modell, tokenenként csak egy részük dolgozik (aktív paraméter) → gyors; <b>dense</b> = minden paraméter dolgozik.</li>
+    <li><b>Cenzúrázatlan módszerek:</b> <b>abliterated</b> = a modell „elutasítási irányát” matematikailag eltávolítják a súlyokból; <b>Heretic</b> = automatizált abliteráció, amely a minőségromlást is minimalizálja; finomhangolt (pl. „uncensored” SFT) = tanítással oldják.</li>
+    <li><b>Unified (egyesített) memória:</b> a CPU és a GPU ugyanazt a nagy memóriát használja (Apple M, AMD Strix Halo / MS-S1, ZBook Ultra G3a) – nagy modell fér el olcsóbban, de lassabb, mint a VRAM.</li>
+    <li><b>P2P / tensor parallel:</b> két kártya közvetlenül cserél adatot (P2P), és egy réteget egyszerre számolnak (tensor parallel) – a sebességük összeadódik. GeForce-on a P2P driver-patch-csel oldható fel (6.11 fejezet).</li>
+    <li><b>Hibrid GPU+RAM:</b> ami nem fér a VRAM-ba, a rendszermemóriában marad; MoE-nél a gyakori rétegek a GPU-n → elfogadható sebesség.</li>
+    <li><b>RAG</b> = a modell válasz előtt a saját archívumodban (ZIM, PDF) keres, és abból idéz – kevesebb hallucináció. Ehhez kell a kis embedding-modell (bge-m3).</li>
   </ul></div></details>
   <details open><summary>Hogyan számol a kalkulátor</summary><div class="body"><ul>
     <li><b>Okosság:</b> Artificial Analysis Intelligence Index v5.0.1 (2026-11-12). Viszonyítás: Claude Opus 5.5 (max) 59,1 = 100%. Az AA a v5-ben megszüntette a külön Coding Indexet; a kódolás (FrontierCode 2.0 + Terminal-Bench 4.0) az összpont 25%-a.</li>
@@ -468,7 +491,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
     <li><b>Következő generációs RTX Pro:</b> nincs adat; három forgatókönyv: 96 / 128 / 192 GB.</li>
     <li><b>MS-S1 MAX-P495, ZBook Ultra G3a:</b> 192 GB LPDDR5X, a GPU-nak max. 160 GB; sávszélesség ~256–273 GB/s (számolt).</li>
     <li><b>HP Pavilion 15-bc504ur:</b> i5-9300H + GTX 1050 4 GB (a bc504TX testvérmodell adatlapja alapján).</li>
-    <li><b>Telefonok:</b> S24 Ultra ~7,5 GB, iPhone 15 Pro ~5 GB jut a modellnek (becslés).</li>
+    <li><b>Telefonok:</b> S24 Ultra ~7,4 GB, iPhone 15 Pro ~5,0 GB jut a modellnek (becslés; a kalkulátor számolja a profil adataiból).</li>
   </ul></div></details>
 </section>
 <footer>ARCHIVUM · a teljes katalógus, letöltési receptek és a Python-kalkulátor: ARCHIVUM.md (6. és 12. fejezet). Generálva: __DATE__.</footer>
@@ -490,7 +513,10 @@ def software():
                     "v": i.get("latest_version") or "", "lic": cut(i.get("license") or "", 40), "b": i.get("bytes") or i.get("bytes_est") or 0,
                     "t": i["tier"], "w": i.get("info_url") or "", "r": repo or "", "rel": d.get("release_url") or "",
                     "alt": cut(hu(i.get("alternatives") or ""), 220)})
-    out.sort(key=lambda x: (x["c"], x["t"], x["n"].lower()))
+    from build import hu_key, impersonal
+    for x in out:
+        x["d"], x["alt"], x["need"] = impersonal(x["d"]), impersonal(x["alt"]), impersonal(x["need"])
+    out.sort(key=lambda x: (not x["c"].startswith("Szoftver"), hu_key(x["c"]), x["t"], hu_key(x["n"])))
     return out
 
 

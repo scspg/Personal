@@ -46,6 +46,14 @@ def human(b):
     return f"{b} B"
 
 
+HU_ORDER = {c: i for i, c in enumerate("aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz")}
+
+
+def hu_key(s):
+    """magyar ábécérend (ékezetes betű az alapbetű után; a többjegyű betűket nem kezeli – kategórianevekhez elég)."""
+    return [HU_ORDER.get(ch, 100 + ord(ch)) for ch in str(s).lower()]
+
+
 def cut(s, n):
     """Rövidítés szóhatáron, kiegyensúlyozatlan zárójel nélkül, „…”-tal."""
     s = str(s or "")
@@ -114,13 +122,17 @@ for _c in ("speech", "translation", "ocr", "vision", "medical_ai", "imagegen", "
 
 def ssd_plans(cat_path, tmp):
     """SSD-méretenként: select_items terv (T2-es gép, ~300 GB LLM-memória, alap + cenzúrázatlan LLM, max 4 modell)."""
-    out = []
+    out, prev = [], []
     for b in SSD_SIZES:
         outp = os.path.join(tmp, f"ssd{b}.json")
+        # a nagyobb meghajtó a kisebb teljes (nem LLM) tartalmát megtartja, csak bővül vagy jobb változatra cserél
         subprocess.run([sys.executable, "-I", os.path.join(HERE, "select_items.py"), cat_path, "--budget", b, "--hw", "T2", "--mem", "300GB",
-                        "--platform", "server", "--llm-models", "4", "--out", outp], check=True, capture_output=True)
+                        "--platform", "server", "--llm-models", "4", "--include", ",".join(prev), "--out", outp], check=True, capture_output=True)
         p = json.load(open(outp, encoding="utf-8"))
         out.append((b, p))
+        # csoporttagot nem kötünk ki: így nagyobb meghajtón a jobb (nagyobb) változatra cserélhető
+        grp_of = {i["id"]: i.get("group") for i in p["items"]}
+        prev = [i["id"] for i in p["items"] if not i["id"].startswith("llm-") and not grp_of.get(i["id"])]
     return out
 
 
@@ -165,7 +177,8 @@ def ssd_section(plans):
     md += ["",
            "**Ajánlás:**",
            "- **1 TB** a minimum: minden életmentő és gyakorlati anyag, a lexikonok, a Survivor Library és egy erős LLM-páros.",
-           "- **2–4 TB** a teljes tudásanyaghoz.",
+           f"- **2 TB:** {len(plans[1][1]['items'])} tétel – a nagy oktatási anyagok (Khan Academy, MIT OCW), a világtérkép és egy második erős LLM is befér.",
+           f"- **4 TB** a teljes tudásanyaghoz: {len(plans[2][1]['items'])} tétel a lehetséges {len(plans[-1][1]['items'])}-ből (domborzati modell, teljes Gutenberg, Stack Overflow, magyar webkorpusz).",
            "- **8 TB fölött** főleg nagy nyers adathalmazok és tükrök jönnek, ezeket HDD-n vagy NAS-on érdemes tárolni.", "",
            "### Melyik meghajtót vedd", "",
            "- **Munkameghajtó (a gépben):** NVMe SSD, TLC NAND, DRAM-cache-sel, magas TBW-értékkel. A gyors SSD a modellek **betöltését** gyorsítja, a futásukat nem.",
@@ -190,14 +203,35 @@ def ssd_section(plans):
     return "\n".join(md)
 
 
+IMPERSONAL = [("nem ellenőriztem", "nem ellenőrzött"), ("Nem ellenőriztem", "Nem ellenőrzött"), ("ellenőriztem", "ellenőrizve"),
+              ("Ellenőriztem", "Ellenőrizve"), ("számolok", "számol a katalógus"), ("számoltam", "számolt érték"), ("Számoltam", "Számolt érték"),
+              ("(ls-remote OK)", ""), ("; ls-remote OK", ""), (" – ls-remote OK", ""), ("ls-remote OK; ", ""), ("ls-remote OK", ""),
+              ("(innen blocked)", "(innen blokkolva)"), ("innen blocked", "innen blokkolva"),
+              ("T2 workstation", "T2 munkaállomás"), ("nagy workstation", "nagy munkaállomás"), ("**T2 – workstation", "**T2 – munkaállomás"),
+              ("AI workstation", "AI-munkaállomás"), ("workstation + HDD", "munkaállomás + HDD")]
+
+
+def impersonal(t):
+    """kézikönyv-hang: első személy és belső ellenőrzési zaj nélkül (a JSONL url_status mezőit nem érinti: ott szó szerinti adat)."""
+    head, sep, rest = t.partition("```jsonl")
+    for a, b in IMPERSONAL:
+        head = head.replace(a, b)
+    if sep:
+        js, sep2, tail = rest.partition("```")
+        for a, b in IMPERSONAL:
+            tail = tail.replace(a, b)
+        return head + sep + js + sep2 + tail
+    return head
+
+
 def oss_digest(items):
     """chat-változatba: 5b tömören – kategóriánként a legjobb választások neve (részletek az ARCHIVUM.md 5b-ben)."""
     by = {}
     for i in sorted((i for i in items if i["id"].startswith(("oss-", "hub-"))), key=lambda x: (x["tier"], -score(x))):
         by.setdefault(CAT_HU.get(i["cat"], i["cat"]), []).append(re.sub(r"\s*\(.*?\)", "", i["name"]).split(" – ")[0])
-    out = ["## Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)", "",
+    out = ["## 5b. Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)", "",
            "> Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.", ""]
-    out += [f"- **{c}:** " + ", ".join(v[:8]) + (f" (+{len(v) - 8})" if len(v) > 8 else "") for c, v in sorted(by.items())]
+    out += [f"- **{c}:** " + ", ".join(v[:8]) + (f" (+{len(v) - 8})" if len(v) > 8 else "") for c, v in sorted(by.items(), key=lambda kv: (not kv[0].startswith("Szoftver"), hu_key(kv[0])))]
     return "\n".join(out)
 
 
@@ -207,7 +241,7 @@ def oss_section(items):
     by = {}
     for i in L:
         by.setdefault(i["cat"], []).append(i)
-    order = sorted(by, key=lambda c: (not c.startswith("oss_"), CAT_HU.get(c, c)))
+    order = sorted(by, key=lambda c: (not c.startswith("oss_"), hu_key(CAT_HU.get(c, c))))
     md = ["---", "", "## 5b. Mindenre a legjobb nyílt forráskódú szoftver és modell", "",
           f"> {sum(1 for i in L if i['id'].startswith('oss-'))} nyílt forráskódú szoftver és {sum(1 for i in L if i['id'].startswith('hub-'))} modell, adathalmaz, platform.",
           "> - **Szoftverek:** kategóriánként a legjobb, aktívan karbantartott, OSI-licencű projekt. Mindegyik repóját `git ls-remote`-tal ellenőrizték (2026-11-14), a verzió a legutóbbi stabil tag.",
@@ -327,7 +361,9 @@ def main():
              "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n",
              "---\n\n## 12. llm_calc.py\n\nEszköz-kalkulátor (lásd 6.10). Kibontás: `sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py`\n\n```python llm_calc.py\n"
              + open(os.path.join(HERE, "llm_calc.py"), encoding="utf-8").read() + "```\n"]
-    open(OUT, "w", encoding="utf-8").write("\n\n".join(p.strip("\n") + "\n" for p in parts if p))
+    text = "\n\n".join(p.strip("\n") + "\n" for p in parts if p)
+    text = impersonal(text).replace("__MB__", f"{len(text.encode()) / 1e6:.1f}".replace(".", ","))
+    open(OUT, "w", encoding="utf-8").write(text)
     print(f"OK: {OUT}  elemek={len(items)}  méret={os.path.getsize(OUT)/1e3:.0f} KB")
     # --- kompakt változat chatbe töltéshez ---
     full = open(OUT, encoding="utf-8").read()
@@ -343,17 +379,20 @@ def main():
             c["notes"] = c["notes"][:240] + "…"
         keep.append(json.dumps(c, ensure_ascii=False, separators=(",", ":")))
     import re as _re
-    comp = _re.sub(r"(?s)\n---\n\n## 5\. Katalógus kategóriánként.*?(?=\n---\n\n## 6\.)",
+    comp = _re.sub(r"(?s)\n---\n\n## 5\. Katalógus kategóriánként.*?(?=\n---\n\n## 5b\.)",
                    "\n---\n\n## 5. Katalógus kategóriánként\n\n*A kompakt változatból kimaradt; a teljes adat a 10. fejezet JSONL-jében van, emberi táblákért lásd a teljes ARCHIVUM.md-t.*\n", full)
-    comp = _re.sub(r"(?s)### 6\.4 .*?(?=### 6\.5 )",
-                   "### 6.4 Kvantált változatok\n\nA kompakt változatban modellenként és platformonként bitszintenként egy változat szerepel a JSONL-ben. Az összes (609) változat linkkel a teljes ARCHIVUM.md-ben van.\n\n", comp)
+    n_var = sum(1 for i in items if "llm_aa" in i)
+    comp = _re.sub(r"(?s)(### 6\.4 [^\n]*\n).*?(?=### 6\.5 )",
+                   lambda m: m.group(1) + f"\nA kompakt változatban modellenként és platformonként bitszintenként egy változat szerepel a JSONL-ben. Az összes ({n_var}) változat linkkel a teljes ARCHIVUM.md-ben van.\n\n", comp)
     comp = _re.sub(r"(?s)```jsonl\n.*?```", lambda m: "```jsonl\n" + "\n".join(keep) + "\n```", comp, count=1)
     comp = comp.replace("# ARCHIVUM – Offline tudásarchívum", "# ARCHIVUM (kompakt) – Offline tudásarchívum", 1)
     comp = _re.sub(r"\*\*Elemek:\*\* [^·]*·", f"**Elemek:** {len(keep)} (a teljes katalógus {len(items)}) · ", comp, count=1)
     comp = _re.sub(r"(?<![\w-])ARCHIVUM\.md(?![\w])", "ARCHIVUM-kompakt.md", comp)
     comp = comp.replace("teljes ARCHIVUM-kompakt.md", "teljes ARCHIVUM.md").replace("a teljes ARCHIVUM-kompakt.md-ben", "a teljes ARCHIVUM.md-ben")
-    comp = comp.replace("> **Cél:**", "> **Kompakt változat:** ~0,8 MB – hosszú kontextusú modellnek vagy eszközhasználó ágensnek való. Rövid, chatbe tölthető összefoglaló: `ARCHIVUM-chat.md`.\n> **Cél:**", 1)
+    comp = comp.replace("> **Cél:**", "> **Kompakt változat:** ~__KMB__ MB – hosszú kontextusú modellnek vagy eszközhasználó ágensnek való. Rövid, chatbe tölthető összefoglaló: `ARCHIVUM-chat.md`.\n> **Cél:**", 1)
     cp = os.path.join(HERE, "..", "ARCHIVUM-kompakt.md")
+    comp = _re.sub(r"\(~[\d,]+ MB\) – NE olvasd be", "(~__KMB__ MB) – NE olvasd be", comp)
+    comp = comp.replace("__KMB__", f"{len(comp.encode()) / 1e6:.1f}".replace(".", ","))
     open(cp, "w", encoding="utf-8").write(comp)
     print(f"OK: {cp}  JSONL-sorok={len(keep)}  méret={os.path.getsize(cp)/1e3:.0f} KB")
     # --- chat-változat: csak a döntéshez kellő összefoglalók (nincs JSONL, nincs kód) ---
@@ -363,15 +402,23 @@ def main():
     chat = ["# ARCHIVUM – chat-összefoglaló (" + datetime.date.today().isoformat() + ")", "",
             f"> Ez a rövid változat chatbe tölthető. A teljes katalógus ({len(items)} tétel, letöltési receptek, szkriptek) az `ARCHIVUM.md`-ben,"
             " az interaktív kalkulátor és SSD-tervező az `ARCHIVUM-LLM.html`-ben van. Ha a chat-AI kérdez, ezekre hivatkozz.", "",
-            grab(full, r"## 0\. Gyorsindítás", r"\n---\n\n## 1\. "),
+            "## 0. Hogyan használd ezt a fájlt\n\n"
+            "- **Ez a chat-változat** döntéshez és tervezéshez való: mit érdemes letölteni, melyik SSD kell, melyik AI-modell fut a gépeiden.\n"
+            "- **A letöltéshez** a teljes `ARCHIVUM.md` kell egy parancsot futtatni tudó AI-ágensnek (Claude Code, Codex stb.); annak 1. fejezetében van a kész prompt, a 11. fejezetben a `select_items.py`.\n"
+            "- **Interaktív kalkulátor, modelltábla, szoftverkönyvtár és SSD-tervező:** `ARCHIVUM-LLM.html` (böngészőben, internet nélkül).\n"
+            "- **Kérdezz rá bátran:** pl. „mi férjen fel egy 2 TB-os SSD-re, ha az orvoslás és a mezőgazdaság a fontos?” vagy „melyik cenzúrázatlan modell fut a 128 GB RAM-os gamer PC-men?”",
             grab(full, r"## 3\. Pontozási rendszer", r"\n\*\*Kiválasztási algoritmus"),
             _re.sub(r"(?s)<details>.*?</details>\n?", "", grab(full, r"## 4b\. ", r"\n---\n\n## 5\. ")),
+            oss_digest(items),
+            "## 6. Helyi LLM-ek (offline AI)",
             grab(full, r"### 6\.1 ", r"### 6\.3 "),
+            "### 6.5 Cenzúrázatlan modellek",
             grab(full, r"#### Rangsor: cenzúrázatlan", r"\*\*Gyakorlati gépkonfigurációk"),
             grab(full, r"### 6\.10 ", r"#### Telefonok").split("**Saját eszközre:**")[0],
+            "### 6.11 GeForce-korlátozások és feloldásuk – a lényeg",
             grab(full, r"\*\*A lényeg:\*\*", r"#### Korlátozások generációnként"),
-            grab(full, r"### 9\.1 ", r"### 9\.2 "),
-            oss_digest(items)]
+            "## 9. Captcha-mentes webes keresés és letöltés",
+            grab(full, r"### 9\.1 ", r"### 9\.2 ")]
     chat_txt = "\n\n".join(c for c in chat if c) + "\n"
     chp = os.path.join(HERE, "..", "ARCHIVUM-chat.md")
     open(chp, "w", encoding="utf-8").write(chat_txt)

@@ -24,25 +24,25 @@
 
 | Gyártó | Legújabb nyílt modell | Kiadva (HF) | Paraméter (össz./aktív) | Kontextus | Licenc |
 |---|---|---|---|---|---|
-| Moonshot AI | [Kimi K3.1 Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro) | 2026-11-02 | 2.8T / 104B | 1048576 | Kimi K3.1 Pro Licens |
-| DeepSeek | [DeepSeek-V4.1-Flash-1017](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) | 2026-10-17 | 552B backbone + 196B Engram memória (763 / ~16B (harmadik fél,  | 1000000 | MIT |
-| Zhipu AI (Z.ai) | [GLM-5.3](https://huggingface.co/zai-org/GLM-5.3) | 2026-08-25 | 753B / ~40B (harmadik fél) | 1M (eval-beállítások és harmadik fél alapján) | GLM-5.3 custom licen |
+| Moonshot AI | [Kimi K3.1 Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro) | 2026-11-02 | 2.8T / 104B | 1048576 | Kimi K3.1 Pro… |
+| DeepSeek | [DeepSeek-V4.1-Flash-1017](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) | 2026-10-17 | 552B backbone + 196B Engram memória… / ~16B… | 1000000 | MIT |
+| Zhipu AI (Z.ai) | [GLM-5.3](https://huggingface.co/zai-org/GLM-5.3) | 2026-08-25 | 753B / ~40B (harmadik fél) | 1M (eval-beállítások és harmadik fél alapján) | GLM-5.3 custom… |
 | Zhipu AI | [GLM-5.3-Flash](https://huggingface.co/zai-org/GLM-5.3-Flash) | 2026-08-25 | 320B (321.3B) / 18B | ~1M (eval 1M kontextussal; a kártyán nincs explicit tábla) | MIT |
-| Xiaomi | [MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL) | 2026-09-21 (RL), 2026- | Pro 1.02T; Flash 309B / Pro 42B; Flash 15B | 1000000 | MIT |
+| Xiaomi | [MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL) | 2026-09-21 (RL)… | Pro 1.02T; Flash 309B / Pro 42B; Flash 15B | 1000000 | MIT |
 | inclusionAI (Ant Group) | [Ling-3.1-flash-1019](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019) | 2026-10-27 | 560B (572B tárolt) / 25B | 1000000 | MIT |
-| MiniMax | [MiniMax-M3.1-Flash](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) | 2026-10-17 | ~428B / 23B | 1000000 | MiniMax Community Li |
-| Alibaba Qwen | [Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) | 2026-08-24 | 180B = 125B MoE + 51B n-gram embedding + / 6B | 262144 natív, 1M-ig bővíthető | Qwen Community Licen |
-| Alibaba Qwen | [Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja)](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B) | 2026-08-08 | 2.4T / 95B | 262144 natív, 1,010,000-ig bővíthető | Qwen3.8-Max license  |
-| StepFun | [Step 5 Preview](https://huggingface.co/stepfun-ai/Step-5-Preview) | 2026-09-20 | 600B / 27B | 1M-ig | StepFun Model Licens |
+| MiniMax | [MiniMax-M3.1-Flash](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) | 2026-10-17 | ~428B / 23B | 1000000 | MiniMax Community… |
+| Alibaba Qwen | [Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) | 2026-08-24 | 180B = 125B MoE + 51B n-gram embedding… / 6B | 262144 natív, 1M-ig bővíthető | Qwen Community… |
+| Alibaba Qwen | [Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja)](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B) | 2026-08-08 | 2.4T / 95B | 262144 natív, 1,010,000-ig bővíthető | Qwen3.8-Max… |
+| StepFun | [Step 5 Preview](https://huggingface.co/stepfun-ai/Step-5-Preview) | 2026-09-20 | 600B / 27B | 1M-ig | StepFun Model… |
 | Thinking Machines Lab | [Inkling 2 Small](https://huggingface.co/thinkingmachines/Inkling-2-Small) | 2026-11-04 | 594B / 17B | 1000000 | Apache-2.0 |
 | Tencent | [Hy4 preview (Hunyuan)](https://huggingface.co/tencent/Hy4-preview) | 2026-08-27 | 770B (+10B MTP) / 49B | 1000000 | Apache-2.0 |
-| Mistral AI | [Mistral Large 4 (1T-A52B)](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B) | 2026-09-30 | ~1T / 49B (52B embeddingek | 1000000 | Mistral Ecosystem Op |
-| Meta (meta-models) | [Muse Spark Open (816B-A42B)](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B) | 2026-09-15 (HF repó);  | 816B / 42B | 1000000 | Muse Model License;  |
+| Mistral AI | [Mistral Large 4 (1T-A52B)](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B) | 2026-09-30 | ~1T / 49B… | 1000000 | Mistral Ecosystem… |
+| Meta (meta-models) | [Muse Spark Open (816B-A42B)](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B) | 2026-09-15… | 816B / 42B | 1000000 | Muse Model… |
 | Alibaba Qwen | [Qwen3.8-27B (dense)](https://huggingface.co/Qwen/Qwen3.8-27B) | 2026-08-05 | 27.8B / 27.8B (dense) | 262144 natív, 1M-ig bővíthető | Apache-2.0 |
 | Meta | [Muse Glimmer 30B](https://huggingface.co/meta-models/Muse-Glimmer-30B) | 2026-08-09 | 29.6B (dense, vision encoderrel együtt) / 29.6B | 131072+ | Apache-2.0 |
-| Google DeepMind | [Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B)](https://huggingface.co/google/gemma-4-31B-it) | E2B/E4B 2026-03-02; 26 | 31B dense (30.7B); 26B MoE (A4B); 11.95B / 31B; ~4B; 12B; 4.5B; | 256K (12B/26B/31B), 128K (E2B/E4B) | Apache-2.0 |
-| NVIDIA | [NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16) | Super-VL 2026-10-12; B | 124B; 31.6B; 8B (4B eff., Gemma 4 alapú) / 12B; 3B; 4B | Super-VL: [nem ellenőrzött]; Lightning: 1M-ig (H100-on 256K); Bolt-E4B: 64K | OpenMDW-1.1 (nyílt s |
-| Alibaba Qwen / Xiaomi | [Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B)](https://huggingface.co/Qwen/Qwen3.5-4B) | 2026-02-27 (Qwen3.5);  | 4B; 9B / dense | [nem ellenőrzött] | Apache-2.0 (Qwen3.5) |
+| Google DeepMind | [Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B)](https://huggingface.co/google/gemma-4-31B-it) | E2B/E4B 2026-03-02… | 31B dense (30.7B); 26B MoE (A4B)… / 31B; ~4B; 12B… | 256K (12B/26B/31B), 128K (E2B/E4B) | Apache-2.0 |
+| NVIDIA | [NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B)](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16) | Super-VL 2026-10-12… | 124B; 31.6B; 8B (4B eff., Gemma 4 alapú) / 12B; 3B; 4B | Super-VL: [nem ellenőrzött]; Lightning: 1M-ig (H100-on 256K); Bolt-E4B: 64K | OpenMDW-1.1… |
+| Alibaba Qwen / Xiaomi | [Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B)](https://huggingface.co/Qwen/Qwen3.5-4B) | 2026-02-27 (Qwen3.5)… | 4B; 9B / dense | [nem ellenőrzött] | Apache-2.0… |
 | Meituan | [LongCat-2.5 (csak megjegyzésként)](https://huggingface.co/meituan-longcat/LongCat-2.5) | 2026-11-04 | 1.6T (1.78T tárolt) / ~48B | [nem ellenőrzött] | MIT |
 
 **Viszonyítási pont – Claude Opus 5.5 (max): 59,1 pont = 100%** (AA Intelligence Index v5.0.1, 2026-11-12). Az index csúcsa ugyanekkor a Claude Fable 5.2 (64,6 = 109%).
@@ -157,36 +157,36 @@ Az AA-index a modell legjobb változatára vonatkozik. A HW oszlop azt mutatja, 
 
 | Modell | Típus | Kiadva | AA v5 | % Opus 5.5 | Licenc | Méret (min–max) | Változat | Platform | HW | group |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Kimi K3.1 Pro | alap | 2026-11-02 | 46.5 | 79% | Kimi K3.1 Pro License (c | 592.7 GB – 1.61 TB | 9 | any, mac, server | T2–T1 | `llm-kimi-k3-1-pro` |
+| Kimi K3.1 Pro | alap | 2026-11-02 | 46.5 | 79% | Kimi K3.1 Pro License… | 592.7 GB – 1.61 TB | 9 | any, mac, server | T2–T1 | `llm-kimi-k3-1-pro` |
 | Hy4 preview (Hunyuan) | alap | 2026-08-27 | ~34.6 | ~59% | Apache-2.0 | 229.4 GB – 1.56 TB | 6 | any, mac, server | T2–T1 | `llm-hy4-preview` |
-| Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja) | alap | 2026-08-08 | ~33.7 | ~57% | Qwen3.8-Max license (oth | 397.3 GB – 4.89 TB | 12 | any, server | T2–T1 | `llm-qwen3-8-2-4t-a95b` |
+| Qwen3.8-2.4T-A95B (a hostolt „Qwen3.8-Max” alapja) | alap | 2026-08-08 | ~33.7 | ~57% | Qwen3.8-Max license… | 397.3 GB – 4.89 TB | 12 | any, server | T2–T1 | `llm-qwen3-8-2-4t-a95b` |
 | DeepSeek-V4.1-Flash-1017 | alap | 2026-10-17 | 32.6 | 55% | MIT | 120.7 GB – 510.3 GB | 23 | any, mac, server | T3–T1 | `llm-deepseek-v4-1-flash-1017` |
-| GLM-5.3 | alap | 2026-08-25 | 31.7 | 54% | GLM-5.3 custom license ( | 211.1 GB – 1.51 TB | 25 | any, mac, server | T3–T1 | `llm-glm-5-3` |
+| GLM-5.3 | alap | 2026-08-25 | 31.7 | 54% | GLM-5.3 custom license… | 211.1 GB – 1.51 TB | 25 | any, mac, server | T3–T1 | `llm-glm-5-3` |
 | Inkling 2 Small | alap | 2026-11-04 | 30.6 | 52% | Apache-2.0 | 171.7 GB – 622.8 GB | 12 | any, mac, server | T2–T1 | `llm-inkling-2-small` |
 | LongCat-2.5 (csak megjegyzésként) | alap | 2026-11-04 | ~30.0 | ~51% | MIT | 1.34 TB – 1.34 TB | 1 | server | T1–T1 | `llm-longcat-2-5` |
-| MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash | alap | 2026-09-21 | 29.9 | 51% | MIT | 126.4 GB – 617.9 GB | 18 | any, mac, server | T3–T1 | `llm-mimo-v2-6-pro` |
+| MiMo-V2.6-Pro (RL és MOPD változat) + MiMo-V2.6-Flash | alap | 2026-09-2… | 29.9 | 51% | MIT | 126.4 GB – 617.9 GB | 18 | any, mac, server | T3–T1 | `llm-mimo-v2-6-pro` |
 | Ling-3.1-flash-1019 | alap | 2026-10-27 | 29.6 | 50% | MIT | 131.0 GB – 608.4 GB | 18 | any, mac, server | T3–T1 | `llm-ling-3-1-flash-1019` |
-| MiniMax-M3.1-Flash | alap | 2026-10-17 | 29.1 | 49% | MiniMax Community Licens | 129.4 GB – 302.9 GB | 16 | any, mac, server | T3–T1 | `llm-minimax-m3-1-flash` |
-| Qwen3.8-Flash-Next | alap | 2026-08-24 | 28.6 | 48% | Qwen Community License 1 | 66.4 GB – 360.0 GB | 57 | any, mac, server | T4–T1 | `llm-qwen3-8-flash-next` |
-| Step 5 Preview | alap | 2026-09-20 | 28.5 | 48% | StepFun Model License (o | 182.5 GB – 1.21 TB | 8 | any, server | T3–T1 | `llm-step-5-preview` |
+| MiniMax-M3.1-Flash | alap | 2026-10-17 | 29.1 | 49% | MiniMax Community… | 129.4 GB – 302.9 GB | 16 | any, mac, server | T3–T1 | `llm-minimax-m3-1-flash` |
+| Qwen3.8-Flash-Next | alap | 2026-08-24 | 28.6 | 48% | Qwen Community License… | 66.4 GB – 360.0 GB | 57 | any, mac, server | T4–T1 | `llm-qwen3-8-flash-next` |
+| Step 5 Preview | alap | 2026-09-20 | 28.5 | 48% | StepFun Model License… | 182.5 GB – 1.21 TB | 8 | any, server | T3–T1 | `llm-step-5-preview` |
 | GLM-5.3-Flash | alap | 2026-08-25 | 27.8 | 47% | MIT | 74.8 GB – 642.7 GB | 44 | any, mac, server | T3–T1 | `llm-glm-5-3-flash` |
-| Mistral Large 4 (1T-A52B) | alap | 2026-09-30 | 25.3 | 43% | Mistral Ecosystem Open-W | 233.0 GB – 2.10 TB | 21 | any, mac, server | T2–T1 | `llm-mistral-large-4` |
-| Muse Spark Open (816B-A42B) | alap | 2026-09-15 | 24.9 | 42% | Muse Model License; GATE | 175.6 GB – 1.64 TB | 17 | any, mac, server | T3–T1 | `llm-muse-spark-open` |
+| Mistral Large 4 (1T-A52B) | alap | 2026-09-30 | 25.3 | 43% | Mistral Ecosystem… | 233.0 GB – 2.10 TB | 21 | any, mac, server | T2–T1 | `llm-mistral-large-4` |
+| Muse Spark Open (816B-A42B) | alap | 2026-09-1… | 24.9 | 42% | Muse Model License… | 175.6 GB – 1.64 TB | 17 | any, mac, server | T3–T1 | `llm-muse-spark-open` |
 | Qwen3.8-27B (dense) | alap | 2026-08-05 | 20.1 | 34% | Apache-2.0 | 6.2 GB – 63.6 GB | 60 | any, mac, server | T4–T1 | `llm-qwen3-8-27b` |
-| NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) | alap | Super-VL 2 | ~13.6 | ~23% | OpenMDW-1.1 (nyílt súlyo | 3.5 GB – 249.6 GB | 45 | any, mac, server | T5–T1 | `llm-nemotron-3-5` |
+| NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) | alap | Super-VL… | ~13.6 | ~23% | OpenMDW-1.1… | 3.5 GB – 249.6 GB | 45 | any, mac, server | T5–T1 | `llm-nemotron-3-5` |
 | Muse Glimmer 30B | alap | 2026-08-09 | 6.3 | 11% | Apache-2.0 | 6.5 GB – 57.1 GB | 33 | any, mac, server | T4–T1 | `llm-muse-glimmer-30b` |
-| Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) | alap | E2B/E4B 20 | ~4.4 | ~7% | Apache-2.0 | 2.3 GB – 62.6 GB | 100 | android, any, mac, server | T5–T1 | `llm-gemma-4` |
-| Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) | alap | 2026-02-27 | ~3.0 | ~5% | Apache-2.0 (Qwen3.5); MI | 1.8 GB – 10.4 GB | 22 | any | T5–T1 | `llm-qwen3-5-small` |
+| Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) | alap | E2B/E4B… | ~4.4 | ~7% | Apache-2.0 | 2.3 GB – 62.6 GB | 100 | android, any, mac, server | T5–T1 | `llm-gemma-4` |
+| Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) | alap | 2026-02-2… | ~3.0 | ~5% | Apache-2.0 (Qwen3.5)… | 1.8 GB – 10.4 GB | 22 | any | T5–T1 | `llm-qwen3-5-small` |
 | DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename) | cenzúrázatlan | 2026-10-17 | ~31.6 | ~53% | MIT | 233.0 GB – 510.3 GB | 5 | any, mac, server | T2–T1 | `llm-deepseek-v4-1-flash-1017-abliterated-hui` |
 | GLM-5.3 abliterated (huihui GGUF) | cenzúrázatlan | 2026-08-25 | ~30.1 | ~51% | other (glm-5.3) | 216.7 GB – 216.7 GB | 1 | any | T2–T1 | `llm-glm-5-3-abliterated-huihui-gguf` |
-| Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) | cenzúrázatlan | 2026-08-24 | ~27.2 | ~46% | other (qwen-community-1. | 68.2 GB – 188.2 GB | 9 | any, mac | T3–T1 | `llm-qwen3-8-flash-next-abliterated-v2-huihui` |
-| MiniMax-M3.1-Flash abliterated (orcarouter GGUF) | cenzúrázatlan | 2026-10-17 | ~27.1 | ~46% | other (minimax-community | 111.9 GB – 111.9 GB | 1 | any | T3–T1 | `llm-minimax-m3-1-flash-abliterated-orcaroute` |
+| Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) | cenzúrázatlan | 2026-08-24 | ~27.2 | ~46% | other… | 68.2 GB – 188.2 GB | 9 | any, mac | T3–T1 | `llm-qwen3-8-flash-next-abliterated-v2-huihui` |
+| MiniMax-M3.1-Flash abliterated (orcarouter GGUF) | cenzúrázatlan | 2026-10-17 | ~27.1 | ~46% | other… | 111.9 GB – 111.9 GB | 1 | any | T3–T1 | `llm-minimax-m3-1-flash-abliterated-orcaroute` |
 | GLM-5.3-Flash abliterated (huihui GGUF) | cenzúrázatlan | 2026-08-25 | ~26.4 | ~45% | MIT | 93.1 GB – 291.8 GB | 10 | any, mac | T3–T1 | `llm-glm-5-3-flash-abliterated-huihui-gguf` |
 | NousResearch Arete-27B (a "R1-1776 utód") | cenzúrázatlan | 2026-08-05 | ~19.0 | ~32% | Apache-2.0 | 15.2 GB – 17.2 GB | 2 | any | T4–T1 | `llm-nousresearch-arete-27b-a-r1-1776-ut-d` |
 | Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh) | cenzúrázatlan | 2026-08-05 | ~18.7 | ~32% | Apache-2.0 | 10.9 GB – 29.0 GB | 6 | any, mac | T4–T1 | `llm-qwen3-8-27b-abliterated-huihui-heretic-a` |
 | Kimi-K3 Abliterated V1 (Uniboshi) | cenzúrázatlan | 2026-06-13 | ~16.2 | ~27% | other (kimi-k3) | 1.51 TB – 1.51 TB | 1 | any | T1–T1 | `llm-kimi-k3-abliterated-v1-uniboshi` |
 | Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) | cenzúrázatlan | 2026-04-15 | ~8.0 | ~14% | Apache-2.0 | 16.9 GB – 21.2 GB | 2 | any | T4–T1 | `llm-qwen3-6-35b-a3b-uncensored-heretic-llmfa` |
-| Mistral-Small-4-119B-2603 heretic (darkc0de, GGUF: Rioky) | cenzúrázatlan | 2026-01-23 | ~7.6 | ~13% | Apache-2.0 (bázis); a he | 43.4 GB – 126.5 GB | 6 | any | T3–T1 | `llm-mistral-small-4-119b-2603-heretic-darkc0` |
+| Mistral-Small-4-119B-2603 heretic (darkc0de, GGUF: Rioky) | cenzúrázatlan | 2026-01-23 | ~7.6 | ~13% | Apache-2.0 (bázis); a… | 43.4 GB – 126.5 GB | 6 | any | T3–T1 | `llm-mistral-small-4-119b-2603-heretic-darkc0` |
 | gemma-4-31B-it heretic (coder3101) / uncensored-heretic (llmfan46) | cenzúrázatlan | 2026-03-11 | 4.1 | 7% | Apache-2.0, NEM gated | 16.9 GB – 25.2 GB | 4 | any, mac | T4–T1 | `llm-gemma-4-31b-it-heretic-coder3101-uncenso` |
 | gpt-oss-120b heretic (MuXodious tainted-heresy / kldzj heretic) | cenzúrázatlan | 2025-08-04 | 3.6 | 6% | Apache-2.0 | 62.2 GB – 63.4 GB | 3 | any, mac | T4–T1 | `llm-gpt-oss-120b-heretic-muxodious-tainted-h` |
 | gemma-4-26B-A4B-it ultra-uncensored-heretic (llmfan46) | cenzúrázatlan | 2026-03-11 | ~3.5 | ~6% | Apache-2.0 | 13.3 GB – 16.8 GB | 2 | any | T4–T1 | `llm-gemma-4-26b-a4b-it-ultra-uncensored-here` |
@@ -1067,23 +1067,23 @@ Kattints egy modellre a lenyitáshoz. A `hf download` parancsok változtatás n�
 
 | # | Pontos név (repó) | Alapmodell (kiadva) | Paraméter | AA v5 alap | **AA v5 cenzúrázatlan (számolt)** | **% Opus 5.5** | Számítás | Módszer | Cenz. | HU | UGI / NatInt | Változat | Méret min–max | Leggyengébb gép | Licenc |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed expert | 32.6 | **~31.6** | **~53%** | × 0.97 (B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE) | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['UD-IQ1_S/*'] (233.0 GB) | MIT |
+| 1 | **[huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF)** | `deepseek-ai/DeepSeek-V4.1-Flash-1017` (2026-10-17) | 763.2B total (safetensors); 384 routed… | 32.6 | **~31.6** | **~53%** | × 0.97 (B: abliteration, KL 0,067 (kicsi eltérés), nagy MoE) | Abliteration (huihui: 18 attn_output tenzor) + Heretic (pqhaz) + Abliteration FP8 (mrfakename) | 9 | 8 | elutasítás 97→4% chat, 98→9% think; KL 0,067 (mrfakename kártya) | 5 | 233.0 GB – 510.3 GB | T2: `huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF` ['UD-IQ1_S/*'] (233.0 GB) | MIT |
 | 2 | **[huihui-ai/Huihui-GLM-5.3-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-abliterated-GGUF)** | `zai-org/GLM-5.3` (2026-08-25) | 753.3B (safetensors); ctx 1M | 31.7 | **~30.1** | **~51%** | × 0.95 (B: abliteration (patch), nagy MoE) | Abliteration (huihui patch-GGUF az unsloth kvantra) | 8.5 | 7.5 | nincs mérés | 1 | 216.7 GB – 216.7 GB | T2: `huihui-ai/Huihui-GLM-5.3-abliterated-GGUF` ['UD-IQ1_S/*'] (216.7 GB) | other (glm-5.3) |
-| 3 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding + | 28.6 | **~27.2** | **~46%** | × 0.95 (B: abliteration v2, nagy MoE) | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['unsloth-UD-IQ4_XS/*'] (93.7 GB) | other (qwen-community-1.0) |
+| 3 | **[huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF)** | `Qwen/Qwen3.8-Flash-Next` (2026-08-24) | 125B, ebből 6B aktív + 51B n-gram embedding… | 28.6 | **~27.2** | **~46%** | × 0.95 (B: abliteration v2, nagy MoE) | Abliteration v2 (huihui) | 9 | 8.5 | nincs mérés (Qwen3.8 még nincs az UGI-n) | 9 | 68.2 GB – 188.2 GB | T3: `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF` ['unsloth-UD-IQ4_XS/*'] (93.7 GB) | other (qwen-community-1.0) |
 | 4 | **[orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF](https://huggingface.co/orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF)** | `MiniMaxAI/MiniMax-M3.1-Flash` (2026-10-17) | kb. 428B / 23B active (kártya); ctx 1M | 29.1 | **~27.1** | **~46%** | × 0.93 (B: közösségi abliteration, nem ellenőrzött) | Abliteration (orcarouter) | 7 | 6.5 | minőség nem ellenőrzött; gated:auto | 1 | 111.9 GB – 111.9 GB | T3: `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF` ['Mix-128G/*'] (111.9 GB) | other (minimax-community) |
 | 5 | **[huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF)** | `zai-org/GLM-5.3-Flash` (2026-08-25) | 320B total / 18B active (kártya); VL; ctx 1M | 27.8 | **~26.4** | **~45%** | × 0.95 (B: abliteration, nagy MoE) | Abliteration (huihui) | 8.5 | 7.5 | nincs mérés | 10 | 93.1 GB – 291.8 GB | T3: `huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF` ['UD-IQ3_XXS/*'] (120.4 GB) | MIT |
 | 6 | **[NousResearch/Arete-27B](https://huggingface.co/NousResearch/Arete-27B)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.4B | ~19.0 | **~19.0** | **~32%** | × 1 (B: SFT, csak propaganda-szűrés) | SFT (propaganda-keretezés eltávolítása, az R1-1776 utódja) | 4 | 8 | NEM általános elutasítás-eltávolító; propaganda 22%→0,9% | 2 | 15.2 GB – 17.2 GB | T4: `bartowski/NousResearch_Arete-27B-GGUF` ['NousResearch_Arete-27B-IQ4_XS.gguf'] (15.2 GB) | Apache-2.0 |
 | 7 | **[huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF](https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF)** | `Qwen/Qwen3.8-27B` (2026-08-05) | 27.8B dense; VL; ctx 262k → 1M | 20.1 | **~18.7** | **~32%** | × 0.93 (B: abliteration, közepes dense) | Abliteration (huihui) / Heretic-ARA (trohrbaugh) | 8.5 | 8.5 | nincs mérés | 6 | 10.9 GB – 29.0 GB | T4: `huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF` ['Huihui-Qwen3.8-27B-abliterated-UD-IQ4_XS.gguf'] (14.4 GB) | Apache-2.0 |
 | 8 | **[Uniboshi/Kimi-K3-Abliterated-V1](https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1)** | `moonshotai/Kimi-K3` (2026-06-13) | 2.8T total / 104B active (kártya); ctx 1M | 17.4 | **~16.2** | **~27%** | × 0.93 (B: közösségi abliteration, minőség nem ellenőrzött) | Abliteration (közösségi, Uniboshi) | 7 | 8 | minőség nem ellenőrzött; gated:auto | 1 | 1.51 TB – 1.51 TB | T1: `Uniboshi/Kimi-K3-Abliterated-V1-GGUF` ['MXFP4_MOE/*'] (1.51 TB) | other (kimi-k3) |
 | 9 | **[llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF)** | `Qwen/Qwen3.6-35B-A3B` (2026-04-15) | 36B MoE, 3B aktív; VL; ctx 262k | ~8.0 | **~8.0** | **~14%** | × 1 (M: NatInt 31,03→31,62 (nincs veszteség)) | Heretic (llmfan46) / Abliteration-MTP (huihui) | 10 | 8 | UGI 50,9; NatInt 31,03→31,62 (+0,6) | 2 | 16.9 GB – 21.2 GB | T4: `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF` ['Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf'] (21.2 GB) | Apache-2.0 |
-| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | **~7.6** | **~13%** | × 0.95 (B: heretic, MoE) | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['Mistral-Small-4-119B-2603-heretic-Q4_K_S.gguf'] (67.7 GB) | Apache-2.0 (bázis); a hereti |
+| 10 | **[darkc0de/Mistral-Small-4-119B-2603-heretic](https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic)** | `mistralai/Mistral-Small-4-119B-2603` (2026-01-23) | 119.4B MoE; VL; ctx 1M (GGUF metadata) | ~8.0 | **~7.6** | **~13%** | × 0.95 (B: heretic, MoE) | Heretic (darkc0de) | 8 | 8 | az alap is engedékeny (UGI W10 4,5) | 6 | 43.4 GB – 126.5 GB | T3: `Rioky/Mistral-Small-4-119B-2603-heretic-gguf` ['Mistral-Small-4-119B-2603-heretic-Q4_K_S.gguf'] (67.7 GB) | Apache-2.0 (bázis); a… |
 | 11 | **[coder3101/gemma-4-31B-it-heretic](https://huggingface.co/coder3101/gemma-4-31B-it-heretic)** | `google/gemma-4-31B-it` (2026-03-11) | 31.3B dense; VL; ctx 256k | 4.4 | **4.1** | **7%** | × 0.939 (M: NatInt 38,91→36,53) | Heretic (coder3101 / llmfan46) | 10 | 8.5 | UGI 65,69 (legjobb 40B alatt); NatInt 38,91→36,53 (−2,4) | 4 | 16.9 GB – 25.2 GB | T4: `mradermacher/gemma-4-31B-it-heretic-GGUF` ['gemma-4-31B-it-heretic.IQ4_XS.gguf'] (16.9 GB) | Apache-2.0, NEM gated |
-| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B (OpenAI release, it | 3.8 | **3.6** | **6%** | × 0.958 (M: NatInt 33,68→32,25) | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['gpt-oss-120B-tainted-heresy-MXFP4_MoE.gguf'] (63.4 GB) | Apache-2.0 |
+| 12 | **[MuXodious/gpt-oss-120b-tainted-heresy](https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy)** | `openai/gpt-oss-120b` (2025-08-04) | 116.8B; az aktív kb. 5.1B… | 3.8 | **3.6** | **6%** | × 0.958 (M: NatInt 33,68→32,25) | Heretic (MuXodious tainted-heresy / kldzj) | 8.5 | 6 | UGI 53,81; NatInt 33,68→32,25 (−1,4) | 3 | 62.2 GB – 63.4 GB | T3: `MuXodious/gpt-oss-120b-tainted-heresy-GGUF` ['gpt-oss-120B-tainted-heresy-MXFP4_MoE.gguf'] (63.4 GB) | Apache-2.0 |
 | 13 | **[llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-26B-A4B-it` (2026-03-11) | 25.8B MoE, kb. 4B aktív; VL | ~3.5 | **~3.5** | **~6%** | × 1 (M: NatInt 34,44→35,71 (nincs veszteség)) | Heretic, ultra (llmfan46) | 10 | 8 | UGI 52,39; NatInt 34,44→35,71 (+1,3) | 2 | 13.3 GB – 16.8 GB | T4: `llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF` ['gemma-4-26B-A4B-it-ultra-uncensored-heretic-Q4_K_M.gguf'] (16.8 GB) | Apache-2.0 |
 | 14 | **[llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF)** | `google/gemma-4-12B-it` (2026-05-23) | 11.96B; any-to-any | ~3.0 | **~2.8** | **~5%** | × 0.93 (B: heretic, kis dense) | Heretic (llmfan46) / Abliteration QAT (huihui) | 9 | 8 | nincs mérés | 1 | 8.5 GB – 8.5 GB | T4: `llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF` ['gemma-4-12B-it-uncensored-heretic-Q4_K_M.gguf'] (8.5 GB) | Apache-2.0 |
-| 15 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any ( | ~2.5 | **~2.5** | **~4%** | × 1 (M: NatInt 18,21→18,73 (nincs veszteség)) | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['gemma-4-E4B-it-heretic-Q4_K_M.gguf'] (5.3 GB) | Apache-2.0 |
+| 15 | **[coder3101/gemma-4-E4B-it-heretic](https://huggingface.co/coder3101/gemma-4-E4B-it-heretic)** | `google/gemma-4-E4B-it` (2026-03-02) | 8B összesen / kb. 4.5B effektív; any-to-any… | ~2.5 | **~2.5** | **~4%** | × 1 (M: NatInt 18,21→18,73 (nincs veszteség)) | Heretic (coder3101 / p-e-w) | 9.5 | 7.5 | NatInt 18,21→18,73 (+0,5) | 1 | 5.3 GB – 5.3 GB | T5: `Abiray/gemma-4-E4B-it-heretic-GGUF` ['gemma-4-E4B-it-heretic-Q4_K_M.gguf'] (5.3 GB) | Apache-2.0 |
 | 16 | **[trohrbaugh/Qwen3.5-9B-heretic-v2](https://huggingface.co/trohrbaugh/Qwen3.5-9B-heretic-v2)** | `Qwen/Qwen3.5-9B` (2026-02-27) | 9.4–9.65B; VL | ~3.0 | **~2.3** | **~4%** | × 0.781 (M: NatInt 30,98→24,2) | Heretic v2 (trohrbaugh) | 9.5 | 7.5 | NatInt 30,98→24,2 (−6,8); huihui-változat: 19,8 (−11,2) | 2 | 5.6 GB – 9.5 GB | T5: `filvyb/Qwen3.5-9B-heretic-v2-GGUF` ['Qwen3.5-9B-heretic-v2-Q4_K_M.gguf'] (5.6 GB) | Apache-2.0 |
-| 17 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE (az aktív kb. 3.6B, itt nem API-ból | ~2.5 | **~2.1** | **~4%** | × 0.829 (M: NatInt 27,18→22,52) | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['gpt-oss-20B-RichardErkhov-heresy-MXFP4_MoE.gguf'] (12.7 GB) | Apache-2.0 |
+| 17 | **[MuXodious/gpt-oss-20b-RichardErkhov-heresy](https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy)** | `openai/gpt-oss-20b` (2025-08-04) | 20.9B MoE… | ~2.5 | **~2.1** | **~4%** | × 0.829 (M: NatInt 27,18→22,52) | Heretic (MuXodious / p-e-w ARA) | 9.5 | 5 | UGI 46,67; NatInt 27,18→22,52 (−4,7) | 1 | 12.7 GB – 12.7 GB | T4: `MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF` ['gpt-oss-20B-RichardErkhov-heresy-MXFP4_MoE.gguf'] (12.7 GB) | Apache-2.0 |
 | 18 | **[p-e-w/Qwen3.5-4B-heretic-2.0](https://huggingface.co/p-e-w/Qwen3.5-4B-heretic-2.0)** | `Qwen/Qwen3.5-4B` (2026-02-27) | 4.5–4.66B; VL | ~2.0 | **~1.9** | **~3%** | × 0.936 (M: NatInt 23,88→22,35 (SOMPOA-változat)) | Heretic 2.0 (p-e-w) / SOMPOA (MuXodious) | 9.5 | 6.5 | SOMPOA: UGI 44,73; NatInt 23,88→22,35 (−1,5) | 4 | 2.5 GB – 4.5 GB | T5: `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF` ['Qwen3.5-4B-heretic-2.0.Q8_0.gguf'] (4.5 GB) | Apache-2.0 |
 | 19 | **[llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF](https://huggingface.co/llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF)** | `google/gemma-4-E2B-it` (2026-03-02) | 5.1B összesen (kb. 2B effektív) | ~1.5 | **~1.4** | **~2%** | × 0.93 (B: heretic, nagyon kis modell) | Heretic, ultra (llmfan46) | 9 | 6.5 | nincs mérés | 2 | 3.4 GB – 3.6 GB | T5: `llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF` ['gemma-4-E2B-it-ultra-uncensored-heretic-Q5_K_M.gguf'] (3.6 GB) | Apache-2.0 |
 
@@ -1149,11 +1149,11 @@ A számok **becslések** az alábbi szabályokkal:
 
 | Runtime | Repó / forrás | Verzió | HW-szint | Megjegyzés |
 |---|---|---|---|---|
-| **llama.cpp** | https://github.com/ggml-org/llama.cpp | b12387 (legutolsó nightly tag); v1.0.0 'release' 2 | T1, T2, T3, T4, T5(Termux) | Forrásból ellenőrzött flagek: -ngl/--n-gpu-layers, -ncmoe/--n-cpu-moe, -cmoe/--cpu-moe, -ot/--override-tensor, --jinja (default: enabled), -fa/--flash-attn [on\ |
-| **ik_llama.cpp** | https://github.com/ikawrakow/ik_llama.cpp | nincs release tag (csak 't0002'); HEAD 2026-11-14; | T1, T2, T3 | Flagek forrásból ellenőrizve: -rtr, -mla, -amb, -ot, --n-cpu-moe, -ger, --jinja, -fa, -ctk, -sm. A -fmoe nem található (valószínűleg default lett, unverified).  |
+| **llama.cpp** | https://github.com/ggml-org/llama.cpp | b12387 (legutolsó nightly tag); v1.0.0 'release'… | T1, T2, T3, T4, T5(Termux) | Forrásból ellenőrzött flagek: -ngl/--n-gpu-layers, -ncmoe/--n-cpu-moe, -cmoe/--cpu-moe, -ot/--override-tensor, --jinja (default: enabled), -fa/--flash-attn… |
+| **ik_llama.cpp** | https://github.com/ikawrakow/ik_llama.cpp | nincs release tag (csak 't0002'); HEAD… | T1, T2, T3 | Flagek forrásból ellenőrizve: -rtr, -mla, -amb, -ot, --n-cpu-moe, -ger, --jinja, -fa, -ctk, -sm. A -fmoe nem található… |
 | **Ollama** | https://github.com/ollama/ollama | v0.40.16 stable (v0.40.17-rc0) | T3, T4 | A docs/import.mdx-ben ellenőrizve: FROM .gguf és a split wildcard. A vision mmproj és a legújabb architektúrák támogatása gyakran késik a llama.cpp-hez képest. |
 | **LM Studio (+ llmster headless, lms CLI)** | https://lmstudio.ai (zárt forrás); CLI: https://github.com/lmstudio-ai/lms | 0.4.28 (lmstudio.ai/download) | T3, T4 | Mac-en MLX és GGUF backend. |
-| **KTransformers (kt-kernel + SGLang)** | https://github.com/kvcache-ai/ktransformers | v0.7.2 (PyPI 2026-10-15) | T1, T2, T3 | Natív támogatás: DeepSeek-V4-Flash, GLM-5.3-Flash (FP8 kb. 306 GiB, legalább 350 GB RAM), MiniMax-M3, Kimi K2.x. Az abliterated safetensors (mrfakename/pqhaz De |
+| **KTransformers (kt-kernel + SGLang)** | https://github.com/kvcache-ai/ktransformers | v0.7.2 (PyPI 2026-10-15) | T1, T2, T3 | Natív támogatás: DeepSeek-V4-Flash, GLM-5.3-Flash (FP8 kb. 306 GiB, legalább 350 GB RAM), MiniMax-M3, Kimi K2.x. Az abliterated safetensors… |
 | **vLLM** | https://github.com/vllm-project/vllm | 0.33.0 (PyPI 2026-11-02); rc v0.34.0rc4 | T1 | A CLI-t nem ellenőriztem a forrásból (ismert használat). Safetensors/FP8 kell (pl. mrfakename DeepSeek-V4.1 abliterated 510 GB). |
 | **SGLang** | https://github.com/sgl-project/sglang | v0.5.23 (PyPI 2026-10-30) | T1 |  |
 | **MLX-LM (+ mlx.distributed)** | https://github.com/ml-explore/mlx-lm | mlx-lm 0.32.2 (PyPI 2026-10-16), mlx v0.32.4 | T2, T4 | A jaccl backend RDMA over Thunderbolt 5-öt használ (lásd exo: macOS 26.2+). Ellenőrizve a mlx-lm/examples/sharded_generate.py-ban. |
@@ -1166,11 +1166,11 @@ A számok **becslések** az alábbi szabályokkal:
 | **PocketPal AI** | https://github.com/a-ghorbani/pocketpal-ai | v1.23.0 (app-prod-release.apk 263 MB) | T5 |  |
 | **MLC LLM / MLC Chat** | https://github.com/mlc-ai/mlc-llm | tag v0.26.dev0 | T5, T4 | Saját (MLC) formátumot használ, nem GGUF-ot; a modelleket előre le kell fordítani vagy letölteni. |
 | **Google AI Edge Gallery** | https://github.com/google-ai-edge/gallery | 1.0.23 | T5 | LiteRT-LM (.litertlm) modelleket futtat (pl. litert-community/...), GGUF-ot nem; Gemma 4 E2B/E4B mobil QAT. |
-| **ChatterUI** | https://github.com/Vali-98/ChatterUI | v0.11.0-beta1 (ChatterUI_ChatterUI_v0.11.0-beta1.a | T5 | Android, llama.cpp alapú, helyi GGUF-ot futtat. |
+| **ChatterUI** | https://github.com/Vali-98/ChatterUI | v0.11.0-beta1… | T5 | Android, llama.cpp alapú, helyi GGUF-ot futtat. |
 | **LLMFarm (iOS/macOS)** | https://github.com/guinmoon/LLMFarm | tag 1.4.3 | T5 | Az App Store/TestFlight elérhetőség unverified. |
-| **Locally AI (iOS/macOS, MLX) és Apollo (Liquid AI, iOS)** | zárt forrás, csak App Store |  | T5 | Forrás: web search (App Store oldalak). Locally AI: iOS 18+, MLX, offline a modell letöltése után. Apollo: iOS 17.6+, LEAP/LFM modellek, saját szerverhez is kap |
+| **Locally AI (iOS/macOS, MLX) és Apollo (Liquid AI, iOS)** | zárt forrás, csak App Store |  | T5 | Forrás: web search (App Store oldalak). Locally AI: iOS 18+, MLX, offline a modell letöltése után. Apollo: iOS 17.6+, LEAP/LFM modellek, saját szerverhez is… |
 | **Heretic (decensoring tool)** | https://github.com/p-e-w/heretic | v2.1.0 / PyPI heretic-llm 2.1.0 | T3 (≤30B bnb_4bit), T1/T2 (nagy modellek) |  |
-| **Kiwix + LLM** | kiwix-tools: https://github.com/kiwix/kiwix-tools (3.8.2); MCP: https://github.com/cameron |  |  | A WikiChat saját indexet épít (nehéz). Az Open WebUI MCP vagy OpenAPI tool integrációját nem ellenőriztem. |
+| **Kiwix + LLM** | kiwix-tools: https://github.com/kiwix/kiwix-tools (3.8.2); MCP… |  |  | A WikiChat saját indexet épít (nehéz). Az Open WebUI MCP vagy OpenAPI tool integrációját nem ellenőriztem. |
 
 ### 6.7 Nulláról a chatig, szintenként
 
@@ -1272,16 +1272,16 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 **Hardveradatok és feltételezések:**
 - **MS-S1 MAX-P495 és ZBook Ultra G3a:** 192 GB LPDDR5X; a GPU-nak legfeljebb 160 GB adható (gyártói adat). A ~256–273 GB/s sávszélességet a memóriasebességből és a 256 bites buszból számoltam.
 - **RTX 6090:** még nincs bejelentve. A pletykák szerint 32 GB GDDR7 és ~1,79 TB/s.
-- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért három forgatókönyvvel számolok: 96, 128 és 192 GB.
+- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért a kalkulátor három forgatókönyvvel számol: 96, 128 és 192 GB.
 - **Pavilion 15-bc504ur:** az i5-9300H + GTX 1050 4 GB a bc504TX testvérmodell adatlapjából jön.
 - **Telefonok:** a modellnek jutó memória becslés (az OS és az appok levonva).
 - **Klaszter (2 vagy 4 MS-S1):** llama.cpp RPC vagy exo pipeline-párhuzamosítás USB4 v2 (80 Gbps) gyűrűn. A kapacitás összeadódik, a sebesség nagyjából egy gépé, plusz ~3 ms hálózati késleltetés gépenként.
 
 #### Telefonok
 
-#### Samsung Galaxy S24 Ultra (12 GB, Snapdragon 8 Gen 3)
+##### Samsung Galaxy S24 Ultra (12 GB, Snapdragon 8 Gen 3)
 
-*Modellnek jutó memória: ~7,4 GB · Android: PocketPal / ChatterUI (GGUF). Kb. 7,5 GB jut a modellnek. Sávszélesség ~68 GB/s (LPDDR5X, becslés).*
+*Modellnek jutó memória: ~7,4 GB · Android: PocketPal / ChatterUI (GGUF). Sávszélesség ~68 GB/s (LPDDR5X, becslés).*
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
@@ -1290,9 +1290,9 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3,0 = ~5% Opus 5.5 · 8,5 bit, 4,5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q8_0.gguf`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1,5 = ~3% Opus 5.5 · 4,5 bit, 3,1 GB, ~19 tok/s, unified] – gyors segéd, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `unsloth/gemma-4-E2B-it-GGUF gemma-4-E2B-it-Q4_K_M.gguf` |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3,0 = ~5% Opus 5.5 · 8,5 bit, 4,5 GB, ~7 tok/s, unified] – fő modell (váltva) – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q8_0.gguf`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2,5 = ~4% Opus 5.5 · 4,5 bit, 5,3 GB, ~11 tok/s, unified] – partner, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `Abiray/gemma-4-E4B-it-heretic-GGUF gemma-4-E4B-it-heretic-Q4_K_M.gguf` |
 
-#### iPhone 15 Pro (8 GB, A17 Pro)
+##### iPhone 15 Pro (8 GB, A17 Pro)
 
-*Modellnek jutó memória: ~5,0 GB · iOS: PocketPal / LLM Farm (GGUF), Locally AI (MLX). Kb. 5 GB jut a modellnek (iOS app-memórialimit).*
+*Modellnek jutó memória: ~5,0 GB · iOS: PocketPal / LLM Farm (GGUF), Locally AI (MLX). Az iOS app-memórialimit miatt kevesebb jut a modellnek.*
 
 | Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |
 |---|---|
@@ -1303,7 +1303,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### Laptopok
 
-#### HP Pavilion 15-bc504ur (8 GB DDR4, GTX 1050 4 GB) – mostani
+##### HP Pavilion 15-bc504ur (8 GB DDR4, GTX 1050 4 GB) – mostani
 
 *Modellnek jutó memória: ~8,8 GB · i5-9300H + GTX 1050 4 GB (a bc504TX testvérmodell adatai alapján). Egycsatornás DDR4-2666 ~21 GB/s.*
 
@@ -1314,7 +1314,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 ~2,5 = ~4% Opus 5.5 · 4,5 bit, 5,1 GB, ~7 tok/s, hibrid GPU+RAM (dense)] – fő modell (váltva) – `unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF NVIDIA-Nemotron-3.5-Bolt-E4B-UD-Q4_K_XL.gguf`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2,0 = ~3% Opus 5.5 · 3,5 bit, 2,4 GB, ~22 tok/s, csak GPU] – gyors segéd, váltva – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q3_K_XL.gguf` |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious) [AA v5 ~1,9 = ~3% Opus 5.5 · 4,5 bit, 2,5 GB, ~19 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.5-4B-heretic-2.0-GGUF Qwen3.5-4B-heretic-2.0.IQ4_XS.gguf`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2,0 = ~3% Opus 5.5 · 3,5 bit, 2,4 GB, ~6 tok/s, csak CPU (dense)] – partner (alap) – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~9 GB |
 
-#### HP Pavilion 15-bc504ur (16 GB DDR4 dual channel, GTX 1050 4 GB)
+##### HP Pavilion 15-bc504ur (16 GB DDR4 dual channel, GTX 1050 4 GB)
 
 *Modellnek jutó memória: ~16,0 GB · +8 GB → kétcsatornás DDR4-2666 ~42 GB/s. A gyors SSD a modell betöltését gyorsítja, a futást nem.*
 
@@ -1325,7 +1325,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~3,0 = ~5% Opus 5.5 · 4,5 bit, 7,0 GB, ~4 tok/s, hibrid GPU+RAM (dense)] – fő modell – `google/gemma-4-12B-it-qat-q4_0-gguf gemma-4-12b-it-qat-q4_0.gguf`<br>Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~2,0 = ~3% Opus 5.5 · 3,5 bit, 2,4 GB, ~11 tok/s, csak CPU (dense)] – gyors segéd / router – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.5-4B / Qwen3.5-9B (+ MiMo-V2.6-Distill-Qwen-9B) [AA v5 ~3,0 = ~5% Opus 5.5 · 8,5 bit, 4,5 GB, ~6 tok/s, hibrid GPU+RAM (dense)] – fő modell – `unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q8_0.gguf`<br>gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46) [AA v5 ~2,5 = ~4% Opus 5.5 · 4,5 bit, 5,3 GB, ~9 tok/s, csak CPU (dense)] – partner (cenzúrázatlan) – `Abiray/gemma-4-E4B-it-heretic-GGUF gemma-4-E4B-it-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~14 GB |
 
-#### HP ZBook Ultra G3a (192 GB unified, Ryzen AI Max+ PRO 495)
+##### HP ZBook Ultra G3a (192 GB unified, Ryzen AI Max+ PRO 495)
 
 *Modellnek jutó memória: ~159 GB · A GPU-nak max. 160 GB adható (HP). LPDDR5X-8000 × 256 bit ≈ 256 GB/s (számolt). Linux + llama.cpp Vulkan/ROCm ajánlott.*
 
@@ -1338,7 +1338,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### AI workstation – MINISFORUM MS-S1 MAX-P495 (1, 2, 4 gép)
 
-#### 1× MINISFORUM MS-S1 MAX-P495 (192 GB)
+##### 1× MINISFORUM MS-S1 MAX-P495 (192 GB)
 
 *Modellnek jutó memória: ~159 GB · LPDDR5X-8533 × 256 bit ≈ 273 GB/s (számolt); GPU-ra max. 160 GB.*
 
@@ -1349,7 +1349,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 97,5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-IQ4_XS.gguf`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 4,5 bit, 23,2 GB, ~49 tok/s, unified] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-MXFP4_MOE.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~142 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 97,5 GB, ~33 tok/s, unified] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-IQ4_XS.gguf`<br>NousResearch Arete-27B (a "R1-1776 utód") [AA v5 ~19,0 = ~32% Opus 5.5 · 4,5 bit, 15,2 GB, ~10 tok/s, unified] – partner (cenzúrázatlan) – `bartowski/NousResearch_Arete-27B-GGUF NousResearch_Arete-27B-IQ4_XS.gguf`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8,0 = ~14% Opus 5.5 · 4,5 bit, 21,2 GB, ~49 tok/s, unified] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~158 GB |
 
-#### 2× MS-S1 MAX-P495 (2×192 GB, USB4 v2 80 Gbps)
+##### 2× MS-S1 MAX-P495 (2×192 GB, USB4 v2 80 Gbps)
 
 *Modellnek jutó memória: ~319 GB · llama.cpp RPC / exo pipeline-párhuzamosítás: a kapacitás összeadódik, a sebesség ~1 gépé + hálózati késleltetés.*
 
@@ -1360,7 +1360,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~28 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 4,5 bit, 23,2 GB, ~49 tok/s, unified ×2] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-MXFP4_MOE.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~184 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~28 tok/s, unified ×2] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27,1 = ~46% Opus 5.5 · 4,5 bit, 111,9 GB, ~11 tok/s, unified ×2] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF Mix-128G/*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8,0 = ~14% Opus 5.5 · 4,5 bit, 21,2 GB, ~49 tok/s, unified ×2] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~311 GB |
 
-#### 4× MS-S1 MAX-P495 (4×192 GB, USB4 v2 gyűrű)
+##### 4× MS-S1 MAX-P495 (4×192 GB, USB4 v2 gyűrű)
 
 *Modellnek jutó memória: ~637 GB · Gépenként 2 db USB4 v2 port → gyűrű topológia; alternatíva 2×10GbE. 640 GB GPU-memória összesen.*
 
@@ -1373,7 +1373,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### Gamer PC – RTX 6090 + RAM-változatok
 
-#### Gamer PC – RTX 6090 32 GB + 96 GB DDR5-6000
+##### Gamer PC – RTX 6090 32 GB + 96 GB DDR5-6000
 
 *Modellnek jutó memória: ~114 GB · RTX 6090 adatai nem hivatalosak (pletyka). 2 DIMM DDR5-6000 kétcsatornás ≈ 96 GB/s.*
 
@@ -1384,7 +1384,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-27B (dense) [AA v5 20,1 = 34% Opus 5.5 · 5,5 bit, 19,5 GB, ~42 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-27B-i1-GGUF Qwen3.8-27B.i1-Q5_K_M.gguf`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 3,5 bit, 21,2 GB, ~54 tok/s, hibrid GPU+RAM] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~50 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-27B (dense) [AA v5 20,1 = 34% Opus 5.5 · 5,5 bit, 19,5 GB, ~42 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-27B-i1-GGUF Qwen3.8-27B.i1-Q5_K_M.gguf`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27,2 = ~46% Opus 5.5 · 3,5 bit, 76,0 GB, ~27 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF swift-IQ3_XXS/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~113 GB |
 
-#### Gamer PC – RTX 6090 32 GB + 128 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + 128 GB DDR5
 
 *Modellnek jutó memória: ~143 GB · 2×64 GB, DDR5-6000 feltételezve.*
 
@@ -1395,7 +1395,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~27 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 3,5 bit, 21,2 GB, ~35 tok/s, csak CPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~135 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~27 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8,0 = ~14% Opus 5.5 · 4,5 bit, 21,2 GB, ~28 tok/s, csak CPU] – partner (cenzúrázatlan) – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~135 GB |
 
-#### Gamer PC – RTX 6090 32 GB + 192 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + 192 GB DDR5
 
 *Modellnek jutó memória: ~205 GB · 4×48 GB → kb. DDR5-5400 (4 DIMM-mel lassabb) ≈ 86 GB/s.*
 
@@ -1406,7 +1406,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~19 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 4,5 bit, 23,2 GB, ~26 tok/s, csak CPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-MXFP4_MOE.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~184 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~25 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27,2 = ~46% Opus 5.5 · 3,5 bit, 76,0 GB, ~18 tok/s, csak CPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF swift-IQ3_XXS/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~198 GB |
 
-#### Gamer PC – RTX 6090 32 GB + 256 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + 256 GB DDR5
 
 *Modellnek jutó memória: ~262 GB · 4×64 GB (AM5 maximum) → kb. DDR5-5200 ≈ 83 GB/s.*
 
@@ -1419,7 +1419,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### Gamer PC – RTX 6090 + következő generációs RTX Pro (két kártya)
 
-#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 96 GB (A: konzervatív) + 256 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 96 GB (A: konzervatív) + 256 GB DDR5
 
 *Modellnek jutó memória: ~358 GB · A: az utód a mostani RTX PRO 6000 Blackwell szintjén (96 GB, ~1,8 TB/s). Összesen 128 GB VRAM.*
 
@@ -1430,7 +1430,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 8,5 bit, 167,4 GB, ~23 tok/s, hibrid GPU+RAM] – fő modell – `ggml-org/Qwen3.8-Flash-Next-GGUF Qwen3.8-Flash-Next-Q8_0-00001-of-00002.gguf Qwen3.8-Flash-Next-Q8_0-00002-of-00002.gguf dflash-Qwen3.8-Flash-Next-Q8_0.gguf mtp-Qwen3.8-Flash-Next-Q8_0.gguf`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 3,5 bit, 21,2 GB, ~30 tok/s, csak CPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~220 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~99 tok/s, csak GPU] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27,1 = ~46% Opus 5.5 · 4,5 bit, 111,9 GB, ~6 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF Mix-128G/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
 
-#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 128 GB (B: valószínű) + 256 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 128 GB (B: valószínű) + 256 GB DDR5
 
 *Modellnek jutó memória: ~390 GB · B: 128 GB, ~2,3 TB/s (becslés). Összesen 160 GB VRAM.*
 
@@ -1441,7 +1441,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1,5 = ~3% Opus 5.5 · 4,5 bit, 3,1 GB, ~127 tok/s, csak GPU] – gyors segéd / router – `unsloth/gemma-4-E2B-it-GGUF gemma-4-E2B-it-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~161 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~98 tok/s, csak GPU] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27,1 = ~46% Opus 5.5 · 4,5 bit, 111,9 GB, ~5 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF Mix-128G/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
 
-#### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 192 GB (C: optimista) + 256 GB DDR5
+##### Gamer PC – RTX 6090 32 GB + köv. gen. RTX Pro 192 GB (C: optimista) + 256 GB DDR5
 
 *Modellnek jutó memória: ~454 GB · C: 192 GB, ~2,8 TB/s (optimista becslés). Összesen 224 GB VRAM.*
 
@@ -1454,7 +1454,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### Gamer PC – FELOLDVA (memória-OC; két kártyánál P2P + tensor parallel) – lásd 6.11
 
-#### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 128 GB DDR5
+##### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 128 GB DDR5
 
 *Modellnek jutó memória: ~143 GB · Egy kártya: a P2P irreleváns; a tensor-felezés feloldása Blackwell/Rubinon nem várható → csak memória-OC ×1,06.*
 
@@ -1465,7 +1465,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~27 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 3,5 bit, 21,2 GB, ~35 tok/s, csak CPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~135 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~27 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8,0 = ~14% Opus 5.5 · 4,5 bit, 21,2 GB, ~28 tok/s, csak CPU] – partner (cenzúrázatlan) – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~135 GB |
 
-#### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 256 GB DDR5
+##### Gamer PC – RTX 6090 FELOLDVA (mem-OC) + 256 GB DDR5
 
 *Modellnek jutó memória: ~262 GB · Memória-OC ×1,06.*
 
@@ -1476,7 +1476,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 5,5 = 9% Opus 5.5 · 4,5 bit, 23,2 GB, ~25 tok/s, csak CPU] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF NVIDIA-Nemotron-3.5-Lightning-30B-A3B-MXFP4_MOE.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~184 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~24 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>GLM-5.3-Flash abliterated (huihui GGUF) [AA v5 ~26,4 = ~45% Opus 5.5 · 3,5 bit, 120,4 GB, ~6 tok/s, csak CPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF UD-IQ3_XXS/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~249 GB |
 
-#### RTX 6090 + köv. RTX Pro 96 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+##### RTX 6090 + köv. RTX Pro 96 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
 
 *Modellnek jutó memória: ~358 GB · A két kártya párhuzamosan (tensor parallel, P2P patch: aikitoria open-gpu-kernel-modules); vegyes generációnál libcuda-patch is kell.*
 
@@ -1487,7 +1487,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 97,5 GB, ~104 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-IQ4_XS.gguf`<br>NVIDIA Nemotron 3.5 (Super-VL-120B-A12B, Lightning-30B-A3B, Bolt-E4B) [AA v5 ~2,5 = ~4% Opus 5.5 · 3,5 bit, 4,2 GB, ~126 tok/s, csak GPU, tensor parallel ×2 (P2P)] – gyors segéd / router – `unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF NVIDIA-Nemotron-3.5-Bolt-E4B-UD-Q3_K_XL.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~120 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 4,5 bit, 93,7 GB, ~105 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `unsloth/Qwen3.8-Flash-Next-GGUF UD-IQ4_XS/*`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27,1 = ~46% Opus 5.5 · 4,5 bit, 111,9 GB, ~6 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF Mix-128G/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~239 GB |
 
-#### RTX 6090 + köv. RTX Pro 128 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+##### RTX 6090 + köv. RTX Pro 128 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
 
 *Modellnek jutó memória: ~390 GB · B forgatókönyv, feloldva.*
 
@@ -1498,7 +1498,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~103 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>Gemma 4 (31B, 26B-A4B, 12B, E4B, E2B) [AA v5 ~1,5 = ~3% Opus 5.5 · 4,5 bit, 3,1 GB, ~129 tok/s, csak GPU, tensor parallel ×2 (P2P)] – gyors segéd / router – `unsloth/gemma-4-E2B-it-GGUF gemma-4-E2B-it-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~161 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | Qwen3.8-Flash-Next [AA v5 28,6 = 48% Opus 5.5 · 5,5 bit, 134,1 GB, ~103 tok/s, csak GPU, tensor parallel ×2 (P2P)] – fő modell – `mradermacher/Qwen3.8-Flash-Next-i1-GGUF Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part1of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part2of3 Qwen3.8-Flash-Next.i1-Q5_K_M.gguf.part3of3`<br>MiniMax-M3.1-Flash abliterated (orcarouter GGUF) [AA v5 ~27,1 = ~46% Opus 5.5 · 4,5 bit, 111,9 GB, ~5 tok/s, hibrid GPU+RAM] – partner (cenzúrázatlan) – `orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF Mix-128G/*`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~286 GB |
 
-#### RTX 6090 + köv. RTX Pro 192 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
+##### RTX 6090 + köv. RTX Pro 192 GB – FELOLDVA (P2P + TP + mem-OC) + 256 GB
 
 *Modellnek jutó memória: ~454 GB · C forgatókönyv, feloldva.*
 
@@ -1511,7 +1511,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 
 #### Linux szerverek
 
-#### Linux szerver – EPYC 12 csatornás DDR5 768 GB + 1× RTX 6090 32 GB
+##### Linux szerver – EPYC 12 csatornás DDR5 768 GB + 1× RTX 6090 32 GB
 
 *Modellnek jutó memória: ~739 GB · ik_llama.cpp / KTransformers: MoE-szakértők RAM-ban, figyelem a GPU-n.*
 
@@ -1522,7 +1522,7 @@ python3 llm_calc.py ARCHIVUM.md --preset all --md      # minden alábbi profil
 | **V3 csapat (alap modellek)** | Hy4 preview (Hunyuan) [AA v5 ~34,6 = ~59% Opus 5.5 · 4,5 bit, 467,3 GB, ~12 tok/s, hibrid GPU+RAM] – fő modell – `AngelSlim/Hy4-preview-GGUF Hy4-preview-Q4_K_M.gguf`<br>Qwen3.8-27B (dense) [AA v5 20,1 = 34% Opus 5.5 · 4,5 bit, 16,9 GB, ~15 tok/s, csak CPU (dense)] – gyors segéd / router – `ubergarm/Qwen3.8-27B-GGUF Qwen3.8-27B-MTP-IQ4_KS.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~560 GB |
 | **V4 vegyes csapat (alap + cenzúrázatlan)** | DeepSeek-V4.1-Flash-1017 [AA v5 32,6 = 55% Opus 5.5 · 8,5 bit, 508,4 GB, ~18 tok/s, hibrid GPU+RAM] – fő modell – `unsloth/DeepSeek-V4.1-Flash-1017-GGUF UD-Q8_K_XL/*`<br>Qwen3.8-Flash-Next abliterated v2 (huihui GGUF) [AA v5 ~27,2 = ~46% Opus 5.5 · 4,5 bit, 93,7 GB, ~49 tok/s, csak CPU] – partner (cenzúrázatlan) – `huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF unsloth-UD-IQ4_XS/*`<br>Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui) [AA v5 ~8,0 = ~14% Opus 5.5 · 4,5 bit, 21,2 GB, ~71 tok/s, csak CPU] – gyors segéd / router – `llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf`<br>+ RAG-embedding: `gpustack/bge-m3-GGUF *Q8_0*` (0,6 GB). Összesen ~721 GB |
 
-#### Linux szerver – 8× H200 141 GB (tensor parallel)
+##### Linux szerver – 8× H200 141 GB (tensor parallel)
 
 *Modellnek jutó memória: ~2050 GB · vLLM/SGLang TP=8; az összesített sávszélesség ~60%-át számolom (kommunikációs veszteség).*
 

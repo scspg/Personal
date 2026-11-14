@@ -4,6 +4,7 @@ import json, glob, sys
 sys.path.insert(0, ".")
 from llm_parse import load_blocks
 from convert_research import load_yaml
+from build import cut
 
 
 OPUS = 59.1        # Claude Opus 5.5 (max) – AA Intelligence Index v5.0.1, 2026-11-12
@@ -47,7 +48,7 @@ def llm_tables(items):
         plats = ", ".join(sorted({v["platform"] for v in g}))
         tiers = sorted({t for v in g for t in v["hw_tiers"]}, key=lambda t: -int(t[1]))
         kind = "cenzúrázatlan" if h["cat"] == "ai_models_uncensored" else "alap"
-        rows.append(f"| {esc(name)} | {kind} | {esc(h.get('released'))[:10]} | {est}{aa} | {est}{pct(aa)} | {esc(h.get('license'))[:24]} | "
+        rows.append(f"| {esc(name)} | {kind} | {esc(cut(h.get('released'), 10))} | {est}{aa} | {est}{pct(aa)} | {esc(cut(h.get('license'), 24))} | "
                     f"{gb(g[0]['bytes'])} – {gb(g[-1]['bytes'])} | {len(g)} | {plats} | {tiers[0]}–{tiers[-1]} | `{h['group']}` |")
         det = [f"<details><summary><b>{esc(name)}</b> – {len(g)} változat</summary>\n",
                "| id | Fájl / repó | Méret | Bit | Min. memória (≈×1,15) | HW | Platform | Letöltés |", "|---|---|---|---|---|---|---|---|"]
@@ -67,8 +68,8 @@ def timeline():
     fr = load_blocks("research/llm_frontier.md.txt")[0]
     rows = ["| Gyártó | Legújabb nyílt modell | Kiadva (HF) | Paraméter (össz./aktív) | Kontextus | Licenc |", "|---|---|---|---|---|---|"]
     for m in fr:
-        rows.append(f"| {esc(m.get('org'))} | [{esc(m.get('name'))}]({m.get('hf_repo')}) | {esc(m.get('released'))[:22]} | "
-                    f"{esc(m.get('params_total'))[:40]} / {esc(m.get('params_active'))[:20]} | {esc(m.get('context'))} | {esc(m.get('license'))[:20]} |")
+        rows.append(f"| {esc(m.get('org'))} | [{esc(m.get('name'))}]({m.get('hf_repo')}) | {esc(cut(m.get('released'), 22))} | "
+                    f"{esc(cut(m.get('params_total'), 40))} / {esc(cut(m.get('params_active'), 20))} | {esc(m.get('context'))} | {esc(cut(m.get('license'), 20))} |")
     return "\n".join(rows)
 
 
@@ -79,7 +80,7 @@ def runtimes():
     for r in rts:
         tiers = r.get("tiers")
         tiers = ", ".join(map(str, tiers)) if isinstance(tiers, list) else esc(tiers)
-        rows.append(f"| **{esc(r.get('name'))}** | {esc(r.get('repo'))[:90]} | {esc(r.get('version'))[:50]} | {tiers} | {esc(r.get('notes'))[:160]} |")
+        rows.append(f"| **{esc(r.get('name'))}** | {esc(cut(r.get('repo'), 90))} | {esc(cut(r.get('version'), 50))} | {tiers} | {esc(cut(r.get('notes'), 160))} |")
     return "\n".join(rows)
 
 
@@ -328,10 +329,10 @@ def uncensored_ranking(items):
         size = f"{gb(vs[0]['bytes'])} – {gb(vs[-1]['bytes'])}" if vs else "–"
         low = r["lowest"]
         lowtxt = f"{low}: `{r['best'][low]['download'].get('repo','')}` {r['best'][low]['download'].get('include') or ''} ({gb(r['best'][low]['bytes'])})" if low else "csak szerver / MLX"
-        out.append(f"| {n} | **[{esc(rname)}]({repo})** | `{esc(m.get('base'))}` ({esc(m.get('base_created'))}) | {esc(m.get('params'))[:45]} | "
+        out.append(f"| {n} | **[{esc(rname)}]({repo})** | `{esc(m.get('base'))}` ({esc(m.get('base_created'))}) | {esc(cut(m.get('params'), 45))} | "
                    f"{('' if any(k in slug(m['name']) for k in MEASURED) else '~')}{r['aa'] if r['aa'] is not None else '?'} | "
                    f"**{'~' if r['uest'] else ''}{r['uaa']}** | **{'~' if r['uest'] else ''}{pct(r['uaa'])}** | × {r['ratio']:.3g} ({esc(r['why'])}) | {esc(r['meth'])} | {esc(r['sc'].get('uncensored'))} | {esc(r['sc'].get('multilingual_hu'))} | "
-                   f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(m.get('license'))[:28]} |")
+                   f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(cut(m.get('license'), 28))} |")
     out += ["",
             "**Hogyan olvasd:**",
             "- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.",
@@ -454,7 +455,7 @@ def manual_section(items):
             continue
         out += [f"### {title}", "", "| T | Pont | Név | Mire jó | Ár | Link |", "|---|---|---|---|---|---|"]
         for i in rows:
-            out.append(f"| {i['tier']} | {sc(i)} | **{esc(i.get('name'))}** | {esc(i.get('desc_hu'))[:180]} | {esc(i.get('price'))[:40]} | "
+            out.append(f"| {i['tier']} | {sc(i)} | **{esc(i.get('name'))}** | {esc(cut(i.get('desc_hu'), 180))} | {esc(cut(i.get('price'), 40))} | "
                        f"[link]({i.get('info_url') or (i.get('download') or {}).get('url') or ''}) |")
         out.append("")
     return "\n".join(out)
@@ -498,8 +499,8 @@ def web_section():
     for k, ts in by.items():
         out += [f"#### {kinds.get(k, k)}", "", "| Eszköz | Verzió (dátum) | Hozzáférés / ár | Karbantartott | Telepítés | Mire jó |", "|---|---|---|---|---|---|"]
         for t in ts:
-            out.append(f"| **[{esc(t.get('name'))}]({str(t.get('repo_or_url') or '').split()[0]})** | {esc(t.get('latest_version'))[:50]} | "
-                       f"{esc(t.get('access'))}: {esc(t.get('price'))[:60]} | {esc(t.get('maintained'))[:40]} | `{esc(t.get('install'))[:80]}` | {esc(t.get('strengths_hu'))[:150]} |")
+            out.append(f"| **[{esc(t.get('name'))}]({str(t.get('repo_or_url') or '').split()[0]})** | {esc(cut(t.get('latest_version'), 50))} | "
+                       f"{esc(t.get('access'))}: {esc(cut(t.get('price'), 60))} | {esc(cut(t.get('maintained'), 40))} | `{esc(cut(t.get('install'), 80))}` | {esc(cut(t.get('strengths_hu'), 150))} |")
         out.append("")
     out += ["### 9.3 Minimális kódminták (Python)", "",
             "```python\n# 1) curl_cffi – böngésző-TLS-t utánzó letöltés (pip install -U curl_cffi)\nimport curl_cffi\n"
@@ -558,7 +559,7 @@ def device_section():
            "**Hardveradatok és feltételezések:**",
            "- **MS-S1 MAX-P495 és ZBook Ultra G3a:** 192 GB LPDDR5X; a GPU-nak legfeljebb 160 GB adható (gyártói adat). A ~256–273 GB/s sávszélességet a memóriasebességből és a 256 bites buszból számoltam.",
            "- **RTX 6090:** még nincs bejelentve. A pletykák szerint 32 GB GDDR7 és ~1,79 TB/s.",
-           "- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért három forgatókönyvvel számolok: 96, 128 és 192 GB.",
+           "- **Következő generációs RTX Pro:** semmilyen hivatalos adat nincs róla, ezért a kalkulátor három forgatókönyvvel számol: 96, 128 és 192 GB.",
            "- **Pavilion 15-bc504ur:** az i5-9300H + GTX 1050 4 GB a bc504TX testvérmodell adatlapjából jön.",
            "- **Telefonok:** a modellnek jutó memória becslés (az OS és az appok levonva).",
            "- **Klaszter (2 vagy 4 MS-S1):** llama.cpp RPC vagy exo pipeline-párhuzamosítás USB4 v2 (80 Gbps) gyűrűn. A kapacitás összeadódik, a sebesség nagyjából egy gépé, plusz ~3 ms hálózati késleltetés gépenként.", ""]

@@ -116,7 +116,9 @@ def _clean_null(d):
 EXTRA_DESC = {
     "llm-gemma-4-e2b-it-ultra-uncensored-heretic-": "Gemma 4 E2B (kb. 2 milliárd effektív paraméter) Heretic-eljárással cenzúrázatlanított változata. Telefonon és 8 GB-os laptopon is gyorsan fut; tudása szerény, egyszerű kérdés-válaszra, fordításra és vázlatírásra jó.",
 }
-EXTRA_SIZE = {"oss-openfda": 3_000_000_000}   # becsült: drug/label + event részhalmaz zip JSON
+EXTRA_SIZE = {"oss-openfda": 3_000_000_000}
+# a kutatás a teljes tartalmas telepítést (2 TB) írta – a tartalom (ZIM, Kolibri, OSM) külön tételként szerepel, itt csak a telepítő kell
+SIZE_OVERRIDE = {"oss-internet-in-a-box": 50_000_000}   # becsült: drug/label + event részhalmaz zip JSON
 
 
 def apply(items):
@@ -137,6 +139,9 @@ def apply(items):
             it["lang"] = "multi" if "," in str(it.get("lang")) else "en"
         if not (it.get("desc_hu") or "").strip() and it.get("group") in EXTRA_DESC:
             it["desc_hu"] = EXTRA_DESC[it["group"]]
+        if it["id"] in SIZE_OVERRIDE:
+            it.pop("bytes", None); it["bytes_est"] = SIZE_OVERRIDE[it["id"]]
+            it["size_human"] = "~20–50 MB (csak a telepítő; a tartalom a katalógus ZIM-, Kolibri- és térképtételeiből jön)"
         if it["id"] in EXTRA_SIZE and not it.get("bytes"):
             it["bytes_est"] = EXTRA_SIZE[it["id"]]
         p = PATCH.get(it["id"])

@@ -57,10 +57,10 @@ PRESETS = {
  # telefonok
  "s24-ultra": dict(name="Samsung Galaxy S24 Ultra (12 GB, Snapdragon 8 Gen 3)", kind="telefon", unified=12, unified_usable=0.62,
                    unified_bw=68, formats="any,android", fix_ms=25, min_tps=4,
-                   note="Android: PocketPal / ChatterUI (GGUF). Kb. 7,5 GB jut a modellnek. Sávszélesség ~68 GB/s (LPDDR5X, becslés)."),
+                   note="Android: PocketPal / ChatterUI (GGUF). Sávszélesség ~68 GB/s (LPDDR5X, becslés)."),
  "iphone-15-pro": dict(name="iPhone 15 Pro (8 GB, A17 Pro)", kind="telefon", unified=8, unified_usable=0.62, unified_bw=51,
                        formats="any,mac", fix_ms=25, min_tps=4,
-                       note="iOS: PocketPal / LLM Farm (GGUF), Locally AI (MLX). Kb. 5 GB jut a modellnek (iOS app-memórialimit)."),
+                       note="iOS: PocketPal / LLM Farm (GGUF), Locally AI (MLX). Az iOS app-memórialimit miatt kevesebb jut a modellnek."),
  # laptopok
  "pavilion-8": dict(name="HP Pavilion 15-bc504ur (8 GB DDR4, GTX 1050 4 GB) – mostani", kind="laptop", vram=4, vram_bw=112,
                     ram=8, ram_usable=0.6, ram_bw=21, formats="any", fix_ms=15, min_tps=4,
@@ -354,7 +354,7 @@ def report(dev, res, md=False):
     out = []
     if md:
         cap = dev.capacity()
-        out.append(f"#### {dev.name}\n\n*Modellnek jutó memória: ~{hu(cap, 1 if cap < 20 else 0)} GB · {dev.note}*\n")
+        out.append(f"##### {dev.name}\n\n*Modellnek jutó memória: ~{hu(cap, 1 if cap < 20 else 0)} GB · {dev.note}*\n")
         out.append("| Változat | Modell(ek) – kvant, méret, becsült sebesség, elhelyezés, letöltés |\n|---|---|")
         for k in ("V1", "V2", "V3", "V4"):
             r = res[k]
