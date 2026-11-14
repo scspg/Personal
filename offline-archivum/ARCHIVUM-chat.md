@@ -365,3 +365,42 @@ A `llm_calc.py` (**12. fejezet**) bármely eszközre kiszámolja a négy változ
    - naplózd a forrást, a dátumot, a SHA-256-ot és a licencet.
 7. **Elavult, modern Cloudflare ellen nem működik:** cloudscraper, puppeteer-extra-plugin-stealth, undetected-chromedriver, playwright-stealth, hrequests.
 8. **MITM (TLS-t bontó) vállalati proxy mögött** a TLS-utánzás hatástalan. Ilyenkor böngésző vagy másik hálózat kell.
+
+## Mindenre a legjobb nyílt forráskódú szoftver és modell (tömören)
+
+> Kategóriánként a legfontosabbak, prioritási sorrendben. Repólink, verzió, licenc, méret és alternatívák: `ARCHIVUM.md` 5b fejezet, illetve a HTML „Szoftverek és modellek” füle.
+
+- **3D-nyomtatható tárgyak:** e-NABLE Hub, Printables, NIH 3D, Thingiverse, MyMiniFactory
+- **Adathalmazok:** Magyar Wikipédia parquet, Angol Wikipédia parquet, OpenStax tankönyvek szövege, PlantVillage növénybetegség-képek, Pl@ntNet-300K képadatkészlet, Wikiforrás magyar + angol, FineWeb-Edu sample-10BT, FineWeb-2 (+8)
+- **Gyűjtőlisták (awesome):** awesome-open-hardware, awesome-selfhosted, sindresorhus/awesome, awesome-sysadmin, awesome-public-datasets
+- **Modellek: OCR, dokumentum:** Tesseract tessdata_best, Datalab Indra OCR, PaddleOCR-VL 1.6, Docling layout + TableFormer modellek, GLM-OCR
+- **Modellek: beszéd (STT/TTS):** whisper.cpp ggml, Piper TTS magyar hangok, NVIDIA Parakeet-TDT 0.6B v3, faster-whisper large-v3-turbo, Qwen3-ASR 0.6B, Coqui XTTS-v2
+- **Modellek: embedding, RAG:** BAAI bge-m3, EmbeddingGemma 2, Qwen3-Embedding 0.6B, BAAI bge-reranker-v2-m3
+- **Modellek: fordítás:** NLLB-200 distilled 600M, MADLAD-400 3B MT, OPUS-MT tc-big hu→en, Argos Translate en↔hu csomagok
+- **Modellek: hang:** BirdNET v2.4, Silero VAD, Demucs v4 hangforrás-szétválasztás
+- **Modellek: képfelismerés:** Pl@ntNet PlantCLEF2024 ViT-B DINOv2, BioCLIP 2, FungiTastic gombahatározó ViT-B/16, RF-DETR Medium, SAM 2.1 Hiera-Large, Microsoft Florence-2 base, Depth Anything 3
+- **Modellek: képgenerálás:** Real-ESRGAN ncnn-vulkan, FLUX.2 [klein] 4B
+- **Modellek: orvosi képelemzés:** TorchXRayVision, Google MedSigLIP-448, SkinTag SigLIP bőrelváltozás-osztályozó, Fundus diabéteszes retinopátia osztályozó
+- **Platformok, gyűjtőhelyek:** Zenodo, Instructables, OSHWA Open Source Hardware tanúsított lista, Hackaday.io, Kaggle Datasets, Codeberg és GitLab.com, ModelScope, SourceForge (+1)
+- **Szoftver: 3D-nyomtatás:** Klipper, OctoPrint, Mainsail
+- **Szoftver: CAD/CAM, mérnöki:** EPANET, grblHAL, pcb2gcode, LibreCAD, Universal G-code Sender, code_aster, OpenModelica, OpenFOAM
+- **Szoftver: automatizálás, energia:** mpp-solar, OpenEMS, Node-RED, OpenPLC Runtime v3, Eclipse Mosquitto, Frigate NVR, Zigbee2MQTT, Grafana OSS (+1)
+- **Szoftver: biztonság, titkosítás:** OpenSSH, GnuPG, KeePassXC, cryptsetup, Vaultwarden, VeraCrypt, Tor, ClamAV
+- **Szoftver: egészségügy:** Community Health Toolkit, OpenMRS 3, GNU Health, DHIS2, OpenELIS Global, openFDA, Orthanc DICOM szerver, OHIF Viewer
+- **Szoftver: elektronika, beágyazott:** MicroPython, ESPHome, PlatformIO Core, ESP-IDF, ngspice, sigrok / PulseView, Zephyr RTOS
+- **Szoftver: fejlesztés:** Git, GCC, SQLite, CPython, Zeal, VSCodium, Rust toolchain, Go (+1)
+- **Szoftver: fordítás, OCR, beszéd, keresés:** Tesseract OCR, LibreTranslate, whisper.cpp, Piper TTS, Meilisearch, SearXNG
+- **Szoftver: hálózat:** OpenWrt, Syncthing, OPNsense, rsync, WireGuard, Pi-hole, Transmission
+- **Szoftver: iroda, dokumentumok:** OsmAnd, LibreOffice, QGIS, FreeCAD, KiCad, PrusaSlicer, calibre, KOReader (+5)
+- **Szoftver: kommunikáció, mesh:** Meshtastic, Reticulum Network Stack, Briar, Matrix Synapse + Element, Asterisk, ejabberd + Conversations, Mumble, Delta Chat (+2)
+- **Szoftver: mezőgazdaság:** farmOS, OpenSprinkler firmware, WeeWX, FarmBot, Grocy
+- **Szoftver: média, grafika:** FFmpeg, VLC media player, Jellyfin, Inkscape, OBS Studio, Blender, Audacity, GIMP (+2)
+- **Szoftver: oktatás:** Anki, GCompris, Scratch 3
+- **Szoftver: operációs rendszer, rendszereszközök:** Debian GNU/Linux, Ventoy, Alpine Linux, SystemRescue, F-Droid, aptly, LineageOS, Clonezilla (+1)
+- **Szoftver: rádió, SDR:** CHIRP, Pat, fldigi, JS8Call, Dire Wolf, rtl-sdr, FreeDV, GNU Radio (+2)
+- **Szoftver: szerver, virtualizáció:** OpenEMR, Proxmox VE, LinuxCNC, Home Assistant, Arduino IDE, Forgejo, QEMU/KVM, Caddy (+2)
+- **Szoftver: tudomány, adat:** Miniforge + SciPy stack, Fiji, GNU Octave, R + RStudio Desktop, Stellarium, Cantera, Maxima, JupyterLab
+- **Szoftver: tudásszerverek, wiki:** kiwix-tools, Internet-in-a-Box, Kolibri, MediaWiki, Moodle, BookStack
+- **Szoftver: tárolás, mentés:** OpenZFS, restic, TrueNAS SCALE, rclone, par2cmdline, Nextcloud, TestDisk & PhotoRec
+- **Szoftver: térkép, navigáció:** Organic Maps, osmium-tool, Planetiler, GraphHopper, Martin csempeszerver, Nominatim
+- **Szoftver: üzlet, közösség:** ODK, InvenTree, Ushahidi Platform, GnuCash, ERPNext, Koha ILS, Decidim, Gibbon (+1)
