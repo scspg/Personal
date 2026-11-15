@@ -11,7 +11,7 @@ ellenőrzöd és rendszerezed a tudásanyagot egy meghajtóra, a felhasználó k
 FELHASZNÁLÓI KERETEK (töltsd ki / kérdezz rá, ha hiányzik):
 - Cél meghajtó / könyvtár: <<pl. /media/usb/archivum>>
 - Tárhely-keret: <<pl. 512GB>>  (ha nincs megadva: a `df -B1` szerinti szabad hely legyen a --budget; a szkript maga hagy 8% tartalékot, ne vonj le még egyszer)
-- Telepítő-platformok: <<linux,win,android>> (alap; macOS-hez futtatás előtt: export GH_ASSET_EXCL='(freebsd|openbsd|aarch64|arm64|armv[0-9]|riscv|i[3-6]86)')
+- Telepítő-platformok: <<linux,win,android>> (alap; macOS-hez futtatás előtt: export GH_PLATFORMS=linux,win,apk,mac)
 - Hardver az LLM-hez: <<T1 szerver (≥1 TB) | T2 munkaállomás 256–1000 GB | T3 gamer PC 24–32 GB VRAM + RAM | T4 laptop | T5 telefon | nincs>>  (ha "nincs": hagyd el a --hw és --mem kapcsolót)
 - LLM-re használható memória (RAM+VRAM vagy unified): <<pl. 160GB>>
 - Platform: <<mac | server | android – vesszővel; üresen hagyva = csak GGUF/Ollama, ekkor a --platform kapcsoló elmarad>>
@@ -37,7 +37,7 @@ MUNKAMENET:
 4. Előellenőrzés (utána a futtatás: `DEST=<cél> nohup bash dl.sh > dl.out 2>&1 &` – újrafuttatás = folytatás; a FAIL/TODO sorok a `<cél>/_log_*.txt`-ben):
    a) szabad hely (`df -B1 <cél>`) ≥ terv + 5%;
    b) a fájlrendszer NEM FAT32 (`df -T` / `lsblk -f`). Ha az, állj meg és szólj;
-   c) eszközök: curl, wget vagy aria2c (ajánlott), sha256sum, git; LLM-hez `hf` (pip install -U huggingface_hub) vagy ollama; archive.org-hoz `ia` (pip install internetarchive).
+   c) eszközök: curl, wget vagy aria2c (ajánlott), sha256sum, git, python3, jq, par2; S3-as tételekhez aws (pip install awscli); LLM-hez `hf` (pip install -U huggingface_hub) vagy ollama; archive.org-hoz `ia` (pip install internetarchive).
 5. Letöltés PRIORITÁSI SORRENDBEN (tier 0 → 5), hogy egy megszakadt letöltés után is a legfontosabb anyag legyen meg.
    Minden fájl újraindítható legyen (-c / aria2c). Párhuzamosan max. 2-3 nagy letöltés fusson.
    A dl.sh "AGENT-FELADAT" blokkjait (API- vagy OAI-PMH-alapú listagyűjtés) neked kell megírnod és lefuttatnod.
@@ -59,7 +59,7 @@ MUNKAMENET:
 8. Olvasóprogramok: töltsd le a tool-* elemeket (Kiwix desktop/Android, kiwix-tools, VLC, PDF-olvasó,
    llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), Windows/macOS/Linux/Android változatban.
 9. Második példány (ha van második meghajtó – lásd 4c fejezet), ebben a sorrendben:
-   - a forráson a 0–1. szintű mappákra: `(cd <mappa> && par2 create -R -r10 mag.par2 *)` (10% javító paritás);
+   - a forráson a 0–1. szintű mappákra (listájuk: `jq -r '.items[]|select(.tier<=1)|"\(.cat)/\(.id)"' plan.json`): `(cd <mappa> && par2 create -R -r10 mag.par2 *)` (10% javító paritás);
    - a forráson: `(cd <cél> && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256)`;
    - másolás: `rsync -a --checksum <cél>/ <második>/` (más gyártó lemezére; utána leválasztva, Faraday-tasakba);
    - ellenőrzés a másolaton: `(cd <második> && sha256sum -c --quiet MANIFEST.sha256)` – a másolaton a manifestet NE generáld újra.

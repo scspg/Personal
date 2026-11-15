@@ -249,7 +249,7 @@ PATCH5 = {
     "oss-yt-dlp": {"bytes_est": 3_500_000}, "oss-imagemagick": {"bytes_est": 14_000_000}, "oss-openscad": {"bytes_est": 23_100_000}, "oss-wireshark": {"bytes_est": 92_400_000},
     "oss-podman": {"bytes": None, "bytes_est": 21_400_000, "size_status": M + ":sekély klón (du)"},
 }
-MULTI_FILE_DONE |= {"gebco-2026-grid", "freedos-14", "arduino-ide-offline", "kicad-eda-and-libraries", "freecad-and-parts-library"}
+MULTI_FILE_DONE |= {"worldclim-21", "natural-earth", "hydrosheds", "gebco-2026-grid", "freedos-14", "arduino-ide-offline", "kicad-eda-and-libraries", "freecad-and-parts-library"}
 for _k, _v in PATCH5.items():
     _d = PATCH.setdefault(_k, {})
     for _kk, _vv in _v.items():
@@ -337,9 +337,22 @@ for _k, _v in PATCH6.items():
 # --- AI-ágens végső átnézés (2026-11-15) ---
 AGENT_NOTE = "Gyűjteményoldal: a megjegyzésben (notes) leírt módon gyűjtsd ki a fájlokat, majd töltsd le őket; maradj a tétel tervezett méretén belül."
 PATCH7 = {
-    **{i: {"download": {"method": "agent", "note": AGENT_NOTE}} for i in
-       ["where-there-is-no-psychiatrist-2018", "fao-better-farming-series", "attra-ncat-publications"]},
-    "pfaf-plants-for-a-future": {"download": {"method": "agent", "note": "A PFAF adatbázis tükrözése előtt KÉRDEZD MEG AZ EMBERT (a megjegyzés szerint engedélyt kell kérni); robots.txt-et tartsd tiszteletben."}},
+    "where-there-is-no-psychiatrist-2018": {"download": {"method": "agent", "note": "A könyvoldalról gyűjtsd ki a 29 fejezet-PDF linkjét (/core/services/aop-cambridge-core/content/view/…/9781108683302c*_CBO.pdf), majd töltsd le őket.",
+        "seed_urls": ["https://www.cambridge.org/core/books/where-there-is-no-psychiatrist/47578A845CAFC7E23A181749A4190B54"]}},
+    "fao-better-farming-series": {"download": {"method": "agent", "note": "A teljes sorozat HTML-tükre (a CD3WD-ből): https://piku.codeberg.page/better_farming/INDEX.HTML – wget -m -np -k; az FAO EPUB-gyűjteményei: /fileadmin/user_upload/faoweb/e-books/BetterFarming/ (indexoldal nincs).",
+        "seed_urls": ["https://piku.codeberg.page/better_farming/INDEX.HTML", "https://www.fao.org/fileadmin/user_upload/faoweb/e-books/BetterFarming/Food_Crops16.epub"]}},
+    "attra-ncat-publications": {"download": {"method": "agent", "note": "WP REST API: https://www.ncat.org/wp-json/wp/v2/publication?per_page=100&page=N (X-WP-Total 375) → minden kiadvány oldaláról a .pdf linkek.",
+        "seed_urls": ["https://www.ncat.org/wp-json/wp/v2/publication?per_page=100&page=1", "https://www.ncat.org/tools-and-media/?media-type=publication"]}},
+    "pfaf-plants-for-a-future": {"download": {"method": "agent", "note": "A PFAF adatbázis tükrözése előtt KÉRDEZD MEG AZ EMBERT (engedélyt kell kérni a PFAF-tól); robots.txt-et tartsd tiszteletben, lassan (--wait=2).",
+        "seed_urls": ["https://pfaf.org/user/Default.aspx"]}},
+    "esa-worldcover": {"notes": "Csak a magyar csempék (N45/N48 × E015/E018/E021) – lásd a Leírás parancsát; a teljes globális térkép sok TB."},
+    "worldclim-21": {"download": {"method": "http", "urls": [f"https://geodata.ucdavis.edu/climate/worldclim/2_1/base/wc2.1_2.5m_{v}.zip" for v in
+        ("prec", "tmin", "tmax", "tavg", "srad", "wind", "vapr", "bio", "elev")]}, "bytes": 2_791_449_150,
+        "size_status": "measured:2026-11-15:content-length (9 fájl, 2,5 ívperc)", "notes": "A teljes 2,5'-es éghajlati készlet (csapadék, hőmérséklet, sugárzás, szél, páratartalom, 19 bioklimatikus változó, domborzat) – termesztési zónákhoz bőven elég. Nagyobb felbontás (30\") és CMIP6-előrejelzések a forrásoldalon."},
+    "natural-earth": {"notes": "A natural_earth_vector.gpkg.zip az összes vektorréteget tartalmazza (1:10m, 1:50m, 1:110m) egy fájlban. Utolsó kiadás 2022 (v5.1.x), stabil."},
+    "hydrosheds": {"notes": "Európa folyói (HydroRIVERS v1.0, vízhozam-becsléssel és rendűséggel) – törpe vízerőmű helyének kiválasztásához. A tavak (HydroLAKES) és vízgyűjtők (HydroBASINS) a forrásoldalon."},
+    "omsz-mentok-elsosegely": {"notes": "Az oldalon nincs PDF: mentsd el a HTML-t, és nyomtasd ki papírra. Az omsz.hu nem válaszolt, a mentok.hu működik. Egészítsd ki az ERC 2025 laikus irányelvvel (erc-guidelines-2025-layperson) és a Hesperian-könyvekkel.",
+        "download": {"method": "agent", "note": "Az oldal(ak) mentése: wget -p -k <url>, vagy nyomtatás PDF-be", "seed_urls": ["https://www.mentok.hu/ha-baj-van/mit-tegyen-mig-megerkezik-a-mento/"]}},
     "wikem-emergency-medicine-wiki": {"download": {"method": "wget-mirror", "url": "https://www.wikem.org/wiki/Main_Page",
                                                    "wget_args": "-l 4 --reject-regex '(Special:|action=|oldid=|diff=|printable=)'"}},
     "esa-worldcover": {"download": {"method": "agent", "note": "Csak Magyarország csempéi (a teljes globális térkép sokkal nagyobb): aws s3 sync s3://esa-worldcover/v200/2021/map/ <cél> --no-sign-request --exclude '*' --include '*N4[5-8]E01[5-9]*' --include '*N4[5-8]E02[0-2]*'"}},

@@ -420,17 +420,18 @@ GH_RELEASE_SH = [
     '  for a in ${2:+"tags/$2"} ${alt:+"$alt"} latest; do   # a katalógus-verzió tagje (v-vel / nélküle), különben a legutóbbi kiadás',
     '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "https://api.github.com/repos/$1/releases/$a" 2>/dev/null | GH_ITEM_MB="$cap" python3 -c \'import sys, json, re, os',
     'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6; tot = min(float(os.environ.get("GH_RELEASE_MAX_MB", "4000")), float(os.environ.get("GH_ITEM_MB", "4000"))) * 1e6',
-    'ok = re.compile(os.environ.get("GH_ASSET_RE", r"((linux|appimage).*(x86_64|amd64|x64)|(x86_64|amd64|x64).*(linux|appimage|\\.deb$|\\.tar\\.(gz|xz|zst)$)|win(dows)?[-_.]?(x64|x86_64|amd64|64)|(x64|x86_64|amd64).*\\.(exe|msi|zip)$|\\.msi$|win64|\\.apk$)"), re.I)',
+    'ok = re.compile(os.environ.get("GH_ASSET_RE", r"((linux|appimage).*(x86_64|amd64|x64)|(x86_64|amd64|x64).*(linux|appimage|\\.deb$|\\.tar\\.(gz|xz|zst)$)|win(dows)?[-_.]?(x64|x86_64|amd64|64)|(x64|x86_64|amd64).*\\.(exe|msi|zip)$|\\.msi$|win64|\\.apk$|darwin|macos|osx|\\.dmg$|\\.pkg$)"), re.I)',
     'bad = re.compile(r"(debug|symbols|dbgsym|pdbs?\\b|[-_.]reh[-_.]|server|[-_.]web[-_.]|sha\\d+|checksum|\\.sig$|\\.asc$|\\.txt$|\\.md5$|\\.blockmap$|\\.ya?ml$|\\.json$|\\.zsync$)", re.I)',
     'arch = re.compile(os.environ.get("GH_ASSET_EXCL", r"(darwin|macos|apple|osx|freebsd|openbsd|netbsd|aarch64|arm64|armv\\d|armhf|riscv|s390|ppc|mips|i[3-6]86)"), re.I)   # más platform (APK kivétel)',
     'def plat(n):',
     '    n = n.lower()',
-    '    return "apk" if n.endswith(".apk") else "win" if re.search(r"win|\\.exe$|\\.msi$", n) else "linux"',
+    '    return "apk" if n.endswith(".apk") else "mac" if re.search(r"darwin|macos|osx|\\.dmg$|\\.pkg$", n) else "win" if re.search(r"win|\\.exe$|\\.msi$", n) else "linux"',
     'def prio(n):   # platformon belül a fő telepítő: Windows setup.exe > msi > zip/7z; Linux AppImage > tar > deb',
     '    n = n.lower()',
     '    return 3 if re.search(r"(setup|install).*\\.exe$|\\.appimage$", n) else 2 if re.search(r"\\.exe$|\\.msi$|\\.tar\\.(gz|xz|zst)$|universal.*\\.apk$", n) else 1',
-    'c = [a for a in d.get("assets", []) if ok.search(a["name"]) and not bad.search(a["name"]) and (a["name"].lower().endswith(".apk") or not arch.search(a["name"])) and a.get("size", 0) <= mx]',
-    'for p in ("linux", "win", "apk"):   # platformonként egy fő telepítő, ami még belefér a keretbe',
+    'P = os.environ.get("GH_PLATFORMS", "linux,win,apk").split(",")',
+    'c = [a for a in d.get("assets", []) if ok.search(a["name"]) and not bad.search(a["name"]) and (a["name"].lower().endswith(".apk") or (plat(a["name"]) == "mac" and "mac" in P) or not arch.search(a["name"])) and a.get("size", 0) <= mx]',
+    'for p in P:   # platformonként egy fő telepítő, ami még belefér a keretbe (macOS: GH_PLATFORMS=linux,win,apk,mac)',
     '    for a in sorted([a for a in c if plat(a["name"]) == p], key=lambda a: (-prio(a["name"]), -a.get("size", 0))):',
     '        if a.get("size", 0) <= tot: tot -= a.get("size", 0); print(a["browser_download_url"]); break\' 2>/dev/null) && [ -n "$list" ] && break',
     '  done; [ -n "$list" ] || return 1',
@@ -446,12 +447,12 @@ def write_sh(plan, path, dest):
     plan_ids = {v["id"] for v in plan}
     need_tools = sorted({"curl"} | {t for m, ts in {"kiwix": ["curl"], "http": ["aria2c|wget"], "wget-mirror": ["wget"], "rsync": ["rsync"],
                          "git": ["git", "python3"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
-                         "torrent": ["aria2c"]}.items() if m in methods for t in ts})
+                         "torrent": ["aria2c"], "agent": ["python3"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
          "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in /*) ;; *) echo "DEST abszolút útvonal legyen (pl. /media/archivum)" >&2; exit 2;; esac',
          'DEST=$(realpath -m -- "$DEST" 2>/dev/null || python3 -c "import os,sys; print(os.path.realpath(sys.argv[1]))" "$DEST")   # ../ és szimlinkek feloldva',
          '_d=$(printf "%s" "$DEST" | tr -s / | sed -e "s#/\\./#/#g" -e "s#/\\.\\$##" -e "s#\\(.\\)/\\$#\\1#")   # //etc, /etc/, /./ → /etc, /',
-         'case "$_d" in ""|/|/bin|/bin/*|/sbin|/sbin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp|/Users|/System|/System/*|/Library|/Applications|"${HOME:-/nonexistent}")',
+         'case "$_d" in ""|/|/bin|/bin/*|/sbin|/sbin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp|/Users|/System|/System/*|/Library|/Applications|/private|/private/etc|/private/etc/*|/private/var|/private/var/*|/private/tmp|"${HOME:-/nonexistent}")',
          '  echo "Hibás célkönyvtár: DEST=\\"$DEST\\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac',
          '_p=$DEST; while [ ! -d "$_p" ]; do _p=$(dirname "$_p"); done; if [ "$(df -P "$_p" 2>/dev/null | awk \'NR==2{print $6}\')" = / ]; then echo "FIGYELEM: $DEST nem külön csatolt meghajtón van – ellenőrizd, hogy nem a rendszerlemezt töltöd-e tele (Ctrl+C 10 mp-en belül)." >&2; sleep 10; fi', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
@@ -499,7 +500,7 @@ def write_sh(plan, path, dest):
         if v.get("notes") and v["download"]["method"] in ("agent", "manual", "wget-mirror"):
             L.append(f"# Megjegyzés: {c(v.get('notes'))[:600]}  (teljes rekord: plan.json → items[id={v['id']}])")
         if v.get("download", {}).get("todo_note"):
-            L.append(f'echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]))} | tee -a "$LOG" "$RUNLOG"')
+            L.append(f'[ -f "{sub}/.done" ] || echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]))} | tee -a "$LOG" "$RUNLOG"')
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
             fl = d.get("flavour") or ""
@@ -507,7 +508,7 @@ def write_sh(plan, path, dest):
             L.append(f'if [ -z "${{REFRESH:-}}" ] && [ -f "{sub}/.ok" ]; then ok {vid}; else')
             L.append(f'U=$(kiwix_latest {q(d["book"])} {q(fl)} {q(d.get("url") or "")})')
             L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --follow-metalink=mem -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
-            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ if [ -n "${{PRUNE:-}}" ]; then find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; else mkdir -p "{sub}/_old"; find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -exec mv -n {{}} "{sub}/_old/" ";"; fi; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
+            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ if [ -n "${{PRUNE:-}}" ]; then find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; elif ls "{sub}"/*.zim 2>/dev/null | grep -qv "${{U##*/}}"; then mkdir -p "{sub}/_old"; find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -exec mv -n {{}} "{sub}/_old/" ";"; echo "FIGYELEM: régi ZIM → {sub}/_old ($(du -sh "{sub}/_old" | cut -f1)); jóváhagyás után PRUNE=1 törli" | tee -a "$LOG"; fi; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
             L.append('fi')
         elif m == "http":
             us = [u for u in (d.get("urls") or [d.get("url")]) if u]
@@ -523,7 +524,7 @@ def write_sh(plan, path, dest):
         elif m == "wget-mirror":
             mink = max(1, int((size_of(v) or 0) / 1000 / 20))   # legalább a tervezett méret ~5%-a jöjjön le, különben részleges tükör
             L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}); '
-                     f'if [ "$(du -sk "{sub}" | cut -f1)" -ge {mink} ]; then ok {vid}; else echo {q("TODO " + v["id"] + " – részleges tükör (a tervezett méret 5%-a alatt): kézzel vagy célzott letöltéssel pótold")} | tee -a "$LOG" "$RUNLOG"; fi')
+                     f'_k=$(du -sk "{sub}" | cut -f1); if [ "$_k" -ge {mink * 10} ]; then ok {vid}; elif [ "$_k" -ge {mink} ]; then echo "TODO {v["id"]} – részleges tükör (${{_k}} KB, a terv 5–50%-a): pótold célzottan" | tee -a "$LOG" "$RUNLOG"; else fail {vid}; fi')
         elif m == "rsync":
             L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {vid} || fail {vid}')
         elif m == "git":
@@ -544,7 +545,7 @@ def write_sh(plan, path, dest):
                 rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
                 cap_mb = max(50, int(((v.get("bytes") or v.get("bytes_est") or 0) * 1.2) / 1e6))   # a tétel tervbe számolt méretén belül
                 todo_txt = "TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB, platformok: linux-x64, win-x64, apk)"
-                todo = f'echo {q(todo_txt)} | tee -a "$LOG" "$RUNLOG"'
+                todo = f'{{ [ -f "{sub}/release/.ok" ] || echo {q(todo_txt)} | tee -a "$LOG" "$RUNLOG"; }}'
                 bi = v.get("binaries_item")
                 if bi and bi in plan_ids:
                     L.append(f'# telepítők: a(z) {c(bi)} tétel már letölti – itt nem ismételjük')
@@ -557,7 +558,8 @@ def write_sh(plan, path, dest):
             rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""
             # hf/huggingface-cli < 1.0: ismételt --include esetén csak az utolsó minta marad → mintánként külön hívás
             calls = [f'hfdl {q(d["repo"])}{rt}' + (f" --include {q(p)}" if p else "") + f' --local-dir "{sub}"' for p in (d.get("include") or [None])]
-            L.append("{ " + " && ".join(calls) + f"; }} && ok {vid} || fail {vid}")
+            hfmin = max(1, int((size_of(v) or 0) / 1000 / 2))   # legalább a tervezett méret fele legyen a mappában (üres minta → nem hamis OK)
+            L.append("{ " + " && ".join(calls) + f'; }} && [ "$(du -sk "{sub}" | cut -f1)" -ge {hfmin} ] && ok {vid} || fail {vid}')
         elif m == "ollama":
             tag = d["tag"].split(" / ")[0].split()[0]
             L.append(f'ollama_pull {q(tag)} "{sub}" && ok {vid} || fail {vid}   # ideiglenes ollama-szerver, a modell a $DEST alá kerül')
@@ -577,7 +579,7 @@ def write_sh(plan, path, dest):
             L.append(f'# Leírás: {c(d.get("note"))}')
             for u in d.get("seed_urls") or []:
                 L.append(f'#   kiinduló URL: {c(u)}')
-            L.append(f'echo "TODO {v["id"]}" | tee -a "$LOG" "$RUNLOG"')
+            L.append(f'[ -f "{sub}/.done" ] || echo "TODO {v["id"]} (kész után: touch {sub}/.done)" | tee -a "$LOG" "$RUNLOG"')
         else:   # s3, jigdo, …: nincs megbízható automatikus parancs
             L.append(f'# KÉZI ({m}): {c(d.get("note"))} {c(d.get("url"))}')
             L.append(f'echo "TODO {v["id"]} ({m})" | tee -a "$LOG" "$RUNLOG"')
