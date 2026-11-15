@@ -1278,10 +1278,10 @@
    "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
     "elemek": [
      "1. (online): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
-     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-dokkoló kell) (ugyanaz a gyártó nem ajánlott); NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
+     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-HBA vagy SAS-dokkoló kell, becsült 40–100 ezer Ft) – más gyártó; egy második IronWolf Pro 24TB olcsóbb, de azonos gyártó, ezért nem ajánlott. NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
-    "osszesen": "~1 040 000–1 125 000 Ft",
+    "osszesen": "~1 167 000–1 227 000 Ft (1 126 886 Ft + SAS-HBA/dokkoló)",
     "megjegyzes": "A teljes 22,5 TB-hoz kevés (24 TB-on 94%-os telítettség); a teljes archívumhoz a 28 TB-os kételemes változat kell (~1,2 M Ft)."
    },
    "~3–3,7 millió Ft – 64–66 TB, NAS + offline szett": {

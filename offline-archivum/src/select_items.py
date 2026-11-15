@@ -48,7 +48,7 @@ def human(b):
         return "?"
     for u, f in (("TB", 1e12), ("GB", 1e9), ("MB", 1e6), ("KB", 1e3)):
         if b >= f:
-            return f"{b / f:.2f} {u}"
+            return f"{b / f:.2f} {u}".replace(".", ",")
     return f"{b} B"
 
 
@@ -400,6 +400,20 @@ def main():
         print(f"Letöltő szkript: {a.emit_sh}  (futtatás előtt nézd át!)")
 
 
+GH_RELEASE_SH = [
+    'gh_release(){ # owner/repo tag célkönyvtár – GitHub-kiadás telepítői (Windows/Linux/macOS/Android), méretkorláttal',
+    '  local api="https://api.github.com/repos/$1/releases/tags/$2" list; [ -n "$2" ] || api="https://api.github.com/repos/$1/releases/latest"',
+    '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "$api" 2>/dev/null | python3 -c \'import sys, json, re, os',
+    'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6',
+    'ok = re.compile(os.environ.get("GH_ASSET_RE", r"(x86_64|amd64|x64|win64|windows|linux|\\.exe$|\\.msi$|\\.appimage$|\\.apk$|\\.dmg$|macos|darwin|arm64|aarch64|universal)"), re.I)',
+    'bad = re.compile(r"(debug|symbols|dbgsym|\\.sig$|\\.asc$|\\.sha\\d*(sum)?$|\\.blockmap$|\\.ya?ml$|\\.json$)", re.I)',
+    'for a in d.get("assets", []):',
+    '    if ok.search(a["name"]) and not bad.search(a["name"]) and a.get("size", 0) <= mx: print(a["browser_download_url"])\' 2>/dev/null) || return 1',
+    '  [ -n "$list" ] || return 1',
+    '  mkdir -p "$3"; local u r=0; for u in $list; do fetch "$u" "$3" || r=1; done; return $r; }',
+]
+
+
 def write_sh(plan, path, dest):
     q = shlex.quote
     c = lambda x: str(x or "").replace("\r", " ").replace("\n", " ")       # kommentbe biztonságos
@@ -409,7 +423,8 @@ def write_sh(plan, path, dest):
                          "git": ["git"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
-         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in ""|/|/bin*|/boot*|/etc*|/usr*|/proc*|/sys*|/dev*) echo "Hibás célkönyvtár: DEST=\"$DEST\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
+         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in ""|/|/bin|/bin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp) echo "Hibás célkönyvtár: DEST=\"$DEST\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac',
+         'if command -v mountpoint >/dev/null && ! mountpoint -q "$DEST" && ! mountpoint -q "$(dirname "$DEST")"; then echo "FIGYELEM: $DEST nem külön csatolt meghajtón van – ellenőrizd, hogy nem a rendszerlemezt töltöd-e tele (Ctrl+C 10 mp-en belül)." >&2; sleep 10; fi', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
          'anyhave(){ local t; for t in ${1//|/ }; do have "$t" && return 0; done; return 1; }',
          "for t in " + " ".join(q(t) for t in need_tools) + '; do anyhave "$t" || echo "FIGYELEM: hiányzó eszköz: $t – az ezt igénylő tételek FAIL-lel végződnek"; done',
@@ -440,6 +455,7 @@ def write_sh(plan, path, dest):
          '  if [ -n "${BUNDLE:-}" ]; then   # BUNDLE=1: +1x hely; sekély tükörből nem klónozható bundle lenne',
          '    if [ -f "$g/shallow" ]; then echo "FIGYELEM: $g sekély – a BUNDLE-höz GIT_FULL=1 kell"; else git -C "$g" bundle create "${g%.git}.bundle" --all; fi',
          '  fi; }',
+         *GH_RELEASE_SH,
          'hfdl(){ if have hf; then hf download "$@"; elif have huggingface-cli; then huggingface-cli download "$@"; else return 127; fi; }',
          'kiwix_latest(){ # book flavour fallback_url -> legfrissebb URL az OPDS katalógusból (GNU és BSD sed-del is)',
          '  local u; u=$(curl -fsSL "https://library.kiwix.org/catalog/v2/entries?name=$1&count=50" 2>/dev/null \\',
@@ -488,8 +504,15 @@ def write_sh(plan, path, dest):
             elif calls:   # több repó: tételenként egy ítélet
                 L.append("_r=0; " + "; ".join(f"{c_} || _r=1" for c_ in calls) + f"; [ $_r = 0 ] && ok {vid} || fail {vid}")
             if d.get("release_url"):
-                L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
-                L.append(f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"')
+                gh = re.match(r"https://github\.com/([\w.-]+/[\w.-]+?)(?:\.git)?/?$", (d.get("repos") or [""])[0] or "")
+                rtag = d.get("tag") or v.get("latest_version") or ""
+                rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
+                todo = f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"'
+                if gh:      # GitHub: a kiadás telepítői automatikusan (GH_ASSET_MAX_MB, GH_ASSET_RE állítható); ha nem sikerül: AI-feladat
+                    L.append(f'gh_release {q(gh.group(1))} {q(rtag)} "{sub}/release" || {todo}')
+                else:
+                    L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
+                    L.append(todo)
         elif m == "hf":
             rt = " --repo-type dataset" if d.get("repo_type") == "dataset" else ""
             # hf/huggingface-cli < 1.0: ismételt --include esetén csak az utolsó minta marad → mintánként külön hívás

@@ -39,7 +39,7 @@ def lab(k):
 def hunum(t):
     """angol tizedespont → vessző, csak mértékegység / százalék előtt (típusszámokat nem bánt)."""
     import re
-    t = re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|GbE|EUR|€|USD|-szer|x\b|°C|év))", r"\1,\2\3", t)
+    t = re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|GbE|EUR|€|USD|DWPD|PBW|-szer|x\b|°C|év))", r"\1,\2\3", t)
     return re.sub(r"(?<![\w.])(\d+)\.(\d+)(?=\s?(?:[-–/]\s?\d+(?:[.,]\d+)?\s?(?:TB|GB|GbE)))", r"\1,\2", t)   # „30.72 / 61,44TB”, „1-2.5 GbE” bal oldala
 
 
@@ -188,7 +188,7 @@ def section(plans):
         for p in sorted(by[k], key=lambda p: (p.get("ar_huf") is None, (p.get("ar_huf") or 0) / max(float(p.get("kapacitas_tb") or 1), 0.001))):
             pro = "; ".join((p.get("elonyok") or [])[:2])
             con = "; ".join((p.get("hatranyok") or [])[:2])
-            md.append(f"| **{_e(p.get('nev'))}** | {_e(p.get('kapacitas_tb') or '–')} | {dur(p.get('tartossag'))} | {speed(p.get('sebesseg_mb_s'))} | "
+            md.append(f"| **{_e(p.get('nev'))}** | {(str(p['kapacitas_tb']).replace('.', ',') if p.get('kapacitas_tb') is not None else '–')} | {dur(p.get('tartossag'))} | {speed(p.get('sebesseg_mb_s'))} | "
                       f"{ft(p.get('ar_huf'))} | {_e(p.get('ar_per_tb') or '–')} | {src_tag(p)} | {SZINT.get(p.get('ajanlas_szint'), '–')} | {links(p)} | "
                       f"+ {_e(pro)}<br>− {_e(con)} |")
         md.append("")

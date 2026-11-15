@@ -385,7 +385,7 @@ def main():
              "`license`, `bytes` (mért vagy hivatalos), `bytes_est` (becsült), `size_status` (`measured|estimated|official:<dátum>:<forrás>`), `format`, `info_url`, "
              "`download` {method: kiwix | http | archive.org | git | hf | ollama | torrent | rsync | wget-mirror | jigdo | agent | manual, …}, `url_status`, "
              "`scores` {S,R,A,U,Q,O} (0–10), `requires`, `subsumed_by`, `hw_tiers` (LLM: T1–T5), `notes`; szoftver- és modelltételeknél még `need_hu` (milyen igényre), "
-             "`alternatives`, `latest_version`, `release_url`; LLM-eknél `llm_aa`, `llm_bits`, `active_b`, `moe`, `platform`.\n\n```jsonl\n" + jsonl + "\n```\n",
+             "`alternatives`, `latest_version`, `release_url`; LLM-eknél `llm_aa`, `llm_aa_est` (becsült-e), `llm_bits`, `active_b`, `moe`, `platform`, `released`; ritkán `size_human` (szöveges méret, ha nincs mért), `hw_note`.\n\n```jsonl\n" + jsonl + "\n```\n",
              "---\n\n## 11. select_items.py\n\n```python select_items.py\n" + sel_src + "```\n",
              "---\n\n## 12. llm_calc.py\n\nEszköz-kalkulátor (lásd 6.10). Kibontás: `sed -n '/^```python llm_calc.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > llm_calc.py`\n\n```python llm_calc.py\n"
              + open(os.path.join(HERE, "llm_calc.py"), encoding="utf-8").read() + "```\n"]

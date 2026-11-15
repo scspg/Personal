@@ -270,6 +270,22 @@ NOTES_FIX = {
 for _k, _v in NOTES_FIX.items():
     PATCH.setdefault(_k, {}).update(_v)
 
+NOTES_FIX2 = {
+    "debian-full-archive-ftpsync": "Az összes kiadást tartalmazza (oldstable…unstable), ha nincs kizárva; az ftpsync ARCH_EXCLUDE beállításával vagy a debmirror-ral egy kiadásra szűkíthető. Tartsd be a tükrözési etikettet, és közeli rsync-tükröt válassz.",
+    "rust-standalone-installer": "Az offline dokumentáció (rust-docs) benne van. A crate-ekhez helyi crates-tükör kell (lásd crates-io-mirror).",
+    "internet-in-a-box": "A telepítőnek internet kell: még az összeomlás előtt futtasd, majd készíts képfájlt az SD-kártyáról. 2,4 GHz-es hotspot a régi eszközöknek. Legutóbbi git-tag: v7.0.9, az oldalon 8.3-as előzetes kiadás is van.",
+    "babcock-wilcox-steam-1913": "Archive.org-tükör: https://archive.org/details/steamitsgenerati22657gut . Más kiadások szkennelései: steamitsgenerati00babc_0 (1894).",
+    "kx-maps-hungary": "kiwix book=maps_en_hungary flavour=null. 605 227 506 bájt. Az európai változat (maps_en_europe) 26,7 GB. Átfed az OsmAnd/Geofabrik tételekkel, de csak Kiwix-olvasó kell hozzá.",
+}
+for _k, _v in NOTES_FIX2.items():
+    PATCH.setdefault(_k, {})["notes"] = _v
+PATCH.setdefault("usda-fooddata-central-sr-legacy", {}).update({"bytes": 6_074_592, "size_status": "measured:2026-11-14:content-length"})
+PATCH.setdefault("ose-wiki-dump-gvcs", {}).update({"glob": "*.7z|*.zst", "bytes": 10_298_646_303})
+try:
+    _SSHU = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "research", "size_status_hu.json"), encoding="utf-8"))
+except OSError:
+    _SSHU = {}
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {
@@ -313,9 +329,22 @@ def _norm_size_status(v):
     v = str(v or "")
     if v in ("measured", "estimated", "official"):
         return f"{v}:2026-11-14:forrás nincs megadva"
-    m = re.match(r"^(measured|estimated|official)[:(]\s*(\d{4}-\d{2}-\d{2})?:?(.*?)\)?$", v, re.S)
+    m = re.match(r"^(measured|estimated|official)\((.*)$", v, re.S)        # kind(forrás) [+ folytatás]
     if m:
-        return f"{m.group(1)}:{m.group(2) or '2026-11-14'}:{(m.group(3) or '').strip(' :()') or 'forrás nincs megadva'}"
+        src = m.group(2)
+        depth, cut_at = 1, None
+        for i, ch in enumerate(src):                   # a nyitó zárójel párja
+            depth += ch == "("
+            depth -= ch == ")"
+            if depth == 0:
+                cut_at = i
+                break
+        body = (src[:cut_at] + src[cut_at + 1:]) if cut_at is not None else src
+        kind = "estimated" if re.search(r"estimated|becsült", body) and m.group(1) == "measured" else m.group(1)
+        return f"{kind}:2026-11-14:{body.strip()}"
+    m = re.match(r"^(measured|estimated|official):(\d{4}-\d{2}-\d{2}):?(.*)$", v, re.S)
+    if m:
+        return f"{m.group(1)}:{m.group(2)}:{m.group(3).strip() or 'forrás nincs megadva'}"
     return v
 
 
@@ -354,6 +383,9 @@ def apply(items):
             it["download"] = {**it["download"], "url": u, "note": note}
         if it.get("size_status"):
             it["size_status"] = _norm_size_status(it["size_status"])
+            if it["id"] in _SSHU:
+                kind_date = ":".join(it["size_status"].split(":")[:2]) if re.match(r"^\w+:\d{4}-", it["size_status"]) else "estimated:2026-11-14"
+                it["size_status"] = f"{kind_date}:{_SSHU[it['id']]}"
         if p and "glob" in p:
             it["download"]["glob"] = it.pop("glob")
         if p and "download_ids_add" in p:

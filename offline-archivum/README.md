@@ -13,8 +13,8 @@
 | Fájl | Méret | Mire való |
 |---|---|---|
 | `ARCHIVUM-LLM.html` | 0,9 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező, tárolóválasztó (Tárolók fül) |
-| `ARCHIVUM.md` | 2,2 MB | teljes katalógus: 1261 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
-| `ARCHIVUM-kompakt.md` | 1,6 MB | ugyanez kevesebb LLM-kvanttal (897 tétel) – hosszú kontextusú modellnek |
+| `ARCHIVUM.md` | 2,2 MB | teljes katalógus: 1263 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
+| `ARCHIVUM-kompakt.md` | 1,6 MB | ugyanez kevesebb LLM-kvanttal (899 tétel) – hosszú kontextusú modellnek |
 | `ARCHIVUM-chat.md` | 0,1 MB | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások, legjobb szoftverek |
 | `eszkozok/select_items.py` | – | letöltési terv a tárhelyhez (`--budget 2TB --hw T2 --mem 300GB --emit-sh dl.sh`) |
 | `eszkozok/llm_calc.py` | – | LLM-kalkulátor (`--preset all`, vagy saját: `--gpu 32:1790 --ram 128 --ram-bw 96`) |

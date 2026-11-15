@@ -41,7 +41,7 @@ MUNKAMENET:
    Minden fájl újraindítható legyen (-c / aria2c). Párhuzamosan max. 2-3 nagy letöltés fusson.
    A dl.sh "AGENT-FELADAT" blokkjait (API- vagy OAI-PMH-alapú listagyűjtés) neked kell megírnod és lefuttatnod.
    Ugyanígy a "# Telepítők/binárisok (AI-feladat)" megjegyzéseket és az `echo "TODO …"` sorokat: ezeknél a kiadási
-   oldalról (release_url) töltsd le a célplatformokhoz illő telepítőket a megadott "release/" mappába (a forráskódot a dl.sh már leklónozza).
+   oldalról (release_url) töltsd le a célplatformokhoz illő telepítőket (GitHub-projekteknél a dl.sh `gh_release` függvénye ezt már megpróbálja; csak a sikertelenekkel kell foglalkoznod) a megadott "release/" mappába (a forráskódot a dl.sh már leklónozza).
    Ha egy forrás 403-at vagy Cloudflare-t ad, a 9. fejezet lépcsőzetes stratégiája szerint haladj:
    curl_cffi → Byparr/FlareSolverr → Camoufox/Patchright → alternatív tükör vagy Wayback.
    CAPTCHA-feloldót csak az ember engedélyével használj.
@@ -60,7 +60,7 @@ MUNKAMENET:
 9. Második példány (ha van második meghajtó – lásd 4c fejezet):
    - `rsync -a --checksum <cél>/ <második>/` az offline példányra (más gyártó, utána leválasztva, Faraday-tasakba);
    - `par2 create -r10` a 0–1. szintű mappákra (10% javító paritás);
-   - sha256 manifest mindkét példányon (`find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256`), és ellenőrzés: `sha256sum -c`.
+   - sha256 manifest mindkét példányon (`find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256`), és ellenőrzés a másolat gyökerében: `(cd <második> && sha256sum -c MANIFEST.sha256)`.
 10. Zárójelentés:
    - mi jött le (OK), mi bukott (FAIL), mennyi hely maradt;
    - a KÉZI TEENDŐK listája linkkel és árral (fizetős, regisztrációs, fizikai könyv);

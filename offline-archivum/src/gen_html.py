@@ -171,7 +171,8 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models,#soft,#stor{max-height:80vh;overflow:auto}
 .bund{width:100%}.bund td{vertical-align:top}.bund td:last-child{max-width:240px}.bund ul{margin:0;padding-left:16px}.bund td:nth-child(2){min-width:260px}
 .stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:240px;max-width:320px;white-space:normal;overflow-wrap:anywhere}.stortab td:nth-child(3){min-width:0;max-width:220px}.stortab td:last-child{min-width:240px;max-width:340px}
-.soft td:nth-child(2){min-width:320px}.soft td:nth-child(4){min-width:90px;white-space:nowrap}
+.soft:not(.stortab) td:nth-child(2){min-width:320px}.soft:not(.stortab) td:nth-child(4){white-space:normal;overflow-wrap:normal;word-break:keep-all;min-width:90px;max-width:170px}
+.stortab td:nth-child(2){min-width:0;width:48px}.stortab td:nth-child(3){min-width:200px;max-width:260px}.stortab td:nth-child(4){max-width:150px;white-space:normal}
 #ssd td:first-child{white-space:nowrap}
 .tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
 #models td:first-child,#models th:first-child{position:sticky;left:0;background:var(--surface);z-index:2}#models th:first-child{background:var(--sunk);z-index:3}
@@ -369,9 +370,9 @@ function softTable(){const q=norm(F('sq').value), c=F('scat').value;
 const ST=__STOR__;
 function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=norm(F('stq').value);
   const so=F('stsort').value, L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||norm(x.n+' '+x.k+' '+x.d+' '+x.pro+' '+x.con+' '+x.l.map(l=>l[0]).join(' ')).includes(q)));
-  if(so){const enc=x=>/ház|NAS|DAS|adapter/i.test(x.k); const key=x=>so==='tb'?(enc(x)?Infinity:-(x.tb||0)):(x[so]??Infinity); L.sort((a,b)=>key(a)-key(b));}
+  if(so){const key=x=>so==='tb'?(x.bay||x.tb==null?Infinity:-x.tb):(x[so]??Infinity); L.sort((a,b)=>key(a)-key(b));}
   const lv={olcso:'olcsó',kozep:'közép',profi:'profi',extrem:'extrém'};
-  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${/ház|NAS|DAS|adapter/i.test(x.k)?'≤'+(x.tb??'–'):(x.tb??'–')}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
+  const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${x.tb==null?'–':(x.bay?'≤':'')+fmt(x.tb,x.tb<1?3:(x.tb%1?2:0))}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
     <td class="num" data-l="Ár">${x.ar?huft(x.ar):'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)||'–'}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
     <td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Nincs találat.</td></tr>';
   F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
@@ -579,9 +580,9 @@ def storage_data():
     for p in prods:
         if p.get("kategoria") == "other" and not p.get("ar_huf"):
             continue
-        out.append({"n": p.get("nev"), "k": G.KAT.get(p.get("kategoria"), p.get("kategoria")), "tb": p.get("kapacitas_tb"), "d": G.dur(p.get("tartossag")).replace("\\|", "|"),
+        out.append({"n": G.hunum(str(p.get("nev") or "")), "k": G.KAT.get(p.get("kategoria"), p.get("kategoria")), "tb": p.get("kapacitas_tb"), "bay": p.get("kategoria") in ("enclosure", "nas", "das", "faraday", "other"), "d": G.dur(p.get("tartossag")).replace("\\|", "|"),
                     "s": G.speed(p.get("sebesseg_mb_s")), "ar": p.get("ar_huf"), "pt": G._e(p.get("ar_per_tb") or ""),
-                    "ptb": round(p["ar_huf"] / float(p["kapacitas_tb"])) if p.get("ar_huf") and p.get("kapacitas_tb") else None, "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
+                    "ptb": round(p["ar_huf"] / float(p["kapacitas_tb"])) if p.get("ar_huf") and p.get("kapacitas_tb") and p.get("kategoria") not in ("enclosure", "nas", "das", "faraday", "other") else None, "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
                     "l": [[x.get("bolt"), x.get("url")] for x in (p.get("linkek") or [])[:3] if x.get("url")],
                     "pro": "; ".join((p.get("elonyok") or [])[:2]), "con": "; ".join((p.get("hatranyok") or [])[:2])})
     return out
