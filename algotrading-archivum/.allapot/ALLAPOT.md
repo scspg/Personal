@@ -22,3 +22,4 @@ Futtatás: cd src && python3 -I build.py && python3 -I gen_html.py && python3 -I
 9 ágens fut (a1..a9) → research/. Utána: build, átnézők (6), javítás.
 - A9 KÉSZ: 118 tétel, a9_spec.md 873 sor (72 soros paritásmátrix, L0–L4 mozgatókar, F0–F6 ütemterv). Megj.: GitHub API nem érhető el (ecosyste.ms tükör), NautilusTrader/LEAN/ArcticDB duplikátum A5-tel (group mező).
 - A2 KÉSZ: 133 tétel (81 mért/24 becsült/28 nem ell.), a2_summary.md. Hiány: webkeresési keret elfogyott; tőzsdei AZ-k nem hivatalosak; magyar 2026-os hatályon kívül helyezés részletei.
+- A3 KÉSZ: 112 tétel (66 mért/42 becsült/4 nem ell.). Kulcs: SZTFH ideiglenes Polymarket-ISP-blokk 2026-01-16 óta; Kalshi HU korlátozott (becsült); Pinnacle API zárva 2025-07-23 óta → CLV-referencia Betfair; py-clob-client archivált → py-sdk, CLOB V2. Hiány: on-chain sport venue-k (Azuro, SX Bet, Overtime), Betfair historical ár.
