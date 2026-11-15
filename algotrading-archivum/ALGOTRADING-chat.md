@@ -1415,6 +1415,59 @@ botorch | BoTorch | free | ingyenes (OSS) | 64/78/70/67 | https://botorch.org/
 mt5-broker-apis | MetaTrader 5 brókeroldali API-k (Manager, Gateway, Server, Report, Web | institutional | brókerlicenc, nem nyilvános | 50/64/54/48 | https://www.metatrader5.com/en/brokers
 mt5manager-pypi | MT5Manager Python csomag (MetaQuotes) | institutional | brókerhozzáférés szükséges | 46/56/47/43 | https://pypi.org/project/MT5Manager/
 
+## Platform- és bróker-összehasonlítás: van-e jobb, mint a jelenlegi (MT5/Vantage)
+a11-broker-ibkr-ireland | Interactive Brokers Ireland Limited (Central Bank of Ireland C423427) | registration | FX 0,20 bp, min. 2 USD/megbízás (mért) | 74/90/83/76 | https://www.interactivebrokers.ie/en/home.php
+a11-plat-ibkr-api | Interactive Brokers TWS API + Web (Client Portal) API | registration | FX: 0,08–0,20 bp × kötésérték, min. 2 US | 72/89/82/74 | https://www.interactivebrokers.com/en/trading/ib-api.php
+a11-plat-darwinex-stack | Darwinex – MT4/MT5, FIX 4.4, ZeroMQ, DXtrade + tőkeallokáció | registration | pro: 1,5 USD/lot/megbízástól (mért); ret | 72/81/76/72 | https://www.darwinex.com/trading/platforms
+a11-broker-darwinex | Darwinex – Tradeslide Trading Tech (FCA 586466) + Sapiens Markets EU S | registration | pro: 1,5 USD/lot/megbízás (mért) | 72/81/76/72 | https://www.darwinex.com/
+a11-broker-pepperstone-eu | Pepperstone EU – Pepperstone EU Limited, CySEC 388/20 (+ Pepperstone G | registration | Razor: 3,50 USD/lot/oldal (mért) | 66/80/72/68 | https://pepperstone.com/en-eu/
+a11-plat-mt5 | MetaTrader 5 (MQL5 EA + Python API) – automatizálási profil | free | kliens ingyenes; MetaQuotes VPS 10–15 US | 65/77/71/65 | https://www.metatrader5.com/en/trading-platform
+a11-pro-pepperstone-eu | Pepperstone Pro (EU) – akár 1:500 | registration | ? | 61/74/68/63 | https://pepperstone.com/en-eu/ways-to-trade/professional-clients/
+a11-pro-tickmill-eu | Tickmill Europe Professional – 1:500 NBP-vel | registration | ? | 61/74/68/63 | https://www.tickmill.com/eu/trading/professional-clients
+a11-broker-dukascopy-europe | Dukascopy Europe IBS AS (Latvijas Banka) – EU | registration | 35→5 USD / 1 M USD / oldal (mért) | 68/78/72/70 | https://www.dukascopy.com/europe/english/home/
+a11-plat-dukascopy-jforex-fix | Dukascopy JForex (Java API) + FIX 4.4 | registration | 35→5 USD / 1 M USD / oldal (betétfüggő) | 68/76/70/69 | https://www.dukascopy.com/europe/english/forex/api/fix-api/
+a11-plat-ctrader-fix | cTrader FIX API (FIX 4.4) | free | ingyenes (bróker-díjak) | 66/76/70/66 | https://help.ctrader.com/fix/
+a11-plat-quantconnect-live | QuantConnect LEAN – élő brókerkapcsolatok | freemium | nem ellenőrzött (felhős live node díj) | 62/77/72/64 | https://www.quantconnect.com/docs/v2/cloud-platform/live-trading/brokerages
+a11-broker-tickmill-eu | Tickmill Europe – Tickmill Europe Ltd, CySEC 278/15 | registration | Raw: 3 USD/lot/oldal (mért) | 64/76/69/66 | https://www.tickmill.com/eu
+a11-broker-fpmarkets-eu | FP Markets EU – First Prudential Markets Ltd, CySEC 371/18 | registration | Raw: 3 USD/oldal (mért) | 63/75/68/64 | https://www.fpmarkets.eu/
+a11-broker-saxo | Saxo Bank A/S (Finanstilsynet, Dánia) | registration | ? | 58/77/70/62 | https://www.home.saxo/
+a11-pro-icmarkets-eu | IC Markets EU – professional ügyfél-eljárás | registration | ? | 61/74/68/63 | https://www.icmarkets.eu/en/trading-accounts/professional-clients
+a11-pro-fpmarkets-eu | FP Markets EU Pro számla – 1:500 | registration | ? | 61/74/68/63 | https://www.fpmarkets.eu/professional-account/
+a11-pro-axi-eu | Axi EU Professional – akár 1:400, NBP nélkül | registration | ? | 61/74/68/63 | https://www.axi-solaris.com/eu/trading-accounts/professional-account
+a11-pro-oanda-tms | OANDA TMS Professional – 200:1 és 0–45% rebate | registration | ? | 61/74/68/63 | https://www.oanda.com/eu-en/professional-client
+a11-pro-darwinex | Darwinex Professional Clients (COBS 3.5 / MiFID) | registration | ? | 61/74/68/63 | https://www.darwinex.com/trading/professional-traders
+a11-pro-saxo | Saxo Elective Professional – külön margin-tábla | registration | ? | 61/74/68/63 | https://www.home.saxo/products/margin-information
+a11-pro-swissquote-eu | Swissquote Bank Europe – FX/CFD csak professional ügyfélnek | registration | ? | 61/74/68/63 | https://www.swissquote.com/en-lu/private/trade/products/forex
+a11-pro-ig-europe | IG Europe – professional státusz (nem ellenőrzött részletek) | registration | ? | 61/74/68/63 | https://www.ig.com/ie
+a11-plat-saxo-openapi | Saxo OpenAPI (REST + streaming) és FIX | registration | API ingyenes; FX min. jutalék 1 USD kis  | 58/76/68/62 | https://www.developer.saxo/openapi/learn/rate-limiting
+a11-broker-ig-europe | IG Europe GmbH (BaFin 148759) | registration | spread-alapú (nem ellenőrzött számokkal) | 58/72/65/60 | https://www.ig.com/ie
+a11-plat-ig-api | IG REST + Streaming API (és intézményi FIX) | registration | API ingyenes; spread-alapú díjak | 57/70/64/60 | https://labs.ig.com/
+a11-plat-tradingview-webhooks | TradingView – riasztás-webhookok mint jelforrás | paid | Essential 12,95 / Plus 29,95 / Premium 5 | 52/66/62/56 | https://www.tradingview.com/support/solutions/43000529348-how-to-configure-webhook-alerts/
+a11-plat-sierra-chart | Sierra Chart (ACSIL C++, DTC protokoll) | paid | 26 / 36 / 46 / 56 USD/hó (~33 €/hó) | 61/67/62/60 | https://www.sierrachart.com/index.php?page=doc/Packages.php
+a11-broker-icmarkets-global | IC Markets Global – Raw Trading Ltd, FSA Seychelles SD018 | registration | Raw: nem ellenőrzött (≈3,5 USD/oldal, be | 58/68/64/54 | https://www.ic.com/en/
+a11-plat-rithmic | Rithmic R \| Protocol API (futures order routing) | institutional | nem ellenőrzött (FCM-en át) | 60/64/59/58 | https://www.rithmic.com/apis
+a11-plat-ninjatrader | NinjaTrader (NinjaScript C#) + NinjaTrader Clearing | freemium | Free 0 / 99 USD/hó / 1499 USD egyszeri;  | 58/64/60/56 | https://ninjatrader.com/pricing/
+a11-plat-cqg | CQG WebAPI / FIX (globális futures) | institutional | nem ellenőrzött | 56/64/58/56 | https://www.cqg.com/
+a11-broker-admirals-europe | Admirals – Admirals Europe Ltd, CySEC 201/13 | registration | ? | 52/62/55/54 | https://admiralmarkets.com/
+a11-plat-prediction-venues | Predikciós helyek API-ja (Polymarket, Kalshi, Betfair) – röviden; rész | registration | lásd A3 | 54/56/56/50 | https://docs.polymarket.com/
+a11-broker-swissquote-europe | Swissquote Bank Europe SA (CSSF, Luxemburg) | registration | ? | 50/62/55/51 | https://www.swissquote.com/en-lu/private
+a11-broker-axi-eu | Axi EU – Solaris EMEA Ltd, CySEC 433/23 | registration | ? | 50/60/53/52 | https://www.axi-solaris.com/eu
+a11-plat-tradingview-broker-integration | TradingView brókerintegráció (chartról kötés) | freemium | TV-csomag + bróker-díjak | 48/60/53/50 | https://www.tradingview.com/brokers/
+a11-plat-tradestation | TradeStation (EasyLanguage + TradeStation API) | registration | nem ellenőrzött | 49/58/54/47 | https://www.tradestation.com/
+a11-broker-exness-cy | Exness (Cy) Ltd – CySEC (EU) | registration | ? | 50/54/50/50 | https://www.exness.eu/
+a11-broker-fxcm-stratos-europe | FXCM EU – Stratos Europe Ltd (ex FXCM EU Ltd), CySEC | registration | ? | 49/54/50/50 | https://www.fxcm.com/
+a11-plat-mt4 | MetaTrader 4 – örökölt EA-platform | free | ingyenes kliens | 50/52/46/52 | https://www.metatrader4.com/
+a11-broker-eightcap-eu | Eightcap EU Ltd (CySEC) | registration | ? | 46/54/48/47 | https://www.eightcap.com/en/
+a11-broker-xm-eu | XM – Trading Point of Financial Instruments Ltd (CySEC) | registration | ? | 46/52/46/46 | https://www.xm.com/
+a11-broker-tickmill-sc | Tickmill Ltd (Seychelles, FSA SD008) – offshore | registration | ? | 52/58/54/48 | https://www.tickmill.com/
+a11-broker-swissquote-ch | Swissquote Bank SA (FINMA, Svájc) | registration | ? | 46/58/52/46 | https://www.swissquote.com/en-ch/private
+a11-broker-blackbull | BlackBull Markets – FSA Seychelles SD045 (NZ központ) | registration | RAW: 3 USD/oldal (mért) | 48/54/51/44 | https://blackbull.com/en/
+a11-plat-multicharts | MultiCharts (PowerLanguage / .NET) | paid | nem ellenőrzött | 46/51/46/47 | https://www.multicharts.com/
+a11-plat-dxtrade | DXtrade (Devexperts) – bróker-white-label platform | registration | bróker-díjak | 44/48/42/44 | https://devexperts.com/dxtrade/
+a11-broker-exness-sc | Exness (SC) Ltd – Seychelles (offshore, 'unlimited leverage') | registration | ? | 44/48/46/40 | https://www.exness.com/
+a11-broker-axi-svg | AxiTrader LLC (SVG) – offshore | registration | ? | 38/42/38/34 | https://www.axi.com/int
+a11-broker-xm-global | XM Global Limited – offshore | registration | ? | 36/38/35/32 | https://www.xm.com/
+
 ## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
 m-kalman-state-space | Kalman-szűrő és állapottér-modellek | free | 0 | 78/91/85/80 | https://github.com/rlabbe/filterpy
 m-gradient-boosting | Gradiens boosting (LightGBM, XGBoost, CatBoost) | free | 0 | 76/92/88/80 | https://github.com/microsoft/LightGBM

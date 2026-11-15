@@ -250,7 +250,7 @@ def main():
         a = f"{n}-{slug(title)}"
         toc.append(f"- [{n}. {title}](#{a}) – {len(L)} tétel")
         body += ["", "---", "", f"## {n}. {title}", ""]
-        summ = read(name.split("_")[0] + "_summary.md")
+        summ = read(name.split("_")[0] + "_summary.md") or read(name.split("_")[0] + "_matrix.md")
         if summ:
             body += [f"### {n}.0. Összefoglaló – {title.split(':')[0].split(',')[0]}", "", re.sub(r"(?m)^#{1,3} (.*)$", lambda m: f"#### {m.group(1)} ({name.split('_')[0].upper()})", summ), ""]
         cc = Counter(o.get("cat") for o in L)
