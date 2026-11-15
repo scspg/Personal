@@ -176,3 +176,6 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## #5 kör: SZAKÉRTŐ 92,7 (min 90, forráskorlátos: csak fizetős/nyomtatott); FELHASZNÁLÓ 93,8 (min 91). Javítva: --floor (csoportváltozat nem lép vissza nagyobb méretnél; build önellenőrzés sys.exit), Kezdőknek-indoklás tervkülönbségből. AI-ágens #5 fut.
 
 ## #6: FELHASZNÁLÓ 94,5 (min 94) → kerekítés egységesítve (tárolószöveg a tervből: plan_tb). AI-ágens #5 még fut.
+
+## AI-ÁGENS #5: 85,2 (git fsck -q érvénytelen kapcsoló → minden git FAIL) → javítva, valódi git 2.43-mal tesztelve OK; forrás-ellenőrzőösszeg hordozható (sumc/hashf: CRLF, nagybetűs hash, macOS shasum/md5 -r), MANIFEST macOS-en shasum. Eltérés-észlelés tesztelve.
+FIGYELEM (saját hiba): egy hibás tesztkivonat üres DEST-tel futott → a konténer gyökerében 9 letöltési könyvtár maradt (/appropriate_tech /civil_defense /engineering /food /medicine /survival /tools /veterinary /water_sanitation, ~3,2 GB); a törlést a biztonsági ellenőrzés nem engedte, a felhasználóra bízva (ideiglenes konténer, a repót nem érinti).

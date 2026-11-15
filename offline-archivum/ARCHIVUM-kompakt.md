@@ -3786,6 +3786,12 @@ def write_sh(plan, path, dest):
          'anyhave(){ local t; for t in ${1//|/ }; do have "$t" && return 0; done; return 1; }',
          "for t in " + " ".join(q(t) for t in need_tools) + '; do anyhave "$t" || echo "FIGYELEM: hiányzó eszköz: $t – az ezt igénylő tételek FAIL-lel végződnek"; done',
          'sha256c(){ if have sha256sum; then sha256sum -c -; else shasum -a 256 -c -; fi; }',
+         'hashf(){ # algo fájl → kisbetűs hash (Linux: *sum; macOS: shasum / md5 -r)',
+         '  case $1 in md5) if have md5sum; then md5sum "$2"; else md5 -r "$2"; fi ;; *) if have "$1sum"; then "$1sum" "$2"; else shasum -a "${1#sha}" "$2"; fi ;; esac | cut -d" " -f1 | tr A-F a-f; }',
+         'sumc(){ # algo listafájl: a forrás ellenőrzőösszeg-fájlja (CRLF is), csak a meglévő fájlokra',
+         '  local a=$1 h n x r=0 line; while IFS= read -r line || [ -n "$line" ]; do line=${line%$\'\\r\'}; [ -z "$line" ] && continue',
+         '    h=$(printf %s "${line%% *}" | tr A-F a-f); n=${line#* }; n=${n# }; n=${n#\\*}; [ -f "$n" ] || continue',
+         '    x=$(hashf "$a" "$n") || return 1; [ "$x" = "$h" ] || { echo "FIGYELEM: ellenőrzőösszeg-eltérés: $n" >&2; r=1; }; done < "$2"; return $r; }',
          'fetch(){ # url outdir',
          '  local ua=${UA:-Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0}',
          '  if have aria2c; then aria2c -c -x8 -s8 --auto-file-renaming=false -U "$ua" -d "$2" "$1"; else (cd "$2" && wget -c --content-disposition --trust-server-names -U "$ua" "$1"); fi; }',
@@ -3809,7 +3815,7 @@ def write_sh(plan, path, dest):
          '      || git -C "$g" fetch -q --depth 1 origin "+HEAD:refs/heads/snapshot" || return 1',
          '    git -C "$g" symbolic-ref HEAD refs/heads/snapshot',
          '  fi',
-         '  git -C "$g" fsck --connectivity-only -q 2>/dev/null || { echo "FIGYELEM: git fsck hiba: $g" >&2; return 1; }   # integritás',
+         '  git -C "$g" fsck --connectivity-only >/dev/null 2>&1 || { echo "FIGYELEM: git fsck hiba: $g" >&2; return 1; }   # integritás',
          '  if [ -n "${BUNDLE:-}" ]; then   # BUNDLE=1: +1x hely; sekély tükörből nem klónozható bundle lenne',
          '    if [ -f "$g/shallow" ]; then echo "FIGYELEM: $g sekély – a BUNDLE-höz GIT_FULL=1 kell"; else git -C "$g" bundle create "${g%.git}.bundle" --all; fi',
          '  fi; }',
@@ -3845,8 +3851,8 @@ def write_sh(plan, path, dest):
             guard = f'[ "$(du -sk "{sub}" | cut -f1)" -ge {minh} ]'
             sums = [u.rsplit("/", 1)[-1].replace("%20", " ") for u in us if re.search(r"(sha1|sha256|md5)(sums?)?(\.txt)?$", u, re.I)]
             if sums:     # a forrás saját ellenőrzőösszeg-fájlja: a letöltött fájlokra lefuttatva
-                tool = "sha256sum" if "256" in sums[0].lower() else "md5sum" if "md5" in sums[0].lower() else "sha1sum"
-                guard += f' && (cd "{sub}" && {tool} -c --ignore-missing --quiet {q(sums[0])})'
+                algo = "sha256" if "256" in sums[0].lower() else "md5" if "md5" in sums[0].lower() else "sha1"
+                guard += f' && (cd "{sub}" && sumc {algo} {q(sums[0])})'
             if len(us) == 1:
                 L.append(f'fetch {q(us[0])} "{sub}" && {guard} && ok {vid} || fail {vid}')
             elif us:      # több fájl: mind letöltődik, tételenként egy ítélet (részleges hiba = FAIL)
@@ -3925,7 +3931,7 @@ def write_sh(plan, path, dest):
     man = json.dumps([{k: v.get(k) for k in ("id", "name", "cat", "tier", "bytes", "bytes_est", "license", "info_url")} | {"path": f"{v['cat']}/{v['id']}"} for v in plan], ensure_ascii=False)
     L.append("cat > \"$DEST/INDEX.md\" <<'ARCHIVUM_INDEX_EOF'\n" + "\n".join(idx) + "\nARCHIVUM_INDEX_EOF")
     L.append("cat > \"$DEST/manifest.json\" <<'ARCHIVUM_MANIFEST_EOF'\n" + man + "\nARCHIVUM_MANIFEST_EOF")
-    L.append('if [ -n "${MANIFEST:-}" ]; then (cd "$DEST" && find . -type f ! -name MANIFEST.sha256 ! -name "_log*" -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256) && echo "MANIFEST.sha256 kész"; fi')
+    L.append('if [ -n "${MANIFEST:-}" ]; then (cd "$DEST" && find . -type f ! -name MANIFEST.sha256 ! -name "_log*" -print0 | sort -z | xargs -0 $(have sha256sum && echo sha256sum || echo "shasum -a 256") > MANIFEST.sha256) && echo "MANIFEST.sha256 kész"; fi')
     L.append('echo "Kész. Napló: $RUNLOG"; echo "FAIL ebben a futásban: $(grep -c "^FAIL" "$RUNLOG") | kézi/AI-teendő (TODO): $(grep -c "^TODO" "$RUNLOG")"')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
