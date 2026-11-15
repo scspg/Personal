@@ -136,7 +136,8 @@ def collect():
             if not url:
                 stats[name]["no_url"] += 1
             nu = norm_url(url)
-            if iid in seen_id or (nu and nu in seen_url and len(nu) > 12):
+            url_dup = nu and nu in seen_url and len(nu) > 12 and name != "a10_methods"   # esettanulmány/módszer: saját mezői miatt link-egyezésnél is marad
+            if iid in seen_id or url_dup:
                 stats[name]["dup"] += 1
                 prev = seen_id.get(iid) or seen_url.get(nu)
                 for k in ("notes_hu", "pitfalls_hu"):   # összefésülés: a hosszabb leírás marad
