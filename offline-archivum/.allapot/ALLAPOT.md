@@ -170,3 +170,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## #4: SZAKÉRTŐ 92,3 (MEK/Debian kiesett: agent-tiltás csak korai bővítésnél) → javítva, 16 TB-on MEK, 32 TB-on Debian vissza; FELHASZNÁLÓ 94,3 (min 94) → MSF kolera felirat + beszédes linkfeliratok (kötet, útmutató, platform, ATP/TC). AI-ágens #4 még fut.
 
 ## AI-ÁGENS #4 92,8 (min 90) → javítva: 0. szintű tétel nem esik ki átfedés/bővítés miatt; git fsck; forrás-ellenőrzőösszeg (sha1/sha256/md5) futtatása; INDEX.md + manifest.json a végén, MANIFEST=1 SHA-256; prompt 7. lépés. Próbafuttatás 64 GB shimekkel OK. KÖVETKEZŐ: utolsó megerősítő kör (AI, felhasználó, szakértő).
+
+## CD3WD: DVD-gyűjtemény külön csoport (cd3wd-dvd) → 1 TB-tól a ZIM (weboldal, 0. szint) ÉS a 28 GB-os DVD-anyag is benne; tier0=39 minden tervben, monoton. KÖVETKEZŐ: utolsó megerősítő kör (AI, felhasználó, szakértő).

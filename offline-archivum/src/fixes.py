@@ -355,7 +355,7 @@ PATCH7 = {
     "wikem-emergency-medicine-wiki": {"download": {"method": "wget-mirror", "url": "https://www.wikem.org/wiki/Main_Page",
                                                    "wget_args": "-l 4 --reject-regex '(Special:|action=|oldid=|diff=|printable=)'"}},
     "esa-worldcover": {"notes": "Csak a magyar csempék (N45/N48 × E015/E018/E021) – lásd a Leírás parancsát; a teljes globális térkép sok TB.", "download": {"method": "agent", "note": "Csak Magyarország csempéi (a teljes globális térkép sokkal nagyobb): aws s3 sync s3://esa-worldcover/v200/2021/map/ <cél> --no-sign-request --exclude '*' --include '*N4[5-8]E01[5-9]*' --include '*N4[5-8]E02[0-2]*'"}},
-    "cd3wd-2012-dvd-isos": {"access": "free", "variant_role": "luxury", "license": "vegyes (harmadik felek dokumentumai, a CD3WD-projekt nyilvános tükrén terjesztve – mint a kx-cd3wd ZIM)"},
+    "cd3wd-2012-dvd-isos": {"access": "free", "group": "cd3wd-dvd", "variant_role": "pref", "variant_rank": 1, "license": "vegyes (harmadik felek dokumentumai, a CD3WD-projekt nyilvános tükrén terjesztve – mint a kx-cd3wd ZIM)"},
     "agromisa-agrodok-series": {"download": {"method": "agent", "note": "CGSpace DSpace API: https://cgspace.cgiar.org/server/api/discover/search/objects?query=agrodok&dsoType=ITEM (313 találat) → az angol Agrodok-füzetek bitstreamjei (/server/api/core/bitstreams/<uuid>/content); minta: AD32.pdf 1 053 178 B. Maradj ~55 MB-on belül."}},
     "kx-cd3wd": {"variant_role": "pref"},
     "kx-khan": {"tier": 3}, "kolibri-khan-academy": {"tier": 3},   # 1 TB-on a gyakorlati tier 0–1 anyag elsőbbséget kap
