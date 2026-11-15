@@ -368,6 +368,10 @@ for _k, _v in PATCH7.items():
         else:
             _d[_kk] = _vv
 
+# --- AI-ágens #3 (2026-11-15): mért méretek a méretőrhöz ---
+PATCH.setdefault("who-imci-distance-learning-2014", {})["auto_bytes"] = 1_319_714
+PATCH.setdefault("ham-digital-modes-fldigi-js8call-direwolf", {}).update({"bytes": 28_670_272, "bytes_est": None, "size_status": "measured:2026-11-15:content-length (2 fájl)"})
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {
@@ -468,6 +472,8 @@ def apply(items):
             if it["id"] in _SSHU:
                 kind_date = ":".join(it["size_status"].split(":")[:2]) if re.match(r"^\w+:\d{4}-", it["size_status"]) else "estimated:2026-11-14"
                 it["size_status"] = f"{kind_date}:{_SSHU[it['id']]}"
+        if p and "auto_bytes" in p:
+            it["download"]["auto_bytes"] = it.pop("auto_bytes")
         if p and "glob" in p:
             it["download"]["glob"] = it.pop("glob")
         if p and "download_ids_add" in p:

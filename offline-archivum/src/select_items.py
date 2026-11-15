@@ -328,9 +328,14 @@ def main():
     def upgrade(maxtier=9):
         """luxus-feljavítások (pl. képes Wikipedia) pontszám szerint; maxtier: csak az ennél nem kisebb fontosságú csoportok"""
         nonlocal used
+        cap = budget * 0.10 if maxtier < 9 else float("inf")   # korai (0–1. szintű) bővítés: legfeljebb a keret 10%-a tételenként
         for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
             if k in chosen and not is_llm(g) and chosen[k]["id"] not in incl and tier_of(k, g) <= maxtier:
                 for v in sorted(g, key=size_of, reverse=True):
+                    if v["download"]["method"] == "agent":          # AI-feladat sosem lehet bővítés (nem töltődik le magától)
+                        continue
+                    if size_of(v) - size_of(chosen[k]) > cap:
+                        continue
                     if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
                         used += size_of(v) - size_of(chosen[k]); chosen[k] = v
                         break
@@ -507,7 +512,7 @@ def write_sh(plan, path, dest):
         if v.get("notes") and (v["download"]["method"] in ("agent", "manual", "wget-mirror") or v["download"].get("todo_note")):
             L.append(f"# Megjegyzés: {c(v.get('notes'))[:600]}  (teljes rekord: plan.json → items[id={v['id']}])")
         if v.get("download", {}).get("todo_note"):
-            L.append(f'[ -f "{sub}/.done" ] || echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]) + " (kész után: touch " + sub + "/.done)")} | tee -a "$LOG" "$RUNLOG"')
+            L.append(f'[ -f "{sub}/.done" ] || printf "%s (kész után: touch %s/.done)\\n" {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]))} "{sub}" | tee -a "$LOG" "$RUNLOG"')
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
             fl = d.get("flavour") or ""
@@ -520,7 +525,7 @@ def write_sh(plan, path, dest):
         elif m == "http":
             us = [u for u in (d.get("urls") or [d.get("url")]) if u]
             share = 10 if d.get("todo_note") else 2          # a tervezett méret legalább 50%-a (todo_note-os készletnél 10%-a) legyen meg
-            minh = max(1, int((size_of(v) or 0) / 1000 / share))
+            minh = max(1, int((d.get("auto_bytes") or size_of(v) or 0) / 1000 / (2 if d.get("auto_bytes") else share)))
             guard = f'[ "$(du -sk "{sub}" | cut -f1)" -ge {minh} ]'
             if len(us) == 1:
                 L.append(f'fetch {q(us[0])} "{sub}" && {guard} && ok {vid} || fail {vid}')
@@ -554,9 +559,8 @@ def write_sh(plan, path, dest):
                 rtag = d.get("tag") or v.get("latest_version") or ""
                 rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
                 cap_mb = max(50, int(((v.get("bytes") or v.get("bytes_est") or 0) * 1.2) / 1e6))   # a tétel tervbe számolt méretén belül
-                todo_txt = ("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB; platformok: GH_PLATFORMS szerint, alap linux-x64, win-x64, apk; kész után: touch "
-                            + sub + "/release/.ok)")
-                todo = f'{{ [ -f "{sub}/release/.ok" ] || echo {q(todo_txt)} | tee -a "$LOG" "$RUNLOG"; }}'
+                todo_txt = ("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB; platformok: GH_PLATFORMS szerint, alap linux-x64, win-x64, apk")
+                todo = f'{{ [ -f "{sub}/release/.ok" ] || printf "%s; kész után: touch %s/release/.ok)\\n" {q(todo_txt)} "{sub}" | tee -a "$LOG" "$RUNLOG"; }}'
                 bi = v.get("binaries_item")
                 if bi and bi in plan_ids:
                     L.append(f'# telepítők: a(z) {c(bi)} tétel már letölti – itt nem ismételjük')
