@@ -53,7 +53,7 @@ A dokumentum azt írja le, mit épít a fejlesztőcsapat (AI-kódolóágensekkel
 
 | Fogalom | Jelentés |
 |---|---|
-| A1–A11 | a kutatóágensek kimenetei (`src/research/a*`): A1 piac/végrehajtás, A3 predikciós piac, A5 nyílt szoftver, A6 AI-kutatás, A7 stratégia és kockázati matek, A8 infrastruktúra és jog, A11 bróker-összehasonlítás |
+| A1–A11 | a kutatási területek (ágensek), kimenetük a `forras/research/a*` fájlokban (a repóban `src/research/`): A1 piac és végrehajtás, A2 kripto, A3 predikció és sport, A4 makró/hírek/alt adat, A5 nyílt szoftver, A6 AI-kutatás és irodalom, A7 stratégiák/kockázat/ötletek, A8 infrastruktúra/adó/jog, A9 platform-architektúra, A10 bevált módszerek, A11 platform- és bróker-összehasonlítás |
 | M1–M16 | a mesterprompt moduljai (M9 döntési réteg, M10 kockázat, M14 fejlesztési folyamat) |
 | L0–L4 | a mozgatókar autonómiaszintjei (§7.1) |
 | venue, helyszín | végrehajtási hely (bróker-számla, tőzsde, predikciós piac); azonosítója a `venue_id` |
@@ -152,6 +152,7 @@ flowchart LR
 | `atp.config` | séma, kompozíció, `config_hash` | Python | Hydra [hydra], pydantic-settings [pydantic-settings] |
 | `atp.research` | backtest, keresés, validálási kapuk, trial-napló | Python | Optuna [optuna], MLflow [mlflow-registry], pypbo [pypbo] |
 | `atp.obs` | metrikák, trace, LLM-trace | Python | Prometheus [prometheus], OTel [opentelemetry], Langfuse [langfuse] |
+| `atp.tools` | fejlesztői parancsok: `export_schemas` (Pydantic → `schemas/generated/`, `--check` diff), profil-validálás, fixture-felvétel | Python | – |
 
 > Csomagnév: `atp` (algotrading platform). Ne legyen `platform`, mert az ütközik a Python standard könyvtárával. (köv.)
 
@@ -170,7 +171,9 @@ conf/execution/           # adapter-futtatási beállítás venue-adat nélkül:
 conf/accounts/            # account_id -> venue_id, secret-hivatkozás
 conf/ensemble/ conf/governance/ conf/search/ conf/experiment/ conf/feeds/
 policy/                   # Rego + opa-tesztek
-schemas/                  # generált JSON Schema (CI ellenőrzi, hogy friss)
+schemas/published/        # kézzel karbantartott, publikált séma (venue_profile, instrument; §12.1)
+schemas/generated/        # a Pydantic-modellekből generált séma, commitolva; `export_schemas --check` diffeli
+tools/versions.env        # a CLI-eszközök rögzített verziói (§9.5)
 tests/                    # unit, property, golden, adapters/, redteam/, fixtures/
 secrets/                  # *.enc.yaml (SOPS + age)
 ```
@@ -242,7 +245,7 @@ Minden ADR a `docs/adr/NNNN-*.md` fájlba kerül; itt a döntés és az indok k�
 | 04 | LangGraph vagy Temporal a HITL-hez | **egyik sem a kereskedési úton**: a jóváhagyás saját, eseménynaplós állapotgép (TTL, nonce, aláírás); munkafolyamat-motor (Temporal) csak F6+ kutatási pipeline-hoz | determinisztikus, auditálható, nincs új infrastruktúra a kritikus úton | F6 |
 | 05 | immudb vagy git tag az auditnapló horgonyához | **saját hash-lánc + óránkénti horgony WORM-tárba** (S3 Object Lock, compliance mód) | a git tag törölhető vagy újraírható; az immudb új szervert hoz; a WORM-tár külső, nem módosítható | ha a szabályozói megőrzés mást ír elő (Q10) |
 | 06 | NATS eseménytár vagy transzport | **csak transzport** (telemetria és dashboard fan-out), v1-ben elhagyható; az **igazságforrás az append-only SQLite eseménynapló** (egy író, `fsync` commitonként) | egyszálú magban a külső eseménytár csak hibaforrás | ha a mag több folyamatra bomlik |
-| 07 | Python és csomagkezelés | **CPython 3.12** (`requires-python = ">=3.12,<3.13"`), **uv** (verzió a `uv.toml`-ban rögzítve), `uv.lock` hash-ekkel; ruff, mypy (`--strict` a `contracts`, `risk`, `sizing`, `oms` csomagra), pytest, Hypothesis, import-linter | széles wheel-támogatás; a MetaTrader5 csomag 3.12-es Windows-wheele ellenőrizendő (csak a C úthoz kell) | évente |
+| 07 | Python és csomagkezelés | **CPython 3.12.16** (`.python-version`; `requires-python = ">=3.12,<3.13"`), **uv 0.13.6** (`[tool.uv] required-version`), `uv.lock` hash-ekkel; ruff, mypy (`--strict` a `contracts`, `risk`, `sizing`, `oms` csomagra), pytest, Hypothesis, import-linter | széles wheel-támogatás; a MetaTrader5 csomag 3.12-es Windows-wheele ellenőrizendő (csak a C úthoz kell) | évente |
 | 08 | F0 biztonsági eszközök | **gitleaks**, **osv-scanner**, **pip-audit**, **sops + age**, semgrep, syft, cosign; mind rögzített verzióval a CI-image-ben | lásd §9.5 | negyedévente (Renovate) |
 | 09 | Hosting-topológia | lásd §1.7 | – | F1 vége |
 | 10 | Második valódi adapter | **CCXT, Binance USDⓈ-M Futures testnet** (tartalék: Bybit testnet), F2–F4 | eltérő protokoll (REST/WS), natív `reduce_only`, `post_only`, `clientOrderId`, perp-funding: a kanonikus modellt jobban terheli, mint egy második MT-bróker; KYC nélkül CI-ben is futtatható. A pontos ccxt sandbox/demo hívás ellenőrizendő | F4 vége: cTrader demo a harmadik (F6) |
@@ -269,9 +272,9 @@ flowchart LR
 
 - **Végrehajtó gép:** Windows Server 2022 VPS a bróker MT-szerverének régiójában (Vantage esetén London; az adatközpont mérendő, A8: LD4 nem megerősített), a ping alapján kiválasztva: **4 vCPU, 16 GB RAM, 100 GB NVMe**. Itt fut a terminál, az EA, a mag és az adapterek, így a híd csak `127.0.0.1`-en kommunikál. A MetaQuotes VPS **nem** használható: a DLL-hívás ott dokumentáltan tiltott (MT5 súgó, A8 mért), Python nem fut rajta. Tartalék változat: Linux + Wine (§4.1 E út), rögzített Wine- és terminálverzióval.
 - **Kutatógép:** Linux, 16+ mag, 128 GB RAM, 2× NVMe (pl. a Hetzner AX102, A8: 159 €/hó, mért). Itt fut az adattó, a backtest, az MLflow és a megfigyelés.
-- **Időszinkron:** Linuxon chrony; Windowson a w32time nagy pontosságú beállítása. Cél: **|eltérés| < 1 ms**; az eltérést minden fillnél naplózzuk (`Fill.clock_offset_us`). 5 ms felett riasztás, 50 ms felett a végrehajtás-minőségi mérés az adott időszakra érvénytelen. Ha a w32time F1-ben nem tartja az 1 ms-t (ellenőrizendő), a végrehajtó gép a Linux + Wine változatra vált, ahol chrony fut.
+- **Időszinkron:** Linuxon chrony; Windowson a w32time nagy pontosságú beállítása. Cél: **|eltérés| < 1 ms**; az eltérést minden fillnél naplózzuk (`Fill.clock_offset_us`). 5 ms felett riasztás, 50 ms felett a végrehajtás-minőségi mérés az adott időszakra érvénytelen. **Virtualizált Windows VPS-en az 1 ms alatti w32time-pontosság nem bizonyított**; ez F1-kapu (F1.12): 7 napos mérés a végrehajtó gépen (p99 |eltérés| < 1 ms) a Windows vs. Linux + Wine döntés előtt. Ha bukik, a végrehajtó gép a Linux + Wine változatra vált, ahol chrony fut.
 - **Frissítési rend:** a terminál-buildet az EA a `HELLO`-ban jelenti; ha nincs a profil `mt.terminal_builds_allowed` listáján, az adapter `SAFE` módban marad, amíg a smoke-teszt le nem fut. OS- és terminálfrissítés csak hétvégén, piaczárás után.
-- **Katasztrófa-helyreállítás:** RPO ≤ 5 s (az eseménynapló folyamatos replikája Litestreammel objektumtárba), RTO ≤ 30 perc (hideg tartalék VPS másik régióban, image és konfiguráció gitből). A helyreállított mag mindig `SAFE` módban indul: `HELLO → SNAPSHOT → reconcile`, és csak ember lépteti `NORMAL`-ba. Amíg a gép áll, a helyszínen maradó védelem: **minden ATP-pozíciónak szerveroldali SL-je van**, ahol a venue támogatja (`server_side_sl_tp`), és az EA-helyi kosár-stop az EA saját gépén fut. Ha a végrehajtó gép maga esik ki, ez a kettő marad.
+- **Katasztrófa-helyreállítás:** RPO ≤ 5 s (az eseménynapló folyamatos replikája Litestreammel objektumtárba), RTO ≤ 30 perc (hideg tartalék VPS másik régióban, image és konfiguráció gitből). A helyreállított mag mindig `SAFE` módban indul: `HELLO → SNAPSHOT → reconcile`, és csak ember lépteti `NORMAL`-ba. Amíg a gép áll, a helyszínen maradó védelem: **minden ATP-pozíciónak szerveroldali SL-je van**, ahol a venue támogatja (`server_side_sl_tp`). Az EA-helyi kosár-stop az EA gépén fut, így a végrehajtó gép kiesésekor **nem** véd; ekkor csak a szerveroldali SL marad. Binance-en a countdown-törlés a védőstopokat is törölheti: ezt F4 testnet-teszt dönti el (§3.6), és amíg nem igazolt, ott a „szerveroldali SL marad” állítás nem érvényes.
 - **Bróker-időzóna és DST:** a Vantage MT-szerverideje GMT+2/+3 (amerikai DST-vel; exec átnéző), ami `server_tz: {mode: ny_plus, ny_plus_hours: 7}`. A részletek: §3.4.
 
 ---
@@ -280,7 +283,7 @@ flowchart LR
 
 ### 2.1 Szabályok
 
-- A szerződések **Pydantic v2** modellek (`frozen=True`, `extra="forbid"`) és **`typing.Protocol`** interfészek. Ez a fejezet **normatív**: a kód mezőnevei, típusai és validátorai ezzel egyeznek. A `schemas/` mappába generált JSON Schema verziózott; breaking change MAJOR verzióemelést kíván [semver]. A `VenueProfile` és az `Instrument` kézzel karbantartott, publikált sémája a §12.1-ben van; a CI ellenőrzi (`tests/contracts/test_schema_sync.py`), hogy a példákat mindkettő elfogadja, és hogy mezőnkénti mutációkra (hiány, `null`, rossz típus, rossz enum, negatív szám) ugyanazt döntik. A séma a szerkezetet írja le; a mezők közötti szabályokat (pl. `min_qty` a `lot_step` többszöröse, Polymarketen `canonical_id = PRED:POLY:<outcome_token_id>`) csak a Pydantic ellenőrzi. A séma-validátor a `jsonschema[format]` extrával fut (dátumformátum).
+- A szerződések **Pydantic v2** modellek (`frozen=True`, `extra="forbid"`) és **`typing.Protocol`** interfészek. Ez a fejezet **normatív**: a kód mezőnevei, típusai és validátorai ezzel egyeznek. A Pydantic-modellekből generált JSON Schema a `schemas/generated/` mappában commitolva van; az `atp.tools.export_schemas --check` újragenerálja egy ideiglenes mappába, és eltérés esetén nem nulla kóddal kilép (breaking change MAJOR verzióemelést kíván [semver]). A `VenueProfile` és az `Instrument` kézzel karbantartott, **publikált** sémája a `schemas/published/` alatt van (§12.1); ez a normatív szerződés a profilt író embereknek, a generált séma pedig a kódé; a CI ellenőrzi (`tests/contracts/test_schema_sync.py`), hogy a példákat mindkettő elfogadja, és hogy mezőnkénti mutációkra (hiány, `null`, rossz típus, rossz enum, negatív szám) ugyanazt döntik. A séma a szerkezetet írja le; a mezők közötti szabályokat (pl. `min_qty` a `lot_step` többszöröse, Polymarketen `canonical_id = PRED:POLY:<outcome_token_id>`) csak a Pydantic ellenőrzi. A séma-validátor a `jsonschema[format]` extrával fut (dátumformátum).
 - **Betöltés:** a modellek `strict=True` módban vannak; a YAML-t előbb JSON-ná alakítjuk, majd `Model.model_validate_json(...)` validál (így `0` nem lesz `false`, és a dátum csak ISO-string lehet). A belső kód tuple-t ad át, nem listát.
 - **Mennyiség:** `qty: Decimal` mindig kanonikus egységben (`Instrument.qty_unit`): `base` = bázisegység (FX: EUR az EURUSD-n; index-CFD: indexegység), `quote` = jegyzési deviza (inverse kontraktus), `shares` = bináris részvény (predikciós piac). A venue-lot csak az adapterben létezik: `venue_volume = qty / contract_size`.
 - **Ár:** a megbízásban egész tick (`price_ticks × tick_size`), így az `intent_hash` nem függ lebegőpontos ábrázolástól. A riportokban és a fillekben `Decimal`.
@@ -296,7 +299,7 @@ flowchart LR
 | Kripto | `CRYPTO:<BASE>-<QUOTE>[-PERP]` | `CRYPTO:BTC-USDT-PERP` | inverse: `CRYPTO:BTC-USD-PERP-INV` |
 | Határidős | `FUT:<ROOT>:<YYYYMM>` | `FUT:ES:202612` | |
 | Részvény | `EQ:<MIC>:<TICKER>` | `EQ:XNAS:AAPL` | |
-| Predikciós | `PRED:POLY:<outcome_token_id>`, `PRED:KALSHI:<ticker>` | `PRED:KALSHI:KXCPI-26NOV-T3.0` | Polymarketen az **outcome token ID**, nem a `market_id` (egy piacnak két tokenje van) |
+| Predikciós | `PRED:POLY:<outcome_token_id>`, `PRED:KALSHI:<ticker>` | `PRED:KALSHI:KXCPI-26NOV-T3.0` | Polymarketen az **outcome token ID**, nem a `market_id` (egy piacnak két tokenje van). Kalshin a `PRED:KALSHI:<ticker>` mindig a **YES** szerződés: a „buy NO at p” az adapterben „sell YES at 1 − p” lesz, az ár centben (tick 0,01); a pozíció előjelét szerződéses teszt ellenőrzi a Kalshi demón (ellenőrizendő) |
 
 ### 2.3 A modul (normatív kód)
 
@@ -311,7 +314,7 @@ CANON_RE = r"^(FX|CFD|CRYPTO|FUT|EQ|PRED|SPORT):[A-Za-z0-9:._-]+$"
 CanonicalId = Annotated[str, Field(pattern=CANON_RE)]
 VenueId = Annotated[str, Field(pattern=r"^[a-z0-9_]{3,40}$")]
 Hash64 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
-Ccy = Annotated[str, Field(pattern=r"^[A-Z0-9]{2,10}$")]
+Ccy = Annotated[str, Field(pattern=r"^[A-Z0-9]{2,10}$")]   # kanonikus kód; pl. Polymarket "pUSD" -> "PUSD" alias
 Pct = Annotated[Decimal, Field(ge=0)]
 TsNs = Annotated[int, Field(ge=0)]            # UTC, nanoszekundum az epoch óta
 Side = Literal["buy", "sell"]
@@ -375,6 +378,8 @@ class Capabilities(Frozen):
     cancel_on_disconnect: bool
     dead_man: Literal["none", "venue_heartbeat", "venue_countdown", "ea_local"]
     dead_man_timeout_s: Decimal | None = None
+    dead_man_scope: Literal["none", "account", "api_key", "symbol", "connection"]
+    dead_man_guaranteed: bool                 # False = best effort (pl. Polymarket): K5 időzítése nem garantált
     partial_fills: bool
     replace: Literal["native", "cancel_replace", "none"]
     oco: bool
@@ -423,7 +428,8 @@ class SessionWindow(Frozen):
 
 class CommissionRule(Frozen):
     applies_to: tuple[str, ...]               # canonical_id vagy glob, pl. "FX:*"
-    kind: Literal["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract", "none"]
+    kind: Literal["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract",
+                  "prob_quadratic", "none"]          # prob_quadratic: amount × qty × p(1−p) (Polymarket, Kalshi)
     amount: Decimal
     currency: Ccy
 
@@ -575,6 +581,7 @@ class OrderIntent(Frozen):
     expire_at_ns: TsNs | None = None
     post_only: bool = False
     reduce_only: bool = False
+    position_id: str | None = None            # hedging számlán: a zárandó pozíció (close-by-ticket)
     strategy_id: str
     origin: Origin
     autonomy_level: int = Field(ge=0, le=4)
@@ -591,6 +598,8 @@ class OrderIntent(Frozen):
             raise ValueError("post_only csak limit")
         if (self.tif == "GTD") != (self.expire_at_ns is not None):
             raise ValueError("GTD <=> expire_at_ns")
+        if self.position_id is not None and not self.reduce_only:
+            raise ValueError("position_id csak reduce_only zárásnál")
         return self
 
 class SubmitAck(Frozen):
@@ -622,16 +631,26 @@ class Fill(Frozen):
     fee_ccy: Ccy
     liquidity: Literal["maker", "taker", "unknown"]
     origin: FillOrigin
-    arrival_ns: TsNs                          # döntés ideje (OrderIntent.created_ns)
-    send_ns: TsNs                             # elküldés a venue felé
-    ack_ns: TsNs | None
     fill_ns: TsNs                             # venue-időbélyeg UTC-ben
     recv_ns: TsNs
-    bid_at_send: Decimal
-    ask_at_send: Decimal
-    ref_mid_at_send: Decimal | None           # független referenciafeed midje
-    ref_source: str | None
     clock_offset_us: int                      # chrony/w32time mért eltérés a fill pillanatában
+    # TCA-mezők: csak origin == "client" esetén kötelezők, kéretlen fillnél None
+    arrival_ns: TsNs | None = None            # döntés ideje (OrderIntent.created_ns)
+    send_ns: TsNs | None = None               # elküldés a venue felé
+    ack_ns: TsNs | None = None
+    bid_at_send: Decimal | None = None
+    ask_at_send: Decimal | None = None
+    ref_mid_at_send: Decimal | None = None    # független referenciafeed midje
+    ref_source: str | None = None
+    @model_validator(mode="after")
+    def _tca_fields(self) -> "Fill":
+        tca = (self.arrival_ns, self.send_ns, self.bid_at_send, self.ask_at_send)
+        if self.origin == "client":
+            if self.client_order_id is None or any(v is None for v in tca):
+                raise ValueError("kliens fill: client_order_id, arrival_ns, send_ns, bid/ask_at_send kötelező")
+        elif any(v is not None for v in tca + (self.ack_ns, self.ref_mid_at_send)):
+            raise ValueError("kéretlen fill (SL/TP/stop-out/likvidáció/kézi): a TCA-mezők None-ok")
+        return self
 
 class ExecutionReport(Frozen):
     report_id: str
@@ -846,7 +865,7 @@ class ExecutionAdapter(Protocol):
     async def positions(self) -> Sequence[Position]: ...
     async def fills(self, since_ns: int) -> Sequence[Fill]: ...
     def events(self) -> AsyncIterator[Union[ExecutionReport, Tick, Bar, MarketStatus, AdapterStatus]]: ...
-    async def arm_dead_man(self, timeout_s: float) -> bool: ...
+    async def arm_dead_man(self, scope: KillScope | None, timeout_s: float) -> bool: ...   # None = venue-alapértelmezés
     async def heartbeat(self) -> None: ...
     async def cancel_all(self, scope: KillScope) -> int: ...
     async def close(self) -> None: ...
@@ -892,6 +911,14 @@ def intent_hash(intent: BaseModel) -> str:
     return sha256_hex(canonical_json(intent))
 
 
+DEDUP_EXCLUDE = {"client_order_id", "created_ns", "proposal_id"}
+
+
+def dedup_key(intent: BaseModel) -> str:
+    """Duplikátum-szűrés kulcsa (60 s ablak): a tartalmi mezők; az intent_hash-t NEM váltja ki."""
+    return sha256_hex(canonical_json(intent, exclude=DEDUP_EXCLUDE))
+
+
 def config_hash(resolved_config: dict) -> str:
     return sha256_hex(canonical_json(resolved_config))
 
@@ -924,7 +951,7 @@ def audit_hash(event: BaseModel) -> str:
 | `open_orders()`, `positions()`, `account()` | pillanatkép; a `positions()` az idegen és kézi pozíciókat is visszaadja `owner`-rel | 5 s | egyeztetés elhalasztva, riasztás |
 | `fills(since_ns)` | fill-történet (egyeztetés, TCA) | 10 s | – |
 | `events()` | aszinkron folyam: `ExecutionReport`, `Tick`, `Bar`, `MarketStatus`, `AdapterStatus`; adapterenként monoton `seq` | – | folyam-rés → `stale`, egyeztetés |
-| `arm_dead_man(timeout_s)` | a venue-natív dead-man switch élesítése (MT5: EA-helyi; Polymarket: order heartbeat; Binance: countdown) | – | `False` → a policy L3+ szintet tilt ezen a venue-n |
+| `arm_dead_man(scope, timeout_s)` | a venue-natív dead-man switch élesítése a `scope`-ra (`None` = a venue alapértelmezése: MT5 EA-helyi, Polymarket API-kulcs, Binance szimbólum) | – | `False` → a policy L3+ szintet tilt ezen a venue-n |
 | `heartbeat()` | a dead-man és a kapcsolat életben tartása (alap: 1 s) | – | 3 kimaradás → `safe` |
 | `cancel_all(scope)` | kill-útvonal; visszaadja a törölt megbízások számát | 2 s | ismétlés 3×, utána riasztás + K6 (§6.5) |
 
@@ -1009,15 +1036,15 @@ Kötelező szabályok:
 |---|---|---|---|
 | Sim | emulált időzítő | a szimulátor törli a függő megbízásokat | F4.2 |
 | MT5 | nincs venue-oldali; EA-helyi heartbeat (`dead_man: ea_local`, 5 s) | az EA `SAFE` módba lép: függők törlése, short-gamma pozíciók zárása a türelmi idő után (§6.4) | F1.6, F4.2 |
-| CCXT – Binance USDⓈ-M testnet | countdown-alapú „cancel all” (a Binance futures `countdownCancelAll` végpontja; ccxt-hívása ellenőrizendő) | a venue a visszaszámlálás végén töröl | F4.2 |
-| Polymarket CLOB (F6+, HU-ban blokkolt) | order heartbeat (az exec átnéző szerint 5 s; végpont ellenőrizendő) | a venue törli a nyitott megbízásokat | F6 |
+| CCXT – Binance USDⓈ-M testnet | `countdownCancelAll` **szimbólumonként** (a `symbol` kötelező, `countdownTime = 0` leállítja): minden nyitott instrumentumra külön élesíteni és megújítani; a hívássúly a profil `rate_limits` vödrébe kerül (`cost.arm_dead_man`, `cost.heartbeat`; a súly értéke ellenőrizendő). `dead_man_guaranteed` ellenőrizendő | a venue a visszaszámlálás végén törli az adott szimbólum megbízásait | F4.2; **testnet-teszt: törli-e a `countdownCancelAll` a `reduce_only` védőstopokat** (ha igen, §1.7 szerint ott nincs megmaradó SL) |
+| Polymarket CLOB (F6+, HU-ban blokkolt) | order heartbeat az A3 `polymarket-order-heartbeat` szerint: 5 s-onként küldendő, **az API-kulcs összes** nyitott megbízására vonatkozik; 10 s heartbeat nélkül a szerver legfeljebb 5 s-os vizsgálati ciklusban cancel-all-t állít sorba, **best effort**. Profil: `dead_man_timeout_s: 15`, `dead_man_scope: api_key`, `dead_man_guaranteed: false` | a venue (nem garantáltan) törli a nyitott megbízásokat | F6 |
 | Kalshi (F6+) | ellenőrizendő; ha nincs, külső watchdog-folyamat törli a megbízásokat | watchdog | F6 |
 
-A policy L3+ szintet csak olyan venue-n enged, ahol `arm_dead_man()` igazzal tért vissza.
+A policy L3+ szintet csak olyan venue-n enged, ahol `arm_dead_man()` igazzal tért vissza. Best-effort helyszínen (`dead_man_guaranteed: false`) a K5 időkorlátja (§6.5) **nem garantált**: a gyakorlat méri és riportolja, de a kapu ott csak a megbízás-törlés megtörténtét kéri, az időt nem.
 
 ### 3.7 Végrehajtás-minőség mérése (`atp.execq`)
 
-**Adat fillenként:** `arrival_ns`, `send_ns`, `ack_ns`, `fill_ns`, `bid_at_send`, `ask_at_send`, `ref_mid_at_send` (független referenciafeed, pl. Dukascopy), `clock_offset_us`. Az elutasított és requote-olt kéréseket is naplózzuk (`ExecutionReport.kind = reject`, `venue_code`).
+**Csak kliens fill (`origin = client`) számít a TCA-ba**; a kéretlen fill (SL, TP, stop-out, likvidáció, kézi) TCA-mezői `None`-ok (a `Fill` validátora kikényszeríti). **Adat kliens fillenként:** `arrival_ns`, `send_ns`, `ack_ns`, `fill_ns`, `bid_at_send`, `ask_at_send`, `ref_mid_at_send` (független referenciafeed, pl. Dukascopy), `clock_offset_us`. Az elutasított és requote-olt kéréseket is naplózzuk (`ExecutionReport.kind = reject`, `venue_code`).
 
 **Mérőszámok** (s = oldal: vételnél +1, eladásnál −1):
 - csúszás: `slip_ticks = s × (fill − ár_küldéskor) / tick_size`, ahol `ár_küldéskor` vételnél az ask, eladásnál a bid; pozitív = kedvezőtlen;
@@ -1026,7 +1053,9 @@ A policy L3+ szintet csak olyan venue-n enged, ahol `arm_dead_man()` igazzal té
 - tartási idő: `ack_ns − send_ns` eloszlása, a fill- és a reject-ágon külön.
 
 **Feltételes szimmetria-teszt.** A küldés és a fill közötti ármozgás `Δm = s × (mid(fill_ns) − mid(send_ns))`. Tisztességes végrehajtásnál a kedvező és a kedvezőtlen mozgás ugyanúgy átmegy a fill-árba:
-`slip = β₊·Δm·1[Δm > 0] + β₋·Δm·1[Δm < 0] + ε`, H₀: β₊ = β₋ (Wald-teszt, HAC-szórással). Kiegészítő próba: a nem nulla csúszású fillek között a kedvezőtlenek aránya `Binomial(n, 0,5)` (egyoldalú). A tesztet `|Δm|`-vödrönként és munkamenetenként (Ázsia, London, NY, rollover ±1 óra) is lefuttatjuk.
+`slip = β₊·Δm·1[Δm > 0] + β₋·Δm·1[Δm < 0] + ε`, H₀: β₊ = β₋ (Wald-teszt, HAC-szórással). Kiegészítő próba: a nem nulla csúszású fillek között a kedvezőtlenek aránya `Binomial(n, 0,5)` (egyoldalú). A tesztet `|Δm|`-vödrönként és munkamenetenként (Ázsia, London, NY, rollover ±1 óra) is lefuttatjuk. **Többszörös tesztelés:** a vödrök (ármozgás × munkamenet × helyszín × instrumentum) p-értékeit Benjamini–Hochberg (q = 0,10, felderítő riport) vagy Holm (α = 0,05, ha a riport döntést indokol, pl. bróker-váltást) szerint korrigáljuk; a riport q-értékeket ad, nem nyers p-t.
+
+**Referenciafeed-késés:** az 1 s-os markout előtt a referenciafeed és a venue-feed közötti késést lead-lag keresztkorrelációval becsüljük (a mid-hozamok keresztkorrelációjának maximuma ±2 s eltolásban, 10 ms-os rácson, naponta); a becsült késéssel eltolt referencia-mid adja a `ref_mid` értékét. Ha a késés bizonytalansága nagyobb, mint 100 ms, az 1 s-os markout arra a napra „nem értékelhető”.
 
 **Last-look szignatúra** (mindhárom együtt erős jel): (1) a reject/requote valószínűsége nő a kliensnek kedvező `Δm`-mel (logisztikus regresszió, a meredekség > 0, p < 0,01); (2) a tartási idő hosszabb a kliensnek kedvező mozgás után; (3) a kedvező mozgás után teljesült fillek aránya kisebb, mint a kedvezőtlen után.
 
@@ -1108,7 +1137,7 @@ sequenceDiagram
 | `TICK` | EA→Py (md) | `md_seq`, `sym`, `bid`, `ask`, `last`, `vol`, `time_msc` (szerver), `local_ms` |
 | `HEARTBEAT` | kétirányú | `mode`, `last_rx_seq`, `time_trade_server`, `time_gmt` |
 | `ACK` / `RESEND` | kétirányú | `ack_seq` / `from_seq` |
-| `NEW_ORDER` | Py→EA | `coid`, `coid_short`, `sym`, `side`, `type`, `volume` (lot), `price`, `sl`, `tp`, `deviation_pts`, `filling`, `type_time`, `expiration`, `magic`, `position` (zárásnál), `expires_ns`, `intent_hash`, `max_slip_pts` |
+| `NEW_ORDER` | Py→EA | `coid`, `coid_short`, `sym`, `side`, `type`, `volume` (lot), `price`, `sl`, `tp`, `deviation_pts`, `filling`, `type_time`, `expiration`, `magic`, `position` (hedging zárásnál kötelező: az `OrderIntent.position_id` tickete), `expires_ns`, `intent_hash`, `max_slip_pts` |
 | `CANCEL` / `MODIFY` / `CLOSE` | Py→EA | `coid` vagy `ticket`, új `price`/`sl`/`tp`, `intent_hash` |
 | `EXEC_REPORT` | EA→Py | `coid`, `kind`, `retcode`, `retcode_external`, `request_id`, `order`, `deal`, `position`, `price`, `volume`, `deal_reason`, `comment_seen`, `time_msc` |
 | `KILL` | Py→EA | `scope` (`ALL`/`SYMBOL`/`MAGIC`/`ACCOUNT`), `flatten` (bool), `reason` |
@@ -1152,7 +1181,7 @@ Az EA inputjai a profilból és a `conf/risk/*` fájlból generálódnak; a hash
 1. `OrderSend`/`OrderSendAsync` visszatérési értéke mellett **mindig** a `MqlTradeResult.retcode`-ot kell vizsgálni [mql5-trade-return-codes]. A requote és az árváltozás korlátos számú újrapróbálást kap, de csak új `coid` nélkül, ugyanarra a journal-sorra.
 2. A filling mode szimbólumonként eltér: `SYMBOL_FILLING_MODE` alapján, nem fixen FOK [mql5-ordercheck].
 3. `OrderCheck()` minden küldés előtt.
-4. Netting és hedging számla eltérő pozíciókezelést kíván (`ACCOUNT_MARGIN_MODE`). Hedging számlán a zárás a `position` ticketre szól (ez a `reduce_only` emulációja).
+4. Netting és hedging számla eltérő pozíciókezelést kíván (`ACCOUNT_MARGIN_MODE`). Hedging számlán a zárás **csak** a `position` ticketre szólhat (close-by-ticket, ez a `reduce_only` emulációja); ticket nélküli ellentétes megbízás hedging számlán új, ellentétes pozíciót nyitna, ezért az EA ezt `reduce_only` esetén elutasítja.
 5. Térfogat-normalizálás: `SYMBOL_VOLUME_MIN`, `SYMBOL_VOLUME_STEP`, `SYMBOL_VOLUME_MAX` – **csak az adapterben és az EA-ban**; a mag kanonikus `qty`-t küld, amelyet már a `lot_step`-re kerekített. Ár: `SYMBOL_DIGITS`, `SYMBOL_TRADE_TICK_SIZE`; stop-szint: `SYMBOL_TRADE_STOPS_LEVEL`, `SYMBOL_TRADE_FREEZE_LEVEL`.
 6. Idő: `TimeTradeServer()` a szerveridő, `TimeGMT()` az UTC; minden `HELLO`/`HEARTBEAT` mindkettőt küldi (§3.4).
 7. A globális és statikus állapot újrainicializálódik időkeret-váltáskor és újrafordításkor; az `OnInit`/`OnDeinit` reason kódjait kezelni kell (https://www.mql5.com/en/docs/runtime/running). Az állapot ezért a journal-fájlban él, nem memóriában.
@@ -1198,7 +1227,7 @@ flowchart TB
 6. `pre_trade(OrderIntent)` → policy (OPA) → szükség esetén jóváhagyás → OMS.
 
 **Kilépés (`intent_kind ∈ {reduce, close}`, `reduce_only = True`):**
-- a méretező csak a meglévő saját pozícióig enged (`qty ≤ |pozíció|`, az irány nem fordulhat);
+- a megbízás **a pozícióval ellentétes oldalú**, és a méretező csak a meglévő saját pozícióig enged (`qty ≤ |pozíció|`, az irány nem fordulhat); hedging számlán kötelező a `position_id` (close-by-ticket), különben a venue új, ellentétes pozíciót nyitna;
 - **nem** fut rá szavazás, ördögügyvéd, vétó, jóváhagyás és szintkorlát; a `DATA_STALE` sem blokkolja (ilyenkor piaci vagy széles limitű megbízás megy);
 - a `pre_trade` csak az érvényességet (`reduce_only` valóban csökkent), a külön zárási rátakeretet (alap 30/perc) és a minimális mennyiséget nézi;
 - L0-n, kill alatt és `SAFE` módban is engedett. A policy ezt külön szabállyal engedi (§7.2).
@@ -1218,7 +1247,7 @@ Logit-pooling az **ébren lévő** (nem tartózkodó) szavazók normalizált sú
 
 `ℓ_ens = Σ_{i∈A} ŵ_i · logit(p_i)`; `p_ens = σ(ℓ_ens)`; `D = sqrt(Σ_{i∈A} ŵ_i (logit p_i − ℓ_ens)²)` (egyet nem értés, logit-egységben).
 
-Ha `|A| < n_awake_min` (alap 2), nincs javaslat. Egy aggregátor egy horizont-vödörhöz tartozik; eltérő horizontú szavazó külön aggregátorba kerül (v1-ben nincs horizont-átskálázás). Alternatíva a stacking meta-learner (purged CV-vel tanítva); a két változatot a validálási kapu dönti el (§8.4). (köv.)
+Ha `|A| < n_awake_min` (alap 2), nincs javaslat: `NO_QUORUM` auditesemény, az ördögügyvéd nem fut. Egy aggregátor egy horizont-vödörhöz tartozik; eltérő horizontú szavazó külön aggregátorba kerül (v1-ben nincs horizont-átskálázás). Alternatíva a stacking meta-learner (purged CV-vel tanítva); a két változatot a validálási kapu dönti el (§8.4). (köv.)
 
 ### 5.5 Online súlyfrissítés: sleeping experts + fixed share + KL-vetítés a korlátos szimplexre
 
@@ -1231,6 +1260,7 @@ Késleltetett visszajelzés: az `i` szavazó `t`-kori szavazatának vesztesége 
 5. **Csoportplafon:** az LLM-szavazók összsúlya ≤ `w_llm_max` (alap 0,25). Sértés esetén a két csoportot külön vetítjük `w_llm_max`, illetve `1 − w_llm_max` összegre (megengedett, ha `|G|·w_min ≤ w_llm_max ≤ |G|·w_max` és ugyanez a maradékra).
 6. Hiperparaméterek: `η ∈ [0,05; 1]`, `α ∈ [0; 0,05]`, `w_min = 0,02`, `w_max = 0,35`; csak a kutatási hangolásban, a trial-könyvelés alatt (§8.4).
 7. Hideg indítás: az új szavazó `w_min`-nel indul, és legalább `n_min = 200` lezárt címke után kap súlyfrissítést (addig alszik).
+8. **Megvalósíthatóság a konstruktorban:** a `CappedHedge` létrehozásakor `check_feasible` fut (`N·w_min ≤ 1 ≤ N·w_max`, `|G|·w_min ≤ w_llm_max`, `|rest|·w_min ≤ 1 − w_llm_max ≤ |rest|·w_max`); megvalósíthatatlan konfiguráció azonnal `ValueError`, nem az `update()` közben. Új szavazó = új példány, újra ellenőrizve.
 
 ```python
 # atp/decision/weights.py
@@ -1258,6 +1288,21 @@ def project_capped_simplex(w: dict[str, float], lo: float, hi: float, total: flo
     return out
 
 
+def check_feasible(groups: dict[str, str], lo: float, hi: float, group_cap: dict[str, float]) -> None:
+    """A konstruktor hívja: megvalósíthatatlan konfiguráció azonnal ValueError, nem update() közben."""
+    n = len(groups)
+    if not (n * lo <= 1.0 <= n * hi):
+        raise ValueError(f"N·w_min ≤ 1 ≤ N·w_max sérül (N={n}, w_min={lo}, w_max={hi})")
+    for g, cap in group_cap.items():
+        m = sum(1 for v in groups.values() if v == g)
+        r = n - m
+        if m == 0:
+            continue
+        if not (m * lo <= cap and r * lo <= 1.0 - cap <= r * hi):
+            raise ValueError(f"csoportplafon {g}={cap}: |G|·w_min ≤ cap és |rest|·w_min ≤ 1−cap ≤ |rest|·w_max kell "
+                             f"(|G|={m}, |rest|={r})")
+
+
 def update(w: dict[str, float], losses: dict[str, float], eta: float, alpha: float,
            lo: float, hi: float, groups: dict[str, str], group_cap: dict[str, float]) -> dict[str, float]:
     """losses: csak az ébren lévő (nem tartózkodó, nem NaN) szavazók; a többi alszik."""
@@ -1272,7 +1317,12 @@ def update(w: dict[str, float], losses: dict[str, float], eta: float, alpha: flo
             new[k] = raw[k] * mass / z
     n = len(new)
     new = {k: (1 - alpha) * v + alpha / n for k, v in new.items()}     # fixed share
-    new = project_capped_simplex(new, lo, hi)
+    return _project(new, lo, hi, groups, group_cap)
+
+
+def _project(w: dict[str, float], lo: float, hi: float, groups: dict[str, str],
+             group_cap: dict[str, float]) -> dict[str, float]:
+    new = project_capped_simplex(w, lo, hi)
     for g, cap in group_cap.items():                                  # pl. {"llm": 0.25}
         members = [k for k in new if groups.get(k) == g]
         if members and sum(new[k] for k in members) > cap + 1e-12:
@@ -1281,12 +1331,25 @@ def update(w: dict[str, float], losses: dict[str, float], eta: float, alpha: flo
             b = project_capped_simplex({k: new[k] for k in rest}, lo, hi, 1.0 - cap)
             new = a | b
     return new
+
+
+class CappedHedge:
+    def __init__(self, groups: dict[str, str], eta: float, alpha: float, w_min: float = 0.02,
+                 w_max: float = 0.35, group_cap: dict[str, float] | None = None) -> None:
+        self.groups, self.eta, self.alpha = dict(groups), eta, alpha
+        self.lo, self.hi, self.group_cap = w_min, w_max, dict(group_cap or {"llm": 0.25})
+        check_feasible(self.groups, self.lo, self.hi, self.group_cap)   # új szavazó = új példány
+        self.w = _project({k: 1.0 for k in self.groups}, self.lo, self.hi, self.groups, self.group_cap)
+
+    def update(self, losses: dict[str, float]) -> dict[str, float]:
+        self.w = update(self.w, losses, self.eta, self.alpha, self.lo, self.hi, self.groups, self.group_cap)
+        return self.w
 ```
 
 Elméleti háttér: Hedge/multiplicative weights, fixed share (Herbster–Warmuth), sleeping experts (Freund–Schapire–Singer–Warmuth, 1997); a forrásokat az A6 gyűjti [river].
 
 **Tulajdonság-tesztek (Hypothesis) [hypothesis], F3.1:**
-1. `|Σw − 1| ≤ 1e-9` és minden `w_i ∈ [w_min, w_max]` minden megengedett bemenetre; nem megengedett `(N, w_min, w_max)` → `ValueError`.
+1. `|Σw − 1| ≤ 1e-9` és minden `w_i ∈ [w_min, w_max]` minden megengedett bemenetre. A Hypothesis-stratégia csak megvalósítható `(N, csoportok, w_min, w_max, w_llm_max)` konfigurációt generál; külön teszt ellenőrzi, hogy a megvalósíthatatlan (pl. 1 LLM + 2 egyéb szavazó, `w_max = 0,35`, `w_llm_max = 0,25`: a maradék legfeljebb 0,70 < 0,75) a konstruktorban `ValueError`.
 2. Az LLM-csoport összsúlya ≤ `w_llm_max`.
 3. **α = 0 és azonos veszteség minden ébren lévőre → a súlyok változatlanok** (megengedett kiinduló súlyokból). α > 0 mellett a súlyok az egyenletes felé mozdulnak: `KL(w′ ‖ u) ≤ KL(w ‖ u)`.
 4. Az alvó szavazók súlya a multiplikatív lépésben nem változik.
@@ -1297,7 +1360,7 @@ Elméleti háttér: Hedge/multiplicative weights, fixed share (Herbster–Warmut
 ### 5.6 Kalibráció és bizonytalanság
 
 - A szavazónkénti kalibráció rolling ablakon fut, időben a tanító után (purged). Kis mintán Platt, `n > 1000` felett isotonic [sklearn-calibration].
-- Ensemble-szinten újrakalibrálunk, és figyeljük a Brier-pontot és az ECE-t (expected calibration error, 10 bin).
+- Ensemble-szinten újrakalibrálunk, és figyeljük a Brier-pontot és az ECE-t. **ECE-becslés:** 10 egyenlő tömegű (kvantilis) bin, és a döntésekhez a **bootstrap 95%-os felső korlát** (B = 1000, a lezárt címkéken blokk-bootstrap a horizont hosszával). **Hiszterézis:** a vétó és az L2 → L1 visszaesés akkor kapcsol, ha a felső korlát > 0,05; visszakapcsolás csak 3 egymást követő, nem átfedő ablak után, amelyekben a felső korlát ≤ 0,03. Így a 200 címkés ablak zaja nem csapkodja a szintet.
 - A konformális sáv adaptív idősoros változat (például ACI) [mapie]. Ha a hozam-intervallum a költségek után tartalmazza a 0-t, nincs nyitás.
 
 ### 5.7 Méretező: egy alap, korlátos szorzók
@@ -1390,7 +1453,7 @@ Két rétegből áll: (1) **determinisztikus szabálykészlet** (vétójog), (2)
 | Kód | Feltétel (alapértelmezés, konfigurálható) |
 |---|---|
 | `RISK_LIMIT` | az előszimuláció (`RiskDecision.approve = false`) bármely limitet sért (§6) |
-| `CALIB_DEGRADED` | az ensemble rolling ECE-je > 0,05, vagy a Brier skill score < 0 az utolsó N = 200 lezárt címkén |
+| `CALIB_DEGRADED` | az ensemble ECE-jének bootstrap felső korlátja > 0,05 (egyenlő tömegű binek, §5.6, hiszterézissel), vagy a Brier skill score < 0 az utolsó N = 200 lezárt címkén |
 | `DATA_STALE` | a tick kora > 2 s, tick-rés, feature-hiány, vagy a Pandera-kapu bukott |
 | `UNTRUSTED_SOLE_DRIVER` | a `p_ens` irányát egyedül `untrusted_text` szavazó dönti el (nélküle az ébren lévők `ℓ_ens` előjele más vagy 0) |
 | `SINGLE_SOURCE_NEWS` | a hír-alapú szavazat < 2 független forrásra épül |
@@ -1402,7 +1465,7 @@ Két rétegből áll: (1) **determinisztikus szabálykészlet** (vétójog), (2)
 
 Ha bármelyik teljesül, `veto = true`. A `RISK_LIMIT` és a `DATA_STALE` vétót **ember sem írhatja felül**. A többit L1–L2 szinten egy ember felülbírálhatja, második megerősítéssel (TOTP, §7.4), és ez auditált.
 
-**Puha ellenérv:** az LLM-kritikus strukturált összefoglalót kap (a javaslat, a méret, az előszimuláció, a szavazatok, a rezsim, a közelmúlt teljesítménye); megbízhatatlan szöveget **nem**. A kimenete `{counter_args[], severity 0..1}`, ebből `conf_mult = 1 − 0,5·severity`. A kritikus hívása is a record/replay gyorsítótáron megy át.
+**Puha ellenérv:** az LLM-kritikus strukturált összefoglalót kap (a javaslat, a méret, az előszimuláció, a szavazatok, a rezsim, a közelmúlt teljesítménye); megbízhatatlan szöveget **nem**. A kimenete `{counter_args[], severity 0..1}`, ebből `conf_mult = 1 − 0,5·severity`. A kritikus hívása is a record/replay gyorsítótáron megy át. **Időkorlát:** 2 s; ha lejár vagy a szolgáltató hibát ad, `severity = 0,5` (tehát `conf_mult = 0,75`), `CRITIC_TIMEOUT` auditesemény, vétó nincs, a determinisztikus szabálykészlet változatlanul fut. Teszt: F3.7.
 
 ---
 
@@ -1414,7 +1477,7 @@ Minták: SEC 15c3-5 (előre beállított tőkeküszöbök, hibásnak tűnő megb
 
 1. Számla-, venue- és instrumentum-engedélylista; kereskedési idő (`sessions`, szerveridőből UTC-re); `blocked_jurisdictions` (OPA, §7.2).
 2. Max. megbízási névérték, árgallér (a limitár ≤ X tick a midtől).
-3. Megbízás-ráta (perc/instrumentum, a profil `rate_limits` vödreivel, a Kalshi-féle tokenköltséggel együtt), duplikátum-szűrés (`intent_hash` 60 s-on belül).
+3. Megbízás-ráta (perc/instrumentum, a profil `rate_limits` vödreivel, a Kalshi-féle tokenköltséggel együtt); duplikátum-szűrés a **`dedup_key`** alapján 60 s-on belül (`hashing.dedup_key`: a tartalmi mezők, a `client_order_id`, `created_ns` és `proposal_id` nélkül). Az `intent_hash` erre nem alkalmas, mert a UUIDv7-et és az időbélyeget is fedi; az `intent_hash` marad a jóváhagyás és az audit kulcsa.
 4. **Effektív tőkeáttétel a kötés után ≤ 10×** (`peg_risk` instrumentumon ≤ 5×), a saját, az idegen és a kézi pozíciókkal együtt, a short-gamma stratégiáknál a **legrosszabb megnyitható állapotra** (minden még nyitható grid-szinttel). Ez váltja ki a régi „margin-szint ≥ 300%” padlót: 1:500 mellett a 300%-os margin-szint kb. 167× effektív áttételt engedett volna (0,6%-os mozgás nulláz).
 5. **Stresszveszteség ≤ 25% equity** minden történelmi sokknapra (§6.2), a még nyitható grid-szintekkel.
 6. Margin-szimuláció a profil margin-modelljével, számladevizára váltva: a kötés utáni margin-szint a stop-out fölött; a stop-out-távolság `x_SO` ≥ `ES₉₉,₉` (§6.2; riasztás már 2 × ES₉₉,₉ alatt).
@@ -1441,14 +1504,16 @@ P&L_számla    = qty × Δár × Árf(jegyzés → számla)
 
 ```text
 StressLoss_s = Σ_{i nyitott} |N_i| · max(0, −irány_i · x_{s,i})
-             + Σ_{j még nyitható szint, x_s útján} |N_j| · max(0, |x_{s,j}| − δ_j)   (folytonos út)
+             + Σ_{j ∈ J_s} |N_j| · (|x_{s,j}| − δ_j)                     (folytonos út)
+J_s          = a még nyitható szintek a pálya KEDVEZŐTLEN oldalán, amelyeket a mozgás elér:
+               esésnél a vételi szintek az ár alatt, emelkedésnél az eladási szintek fölötte (δ_j < |x_{s,j}|)
 gap-változat: a szintek és a stop a mozgás végén teljesülnek  → a nagyobbik számít
 feltétel:     max_s StressLoss_s ≤ 0,25 · E
 ```
 
-ahol `δ_j` a `j` szint relatív távolsága az aktuális ártól. Egyetlen kitettségre ez `L_eff ≤ 0,25/x`: **5,4×** (EURUSD 2008-12-19, −4,63%), **5,6×** (USDJPY 2024-08-05, −4,49%), **3,2×** (GBPUSD 2016-06-24, −7,84%), **1,7×** (EURCHF 2015-01-15, −14,40%), 9,5× (GBPUSD 2016-10-07). Ez a **kötő** limit: a 10×-es plafon csak felső határ.
+ahol `δ_j` a `j` szint relatív távolsága az aktuális ártól; a mozgással azonos oldalon nyíló (nyerő) szintek nem számítanak, és nem nettósítanak. Egyetlen kitettségre ez `L_eff ≤ 0,25/x`: **5,4×** (EURUSD 2008-12-19, −4,63%), **5,6×** (USDJPY 2024-08-05, −4,49%), **3,2×** (GBPUSD 2016-06-24, −7,84%), **1,7×** (EURCHF 2015-01-15, −14,40%), 9,5× (GBPUSD 2016-10-07). Ez a **kötő** limit: a 10×-es plafon csak felső határ.
 
-**Forgatókönyv-készlet** (`conf/risk/scenarios.yaml`, ECB-fixing, A7 §5.3): 2008-12-19 EURUSD; 2015-01-15 EURCHF; 2016-06-24 GBPUSD és EURGBP; 2016-10-07 GBPUSD és EURGBP; 2024-08-05 USDJPY. Az instrumentumra nem definiált mozgást a forgatókönyv a legközelebbi devizaláb mozgásával tölti ki; ha nincs ilyen, a legnagyobb abszolút mozgás érvényes.
+**Forgatókönyv-készlet** (`conf/risk/scenarios.yaml`, ECB-fixing, A7 §5.3): 2008-12-19, 2015-01-15, 2016-06-24, 2016-10-07, 2024-08-05. **Minden dátumra a teljes ECB-keresztmetszet** kerül a forgatókönyvbe: minden ECB-referenciadeviza aznapi (előző munkanaphoz mért) tényleges mozgása, a keresztárfolyamok az EUR-fixingekből számolva (pl. a 2015-01-15-i EURUSD a saját tényleges mozgását kapja, nem a CHF −14,40%-át). Olyan instrumentumra, amelyre nincs ECB-adat (index-CFD, kripto, árupiac), a `scenarios.yaml`-ban explicit, forrással megadott mozgás kell; ennek hiányában az instrumentum nyitásra tiltott (`STRESS_UNDEFINED`).
 
 **Margin-riasztás** (a stop-out-távolságból, nem fix margin-szintből): `x_SO = 1/L_eff − SO/λ`; riasztás, ha `x_SO < 2 × ES_99,9` (az instrumentum EVT napi várható vesztesége, A7: EURUSD 2,95%); nyitás tiltva, ha `x_SO < ES_99,9`. A `SO` a profilból jön (20% vagy 50% adat, nem kód), és az adapter a venue által riportolt értékkel (`stop_out_pct_reported`) egyezteti; eltérés → `SAFE`.
 
@@ -1476,8 +1541,8 @@ A `flatten` mindig `reduce_only` piaci (vagy marketable limit) megbízással, li
 | K2 | instrumentum-leállítás | az instrumentumon nincs nyitás; függők törlése | ≤ 1 s |
 | K3 | venue/számla `cancel_all` | minden saját függő megbízás törölve; flatten a §6.4 szerint | ≤ 2 s (függők) |
 | K4 | globális szoftveres `KILL` | K3 minden venue-n; a szint L0 | ≤ 2 s |
-| K5 | a mag kiesése (folyamat leállítva) | venue-natív vagy helyi dead-man: MT5 EA `SAFE`; Binance countdown; Polymarket heartbeat-lejárat | ≤ a `dead_man_timeout_s` + 2 s |
-| K6 | ember, sávon kívül | Telegram `/kill` engedélyezett `user_id`-ről + TOTP → K4; tartalékként kézi belépés (terminálban „AutoTrading” ki, tőzsdei felületen „cancel all”) | automata rész ≤ 5 s; a kézi rész negyedéves gyakorlat, futtatókönyvvel |
+| K5 | a mag kiesése (folyamat leállítva) | venue-natív vagy helyi dead-man: MT5 EA `SAFE`; Binance szimbólumonkénti countdown; Polymarket heartbeat-lejárat | ≤ `dead_man_timeout_s` + 2 s (MT5: 7 s); best-effort helyszínen (`dead_man_guaranteed: false`, pl. Polymarket) **nem garantált**, csak mért |
+| K6 | ember, sávon kívül | Telegram `/kill` az engedélyezett `user_id`-listáról, **TOTP nélkül** (a biztonságos irányban nincs súrlódás) → K4; tartalékként kézi belépés (terminálban „AutoTrading” ki, tőzsdei felületen „cancel all”). A visszakapcsolás (un-kill) TOTP-t és négy szemet kér | automata rész ≤ 5 s; a kézi rész negyedéves gyakorlat, futtatókönyvvel |
 
 A **kill-gyakorlat** (F4.2) minden adapteren (`sim`, `mt5_bridge_sim`, `ccxt_replay`; demón `mt5_demo`, `ccxt_testnet`) mind a hat szintet lefuttatja 5 függő megbízással és 2 pozícióval. Riportja szintenként: `pending_after`, `positions_after` (a flatten-politika szerint), `elapsed_ms`, auditesemény megléte.
 
@@ -1487,6 +1552,8 @@ Minden `short_gamma = True` stratégiára kötelező az L2 micro-live előtt és
 1. **MC-kapu:** P(csőd 1 éven belül) ≤ 1%. Modell: Student-t(4) innovációk, a realizált volatilitás **1,5-szerese**, legalább 4 000 pálya (a kapuban 10 000), spread, swap, hétvégi gap; **a stratégia tényleges kódja fut** a backtest-motoron, a kosár-stop utáni újraindítás logikájával. Csőd = stop-out **vagy** equity ≤ 50% E₀. A becslés 95%-os Clopper–Pearson felső korlátja is ≤ 1%.
 2. **Sokknap-visszajátszás:** a §6.2 forgatókönyvein (2008-12-19, 2015-01-15, 2016-06-24, 2016-10-07, 2024-08-05) a stresszveszteség ≤ 25% E₀ a folytonos és a gap-változatban is; ahol van tickadat (Dukascopy), az intraday út is.
 3. **Áttétel-plafon** a legrosszabb megnyitható állapotban: ≤ 10× (≤ 5× `peg_risk`).
+
+**Motor-egyeztetés mint kapu:** az A7 grid-MC (Függelék A) nem független ellenőrzés. A farokkapu csak akkor használható, ha a független, eseményvezérelt backtest-motor a **valódi stratégiakóddal**, ugyanazokkal a paraméterekkel az A7 referencia-gridjén ±2 százalékponton belül reprodukálja az A7 eredményét: alap-volatilitáson P(stop-out, 1 év) = 35,3%, a kapu modelljében P(csőd) = 85,2% (F4.9). Eltérés esetén a farokkapu eredménye érvénytelen, amíg az eltérés oka nincs dokumentálva.
 
 Az A7 referencia-gridje (0,05 lot, 20 pip, 10 000 USD, korlátlan szint) **megbukik**: a kapu modelljében (t(4), σ × 1,5) P(csőd) = 85,2%; már az alap-volatilitáson is 35,3% az 1 éves stop-out-valószínűség (3 évre 74,7%), és a minden pályára vett átlagos hozam −32,0%. **A kapu szükséges, de nem elégséges:** az A7 egyetlen átmenő grid-változata is kb. −9,8%-ot veszít évente edge nélkül. A nyereségességet a §8.4 validálási kapui döntik el.
 
@@ -1506,12 +1573,12 @@ A szint számlánként él. A demo/paper számlán a rendszer automatikusan köt
 |---|---|---|---|---|---|
 | L0 | Leállítva | semmit, csak adatgyűjtés és `reduce_only` zárás | – | kill vagy indulás | – |
 | L1 | Javaslat | javaslatot küld, nem köt | dönt és kézzel köt | F3 és F4 kész | – |
-| L2 | Jóváhagyással kötés | `OrderIntent`-et készít, jóváhagyás után megy ki (TTL 60 s, árelmozdulás-korlát) | jóváhagy vagy elutasít (Telegram + TOTP) | ≥ 30 nap L1, paper-kapu (F5.1), farokkapu (§6.6) | ECE > 0,05 → L1 |
+| L2 | Jóváhagyással kötés | `OrderIntent`-et készít, jóváhagyás után megy ki (TTL 60 s, árelmozdulás-korlát) | jóváhagy vagy elutasít (Telegram + TOTP) | ≥ 30 nap L1, paper-kapu (F5.1), farokkapu (§6.6) | az ECE bootstrap felső korlátja > 0,05 → L1 (hiszterézissel, §5.6) |
 | L3 | Korlátozott autonómia | önállóan köt a sávon belül (névérték, napi veszteség, instrumentumlista, időablak); a sávon kívül L2 | napi review, kill | micro-live kapu (F5.4, ≥ 20 kereskedési nap L2) | napi veszteséglimit, 3 vétó/óra, drift → L2 vagy L0 |
 | L4 | Teljes autonómia | stratégián belül teljes, a kockázati motor keretein belül | heti review, kill | skálázási kapu (F6.1), **≥ 90 nap L3** | bármely kemény limit → L0 |
 
 - A szintváltás auditesemény (`LEVEL_CHANGE`). **Felfelé csak ember léptethet**, két lépésben: kérés, majd megerősítés más csatornán, két különböző jóváhagyó TOTP-jával (négy szem). **Lefelé automatikusan is** léphet a rendszer.
-- A policy deklaratív (Rego, OPA) [opa], verziózott és tesztelt (`opa test`). Ha a policy-motor nem elérhető, a válasz nyitásra `deny`, `reduce_only`-ra `allow`.
+- A policy deklaratív (Rego, OPA) [opa], verziózott és tesztelt (`opa test`). Ha a policy-motor nem elérhető, a válasz nyitásra `deny`; `reduce_only` zárásra a governance-réteg a §5.2 érvényességi ellenőrzése után enged (a kill-útvonal flattenje nem függ az OPA elérhetőségétől).
 
 ### 7.2 Policy (Rego, OPA v1 szintaxis)
 
@@ -1520,13 +1587,83 @@ package atp.autonomy
 
 default decision := "deny"
 
-# kilépés: mindig engedett, ha valóban csökkenti a saját pozíciót
+# --- bemenet-ellenőrzés: hiányzó vagy nem numerikus mező -> deny (fail-closed) ---
+valid_number(x) if is_number(x)
+
+valid_number(x) if {
+	is_string(x)
+	regex.match(`^-?[0-9]+(\.[0-9]+)?$`, x)
+}
+
+required_ctx_numbers := ["own_position_qty", "notional_acct", "post_trade_eff_leverage", "stress_loss_pct", "daily_pnl_pct"]
+
+required_data_numbers := ["max_eff_leverage", "max_eff_leverage_peg", "max_stress_loss_pct"]
+
+deny contains "MISSING_INPUT" if {
+	some f in required_ctx_numbers
+	not valid_number(input.ctx[f])
+}
+
+deny contains "MISSING_INPUT" if {
+	some f in required_data_numbers
+	not is_number(data.risk[f])
+}
+
+deny contains "MISSING_INPUT" if not is_number(input.level)
+
+deny contains "MISSING_INPUT" if not valid_number(input.intent.qty)
+
+deny contains "MISSING_INPUT" if not is_boolean(input.ctx.kill_active)
+
+deny contains "MISSING_INPUT" if not is_boolean(input.ctx.dead_man_armed)
+
+deny contains "MISSING_INPUT" if not is_string(input.intent.config_hash)
+
+deny contains "MISSING_INPUT" if not is_string(input.venue.position_mode)
+
+deny contains "MISSING_INPUT" if not is_array(input.venue.blocked_jurisdictions)
+
+deny contains "MISSING_INPUT" if not is_string(input.ctx.client_jurisdiction)
+
+deny contains "MISSING_INPUT" if not is_string(input.ctx.approved_config_hash)
+
+deny contains "MISSING_INPUT" if not is_boolean(input.instrument.peg_risk)
+
+# --- kilépés: ellentétes oldal, legfeljebb a saját pozícióig; hedging számlán close-by-ticket ---
+opposite_side if {
+	input.intent.side == "sell"
+	to_number(input.ctx.own_position_qty) > 0
+}
+
+opposite_side if {
+	input.intent.side == "buy"
+	to_number(input.ctx.own_position_qty) < 0
+}
+
+close_target_ok if input.venue.position_mode == "netting"
+
+close_target_ok if {
+	input.venue.position_mode == "hedging"
+	is_string(input.intent.position_id)
+	input.intent.position_id in input.ctx.own_position_ids
+}
+
 exit_order if {
-	input.intent.reduce_only
+	input.intent.reduce_only == true
+	valid_number(input.intent.qty)
+	valid_number(input.ctx.own_position_qty)
+	opposite_side
+	close_target_ok
 	to_number(input.intent.qty) <= abs(to_number(input.ctx.own_position_qty))
 }
 
-deny contains "KILL_ACTIVE" if input.ctx.kill_active
+deny contains "INVALID_REDUCE_ONLY" if {
+	input.intent.reduce_only == true
+	not exit_order
+}
+
+# --- nyitás: kemény tiltások ---
+deny contains "KILL_ACTIVE" if input.ctx.kill_active == true
 
 deny contains "VENUE_BLOCKED" if {
 	some j in input.venue.blocked_jurisdictions
@@ -1545,12 +1682,12 @@ deny contains "CONFIG_HASH_MISMATCH" if input.intent.config_hash != input.ctx.ap
 
 deny contains "NO_DEAD_MAN" if {
 	input.level >= 3
-	not input.ctx.dead_man_armed
+	input.ctx.dead_man_armed != true
 }
 
-max_leverage := data.risk.max_eff_leverage_peg if input.instrument.peg_risk
+max_leverage := data.risk.max_eff_leverage_peg if input.instrument.peg_risk == true
 
-max_leverage := data.risk.max_eff_leverage if not input.instrument.peg_risk
+max_leverage := data.risk.max_eff_leverage if input.instrument.peg_risk != true
 
 within_band if {
 	lim := data.limits[format_int(input.level, 10)]
@@ -1582,7 +1719,7 @@ decision := "need_approval" if {
 }
 ```
 
-A policy bemenete: `{level, intent: OrderIntent JSON, venue: {venue_id, blocked_jurisdictions}, instrument: {canonical_id, peg_risk}, ctx: {kill_active, client_jurisdiction, own_position_qty, notional_acct, post_trade_eff_leverage, stress_loss_pct, daily_pnl_pct, approved_config_hash, dead_man_armed}}`; a `ctx` értékeit a kockázati motor számolja (`RiskDecision`), a `Decimal` stringként érkezik. A `data.blocked_venues` a `policy/data/blocked_venues.json` fájlból jön; magyar ügyfélre (`HU`) a kiinduló lista: `polymarket_clob` (SZTFH ideiglenes ISP-blokk 2026-01-16 óta, A3/A8 mért), `betfair_ex` (SZTFH-blokk 2023-09 óta, becs.), `kalshi` (EU-ból korlátozott, HU-t is érinti, becs.). A lista módosítása `CONFIG_CHANGE` auditesemény és négy szem. Az `opa test` lefedi: minden szint × (sávon belül, kívül), kill, blokkolt venue, áttétel- és stresszlimit, kilépés kill alatt, hiányzó dead-man L3-on, konfigurációs hash eltérése.
+A policy bemenete: `{level, intent: OrderIntent JSON, venue: {venue_id, position_mode, blocked_jurisdictions}, instrument: {canonical_id, peg_risk}, ctx: {kill_active, client_jurisdiction, own_position_qty, own_position_ids, notional_acct, post_trade_eff_leverage, stress_loss_pct, daily_pnl_pct, approved_config_hash, dead_man_armed}}`. Az `own_position_qty` netting számlán a nettó saját pozíció, hedging számlán a `position_id` által megjelölt pozíció előjeles mennyisége. A `ctx` értékeit a kockázati motor számolja (`RiskDecision`), a `Decimal` stringként érkezik. **Minden kötelező mező hiánya vagy nem numerikus értéke `MISSING_INPUT`-ot ad (fail-closed)**, a `data.risk.*` hiánya is. A `data.blocked_venues` a `policy/data/blocked_venues.json` fájlból jön; magyar ügyfélre (`HU`) a kiinduló lista: `polymarket_clob` (SZTFH ideiglenes ISP-blokk 2026-01-16 óta, A3/A8 mért), `betfair_ex` (SZTFH-blokk 2023-09 óta, becs.), `kalshi` (EU-ból korlátozott, HU-t is érinti, becs.). A lista módosítása `CONFIG_CHANGE` auditesemény és négy szem. Az `opa test` lefedi: minden szint × (sávon belül, kívül), kill, blokkolt venue, áttétel- és stresszlimit, kilépés kill alatt, hiányzó dead-man L3-on, konfigurációs hash eltérése; **minden kötelező mező hiánya és nem numerikus értéke** (pl. `"post_trade_eff_leverage": "abc"`, hiányzó `stress_loss_pct`, hiányzó `data.risk`) → `deny` + `MISSING_INPUT`; **azonos oldali `reduce_only`** (long pozícióra `buy`) → `deny` + `INVALID_REDUCE_ONLY`; hedging számlán `position_id` nélküli vagy idegen `position_id`-jű zárás → `deny`.
 
 ### 7.3 Limitek (alapértelmezés a micro-live fázisra, `conf/risk/micro_live.yaml`)
 
@@ -1602,6 +1739,7 @@ Az EU-s retail 30:1 brókeráttétel mellett a 10×-es plafon már a brókerkorl
 ### 7.4 Ember-a-hurokban és aláírt jóváhagyás
 
 - **Jóváhagyási kártya** (Telegram inline gombok): instrumentum, irány, kanonikus mennyiség és névérték, SL/TP, `p_ens`, `D`, az ördögügyvéd 3 legerősebb ellenérve, stresszveszteség, worst-case veszteség, `intent_hash`, `config_hash`.
+- **TOTP csak a kockázatnövelő irányban kell:** L2-jóváhagyás, visszakapcsolás kill után, szintemelés, limitlazítás, `blocked_venues`-módosítás. A `/kill` és minden szintcsökkentés az engedélyezett listáról TOTP nélkül azonnal végrehajtódik.
 - **Aláírás:** a jóváhagyó a kártyára a hitelesítő alkalmazásából a **TOTP-kódot** (RFC 6238, 30 s, 6 jegy) küldi vissza; a governance-szolgáltatás ellenőrzi, és a jóváhagyási rekordot (`{intent_hash, config_hash, approver_id, decision, ts_ns, nonce, totp_step}`) a saját kulcsával **HMAC-SHA256**-tal aláírja, majd `APPROVAL` auditeseményként írja. A TOTP az ember jelenlétét, a HMAC a rekord sértetlenségét bizonyítja. Egy TOTP-lépés csak egyszer használható (visszajátszás ellen).
 - **TTL és árelmozdulás:** a jóváhagyás érvénytelen, ha 60 s eltelt, vagy a mid több mint k tickkel mozdult; módosult intent (más `intent_hash`) új jóváhagyást kér.
 - **Négy szem** a szintemeléshez, a limitek lazításához és a `blocked_venues` módosításához. Egyszemélyes csapatnál ez időzár: 24 óra várakozás és újramegerősítés újabb TOTP-val.
@@ -1699,7 +1837,7 @@ A célfüggvény **soha nem a nyers in-sample Sharpe**, hanem a purged walk-forw
 Jelölés: `SR̂` per-periódus (nem évesített) Sharpe, `γ₃` ferdeség, `γ₄` kurtózis (nem többlet), `n` megfigyelésszám, `Φ` a standard normális eloszlásfüggvény.
 
 1. **CPCV** (Combinatorial Purged CV, López de Prado, AFML 12. fejezet): N = 10 csoport, k = 2 tesztcsoport → 45 felosztás, 9 backtest-pálya; purge = a címke-horizont, embargo = max(h, a minta 1%-a). Kapu: a pályák medián Sharpe-ja a költségek után > 0, és a pályák ≥ 70%-a pozitív.
-2. **PBO (CSCV)** a study legjobb konfigurációin, S = 16: `PBO < 0,2` [pypbo]. Módszer: Bailey–Borwein–López de Prado–Zhu, J. Comput. Finance 20(4), 2017 (mért a risk.net oldalon).
+2. **PBO (CSCV)** a study legjobb konfigurációin, S = 16: `PBO < 0,2` [pypbo]. Módszer: Bailey–Borwein–López de Prado–Zhu, J. Comput. Finance, online 2016, 20(4) 2017 (mért a risk.net oldalon).
 3. **PSR és DSR** (Bailey–López de Prado 2012, J. Risk, doi 10.21314/JOR.2012.255; DSR: Bailey–López de Prado 2014, JPM, doi 10.3905/jpm.2014.40.5.094, Crossref-fel ellenőrizve 2026-11-15):
 
    ```text
@@ -1708,11 +1846,11 @@ Jelölés: `SR̂` per-periódus (nem évesített) Sharpe, `γ₃` ferdeség, `γ
    DSR      = PSR(SR*₀)  ≥ 0,95
    ```
 
-   - **`N_eff` trial-klaszterezéssel:** a trial-napló OOS-hozamsorainak korrelációs távolsága `d = sqrt(0,5·(1 − ρ))`, ONC-klaszterezés (López de Prado–Lewis, SSRN 3167017); `N_eff` = a klaszterek száma.
+   - **`N_eff` hipotézisenként, trial-klaszterezéssel:** az adott hipotézis (`hypothesis_id`) összes trialjének OOS-hozamsorain a korrelációs távolság `d = sqrt(0,5·(1 − ρ))`, ONC-klaszterezés (López de Prado–Lewis, SSRN 3167017); `N_eff,h` = a klaszterek száma. A DSR így csak a hipotézisen **belüli** keresést deflálja; a hipotézisek közötti többszörösséget a 4. pont BH-ja kezeli (nincs kettős korrekció).
    - **`V̂[SR_k]`** a klaszterszintű (klaszterenként aggregált hozamsorú) Sharpe-ok szórásnégyzete, nem a nyers trialeké (López de Prado 2019, JFDS, doi 10.3905/jfds.2019.1.099).
    - Kiegészítő küszöb: t > 3 (Harvey–Liu–Zhu, A6).
-4. **Globális FDR:** a trial-naplóban minden hipotézis p-értéke `p_h = 1 − DSR_h` (a hipotézis legjobb konfigurációjára). Benjamini–Hochberg q = 0,10 a **valaha tesztelt összes** hipotézisen; csak BH-felfedezés promotálható. A már élő stratégia nem esik ki automatikusan egy későbbi BH-újraszámolás miatt, de jelölést és felülvizsgálatot kap.
-5. **McLean–Pontiff haircut:** publikált jelre (`published_signal = true`) a várható OOS Sharpe = **0,5 × backtest-Sharpe** (McLean–Pontiff 2016, JF, doi 10.1111/jofi.12365: OOS kb. −26%, publikálás után kb. −58%). A DSR és a paper-kapu a haircutolt értékkel számol; saját jelre a haircut 0,75.
+4. **Globális FDR:** a trial-naplóban minden hipotézis p-értéke `p_h = 1 − DSR_h`, ahol a `DSR_h` a hipotézis legjobb konfigurációjára, a saját `N_eff,h`-jával számolt érték (nem a globális `N_eff`-fel). Benjamini–Hochberg q = 0,10 a **valaha tesztelt összes** hipotézisen; csak BH-felfedezés promotálható. A már élő stratégia nem esik ki automatikusan egy későbbi BH-újraszámolás miatt, de jelölést és felülvizsgálatot kap.
+5. **McLean–Pontiff haircut:** publikált jelre (`published_signal = true`) a várható OOS Sharpe = **0,5 × backtest-Sharpe** (McLean–Pontiff 2016, JF, doi 10.1111/jofi.12365: OOS kb. −26%, publikálás után kb. −58%). A DSR és a paper-kapu a haircutolt értékkel számol. Saját (nem publikált) jelre a haircut 0,75: ez **feltevés**, nem mért érték; a saját OOS-lecsengés mérése után felülírandó.
 6. **Lezárt holdout:** a legutóbbi 6 hónap a keresés alatt gépileg elérhetetlen (`research` szerepkörben dátum-tiltás); csak a végső jelöltre, egyszer oldható fel, és a feloldás auditesemény.
 7. **Paraméter-stabilitás:** a legjobb pont ±10%-os környezetében az OOS-metrika ≥ a csúcs 70%-a (fennsík, nem csúcs).
 8. **Keresési költségvetés:** a stratégiánkénti trial-plafon a study indulásakor rögzített; új study trialjei a globális naplóba kerülnek, és növelik az `N_eff`-et.
@@ -1797,7 +1935,50 @@ A demo/testnet tesztek (`-m demo`) éjszakai, külön jobban futnak, demo-hitele
 
 - **1. fázis:** SOPS + age, titkosított fájlok gitben [sops], [age]; runtime-ban csak memóriában. **2. fázis:** OpenBao vagy Vault, szolgáltatásonkénti policyval és rövid életű tokenekkel [openbao], [hashicorp-vault].
 - A bróker-jelszó külön secret, csak a végrehajtó gép olvassa. Befektetői (read-only) jelszó az elemző komponenseknek, ha a bróker ad ilyet (n.e.). A HMAC-kulcsok (híd, jóváhagyás, horgony) külön secretek, évente és incidens után forgatva.
-- Függőségek: `uv.lock` hash-ekkel [uv]; Renovate minimumRelease-késleltetéssel [renovate]; új függőség előtt OpenSSF Scorecard [ossf-scorecard]; SBOM [syft], [cyclonedx]; aláírt image [sigstore-cosign]; cél: SLSA Build L2 [slsa]; folyamat-ellenőrzőlista: NIST SSDF [nist-ssdf]. A CLI-eszközök (gitleaks, osv-scanner, sops, age, opa, promptfoo) rögzített verzióval a CI-image-ben (`tools/versions.env`).
+- Függőségek: `uv.lock` hash-ekkel [uv]; Renovate minimumRelease-késleltetéssel [renovate]; új függőség előtt OpenSSF Scorecard [ossf-scorecard]; SBOM [syft], [cyclonedx]; aláírt image [sigstore-cosign]; cél: SLSA Build L2 [slsa]; folyamat-ellenőrzőlista: NIST SSDF [nist-ssdf]. A CLI-eszközök rögzített verzióval a CI-image-ben (`tools/versions.env`); a Python-eszközök a `pyproject.toml` `dev` csoportjában, a `uv.lock` rögzíti őket. A verziók a 2026-11-15-i állapot szerint mértek (PyPI; GitHub-kiadások az ungh.cc tükrön; a Python az endoflife.date-en; a promptfoo az npm-regiszterben); mindegyik legalább két hete megjelent kiadás, a Renovate-késleltetéssel összhangban.
+
+```bash
+# tools/versions.env – a CLI-eszközök rögzített verziói (mért, 2026-11-15)
+PYTHON_VERSION=3.12.16        # endoflife.date, 2026-10-25
+UV_VERSION=0.13.6             # PyPI/GitHub, 2026-10-27
+GITLEAKS_VERSION=8.30.1       # GitHub, 2026-03-21
+OSV_SCANNER_VERSION=2.7.0     # GitHub, 2026-10-12
+SOPS_VERSION=3.13.3           # GitHub, 2026-07-23
+AGE_VERSION=1.3.2             # GitHub, 2026-08-29
+OPA_VERSION=1.22.0            # GitHub, 2026-10-29
+PROMPTFOO_VERSION=0.125.1     # npm, 2026-10-25
+# a Python-eszközök a pyproject dev-csoportjában (tájékoztatásul, a uv.lock az irányadó)
+PIP_AUDIT_VERSION=2.10.1      # PyPI, 2026-06-10
+IMPORT_LINTER_VERSION=2.15    # PyPI, 2026-09-04
+RUFF_VERSION=0.17.3           # PyPI, 2026-10-27
+PYTEST_VERSION=9.2.0          # PyPI, 2026-10-27
+```
+
+```toml
+# pyproject.toml (kivonat; az import-linter szerződése a §12.4-ben)
+[project]
+name = "atp"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pydantic>=2.14,<3", "pyyaml>=6.0.3", "jsonschema[format]>=4.26"]
+
+[dependency-groups]
+dev = [
+  "pytest==9.2.0",
+  "hypothesis==6.170.14",
+  "ruff==0.17.3",
+  "mypy==2.4.1",
+  "import-linter==2.15",
+  "pip-audit==2.10.1",
+  "pytest-regressions==2.11.0",
+  "syrupy==2026.4.6.124150327040",
+]
+
+[tool.uv]
+required-version = "==0.13.6"
+```
+
+A `uv sync` a `dev` csoportot alapból telepíti, így az F0.3 `uv run pip-audit` parancsa a projektkörnyezetben fut.
 - A közösségi Docker-image-eket (MT5) nem húzzuk be közvetlenül; saját build rögzített base-image hash-sel [mt5-docker-gmag11].
 
 ### 9.6 Megfigyelés
@@ -1852,7 +2033,7 @@ from hypothesis import settings
 settings.register_profile("ci", max_examples=1000, derandomize=True, deadline=None)
 settings.register_profile("dev", max_examples=100)
 
-ADAPTERS = ("sim", "mt5_bridge_sim", "ccxt_replay", "mt5_demo", "ccxt_testnet")
+ADAPTERS = ("sim", "mt5_bridge_sim", "ccxt_replay", "ctrader_replay", "mt5_demo", "ccxt_testnet")
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -1891,13 +2072,13 @@ A blokkok `bash -euo pipefail` alatt futnak: a blokk exit 0-val ér véget, ha m
 | F0.3 | `uv.lock` | nincs ismert high/critical sérülékenység |
 | F0.4 | `secrets/dev.enc.yaml` | SOPS-szal visszafejthető, plaintext titok nincs a repóban |
 | F0.5 | PR a `atp/risk/` mappába | review nélkül nem merge-elhető |
-| F0.6 | `atp/contracts.py`, `pyproject.toml` | a szerződések importálhatók, a séma friss, az import-linter zöld |
+| F0.6 | `atp/contracts.py`, `pyproject.toml` | a szerződések importálhatók; a `schemas/generated/` megegyezik a frissen generálttal; a `schemas/published/` séma és a Pydantic a példákon egyezik; az import-linter zöld |
 
 ```bash
 # F0.1
 uv sync --locked
 rc=0; uv run pytest -q || rc=$?; test "$rc" -eq 0 -o "$rc" -eq 5
-# F0.2 (gitleaks 8.x; újabb verzióban a `gitleaks git` alparancs az ajánlott – a rögzített verzión ellenőrizendő)
+# F0.2 (gitleaks 8.30.1, tools/versions.env; hogy a `detect` alparancs ezen a verzión még támogatott-e a `gitleaks git` mellett, ellenőrizendő)
 gitleaks detect --no-banner --redact
 # F0.3
 uv run pip-audit
@@ -1911,7 +2092,7 @@ gh api "repos/{owner}/{repo}/branches/main/protection" \
 grep -qE '^/?atp/risk/' .github/CODEOWNERS
 # F0.6
 uv run python -c "import atp.contracts"
-uv run python -m atp.tools.export_schemas --check schemas/
+uv run python -m atp.tools.export_schemas --out schemas/generated/ --check   # újragenerál ideiglenes mappába, diff a commitolt változattal
 uv run lint-imports
 ```
 
@@ -1925,12 +2106,13 @@ uv run lint-imports
 | F1.4 | `mt5_bridge_sim`; demón a valódi EA | `HELLO → WELCOME → SNAPSHOT → RECONCILE_DONE(NORMAL)`; heartbeat-kor < 2 s |
 | F1.5a | 10 000 `ctl` keret a szimulátoron | 0 elveszett, 0 duplikátum, p99 < 5 ms (localhost) |
 | F1.5b | 100 `NEW_ORDER` demón, ≤ 8/perc (a 10/perc guard alatt), nyit és zár | 100 `EXEC_REPORT`, 0 duplikátum; az ack-latencia p50/p99 riportolva (nem kapu: a bróker nem a mi kontrollunk) |
-| F1.6 | a Python-folyamat leállítása nyitott demo-pozícióval | az EA 5 s-on belül `SAFE`; függők törölve; short-gamma pozíció zárva a türelmi idő után |
+| F1.6 | a Python-folyamat leállítása nyitott demo-pozícióval | az EA `SAFE` módba lép **≤ `dead_man_timeout_s` + 2 s** alatt (MT5: 5 + 2 = 7 s; ugyanaz a szabály, mint a §6.5 K5); függők törölve; short-gamma pozíció zárva a türelmi idő után |
 | F1.7 | ugyanaz a `coid` kétszer; EA-újraindulás a kettő között; hibás MAC | a második `DUPLICATE`; a hibás MAC eldobva + `SAFE` |
 | F1.8 | comment-csonkítási próba a demón | a mért hossz a profilba kerül; ≥ 14 |
 | F1.9 | DST-váltások 2026 márciusában és novemberében (US és EU) | a `server_tz → UTC` átváltás minden órára helyes |
 | F1.10 | `venues/*/profile.yaml`, `instruments.yaml` | séma- és Pydantic-validálás hiba nélkül; `symbol_map` ↔ `venue_symbol` konzisztens |
 | F1.11 | Market Execution mód, a `deviation`-nél nagyobb csúszás a szimulátorban | `SLIPPAGE_BREACH`, 3 eset után `SPREAD_WIDE`-vétó |
+| F1.12 | 7 nap időszinkron-mérés a végrehajtó gépen (Windows VPS, w32time) | p99 `|eltérés|` < 1 ms; ha bukik, a végrehajtó gép Linux + Wine + chrony (§1.7) – ez a döntés F1-kapu |
 
 ```bash
 # F1.1 (CI: fixture-forrás; éjszaka: --source vantage_mt5_demo)
@@ -1951,6 +2133,9 @@ uv run pytest tests/adapters/mt5/test_heartbeat_loss.py tests/adapters/mt5/test_
 # F1.9, F1.10
 uv run pytest tests/adapters/test_server_tz.py -q
 uv run python -m atp.venues validate venues/*/profile.yaml venues/*/instruments.yaml
+# F1.12 (a végrehajtó gépen; a riportot az atp.obs gyűjti a clock_offset_us metrikából)
+uv run python -m atp.obs.clock_report --host exec-primary --days 7 --report out/clock.json
+jq -e '.p99_abs_offset_us < 1000' out/clock.json
 # éjszakai demo-job: F1.4–F1.8 a valódi EA-val
 uv run pytest tests/adapters/mt5 -q --adapter mt5_demo --demo
 uv run python -m atp.adapters.mt5.soak --target demo --n 100 --rate-per-min 8 --report out/soak_demo.json
@@ -1996,12 +2181,12 @@ uv run pytest tests/adapters/test_contract.py -q --adapter ccxt_testnet --demo
 | # | Bemenet | Elvárt kimenet |
 |---|---|---|
 | F3.1 | súlyfrissítő | a §5.5 hét tulajdonsága, 0 ellenpélda |
-| F3.2 | 3 stat + 2 ML + 1 LLM szavazó, az LLM knowledge cutoff + 1 hónap utáni OOS-ablak | a kiértékelő riport elkészül (ECE, Brier skill, CPCV-pályák); a kapu PASS vagy FAIL – mindkettő érvényes kimenet, FAIL esetén a szavazó nem kap súlyt |
+| F3.2 | 3 stat + 2 ML + 1 LLM szavazó, OOS-ablak az `llm_eval_floor` = knowledge cutoff + 1 hónap után | a kiértékelő riport elkészül (ECE, Brier skill, CPCV-pályák); a kapu PASS vagy FAIL – mindkettő érvényes kimenet, FAIL esetén a szavazó nem kap súlyt |
 | F3.3 | injekciós korpusz (≥ 200 eset) | 0 sémán kívüli kimenet, 0 előjelfordulás |
-| F3.4 | csak az LLM szavaz long; a többi (a) tartózkodik, (b) pontosan p = 0,5-öt ad | `UNTRUSTED_SOLE_DRIVER` vétó mindkét esetben |
+| F3.4 | csak az LLM szavaz long; a többi (a) tartózkodik, (b) pontosan p = 0,5-öt ad | (a) nincs `Proposal`, `NO_QUORUM` auditesemény (1 ébren lévő < `n_awake_min` = 2); (b) `UNTRUSTED_SOLE_DRIVER` vétó |
 | F3.5 | rontott kalibráció (zajosított p) | `CALIB_DEGRADED` vétó, `c_calib = 0` |
 | F3.6 | méretező golden-táblázata (1k, 10k, 100k USD × c) | pontosan a §5.7 értékei; `MIN_QTY` az 1k/c = 0,5 esetén; nincs felfelé kerekítés |
-| F3.7 | szakasz-sorrend; `reduce_only` `DATA_STALE` és kill alatt | az ördögügyvéd a méretezett javaslatot és az előszimulációt kapja; a kilépés átmegy |
+| F3.7 | szakasz-sorrend; `reduce_only` `DATA_STALE` és kill alatt; az LLM-kritikus 2 s-nál tovább válaszol | az ördögügyvéd a méretezett javaslatot és az előszimulációt kapja; a kilépés átmegy; `CRITIC_TIMEOUT`, `conf_mult = 0,75`, nincs vétó |
 | F3.8 | LLM-szavazó replay-módban, üres cache | `LLMCacheMiss`, nincs hálózati hívás |
 
 ```bash
@@ -2009,7 +2194,7 @@ uv run pytest tests/adapters/test_contract.py -q --adapter ccxt_testnet --demo
 uv run pytest tests/decision/test_weights_props.py -q --hypothesis-profile=ci
 # F3.2
 uv run python -m atp.decision.eval --window post_cutoff --report out/eval.json
-jq -e '(.gate == "PASS" or .gate == "FAIL") and has("ece") and has("bss") and (.window_start > .llm_knowledge_cutoff)' out/eval.json
+jq -e '(.gate == "PASS" or .gate == "FAIL") and has("ece") and has("bss") and has("llm_eval_floor") and (.window_start >= .llm_eval_floor)' out/eval.json
 # F3.3 (a promptfoo verziója a tools/versions.env-ben; hiba esetén ≠ 0 kilépés a rögzített verzión ellenőrizendő)
 source tools/versions.env
 npx --yes "promptfoo@${PROMPTFOO_VERSION}" eval -c tests/redteam/promptfooconfig.yaml
@@ -2025,13 +2210,14 @@ uv run pytest tests/sizing/test_golden_sizes.py tests/core/test_stage_order.py t
 |---|---|---|
 | F4.1 | napi veszteség szimulált átlépése | új nyitás tiltva, szint L0, short-gamma flatten, auditesemény |
 | F4.2 | kill-gyakorlat K1–K6, 5 függő megbízás + 2 pozíció, minden adapteren | a §6.5 időkorlátai; `pending_after = 0`; a pozíciók a flatten-politika szerint |
-| F4.3 | `/kill` nem engedélyezett `user_id`-ről; hibás vagy újrahasznált TOTP | elutasítva, riasztás |
+| F4.3 | `/kill` nem engedélyezett `user_id`-ről; `/kill` engedélyezett `user_id`-ről TOTP nélkül; visszakapcsolás TOTP nélkül, hibás vagy újrahasznált TOTP-val | az első elutasítva + riasztás; a második azonnal K4; a visszakapcsolás elutasítva |
 | F4.4 | OPA-policy-k | minden szabály-eset tesztelve, a blokkolt venue is |
 | F4.5 | a policy-motor leállítva | nyitó intent `deny`, `reduce_only` `allow` |
 | F4.6 | auditnapló 10 000 eseménnyel; egy eseményben az `actor` utólag átírva | `verify` a hibás `seq`-et adja és exit 2; az érintetlen napló exit 0 |
 | F4.7 | L2 jóváhagyás 61 s után; módosult `intent_hash`; hibás HMAC | lejárt vagy érvénytelen, nem megy ki |
 | F4.8 | 10×/5× áttétel- és 25%-os stresszlimit; ugyanaz az EA-csonkban | a limitet sértő nyitás elutasítva a motorban, az OPA-ban és az EA-ban |
-| F4.9 | farokkapu ismert fixture-stratégiákon | az A7 referencia-gridje FAIL; az A7 átmenő változata PASS; a riportban P(csőd) és a Clopper–Pearson-korlát |
+| F4.9 | farokkapu ismert fixture-stratégiákon; motor-egyeztetés | a független eseményvezérelt motor a valódi grid-kóddal az A7 referencia-gridjén ±2 százalékponton belül adja az A7 értékeit (P(stop-out, 1 év) 35,3%; σ × 1,5 mellett P(csőd) 85,2%); az A7 referencia-gridje FAIL; az A7 átmenő változata PASS; a riportban P(csőd) és a Clopper–Pearson-korlát |
+| F4.11 | Binance USDⓈ-M testnet: nyitott pozíció `reduce_only` védőstoppal, majd a countdown lejár | a riport rögzíti, hogy a `countdownCancelAll` törölte-e a védőstopot; ha igen, a profil `server_side_sl_tp`-je erre a helyszínre `false`, és a §1.7 állítása ott nem érvényes |
 | F4.10 | WORM-horgony | a horgony kiírva, a lánc a horgonnyal együtt ellenőrizhető |
 
 ```bash
@@ -2039,6 +2225,8 @@ uv run pytest tests/sizing/test_golden_sizes.py tests/core/test_stage_order.py t
 uv run pytest tests/risk/test_daily_loss.py tests/governance/test_telegram_auth.py \
   tests/governance/test_fail_closed.py tests/governance/test_approval.py tests/risk/test_leverage_stress.py \
   tests/risk/test_tail_gate.py tests/audit/test_anchor.py -q
+uv run python -m atp.research.engine_reconcile --reference a7_reference_grid --tolerance-pp 2 --report out/reconcile.json
+jq -e '.within_tolerance == true' out/reconcile.json
 uv run pytest tests/adapters/mt5/test_ea_limits.py -q --adapter mt5_bridge_sim
 # F4.2
 for a in sim mt5_bridge_sim ccxt_replay; do
@@ -2052,8 +2240,12 @@ opa test policy/ -v
 rc=0; uv run python -m atp.audit.verify --db tests/fixtures/audit/tampered.db --from 0 || rc=$?; test "$rc" -eq 2
 uv run python -m atp.audit.verify --db tests/fixtures/audit/clean.db --from 0
 # éjszakai demo/testnet kill-gyakorlat
-uv run python -m atp.governance.kill_drill --adapter mt5_demo --levels 1-5 --demo --report out/kill_mt5_demo.json
-uv run python -m atp.governance.kill_drill --adapter ccxt_testnet --levels 1-5 --demo --report out/kill_ccxt_testnet.json
+for a in mt5_demo ccxt_testnet; do
+  uv run python -m atp.governance.kill_drill --adapter "$a" --levels 1-5 --demo --report "out/kill_${a}.json"
+  jq -e '.all_pass == true' "out/kill_${a}.json"
+done
+# F4.11 (éjszakai testnet)
+uv run pytest tests/adapters/ccxt/test_countdown_keeps_stops.py -q --adapter ccxt_testnet --demo
 # a valódi WORM-vödör beállítása (üzemeltetés, AWS CLI)
 aws s3api get-object-lock-configuration --bucket "$ATP_WORM_BUCKET" \
   --query 'ObjectLockConfiguration.ObjectLockEnabled' --output text | grep -qx Enabled
@@ -2067,7 +2259,7 @@ aws s3api get-object-lock-configuration --bucket "$ATP_WORM_BUCKET" \
 | F5.2 | a jelölt konfiguráció studyja | a §8.4 1–9. kapuja PASS |
 | F5.3 | élő számla L1-en ≥ 30 naptári nap | a javaslatok és a kézi kötések naplózva; ECE ≤ 0,05 |
 | F5.4 | micro live (élő számla, minimális méret, L2) ≥ 20 kereskedési nap | 0 kemény limit-sértés; `recon_diff = 0`; SPRT H₀ |
-| F5.5 | kanári deploy | egy instrumentum, 1 óra; utána automatikus bővítés vagy visszaállás |
+| F5.5 | kanári deploy | egy instrumentum, 1 óra; utána automatikus bővítés, vagy visszaállás – visszaálláskor a parancs nem nulla kóddal lép ki |
 
 ```bash
 # F5.1
@@ -2081,22 +2273,24 @@ uv run python -m atp.ops.level_report --account live --level 1 --min-days 30 --r
 jq -e '.days >= 30 and .ece <= 0.05' out/l1.json
 uv run python -m atp.ops.daily_report --account live --min-trading-days 20 --report out/micro.json
 jq -e '.violations == 0 and .recon_diff == 0 and .sprt_slippage == "accept_h0"' out/micro.json
-# F5.5
-make deploy-canary
+# F5.5 (visszagörgetéskor a make nem nulla kóddal lép ki)
+make deploy-canary REPORT=out/canary.json
+jq -e '.smoke == "PASS" and .rolled_back == false' out/canary.json
 ```
 
 ### 10.9 F6 – L3 és skálázás
 
 | # | Bemenet | Elvárt kimenet |
 |---|---|---|
-| F6.1 | ≥ 90 nap L3 | max drawdown ≤ a tervezett; vétó-ráta stabil; kalibráció rendben; `PSR(0) ≥ 0,95`, ha n ≥ MinTRL – különben L3 marad |
+| F6.1 | ≥ 90 nap L3 | max drawdown ≤ a tervezett; vétó-ráta stabil; kalibráció rendben; `PSR(0) ≥ 0,95` **és** n ≥ MinTRL. Ha n < MinTRL, a riport `UNDECIDED`: a kapu nem megy át, a stratégia L3-on marad (ez nem bukás) |
 | F6.2 | méret-emelés lépcsőzetesen (×1,5 lépcsőnként, legalább 2 hét/lépcső, minden lépcső előtt farokkapu) | a csúszás lépcsőnként legfeljebb 25%-kal nő |
 | F6.3 | harmadik adapter (cTrader demo, A11 migrációs út) | ugyanaz az adapter-szerződés zöld szimulátoron és felvett visszajátszáson |
 
 ```bash
 # F6.1
 uv run python -m atp.ops.scale_gate --account live --min-days 90 --report out/scale.json
-jq -e '.l3_days >= 90 and .dd_ok and .calib_ok and (.psr0 >= 0.95 or .n_obs < .min_trl)' out/scale.json
+jq -e '.l3_days >= 90 and .dd_ok and .calib_ok and .psr0 >= 0.95 and .n_obs >= .min_trl' out/scale.json
+# n_obs < min_trl esetén a riport verdict mezője "UNDECIDED", a fenti jq nem nulla – a szint marad L3
 # F6.2
 uv run python -m atp.ops.capacity_report --account live --report out/capacity.json
 jq -e '[.steps[] | .slippage_increase_pct <= 25] | all' out/capacity.json
@@ -2104,7 +2298,6 @@ jq -e '[.steps[] | .slippage_increase_pct <= 25] | all' out/capacity.json
 uv run pytest tests/adapters/test_contract.py -q --adapter ctrader_replay
 ```
 
-(Az F6.3-hoz a `conftest.py` `ADAPTERS` listáját `ctrader_replay`-jel bővíteni kell.)
 
 ---
 
@@ -2210,7 +2403,7 @@ Mindegyikhez alapértelmezés tartozik: ha a válasz nem jön meg az F1 végéig
 
 ### 11.3 Hiányok és ellenőrizendő pontok
 
-- **Ellenőrizendő API- és viselkedési részletek** (az első használat előtt teszttel): az MT5 `comment` tényleges hossza és megőrzése brókerenként (F1.8); a `FileFlush` lemezre írási garanciája Windows alatt; a MetaEditor `/compile` és `/log` kapcsolói Wine alatt; a MetaTrader5 Python csomag 3.12-es wheele; a ccxt sandbox/demo módja és a Binance `countdownCancelAll` elérése ccxt-ből; a Polymarket order-heartbeat végpontja és időkorlátja; a Kalshi dead-man megoldása és tokenköltségei (az exec átnéző szerint alapból 10 token/kérés, Basic szinten kb. 10 megbízás/s; a profil `rate_limits` vödrébe kerül); a w32time 1 ms alatti pontossága; az osv-scanner `uv.lock`-támogatása; a gitleaks alparancsa; a promptfoo kilépési kódja.
+- **Ellenőrizendő API- és viselkedési részletek** (az első használat előtt teszttel): az MT5 `comment` tényleges hossza és megőrzése brókerenként (F1.8); a `FileFlush` lemezre írási garanciája Windows alatt; a MetaEditor `/compile` és `/log` kapcsolói Wine alatt; a MetaTrader5 Python csomag 3.12-es wheele; a ccxt sandbox/demo módja, a Binance `countdownCancelAll` elérése ccxt-ből, a hívássúlya és az, hogy törli-e a `reduce_only` védőstopokat (F4.11); a Kalshi YES/NO-leképezés és pozíció-előjel a demón; a Polymarket pUSD-tokencíme; a Kalshi dead-man megoldása és tokenköltségei (az exec átnéző szerint alapból 10 token/kérés, Basic szinten kb. 10 megbízás/s; a profil `rate_limits` vödrébe kerül); a w32time 1 ms alatti pontossága virtualizált Windows VPS-en (F1.12-kapu); az osv-scanner `uv.lock`-támogatása; a gitleaks alparancsa; a promptfoo kilépési kódja.
 - **Citadel / Citadel Securities mérnöki előadásai:** nyilvános, ellenőrizhető forrást nem találtunk (a careers oldal 403-at adott). Nincs katalógustétel.
 - **Jane Street Tech Talks:** az oldal létezik (mért), a címlistát gépileg nem tudtuk kinyerni.
 - **MT5 Manager/Gateway API részletes dokumentációja:** bejelentkezéshez kötött (support.metaquotes.net). A retail számára nem elérhetőség következtetés.

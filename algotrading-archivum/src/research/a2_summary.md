@@ -51,7 +51,7 @@ Tier: 0 = 15, 1 = 36, 2 = 45, 3 = 37. A GitHub-adat 44 tételnél mért: csillag
   - Kisösszegű mentesség: ügyletenként ≤ 20 000 Ft és évente ≤ 200 000 Ft (a NAV-oldal példája).
   - Veszteség: adókiegyenlítés 2 évre visszamenőleg.
   - Szocho: a NAV-oldal nem említi.
-- **2025-ös validálási rezsim** (hatály 2025-07-01): kötelező validátor-igazolás és két Btk.-tényállás. Ennek nyomán a Revolut (2025-07-17), a MoonPay, a Strike és a Kriptomat kivonult.
+- **2025-ös validálási rezsim** (hatály 2025-07-01): kötelező validátor-igazolás és két Btk.-tényállás. Ennek nyomán a Revolut (felfüggesztés 2025-07-04/05, hvg 2025-07-05 – átnézői forrás; teljes kivonulás és számlazárás 2025-12-18), a MoonPay, a Strike és a Kriptomat kivonult.
 - **Eltörlés:** parlamenti szavazás 2026-07-28 (143 igen, 46 nem, 1 tartózkodás), kihirdetés 2026-07-31 (sajtó). A törvényszámot nem sikerült elsődleges forrásból ellenőrizni.
 - **Helyi engedély:** az MNB 2026-07-20-án első helyi MiCA-engedélyt adott (CoinCash/Tiwala Solutions, egy forrás szerint).
 - **MiCA:** a grandfathering 2026-07-01-én lejárt.

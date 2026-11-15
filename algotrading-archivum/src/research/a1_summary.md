@@ -6,7 +6,7 @@ EUR-átszámítás: ECB referencia 2026-11-13, 1 EUR = 1.1052 USD (mért). Minde
 Korlát: a munkamenet közös WebSearch-kerete elfogyott a futás közben. Utána csak WebFetch, curl és API-próbák mentek, ezért a brókeradatok egy része „becsült” maradt.
 
 ## Fő megállapítások
-- A Vantage 1:500-as számlája offshore jogalanyhoz tartozik, jellemzően a Vantage Global Limitedhez (VFSC 700271) [mért]. Ennek EU-s befektetővédelme nincs, és MiFID-útlevele sincs. Ehhez a jogalanyhoz LEI-t sem találtam [mért].
+- A Vantage 1:500-as számlája offshore jogalanyhoz tartozik. A korábban idézett Vantage Global Limited (VFSC 700271) **történeti** adat [mért egy régebbi PDF-ből]; a Help Center (2026-11-05) szerint ma a VIG Group (Mauritius FSC GB20026165) szerződtet, és a kötelező forrás az ügyfél saját Client Agreementje (lásd a11_matrix.md 1. fejezet). Ennek EU-s befektetővédelme nincs, és MiFID-útlevele sincs. Ehhez a jogalanyhoz LEI-t sem találtam [mért].
 - Felügyeleti nyomás [mért]:
   - AFM penalty payment order a Vantage Global Limited ellen, 2024-10-24.
   - Az FCA 2026-04-02-án warning listára tette a vantagemarkets.com-ot, és kimondta, hogy az nem azonos az FCA-engedélyes Vantage Global Prime LLP-vel.
@@ -21,7 +21,7 @@ Korlát: a munkamenet közös WebSearch-kerete elfogyott a futás közben. Után
 ## Vantage-adatlap (minden ténynél címke)
 | Tény | Érték | Címke |
 |---|---|---|
-| Offshore jogalany (1:500) | Vantage Global Limited, VFSC 700271 (Financial Dealers Licensing Act CAP 70) | mért (PAMM Agreement PDF) |
+| Offshore jogalany (1:500) | Ma: VIG Group, Mauritius FSC GB20026165 (Help Center 2026-11-05); történeti: Vantage Global Limited, VFSC 700271 (Financial Dealers Licensing Act CAP 70); kötelező forrás: a Client Agreement | mért (Help Center; a VFSC-adat régebbi PAMM Agreement PDF-ből, történeti) |
 | Kajmáni jogalany | Vantage International Group Ltd, CIMA SIBL 1383491; LEI 549300F1FE68O6Z81Y75 | szám: becsült; LEI: mért |
 | UK jogalany | Vantage Global Prime LLP, FCA FRN 590299; LEI 213800EXN2WUODF1C670; retail 1:30 | FRN, LEI: mért; 1:30: becsült |
 | AU jogalany | Vantage Global Prime Pty Ltd, AFSL 428901; LEI 5493003EAMXFPEID3T86 | AFSL: becsült; LEI: mért |

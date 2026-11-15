@@ -25,7 +25,7 @@ A MetaTrader 5 és a Vantage a **jelenlegi** végrehajtási hely, nem a platform
 | `fee_tiers` | lista: `tier, min_30d_volume, maker_bps, taker_bps` | nem | tőzsdei díjsávok |
 | `swaps` | lista: `applies_to[]`, `kind (points_per_lot \| pct_annual \| funding \| none)`, `long`, `short`, `triple_day` | igen | instrumentumonkénti swap |
 | `rate_limits` | lista: `name, scope, capacity, refill_per_s, cost{művelet: token}` | igen | token-vödrök, pl. Kalshi írási tokenek (`submit: 10`) |
-| `capabilities` | `Capabilities` (§2.3) | igen | TIF, post_only, reduce_only, kliens-ID, cancel-on-disconnect, dead-man, végrehajtási mód |
+| `capabilities` | `Capabilities` (§2.3) | igen | TIF, post_only, reduce_only, kliens-ID, cancel-on-disconnect, dead-man (`dead_man_scope`, `dead_man_timeout_s`, `dead_man_guaranteed`), végrehajtási mód |
 | `symbol_map` | `{canonical_id: venue_symbol}` | igen | a brókerszimbólum csak itt és az `instruments.yaml`-ban |
 | `mt` | objektum vagy `null`: `owned_magic_ranges, foreign_magics, manual_magic, comment_max_len, terminal_builds_allowed` | csak `mt4`/`mt5`-n (máshol `null`) | magic-allowlist, együttélés (§3.5) |
 | `server_location` | `region, datacenter, verified` | igen | |
@@ -34,7 +34,7 @@ A MetaTrader 5 és a Vantage a **jelenlegi** végrehajtási hely, nem a platform
 
 A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.leverage_by_class[...]` = λ. A `peg_risk` az `Instrument` mezője (gazdasági tulajdonság), és ez kapcsolja be az 5×-ös plafont.
 
-**`VenueProfile` JSON Schema** (`schemas/venue_profile.schema.json`, publikált, normatív):
+**`VenueProfile` JSON Schema** (`schemas/published/venue_profile.schema.json`, kézzel karbantartott, publikált, normatív; a Pydantic-ból generált párja a `schemas/generated/` alatt, §2.1):
 
 ```json
 {
@@ -113,7 +113,8 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
       "items": {
         "type": "object", "additionalProperties": false, "required": ["applies_to", "kind", "amount", "currency"],
         "properties": {
-          "applies_to": {"$ref": "#/$defs/globs"}, "kind": {"enum": ["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract", "none"]},
+          "applies_to": {"$ref": "#/$defs/globs"},
+          "kind": {"enum": ["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract", "prob_quadratic", "none"]},
           "amount": {"$ref": "#/$defs/dec"}, "currency": {"$ref": "#/$defs/ccy"}
         }
       }
@@ -153,7 +154,7 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
       "required": [
         "order_types", "tif", "post_only", "reduce_only", "client_order_id", "client_order_id_max_len", "cancel_on_disconnect", "dead_man",
         "partial_fills", "replace", "oco", "server_side_sl_tp", "trailing_server_side", "streaming_quotes", "l2_depth", "batch_orders",
-        "execution_mode"
+        "execution_mode", "dead_man_scope", "dead_man_guaranteed"
       ],
       "properties": {
         "order_types": {"type": "array", "items": {"enum": ["market", "limit", "stop", "stop_limit"]}},
@@ -165,7 +166,8 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
         "replace": {"enum": ["native", "cancel_replace", "none"]}, "oco": {"type": "boolean"}, "server_side_sl_tp": {"type": "boolean"},
         "trailing_server_side": {"type": "boolean"}, "streaming_quotes": {"type": "boolean"}, "l2_depth": {"type": "boolean"},
         "batch_orders": {"type": "boolean"},
-        "execution_mode": {"type": "object", "additionalProperties": {"enum": ["market", "instant", "request", "exchange"]}}
+        "execution_mode": {"type": "object", "additionalProperties": {"enum": ["market", "instant", "request", "exchange"]}},
+        "dead_man_scope": {"enum": ["none", "account", "api_key", "symbol", "connection"]}, "dead_man_guaranteed": {"type": "boolean"}
       }
     },
     "symbol_map": {"type": "object", "propertyNames": {"$ref": "#/$defs/canon"}, "additionalProperties": {"type": "string"}},
@@ -216,7 +218,7 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
 }
 ```
 
-**`Instrument` JSON Schema** (`schemas/instrument.schema.json`):
+**`Instrument` JSON Schema** (`schemas/published/instrument.schema.json`):
 
 ```json
 {
@@ -313,6 +315,8 @@ capabilities:
   cancel_on_disconnect: false
   dead_man: ea_local
   dead_man_timeout_s: "5"
+  dead_man_scope: account
+  dead_man_guaranteed: false    # az EA ugyanazon a gépen fut: gépkiesésnél csak a szerveroldali SL marad
   partial_fills: true
   replace: native
   oco: false
@@ -340,10 +344,10 @@ sources:
   - {field: entity, source: "saját Client Agreement", checked: "2026-11-15"}
 ```
 
-**Példa instrumentumokra** (`venues/<venue_id>/instruments.yaml`; a Polymarket-sor azonosítója illusztráció, a minimális méret és a tick ellenőrizendő):
+**Példa instrumentumokra** (`venues/vantage_mt5_live/instruments.yaml`; a `symbol_map` minden kulcsához pontosan egy sor, azonos `venue_symbol`-lal – F1.10):
 
 ```yaml
-# venues/vantage_mt5_live/instruments.yaml (részlet) – az adapter instruments() exportjából
+# venues/vantage_mt5_live/instruments.yaml – az adapter instruments() exportjából (részlet)
 - canonical_id: "FX:EURUSD"
   venue_id: vantage_mt5_live
   venue_symbol: EURUSD
@@ -360,6 +364,102 @@ sources:
   lot_step: "1000"
   max_qty: "10000000"
   leverage_class: fx_major
+- canonical_id: "FX:USDJPY"         # jegyzési deviza JPY: P&L és margin átváltással (§6.2)
+  venue_id: vantage_mt5_live
+  venue_symbol: USDJPY
+  asset_class: fx
+  payoff: linear
+  qty_unit: base
+  base_ccy: USD
+  quote_ccy: JPY
+  settle_ccy: JPY
+  contract_size: "100000"
+  tick_size: "0.001"
+  price_precision: 3
+  min_qty: "1000"
+  lot_step: "1000"
+  max_qty: "10000000"
+  leverage_class: fx_major
+```
+
+**Második példa: egy teljesen más helyszín** (`venues/polymarket_clob/`, F6+, HU-ból blokkolt, csak adatként). A pUSD collateral kanonikus kódja `PUSD` (a `Ccy` minta nagybetűs), a token Polygon-címe a `sources`-ban:
+
+```yaml
+# venues/polymarket_clob/profile.yaml – csak adatforrásként és F6+; HU-ból SZTFH-blokk (OPA: VENUE_BLOCKED)
+schema_version: "1.0"
+venue_id: polymarket_clob
+platform: polymarket_clob
+adapter: "atp.adapters.polymarket:PolymarketAdapter"
+account_type: api_key
+account_currency: PUSD               # alias a V2 "pUSD" collateralra; a tokencím a sources-ban
+entity:
+  name: "Adventure One QSS Inc. (az SZTFH-határozat szerinti üzemeltető)"
+  regulator: "ellenőrizendő"
+  license_id: "ellenőrizendő"
+  jurisdiction: "ellenőrizendő"
+  source: "A3/A8: sztfh-polymarket-block-2026"
+  checked: "2026-11-15"
+blocked_jurisdictions: [HU]
+position_mode: netting
+negative_balance_protection: unknown   # teljes fedezet: a veszteség a befizetett összegig terjed
+margin_model:
+  kind: full_collateral
+  leverage_by_class: {none: 1}
+  margin_call_pct: "0"
+  stop_out_pct: "0"
+  stop_out_mode: percent
+  stop_out_order: venue_defined
+server_tz: {mode: utc}
+sessions:
+  default:
+    - {days: [mon, tue, wed, thu, fri, sat, sun], open: "00:00", close: "23:59"}
+rollover_server_time: "00:00"
+commissions:
+  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD}   # kategóriánként eltér; a maker nem fizet
+swaps:
+  - {applies_to: ["PRED:POLY:*"], kind: none, long: "0", short: "0"}
+rate_limits:
+  - {name: clob_general, scope: account, capacity: 9000, refill_per_s: "900", cost: {order_status: 1, open_orders: 1}}
+  - {name: clob_post_order, scope: account, capacity: 5000, refill_per_s: "200", cost: {submit: 1, replace: 1}}
+  - {name: clob_heartbeat, scope: account, capacity: 10, refill_per_s: "1", cost: {heartbeat: 1, arm_dead_man: 1}}
+capabilities:
+  order_types: [market, limit]
+  tif: [GTC, GTD, FOK, IOC]
+  post_only: false                   # ellenőrizendő
+  reduce_only: none
+  client_order_id: none
+  client_order_id_max_len: 0
+  cancel_on_disconnect: false
+  dead_man: venue_heartbeat
+  dead_man_timeout_s: "15"           # 10 s lejárat + legfeljebb 5 s vizsgálati ciklus (A3)
+  dead_man_scope: api_key
+  dead_man_guaranteed: false         # best effort: a törlés sorba áll, nem garantált
+  partial_fills: true
+  replace: none
+  oco: false
+  server_side_sl_tp: false
+  trailing_server_side: false
+  streaming_quotes: true
+  l2_depth: true
+  batch_orders: true
+  execution_mode: {"*": exchange}
+symbol_map: {"PRED:POLY:123456789012345678901234567890": "123456789012345678901234567890"}
+mt: null
+server_location: {region: "London (AWS eu-west-2)", datacenter: null, verified: "mért"}
+tos_flags:
+  ea_allowed: true
+  latency_arbitrage: unknown
+  carry_trade_abuse_clause: absent
+  notes: "VPN-tilalom az ÁSZF-ben; HU: SZTFH ideiglenes ISP-blokk 2026-01-16 óta"
+sources:
+  - {field: account_currency, source: "pUSD collateral (docs.polymarket.com); a Polygon-tokencím ide írandó – ellenőrizendő", checked: "2026-11-15"}
+  - {field: rate_limits, source: "A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000)", checked: "2026-11-15"}
+  - {field: capabilities.dead_man_timeout_s, source: "A3 polymarket-order-heartbeat", checked: "2026-11-15"}
+  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként", checked: "2026-11-15"}
+```
+
+```yaml
+# venues/polymarket_clob/instruments.yaml – az azonosító illusztráció; a min. méret és a tick piaconként ellenőrizendő
 - canonical_id: "PRED:POLY:123456789012345678901234567890"
   venue_id: polymarket_clob
   venue_symbol: "123456789012345678901234567890"
@@ -367,8 +467,8 @@ sources:
   payoff: binary
   qty_unit: shares
   base_ccy: SHARE
-  quote_ccy: USDC
-  settle_ccy: USDC
+  quote_ccy: PUSD
+  settle_ccy: PUSD
   contract_size: "1"
   tick_size: "0.01"
   price_precision: 2
@@ -411,7 +511,7 @@ sources:
 |---|---|---|
 | A venue-semleges mag nem importál adaptert vagy venue-SDK-t | `atp.strategies`, `decision`, `sizing`, `risk`, `core`, `oms` | az import-linter `forbidden` szerződése zöld |
 | Nincs brókernév és bróker-konstans a venue-semleges kódban | ugyanezek a mappák | a `grep` üres |
-| Profil adatként | új `VenueProfile` és `Instrument` YAML | séma- és Pydantic-validálás hiba nélkül, a kettő egyezik |
+| Profil adatként | új `VenueProfile` és `Instrument` YAML | séma- és Pydantic-validálás hiba nélkül, a kettő egyezik; `symbol_map` ↔ `venue_symbol` konzisztens |
 | Paritás | azonos megbízás-szkript a sim-adapteren és az új adapter szimulátorán/visszajátszásán | a §3.9 tűrései |
 | Profilvezérelt kockázat | stop-out 20% vs 50% profil | eltérő `x_SO` és riasztási küszöb |
 
@@ -432,7 +532,7 @@ forbidden_modules = ["atp.adapters", "atp.venues", "MetaTrader5", "ccxt", "zmq"]
 ```bash
 # venue-semlegesség (GNU grep, ERE)
 uv run lint-imports
-test -z "$(grep -rniE '(vantage|metatrader|mql[45]|(^|[^a-z0-9])mt[45]([^a-z0-9]|$))' \
+test -z "$(grep -rniE '(vantage|metatrader|mql[45]|mt[45]([^0-9]|$))' \
   atp/strategies atp/decision atp/sizing atp/risk atp/core atp/oms || true)"
 test -z "$(grep -rnE '(SYMBOL_[A-Z_]+|ACCOUNT_[A-Z_]+|ORDER_FILLING_[A-Z]+|TRADE_ACTION_[A-Z]+)' \
   atp/strategies atp/decision atp/sizing atp/risk atp/core atp/oms || true)"
