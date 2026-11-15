@@ -36,6 +36,32 @@ SOURCES = [
 ]
 
 
+CAT_HU = {
+    "broker": "Brókerek", "community": "Közösségek", "data": "Piaci adatforrások", "execution": "Végrehajtás, MetaTrader, API-k",
+    "execution-quality": "Végrehajtási minőség mérése", "infra": "Infrastruktúra", "reference": "Referenciaadat", "research": "Kutatási források",
+    "kripto-cex-api": "Központosított tőzsdék API-i", "kripto-derivativ-adat": "Derivatív adat (funding, OI, likvidáció)", "kripto-dex-adat": "DEX-adat",
+    "kripto-infrastruktura": "Infrastruktúra, node, colocation", "kripto-irodalom": "Kutatás és irodalom", "kripto-jog-ado": "Jog és adó (HU/EU)",
+    "kripto-mev-mempool": "MEV és mempool", "kripto-onchain-adat": "On-chain adat", "kripto-oss-eszkoz": "Nyílt forráskódú eszközök",
+    "kripto-piaci-adat": "Piaci adat (tick, L2)", "kripto-strategia": "Stratégiák",
+    "M1-adateszkoz": "Adateszközök", "M13-meta-index": "Gyűjtőlisták, meta-indexek", "M14-fejlesztes-biztonsag": "Fejlesztés és biztonság",
+    "M14-infra": "Infrastruktúra-szoftver", "M14-mlops": "MLOps", "M14-vizualizacio": "Vizualizáció, terminál", "M6-mt5-hid": "MetaTrader-hidak",
+    "M6-vegrehajtas": "Végrehajtás", "M7-adattarolo": "Adattárolók (tick, idősor)", "M7-backtest": "Backtest- és élő motorok", "M7-validalas": "Validálás",
+    "M8-idosor": "Idősor-elemzés", "M8-kvant-konyvtar": "Kvant-könyvtárak", "M8-ts-alapmodell": "Idősor-alapmodellek", "M9-penzugyi-llm": "Pénzügyi LLM-ek",
+    "broker-regulation": "Bróker-szabályozás", "infra-hardware": "Hardver", "infra-latency": "Késleltetés", "infra-server-location": "Szerverhelyek",
+    "infra-vps-colo": "VPS és colocation", "legal-tax-hu": "Magyar adó és jog", "regulation": "Szabályozás", "relocation": "Költözés, adórezidencia",
+    "case_study": "Esettanulmányok", "method": "Módszertár",
+}
+
+
+def cat_label(o, big):
+    c = o.get("cat") or "egyéb"
+    lab = CAT_HU.get(c, re.sub(r"^M\d+[ -]", "", c))
+    if c in big and o.get("sub"):
+        part = re.split(r" / | – |: ", str(o["sub"]))[0].strip()
+        return f"{lab} – {part[:1].upper() + part[1:]}"
+    return lab
+
+
 def slug(s):
     s = s.lower()
     for a, b in zip("áéíóöőúüű", "aeiooouuu"):
@@ -203,10 +229,15 @@ def main():
         body += ["", "---", "", f"## {n}. {title}", ""]
         summ = read(name.split("_")[0] + "_summary.md")
         if summ:
-            body += ["### Összefoglaló (kutatói jegyzet)", "", re.sub(r"(?m)^#{1,3} ", "#### ", summ), ""]
+            body += [f"### {n}.0. Összefoglaló – {title.split(':')[0].split(',')[0]}", "", re.sub(r"(?m)^#{1,3} (.*)$", lambda m: f"#### {m.group(1)} ({name.split('_')[0].upper()})", summ), ""]
+        cc = Counter(o.get("cat") for o in L)
+        big = {c for c, k in cc.items() if k > 40}
         cats = defaultdict(list)
         for o in L:
-            cats[o.get("cat") or "egyéb"].append(o)
+            cats[cat_label(o, big)].append(o)
+        small = [k for k, v in cats.items() if len(v) < 3 and " – " in k]
+        for k in small:      # 3 tételnél kisebb alcsoport → a fő kategória „egyéb” csoportja
+            cats[k.split(" – ")[0] + " – egyéb"] += cats.pop(k)
         for j, (c, CL) in enumerate(sorted(cats.items(), key=lambda kv: (-len(kv[1]), kv[0])), 1):
             CL.sort(key=lambda o: (o["tier"], -o["prof"]["kiegyensulyozott"]))
             body += [f"### {n}.{j}. {c} ({len(CL)})", ""] + table(CL) + [""]
@@ -268,6 +299,14 @@ def main():
     scoring += ["", "**Szint:** 0 = nélkülözhetetlen mag · 1 = erősen ajánlott · 2 = bővítés · 3 = luxus vagy intézményi.", ""]
     md = head + ["", "---", "", "## 1. Mesterprompt", "", re.sub(r"(?m)^(#{1,3}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", prompt), "", "---", ""] \
         + scoring + budget_section(items) + body
+    # tartalomjegyzék-horgonyok a tényleges ## címsorokból, GitHub-szabály szerint (ékezet marad, írásjel törlődik, szóköz → kötőjel)
+    gh = lambda h: re.sub(r"\s", "-", re.sub(r"[^\w\- ]", "", re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", h).strip().lower()))
+    heads = {}
+    for line in md:
+        m = re.match(r"^## (\d+)\. (.*)$", line)
+        if m and m.group(1) not in heads:
+            heads[m.group(1)] = gh(f"{m.group(1)}. {m.group(2)}")
+    md = [re.sub(r"\]\(#(\d+)-[^)]*\)", lambda m: f"](#{heads.get(m.group(1), m.group(0))})", l) if l.startswith("- [") else l for l in md]
     out = os.path.join(ROOT, "ALGOTRADING.md")
     open(out, "w", encoding="utf-8").write("\n".join(md) + "\n")
 

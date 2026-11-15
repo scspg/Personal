@@ -1,51 +1,57 @@
 {
- "items": 0,
- "strategies": 0,
- "ideas": 0,
+ "items": 1397,
+ "strategies": 119,
+ "ideas": 165,
  "stats": {
   "a1_market_exec": {
-   "raw": 0,
+   "raw": 160,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 1,
    "no_url": 0
   },
   "a2_crypto": {
-   "raw": 0,
+   "raw": 133,
    "bad_json": 0,
    "dup": 0,
    "no_url": 0
   },
   "a3_predict_sports": {
-   "raw": 0,
+   "raw": 112,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 5,
    "no_url": 0
   },
   "a4_macro_news_alt": {
-   "raw": 0,
+   "raw": 298,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 11,
    "no_url": 0
   },
   "a5_oss": {
-   "raw": 0,
+   "raw": 277,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 25,
    "no_url": 0
   },
   "a6_ai_research": {
-   "raw": 0,
+   "raw": 270,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 15,
    "no_url": 0
   },
   "a8_infra_legal": {
-   "raw": 0,
+   "raw": 117,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 20,
    "no_url": 0
   },
   "a9_platform": {
+   "raw": 118,
+   "bad_json": 0,
+   "dup": 11,
+   "no_url": 0
+  },
+  "a10_methods": {
    "raw": 0,
    "bad_json": 0,
    "dup": 0,
