@@ -325,18 +325,25 @@ def main():
         while take(lambda v: True):
             pass
 
+    def upgrade(maxtier=9):
+        """luxus-feljavítások (pl. képes Wikipedia) pontszám szerint; maxtier: csak az ennél nem kisebb fontosságú csoportok"""
+        nonlocal used
+        for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
+            if k in chosen and not is_llm(g) and chosen[k]["id"] not in incl and tier_of(k, g) <= maxtier:
+                for v in sorted(g, key=size_of, reverse=True):
+                    if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
+                        used += size_of(v) - size_of(chosen[k]); chosen[k] = v
+                        break
+
     llm_done = False
     for t in tiers:
         if t >= 1 and not llm_done:
             llm_pass(); llm_done = True
         fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g))
-    # 3) luxus-feljavítások (pl. képes Wikipedia) pontszám szerint
-    for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
-        if k in chosen and not is_llm(g) and chosen[k]["id"] not in incl:
-            for v in sorted(g, key=size_of, reverse=True):
-                if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
-                    used += size_of(v) - size_of(chosen[k]); chosen[k] = v
-                    break
+        if t == 1:
+            upgrade(1)      # a 0–1. szintű csoportok bővített változata a 2. szintű új tételek előtt jön
+    # 3) luxus-feljavítások a maradék helyen
+    upgrade()
     # 4) átfedések kiszűrése (pl. Wikipedia-orvosi részhalmaz, ha a teljes WP bent van), majd újratöltés
     for _ in range(10):
         ids = {v["id"] for v in chosen.values() if v["download"]["method"] != "agent"}   # AI-feladat nem helyettesít automatikus letöltést

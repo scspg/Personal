@@ -377,15 +377,17 @@ let softAll=false; function softTable(){const q=norm(F('sq').value), c=F('scat')
 (()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
 /* ---------- tárolók ---------- */
 const ST=__STOR__;
-function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=norm(F('stq').value);
-  const so=F('stsort').value, L=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||norm(x.n+' '+x.k+' '+x.d+' '+x.pro+' '+x.con+' '+x.l.map(l=>l[0]).join(' ')).includes(q)));
-  if(so){const key=x=>so==='tb'?(x.bay||x.tb==null?Infinity:-x.tb):(x[so]??Infinity); L.sort((a,b)=>key(a)-key(b));}
+let storAll=false; function storTable(){const c=F('stcat').value,l=F('stlvl').value,q=norm(F('stq').value);
+  const so=F('stsort').value, L1=ST.filter(x=>(!c||x.k===c)&&(!l||x.lv===l)&&(!q||norm(x.n+' '+x.k+' '+x.d+' '+x.pro+' '+x.con+' '+x.l.map(l=>l[0]).join(' ')).includes(q)));
+  if(so){const key=x=>so==='tb'?(x.bay||x.tb==null?Infinity:-x.tb):(x[so]??Infinity); L1.sort((a,b)=>key(a)-key(b));}
+  const sshort=!storAll&&!q&&!c&&!l&&matchMedia('(max-width:600px)').matches&&L1.length>15; const L=sshort?L1.slice(0,15):L1;
   const lv={olcso:'olcsó',kozep:'közép',profi:'profi',extrem:'extrém'};
   const tr=L.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class="muted">${esc(x.k)}</small><br><small>${x.l.map(([b,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(b)}</a>`).join(' · ')}</small></td><td class="num" data-l="TB">${x.tb==null?'–':(x.bay?'≤':'')+fmt(x.tb,x.tb<1?3:(x.tb%1?2:0))}</td><td data-l="Tartósság" class="sd">${esc(x.d)||'–'}</td><td data-l="Sebesség, MB/s">${esc(x.s)||'–'}</td>
     <td class="num" data-l="Ár">${x.ar?huft(x.ar):'–'}</td><td data-l="Ft/TB" class="sd">${esc(x.pt)||'–'}</td><td data-l="Forrás">${esc(x.src)}</td><td data-l="Szint">${lv[x.lv]||'–'}</td>
     <td data-l="Előny/hátrány" class="sd">+ ${esc(x.pro)}<br>− ${esc(x.con)}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Nincs találat.</td></tr>';
   F('stor').innerHTML=`<table class="soft stortab"><thead><tr><th>Termék</th><th class="num">TB</th><th>Tartósság</th><th>Sebesség</th><th class="num">Ár</th><th>Ft/TB</th><th>Forrás</th><th>Szint</th><th>Előny / hátrány</th></tr></thead><tbody>${tr}</tbody></table>`;
-  F('stcount').textContent=L.length+' termék';}
+  F('stcount').textContent=L1.length+' termék';
+  if(sshort){const btn=document.createElement('button');btn.type='button';btn.textContent='Mind a '+L1.length+' termék mutatása';btn.onclick=()=>{storAll=true;storTable();};F('stor').appendChild(btn);}}
 (()=>{const sel=F('stcat'); [...new Set(ST.map(x=>x.k))].forEach(c=>sel.add(new Option(c,c))); ['stcat','stlvl','stq','stsort'].forEach(id=>F(id).addEventListener('input',storTable)); storTable();})();
 /* ---------- indítás ---------- */
 if('IntersectionObserver' in window){const navA=[...document.querySelectorAll('nav.tabs a')];const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navA.forEach(a=>{if(a.getAttribute('href')==='#'+e.target.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}});},{rootMargin:'-45% 0px -50% 0px'});navA.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)io.observe(t);});}
@@ -485,6 +487,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 
 <section id="ssd">
   <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
+  __CORE__
   <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil; LLM: 1–32 TB-ig T2-es gép ~300 GB memóriával és max. 4 modell, 64–128 TB-nál T1 szerver ~2 TB memóriával és max. 8 modell). A nagyobb méret a kisebb teljes tartalmát megtartja. A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
 </section>
@@ -654,6 +657,30 @@ def storage_bundles_html():
             + '<h3>Terméktábla</h3>')
 
 
+def core_links_html():
+    """kezdőknek: a 0. szintű (életmentő) tételek közvetlen letöltési linkjei – terminál nélkül, kattintással."""
+    import html
+    from gen_sections import all_items
+    from build import human, CAT_HU
+    rows = []
+    for i in sorted(all_items(), key=lambda x: (x["cat"], x["name"])):
+        if i["tier"] != 0 or i["cat"].startswith("ai_models") or i.get("access") not in ("free", "free-registration", "donation"):
+            continue
+        d = i.get("download") or {}
+        urls = (d.get("urls") or ([d["url"]] if d.get("url") and d.get("method") in ("http", "kiwix") else []))
+        if d.get("method") == "archive.org" and d.get("ids"):
+            urls = [f"https://archive.org/details/{x}" for x in d["ids"]]
+        if not urls:
+            continue
+        sz = human(i.get("bytes") or i.get("bytes_est")) if (i.get("bytes") or i.get("bytes_est")) else "?"
+        links = " · ".join(f'<a href="{html.escape(u)}" target="_blank" rel="noopener">{k + 1 if len(urls) > 1 else "letöltés"}</a>' for k, u in enumerate(urls[:8]))
+        rows.append(f"<li><b>{html.escape(cut(i['name'], 80))}</b> <span class='hint'>({html.escape(CAT_HU.get(i['cat'], i['cat']))}, {sz})</span> – {links}</li>")
+    return (f'<details><summary>Kezdőknek: az életmentő mag ({len(rows)} tétel) letöltése kattintással, terminál nélkül</summary><div class="body">'
+            '<p class="hint">Ha nem használsz parancssort vagy AI-ágenst: ezeket a fájlokat egyenként töltsd le a böngészővel egy külön meghajtóra. '
+            'A Kiwix-fájlok (.zim) a Kiwix olvasóval nyithatók meg (Kiwix Desktop / Android). Archive.org-nál a megnyíló oldalon a „PDF” letöltést válaszd. A többi anyaghoz a teljes letöltés (ARCHIVUM.md, 1. fejezet) kell.</p>'
+            f'<ul>{"".join(rows)}</ul></div></details>')
+
+
 def ssd_html():
     import html as H
     P = json.load(open(os.path.join(HERE, "ssd_plans.json"), encoding="utf-8"))
@@ -706,7 +733,7 @@ def main():
           .replace("__SOFT__", json.dumps(software(), ensure_ascii=False, separators=(",", ":")))
           .replace("__START__", "gamer-pc-128" if "gamer-pc-128" in presets else next(iter(presets))))
     date = build_date()
-    frag = BODY.replace("__SSD__", ssd_html()).replace("__STORAGE__", storage_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
+    frag = BODY.replace("__CORE__", core_links_html()).replace("__SSD__", ssd_html()).replace("__STORAGE__", storage_html()).replace("__CSS__", CSS).replace("__JS__", js).replace("__DATE__", date)
     open(os.path.join(HERE, "..", "ARCHIVUM-LLM.fragment.html"), "w", encoding="utf-8").write(frag)
     full = ('<!doctype html>\n<html lang="hu">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +

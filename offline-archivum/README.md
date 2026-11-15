@@ -8,7 +8,8 @@
    less dl.sh && DEST=/media/usb/archivum bash dl.sh
    ```
    **Windowson:** PowerShellben (rendszergazdaként) `wsl --install`, újraindítás után az Ubuntu ablakban futtasd ugyanezt; a D: meghajtó ott `/mnt/d/...` (pl. `DEST=/mnt/d/archivum`).
-3. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
+3. **Parancssor nélkül:** az `ARCHIVUM-LLM.html` SSD-fülén a „Kezdőknek” lista az életmentő mag minden fájlját kattintással letölthetővé teszi.
+4. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
 
 ## Fájlok
 | Fájl | Méret | Mire való |

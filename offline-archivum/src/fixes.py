@@ -359,6 +359,7 @@ PATCH7 = {
     "cd3wd-2012-dvd-isos": {"access": "free", "variant_role": "luxury", "license": "vegyes (harmadik felek dokumentumai, a CD3WD-projekt nyilvános tükrén terjesztve – mint a kx-cd3wd ZIM)"},
     "agromisa-agrodok-series": {"download": {"method": "agent", "note": "CGSpace DSpace API: https://cgspace.cgiar.org/server/api/discover/search/objects?query=agrodok&dsoType=ITEM (313 találat) → az angol Agrodok-füzetek bitstreamjei (/server/api/core/bitstreams/<uuid>/content); minta: AD32.pdf 1 053 178 B. Maradj ~55 MB-on belül."}},
     "kx-cd3wd": {"variant_role": "pref"},
+    "kx-khan": {"tier": 3}, "kolibri-khan-academy": {"tier": 3},   # 1 TB-on a gyakorlati tier 0–1 anyag elsőbbséget kap
 }
 for _k, _v in PATCH7.items():
     _d = PATCH.setdefault(_k, {})

@@ -401,7 +401,7 @@ def main():
     preset_md = ["---\n\n## 4. Előre számolt csomagok\n",
                  "`select_items.py --budget <X> --hw <T>`, `balanced` profil, nyelv: hu, en, multi, hozzáférés: free, free-registration, donation. "
                  "Ez csak tájékoztató, a pontos tervet az ágens futtatja a saját keretével. "
-                 "*A 4b fejezet más beállítással számol (T2/T1 LLM-gép, szerverformátum is, és a nagyobb méret a kisebb teljes tartalmát megtartja), ezért a tételszám eltérhet.*\n",
+                 "*A 4b fejezet más beállítással számol (T2/T1 LLM-gép, szerverformátum is, 1–2 TB-on legfeljebb 1 cenzúrázatlan modell, 1 TB-on az LLM legfeljebb 25%, és a nagyobb méret a kisebb teljes tartalmát megtartja), ezért a tételszám és a modellválasztás eltérhet – SSD-vásárláshoz a 4b az irányadó.*\n",
                  "| Keret | Tipikus eszköz | LLM-szint | Elemek | Felhasznált | LLM | 4 legnagyobb tartalmi elem |",
                  "|---|---|---|---|---|---|---|", *preset_rows]
 
@@ -520,7 +520,8 @@ def main():
    less dl.sh && DEST=/media/usb/archivum bash dl.sh
    ```
    **Windowson:** PowerShellben (rendszergazdaként) `wsl --install`, újraindítás után az Ubuntu ablakban futtasd ugyanezt; a D: meghajtó ott `/mnt/d/...` (pl. `DEST=/mnt/d/archivum`).
-3. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
+3. **Parancssor nélkül:** az `ARCHIVUM-LLM.html` SSD-fülén a „Kezdőknek” lista az életmentő mag minden fájlját kattintással letölthetővé teszi.
+4. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
 
 ## Fájlok
 | Fájl | Méret | Mire való |
