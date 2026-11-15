@@ -5466,15 +5466,16 @@ def main():
 
 GH_RELEASE_SH = [
     'gh_release(){ # owner/repo tag célkönyvtár – GitHub-kiadás telepítői (Windows/Linux/macOS/Android), méretkorláttal',
-    '  local api="https://api.github.com/repos/$1/releases/tags/$2" list; [ -n "$2" ] || api="https://api.github.com/repos/$1/releases/latest"',
-    '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "$api" 2>/dev/null | python3 -c \'import sys, json, re, os',
-    'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6',
+    '  local a list="" u r=0',
+    '  for a in ${2:+"tags/$2"} ${2:+"tags/v${2#v}"} latest; do   # a katalógus-verzió tagje (v-vel / nélküle), különben a legutóbbi kiadás',
+    '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "https://api.github.com/repos/$1/releases/$a" 2>/dev/null | python3 -c \'import sys, json, re, os',
+    'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6; tot = float(os.environ.get("GH_RELEASE_MAX_MB", "4000")) * 1e6',
     'ok = re.compile(os.environ.get("GH_ASSET_RE", r"(x86_64|amd64|x64|win64|windows|linux|\\.exe$|\\.msi$|\\.appimage$|\\.apk$|\\.dmg$|macos|darwin|arm64|aarch64|universal)"), re.I)',
     'bad = re.compile(r"(debug|symbols|dbgsym|\\.sig$|\\.asc$|\\.sha\\d*(sum)?$|\\.blockmap$|\\.ya?ml$|\\.json$)", re.I)',
-    'for a in d.get("assets", []):',
-    '    if ok.search(a["name"]) and not bad.search(a["name"]) and a.get("size", 0) <= mx: print(a["browser_download_url"])\' 2>/dev/null) || return 1',
-    '  [ -n "$list" ] || return 1',
-    '  mkdir -p "$3"; local u r=0; for u in $list; do fetch "$u" "$3" || r=1; done; return $r; }',
+    'for a in sorted(d.get("assets", []), key=lambda a: a.get("size", 0)):   # kiadásonként összesen max. GH_RELEASE_MAX_MB',
+    '    if ok.search(a["name"]) and not bad.search(a["name"]) and a.get("size", 0) <= min(mx, tot): tot -= a.get("size", 0); print(a["browser_download_url"])\' 2>/dev/null) && [ -n "$list" ] && break',
+    '  done; [ -n "$list" ] || return 1',
+    '  mkdir -p "$3"; for u in $list; do fetch "$u" "$3" || r=1; done; return $r; }',
 ]
 
 
@@ -5487,8 +5488,10 @@ def write_sh(plan, path, dest):
                          "git": ["git"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
-         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in ""|/|/bin|/bin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp) echo "Hibás célkönyvtár: DEST=\"$DEST\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac',
-         'if command -v mountpoint >/dev/null && ! mountpoint -q "$DEST" && ! mountpoint -q "$(dirname "$DEST")"; then echo "FIGYELEM: $DEST nem külön csatolt meghajtón van – ellenőrizd, hogy nem a rendszerlemezt töltöd-e tele (Ctrl+C 10 mp-en belül)." >&2; sleep 10; fi', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
+         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", '_d=$(printf "%s" "$DEST" | tr -s / | sed -e "s#/\\./#/#g" -e "s#/\\.\\$##" -e "s#\\(.\\)/\\$#\\1#")   # //etc, /etc/, /./ → /etc, /',
+         'case "$_d" in ""|/|/bin|/bin/*|/sbin|/sbin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp|/Users|/System|/System/*|/Library|/Applications|"${HOME:-/nonexistent}")',
+         '  echo "Hibás célkönyvtár: DEST=\\"$DEST\\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac',
+         '_p=$DEST; while [ ! -d "$_p" ]; do _p=$(dirname "$_p"); done; if [ "$(df -P "$_p" 2>/dev/null | awk \'NR==2{print $6}\')" = / ]; then echo "FIGYELEM: $DEST nem külön csatolt meghajtón van – ellenőrizd, hogy nem a rendszerlemezt töltöd-e tele (Ctrl+C 10 mp-en belül)." >&2; sleep 10; fi', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
          'have(){ command -v "$1" >/dev/null 2>&1; }',
          'anyhave(){ local t; for t in ${1//|/ }; do have "$t" && return 0; done; return 1; }',
          "for t in " + " ".join(q(t) for t in need_tools) + '; do anyhave "$t" || echo "FIGYELEM: hiányzó eszköz: $t – az ezt igénylő tételek FAIL-lel végződnek"; done',
@@ -5928,15 +5931,17 @@ def team(dev, vs, mixed):
     singles = [c for c in cands if mixed or c[0]["cat"] == "ai_models"]
     if not singles:
         return None
-    v1, r1 = singles[0]
-    pool = [c for c in singles if c[0]["group"] != v1["group"] and c[0]["llm_bits"] >= 3.5]
-    if mixed:
-        pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
-        pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
+    for v1, r1 in singles:          # az első fő modell, amelyhez van pár (a leggyorsabb fő modellhez nem mindig van gyorsabb segéd)
+        pool = [c for c in singles if c[0]["group"] != v1["group"] and c[0]["llm_bits"] >= 3.5]
+        if mixed:
+            pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
+            pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
+        else:
+            pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or [c for c in pool if c[1][0] > r1[0]]   # a "gyors segéd" tényleg gyorsabb legyen
+            pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
+        if pool:
+            break
     else:
-        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or [c for c in pool if c[1][0] > r1[0]]   # a "gyors segéd" tényleg gyorsabb legyen
-        pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
-    if not pool:
         return None
     v2, r2 = pool[0]
     why = (" – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van" if r1[2] + r2[2] > cap

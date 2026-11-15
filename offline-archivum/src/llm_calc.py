@@ -303,15 +303,17 @@ def team(dev, vs, mixed):
     singles = [c for c in cands if mixed or c[0]["cat"] == "ai_models"]
     if not singles:
         return None
-    v1, r1 = singles[0]
-    pool = [c for c in singles if c[0]["group"] != v1["group"] and c[0]["llm_bits"] >= 3.5]
-    if mixed:
-        pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
-        pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
+    for v1, r1 in singles:          # az első fő modell, amelyhez van pár (a leggyorsabb fő modellhez nem mindig van gyorsabb segéd)
+        pool = [c for c in singles if c[0]["group"] != v1["group"] and c[0]["llm_bits"] >= 3.5]
+        if mixed:
+            pool = [c for c in pool if (c[0]["cat"] == "ai_models_uncensored") != (v1["cat"] == "ai_models_uncensored")]
+            pool.sort(key=lambda c: -usable(c[0], c[1][0], dev.min_tps))
+        else:
+            pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or [c for c in pool if c[1][0] > r1[0]]   # a "gyors segéd" tényleg gyorsabb legyen
+            pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
+        if pool:
+            break
     else:
-        pool = [c for c in pool if c[1][0] >= 1.5 * r1[0]] or [c for c in pool if c[1][0] > r1[0]]   # a "gyors segéd" tényleg gyorsabb legyen
-        pool.sort(key=lambda c: (-c[1][0], -smart(c[0])))
-    if not pool:
         return None
     v2, r2 = pool[0]
     why = (" – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van" if r1[2] + r2[2] > cap

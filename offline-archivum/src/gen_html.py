@@ -271,7 +271,7 @@ function bestSingle(dev,unc){let best=null; const all=[];
   for(const v of V){ if(v.u!==unc||unusableQ(v)) continue; const r=dev.run(v); if(!r||r[0]<dev.min_tps) continue;
     const key=usable(v,r[0],dev.min_tps); all.push([key,v,r]); if(!best||key>best[0]||(key===best[0]&&r[0]>best[2][0])) best=[key,v,r];}
   if(!best) return null; const out=[[best[1],best[2],'egyedül']], seen=new Set([best[1].f]);
-  all.sort((a,b)=>b[0]-a[0]); for(const [k,v,r] of all){ if(out.length>=3) break; if(!seen.has(v.f)&&k>=0.95*best[0]){out.push([v,r,'közel azonos alternatíva']);seen.add(v.f);} }
+  all.sort((a,b)=>b[0]-a[0]||b[2][0]-a[2][0]);   /* mint Pythonban: (usable, tok/s) */ for(const [k,v,r] of all){ if(out.length>=3) break; if(!seen.has(v.f)&&k>=0.95*best[0]){out.push([v,r,'közel azonos alternatíva']);seen.add(v.f);} }
   return out;}
 function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
   let c=V.filter(v=>!unusableQ(v)).map(v=>[v,dev.run(v)]).filter(([v,r])=>r&&r[0]>=dev.min_tps);
@@ -292,10 +292,11 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
     for(const [v,_r] of c){ const r=dev.run(v,cap-used,vu); if(!r||groups.has(v.g)||r[2]>cap-used||r[0]<Math.max(hTps,1.5*best[1][0][1][0])||v.bits<3.5||r[2]>hMax) continue; if(!h||smart(v)>smart(h[0])) h=[v,r];}
     if(h) best[1].push([h[0],h[1],'gyors segéd / router']);}
   if(best) return best[1];
-  const singles=c.filter(([v])=>mixed||!v.u); if(!singles.length) return null; const [v1,r1]=singles[0];
-  let pool=singles.filter(([v])=>v.g!==v1.g&&v.bits>=3.5);
+  const singles=c.filter(([v])=>mixed||!v.u); if(!singles.length) return null; let v1,r1,pool=[];
+  for([v1,r1] of singles){pool=singles.filter(([v])=>v.g!==v1.g&&v.bits>=3.5);
   if(mixed){pool=pool.filter(([v])=>v.u!==v1.u); pool.sort((a,b)=>usable(b[0],b[1][0],dev.min_tps)-usable(a[0],a[1][0],dev.min_tps));}
   else{const fast=pool.filter(([,r])=>r[0]>=1.5*r1[0]); pool=fast.length?fast:pool.filter(([,r])=>r[0]>r1[0]); pool.sort((a,b)=>b[1][0]-a[1][0]||smart(b[0])-smart(a[0]));}
+  if(pool.length) break;}
   if(!pool.length) return null; const [v2,r2]=pool[0];
   const why=r1[2]+r2[2]>cap?' – egyszerre csak egy fér a memóriába, a tárhelyen mindkettő ott van':' – együtt is elférnének, de nincs a csapatfeltételeknek (gyors, kicsi segéd / partner) megfelelő pár, ezért felváltva futnak';
   return [[v1,r1,'fő modell (váltva)'],[v2,r2,(mixed?'partner':'gyors segéd')+', váltva'+why]];}
