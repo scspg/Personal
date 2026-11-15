@@ -132,6 +132,26 @@ def linkify_md(text):
     return t
 
 
+def plan_tb(s):
+    """„a 16 TB-os tervhez (13,6 TB)” → a tényleges tervméret, ugyanazzal a kerekítéssel, mint a 4b fejezet."""
+    import json as _j, re as _r
+    try:
+        rows = _j.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ssd_plans.json"), encoding="utf-8"))
+    except (OSError, ValueError):
+        return s
+    used = {}
+    for r in rows:
+        it = r[1]["items"] if isinstance(r[1], dict) else r[1]
+        used[r[0]] = sum((i.get("bytes") or i.get("bytes_est") or 0) for i in it) / 1e12
+    def f(m):
+        v = used.get(m.group(1) + "TB")
+        return m.group(0) if v is None else f"{m.group(1)} TB-os tervhez ({v:.1f} TB)".replace(".", ",")
+    s = _r.sub(r"(\d+) TB-os tervhez \(\d+,\d TB\)", f, s)
+    if "32TB" in used:
+        s = _r.sub(r"teljes \d+,\d TB-hoz", f"teljes {used['32TB']:.1f} TB-hoz".replace(".", ","), s)
+    return s
+
+
 def section(plans):
     d, prods = load()
     hd, sx = d["hdd"], d["ssd_extra"]
@@ -239,7 +259,7 @@ def section(plans):
                       f"+ {_e(pro)}<br>− {_e(con)} |")
         md.append("")
     md += ["**Források:** " + " · ".join(f"<{u}>" for u in (hd.get("forrasok") or []) + (AM.get("forrasok") or [])), ""]
-    return "\n".join(md)
+    return plan_tb("\n".join(md))
 
 
 if __name__ == "__main__":

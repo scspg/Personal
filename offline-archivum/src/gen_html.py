@@ -638,7 +638,7 @@ def storage_bundles_html():
         if isinstance(v, dict):
             k2.append(f"<tr><td><b>{E(G.lab(k))}</b></td><td data-l='1. eszköz'>{E(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))}</td>"
                       f"<td data-l='2. eszköz (offline)'>{E(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))}</td>"
-                      f"<td data-l='Védelem, megjegyzés'>{E(v.get('vedelem') or v.get('plusz_opcionalis_mag') or '')}{(' ' + E(v['megjegyzes'])) if v.get('megjegyzes') else ''}</td>"
+                      f"<td data-l='Védelem, megjegyzés'>{E(v.get('vedelem') or v.get('plusz_opcionalis_mag') or '')}{(' ' + E(G.plan_tb(v['megjegyzes']))) if v.get('megjegyzes') else ''}</td>"
                       f"<td data-l='Összesen'>{E(v.get('osszesen'))}</td></tr>")
     one = []
     for k, v in (hd.get("egyeszkozos_opciok") or {}).items():

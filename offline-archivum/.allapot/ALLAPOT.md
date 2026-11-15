@@ -174,3 +174,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## CD3WD: DVD-gyűjtemény külön csoport (cd3wd-dvd) → 1 TB-tól a ZIM (weboldal, 0. szint) ÉS a 28 GB-os DVD-anyag is benne; tier0=39 minden tervben, monoton. KÖVETKEZŐ: utolsó megerősítő kör (AI, felhasználó, szakértő).
 
 ## #5 kör: SZAKÉRTŐ 92,7 (min 90, forráskorlátos: csak fizetős/nyomtatott); FELHASZNÁLÓ 93,8 (min 91). Javítva: --floor (csoportváltozat nem lép vissza nagyobb méretnél; build önellenőrzés sys.exit), Kezdőknek-indoklás tervkülönbségből. AI-ágens #5 fut.
+
+## #6: FELHASZNÁLÓ 94,5 (min 94) → kerekítés egységesítve (tárolószöveg a tervből: plan_tb). AI-ágens #5 még fut.
