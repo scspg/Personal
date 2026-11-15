@@ -182,7 +182,7 @@ def collect():
             if not url:
                 stats[name]["no_url"] += 1
             nu = norm_url(url)
-            for k in ("docs_url", "info_url", "granularity", "latency", "license", "price", "history_from", "provider"):   # üres → null
+            for k in [k for k, v in o.items() if v == ""]:   # minden üres szöveg → null (mesterprompt 2.1)
                 if o.get(k) == "":
                     o[k] = None
             o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
@@ -311,6 +311,28 @@ FAMILY_HU = {"news-event": "Hír- és eseményvezérelt", "grid": "Grid", "stat-
              "market-making": "Árjegyzés (market making)", "prediction": "Predikciós piacok"}
 
 
+def fmt_prereg(p, test=None):
+    if not isinstance(p, dict):
+        return cut(test, 250)
+    mn = p.get("min_n")
+    mn = f"{mn.get('n')} {mn.get('unit', '')}".strip() if isinstance(mn, dict) else str(mn or "?")
+    parts = [f"**{cut(p.get('metric'), 90)}**", f"horizont: {cut(p.get('horizon'), 40)}", f"min. n: {cut(mn, 40)}",
+             f"α {p.get('alpha', '?')}; {cut(p.get('multiplicity'), 50)}", f"OOS: {cut(p.get('oos_start'), 30)}", f"leállítás: {cut(p.get('kill_rule'), 110)}"]
+    return " · ".join(parts)
+
+
+def fmt_prior(pa):
+    pa = pa if isinstance(pa, list) else []
+    out = []
+    for x in pa[:3]:
+        if isinstance(x, dict):
+            u = str(x.get("doi_or_url") or "")
+            u = u if u.startswith("http") else (f"https://doi.org/{u}" if u.startswith("10.") else "")
+            ref = cut(x.get("ref"), 70)
+            out.append(f"[{ref}]({u})" if u else ref)
+    return " · ".join(out) or "nem találtunk"
+
+
 def fmt_params(p):
     if isinstance(p, dict):
         return "; ".join(f"{k}: {v}" for k, v in list(p.items())[:6])
@@ -326,7 +348,7 @@ def fmt_evidence(ev):
         if isinstance(e, dict):
             ref = esc(e.get("ref") or e.get("title") or "forrás")[:90]
             u = e.get("url") or ""
-            rp = esc(e.get("reported_hu") or "")[:140]
+            rp = cut(e.get("reported_hu"), 180)
             lab = esc(e.get("label") or "")[:40]
             out.append((f"[{ref}]({u})" if str(u).startswith("http") else ref) + (f": {rp}" if rp else "") + (f" ({lab})" if lab else ""))
         elif isinstance(e, str):
@@ -358,7 +380,8 @@ def fmt_sources(ds):
     return ", ".join(out)
 
 
-NON_SOURCE = {"case_study", "method", "strategy", "kripto-strategia", "kripto-irodalom"}
+NON_SOURCE = {"case_study", "method", "strategy", "kripto-strategia", "kripto-irodalom", "M13 Tudás", "execution-quality", "kripto-infrastruktura",
+              "infra-server-location", "infra-latency", "research", "community"}
 
 
 def budget_section(items):
@@ -425,8 +448,8 @@ def main():
             body += [f"### {n}.{j}. {f} ({len(FL)})", "",
                      "| Stratégia | Képlet / lényeg | Paraméterek | Mikor működik | Mikor hal meg | Lecsengés | FX/CFD | Bizonyíték | Implementáció |", "|---|---|---|---|---|---|---|---|---|"]
             for x in sorted(FL, key=lambda x: -(x.get("mt5_fit") or 0)):
-                body.append(f"| {link(x) if x.get('url') else esc(x.get('name'))} | {esc(x.get('formula_hu'))[:300]} | {esc(fmt_params(x.get('params')))[:200]} | "
-                            f"{esc(x.get('works_when_hu'))[:200]} | {esc(x.get('dies_when_hu'))[:200]} | {esc(x.get('decay_hu'))[:160]} | {x.get('mt5_fit', '?')}/10 | "
+                body.append(f"| {link(x) if x.get('url') else esc(x.get('name'))} | {cut(x.get('formula_hu'), 320)} | {cut(fmt_params(x.get('params')), 220)} | "
+                            f"{cut(x.get('works_when_hu'), 220)} | {cut(x.get('dies_when_hu'), 220)} | {cut(x.get('decay_hu'), 200)} | {x.get('mt5_fit', '?')}/10 | "
                             f"{fmt_evidence(x.get('evidence'))} | {fmt_repos(x.get('impl_repos'))} |")
             body.append("")
         n += 1
@@ -439,11 +462,11 @@ def main():
         toc.append(f"- [{n}. Hipotézisgyár – új ötletek](#{n}-hipotezisgyar) – {len(ideas)} ötlet")
         body += ["", "---", "", f"## {n}. Hipotézisgyár", "",
                  "Az újszerűség becsült (0–10); a publikált ötletnél forrás és alacsonyabb pont. Minden ötlet cáfolható teszttel.", "",
-                 "| # | Ötlet | Mechanizmus | Adat | Cáfoló teszt | Újszerűség | MT5 | Kockázat |", "|---|---|---|---|---|---|---|---|"]
+                 "| # | Ötlet | Mechanizmus | Adat | Előregisztráció (mérőszám · min. minta · α / többszörös teszt · OOS-kezdet · leállítás) | Előzmény | Újszerűség | FX/CFD | Kockázat |", "|---|---|---|---|---|---|---|---|---|"]
         for k, s in enumerate(sorted(ideas, key=lambda s: -((s.get("novelty") or 0) + (s.get("mt5_fit") or 0))), 1):
             ds = fmt_sources(s.get("data_sources"))
-            body.append(f"| {k} | **{esc(s.get('title_hu'))}** | {esc(s.get('mechanism_hu'))[:300]} | {esc(ds)[:200]} | {esc(s.get('test_hu'))[:250]} | "
-                        f"{s.get('novelty', '?')}/10 | {s.get('mt5_fit', '?')}/10 | {esc(s.get('risk_hu'))[:150]} |")
+            body.append(f"| {k} | **{esc(s.get('title_hu'))}** | {cut(s.get('mechanism_hu'), 300)} | {ds} | {fmt_prereg(s.get('prereg'), s.get('test_hu'))} | "
+                        f"{fmt_prior(s.get('prior_art'))} | {s.get('novelty', '?')}/10 | {s.get('mt5_fit', '?')}/10 | {cut(s.get('risk_hu'), 150)} |")
         n += 1
     tab = read("a8_tables.md")
     if tab:
@@ -537,17 +560,19 @@ def write_dl(items):
                   '[ -n "$DEST" ] || { echo "DEST üres" >&2; exit 2; }',
          'DEST=$(realpath -m -- "$DEST" 2>/dev/null || python3 -c "import os,sys; print(os.path.realpath(sys.argv[1]))" "$DEST" 2>/dev/null)',
          '[ -n "$DEST" ] || { echo "DEST nem oldható fel (nincs realpath -m és python3)" >&2; exit 2; }', 'case "$DEST" in /|/bin|/boot|/dev|/etc|/home|/lib*|/proc|/root|/run|/sbin|/sys|/usr|/var|/private|/System) echo "Tiltott DEST: $DEST" >&2; exit 2;; esac',
+                  'case "$DEST" in "${HOME:-/nonexistent}"|/usr/*|/var/*|/opt|/srv|/mnt|/media) [ "${ALLOW_DEST:-}" = 1 ] || { echo "DEST=$DEST rendszer- vagy saját mappa gyökere: adj meg almappát, vagy ALLOW_DEST=1" >&2; exit 2; };; esac',
          'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"',
          'UA="${UA:-algotrading-archivum-letolto/1.0 (kutatási célú letöltés)}"   # a SEC és több hivatal UA nélkül 403-at ad; saját elérhetőséget az UA-ba a felhasználó írjon',
-         'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
-    n, seen_repo = 0, set()
+         'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"',
+         'sec_ok(){ case "$UA" in *@*) return 0;; *) echo "KIHAGYVA (SEC): a SEC elérhetőséget kér az UA-ban, pl. UA=\"Nev nev@domain.hu\"" | tee -a "$LOG"; return 1;; esac; }', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
+    n, seen_repo, scripted = 0, set(), set()
     q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] != "free":
             continue
         d = o.get("download") or {}
         gh = (o.get("github") or {}).get("repo")
-        FILE_RE = r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|pdf|h5|nc|zst)(\?|$)"
+        FILE_RE = r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|xml|pdf|h5|nc|zst)(\?|$)"
         files = [u for u in (d.get("files") or []) if isinstance(u, str) and re.search(FILE_RE, u, re.I)]
         if d.get("method") == "http" and re.search(FILE_RE, str(d.get("url", "")), re.I):
             files = files or [d["url"]]
@@ -555,8 +580,10 @@ def write_dl(items):
             for u in files[:20]:
                 fn = os.path.basename(u.split("?")[0]) or "file"
                 sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
-                L.append(f'mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
+                pre = 'sec_ok && ' if "sec.gov" in u else ""
+                L.append(f'{pre}mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
                 n += 1
+            scripted.add(o["id"])
             continue
         sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
         if d.get("method") == "git" or (gh and re.match(r"^[\w.-]+/[\w.-]+$", gh)):
@@ -570,14 +597,25 @@ def write_dl(items):
             L.append(f'if [ -d {sub}/.git ]; then git -C {sub} pull -q --ff-only && ok {o["id"]} || fail {o["id"]}; '
                      f'else git clone -q --depth 1 --filter=blob:limit=50m {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
+            scripted.add(o["id"])
         elif d.get("method") == "hf" and d.get("url"):
             m = re.match(r"^(?:https?://huggingface\.co/)?(datasets/|spaces/)?([\w.-]+/[\w.-]+)", str(d["url"]))
             if not m:
                 continue
             rt = {"datasets/": " --repo-type dataset", "spaces/": " --repo-type space"}.get(m.group(1) or "", "")
-            L.append(f'if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
+            big = (o.get("bytes_est") or 0) > 5e9
+            warn = f'echo "FIGYELEM: {o["id"]} becsült mérete {human(o.get("bytes_est"))}" ; ' if big else ""
+            L.append(f'{warn}if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
             n += 1
-    L += ["", 'echo "Kész. Napló: $LOG"']
+            scripted.add(o["id"])
+    # kézi / regisztrációs / API-kulcsos tételek: TODO-lista, hogy semmi ne vesszen el csendben
+    L += ["", "# --- Nem automatizálható ingyenes és regisztrációs tételek (kézi letöltés, API-kulcs vagy weboldal) ---",
+          'todo(){ echo "TODO $1 – $2" | tee -a "$DEST/_TODO.txt"; }']
+    for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
+        if o["access"] in ("free", "registration") and o["id"] not in scripted and o.get("cat") not in NON_SOURCE:
+            why = "regisztráció/API-kulcs kell" if o["access"] == "registration" else "weboldal vagy API, nincs közvetlen fájl"
+            L.append(f'todo {q(o["id"])} {q(why + " – " + str(o.get("url") or ""))}')
+    L += ["", 'echo "Kész. Napló: $LOG; kézi tételek: $DEST/_TODO.txt"']
     p = os.path.join(ROOT, "letolto.sh")
     open(p, "w", encoding="utf-8").write("\n".join(L) + "\n")
     os.chmod(p, 0o755)

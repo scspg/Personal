@@ -89,7 +89,13 @@ def main():
                   "h": (o.get("notes_hu") or " · ".join(x for x in (o.get("method_hu"), o.get("result_hu"), o.get("improve_hu")) if x) or "")[:500], "b": (o.get("pitfalls_hu") or "")[:250], "v": o.get("verified")} for o in items]
     st = [{"n": s.get("name"), "u": s.get("url"), "f": (s.get("formula_hu") or "")[:400], "w": (s.get("works_when_hu") or "")[:250],
            "x": (s.get("dies_when_hu") or "")[:250], "m": s.get("mt5_fit")} for s in strat]
-    idz = [{"n": s.get("title_hu"), "m": (s.get("mechanism_hu") or "")[:400], "t": (s.get("test_hu") or "")[:300],
+    def pr(s):
+        p = s.get("prereg")
+        if not isinstance(p, dict):
+            return (s.get("test_hu") or "")[:300]
+        mn = p.get("min_n"); mn = f"{mn.get('n')} {mn.get('unit', '')}" if isinstance(mn, dict) else mn
+        return f"{p.get('metric')} · horizont {p.get('horizon')} · min. n {mn} · α {p.get('alpha')} ({p.get('multiplicity')}) · OOS {p.get('oos_start')} · leállítás: {p.get('kill_rule')}"[:600]
+    idz = [{"n": s.get("title_hu"), "m": (s.get("mechanism_hu") or "")[:400], "t": pr(s),
             "y": s.get("novelty"), "f": s.get("mt5_fit"), "r": (s.get("risk_hu") or "")[:200]} for s in ideas]
     data = json.dumps({"items": cat_items, "strat": st, "ideas": idz}, ensure_ascii=False).replace("</", "<\\/")
     page = TEMPLATE.replace("__DATA__", data).replace("__TABLES__", md_tables(tables) if tables else "<p>A táblák a kutatás végén kerülnek ide.</p>") \
@@ -158,7 +164,7 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 </div></section>
 
 <section id="str" hidden><div class="card"><input id="sq" placeholder="Keresés a stratégiák között"></div><div class="card tw"><table id="ts"><thead><tr><th>Stratégia</th><th>FX/CFD</th><th>Lényeg / képlet</th><th>Mikor működik</th><th>Mikor hal meg</th></tr></thead><tbody></tbody></table></div></section>
-<section id="otl" hidden><div class="card"><input id="iq" placeholder="Keresés az ötletek között"></div><div class="card tw"><table id="ti"><thead><tr><th>Ötlet</th><th>Új</th><th>FX/CFD</th><th>Mechanizmus</th><th>Cáfoló teszt</th><th>Kockázat</th></tr></thead><tbody></tbody></table></div></section>
+<section id="otl" hidden><div class="card"><input id="iq" placeholder="Keresés az ötletek között"></div><div class="card tw"><table id="ti"><thead><tr><th>Ötlet</th><th>Új</th><th>FX/CFD</th><th>Mechanizmus</th><th>Előregisztráció</th><th>Kockázat</th></tr></thead><tbody></tbody></table></div></section>
 <section id="inf" hidden><div class="card">__TABLES__</div></section>
 <section id="spec" hidden><div class="card"><p class="mut">A teljes szöveg: <code>FEJLESZTOI-SPEC.md</code>. A 12. fejezet (platform- és brókerfüggetlenség) minden más fejezetet felülír. A mermaid-ábrák itt forráskódként látszanak.</p>__SPEC__</div></section>
 <section id="mod" hidden><div class="card"><h2>Pontozás</h2><p>Tételpontok 0–10: R relevancia, E edge-potenciál, Q minőség, C költséghatékonyság, L késleltetés/frissesség, F karbantartottság, Z jogi/ÁSZF-biztonság. Profilpont 0–100 = súlyozott átlag × 10. Súlyok (R/E/Q/C/L/F/Z): gyors pénz .15/.30/.10/.10/.20/.05/.10 · kockázat .25/.05/.30/.10/.05/.15/.10 · kutatás .25/.20/.25/.10/0/.15/.05 · predikció .15/.30/.15/.10/.10/0/.20.</p>
