@@ -42,7 +42,7 @@
      }
     ],
     "elonyok": [
-     "A teljes 22,5 TB-os archívumhoz 8% tartalékkal elég (≥24,5 TB kell)",
+     "A teljes 22,4 TB-os archívumhoz 8% tartalékkal elég (≥24,5 TB kell)",
      "Másik gyártó és nem HAMR: valódi diverzitás a Seagate Exos M mellé"
     ],
     "hatranyok": [
@@ -1234,9 +1234,9 @@
   "kompakt_2_eszkoz": {
    "26_32_TB": {
     "eszkoz_1_elsodleges": "Seagate Exos M 28TB (ipon, 578 590 Ft, mért, előrendelés) dokkolóban; ZFS, havi scrub",
-    "eszkoz_2_offline": "WD Red Pro 26TB (alternate.de 1393 €  magyar áfával ~543 403 Ft) – MÁS GYÁRTÓ  nem HAMR; antisztatikus tasak + hab + Faraday-tasak + tömített lőszerláda + szilikagél  másik épületben",
+    "eszkoz_2_offline": "WD Red Pro 26TB (alternate.de 1393 €, magyar áfával ~543 403 Ft) – MÁS GYÁRTÓ, nem HAMR; antisztatikus tasak + hab + Faraday-tasak + tömített lőszerláda + szilikagél, másik épületben",
     "vedelem": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP, zsarolóvírus; gyártó- és technológia-diverzitás (HAMR + nem HAMR).",
-    "megjegyzes": "A HAMR új technológia, ezért a B példányt félévente végig kell olvasni. Ha nincs készleten: 2× Toshiba MG10 22TB és a 9 TB-os Debian-tükör nélküli archívum (~13,5 TB).",
+    "megjegyzes": "A HAMR új technológia (itt az A példány, Exos M), ezért az A-n a havi scrubot és a SMART-figyelést ne hagyd ki; a B példányt félévente végig kell olvasni. Ha nincs készleten: 2× Toshiba MG10 22TB és a 9 TB-os Debian-tükör nélküli archívum (~13,5 TB).",
     "osszesen": "~1 182 400 Ft; a maggal (Samsung T7 Shield 2TB, ipon 198 391 Ft) ~1 380 791 Ft; M-DISC-kel ~1 470 591 Ft"
    },
    "24_TB": {
@@ -1245,7 +1245,7 @@
     "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline).",
     "plusz_opcionalis_mag": "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen.",
     "osszesen": "~885 487 Ft",
-    "megjegyzes": "A 16 TB-os tervhez (13,6 TB) – a teljes 22,5 TB-hoz ≥24,5 TB kell."
+    "megjegyzes": "A 16 TB-os tervhez (13,6 TB) – a teljes 22,4 TB-hoz ≥24,5 TB kell."
    },
    "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tüzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.",
    "32_TB": {
@@ -1263,13 +1263,13 @@
   },
   "adatintegritas": {
    "zfs_btrfs": [
-    "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetet így hozd létre, írás előtt: zfs create -o copies=2 arch1/mag (csak az utána írt adatra hat; a ~1,5 TB mag ~3 TB-ot foglal; bit-rot ellen, NEM lemezhiba ellen).",
+    "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetet így hozd létre, írás előtt: zfs create -o copies=2 arch1/mag (csak az utána írt adatra hat; a ~1,4 TB mag ~2,8 TB-ot foglal; bit-rot ellen, NEM lemezhiba ellen).",
     "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B /mnt/arch; egylemezes Btrfs-en a mag külön partícióján: mkfs.btrfs -m dup -d dup /dev/… (a profil az egész fájlrendszerre vonatkozik, és felezi a kapacitást).",
     "Ellenőrzött szinkron: zfs send/recv snapshotokkal (a checksumok átmennek), vagy rsync --checksum + SHA256 manifest (hashdeep / sha256sum) minden másolaton."
    ],
    "snapraid_par2": [
     "Sok, eltérő méretű lemeznél (JBOD a QNAP TR-004 / ICY BOX / D8 házban): SnapRAID, 4-6 adatlemezre 1 paritás, 7+ lemeznél 2 paritás. Utána: snapraid sync, snapraid scrub -p 10 -o 30 (minden ellenőrzéskor), a „content” fájl legalább 3 lemezen legyen.",
-    "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): (cd <mappa> && par2 create -R -r15 mag.par2 *). Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify mag.par2; javítás: par2 repair mag.par2 mag.par2; javítás: par2 repair mag.par2."
+    "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): (cd <mappa> && par2 create -R -r15 mag.par2 *). Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify mag.par2; javítás: par2 repair mag.par2."
    ],
    "offline_bekapcsolas": [
     "Félévente (legalább évente) kapcsold be: SMART-ellenőrzés + teljes scrub/olvasás + a hibák javítása a másik másolatból.",
@@ -1285,7 +1285,7 @@
     "LTO-nál: 16-25 °C, 20-50% RH, függőlegesen, gyári tokban."
    ],
    "smart": [
-    "smartctl -a -d sat /dev/disk/by-id/… minden bekapcsoláskor (USB-dokkolón a -d sat kell); új lemeznél beégetés: smartctl -t long, majd badblocks -b 8192 -t random -wsv /dev/disk/by-id/<lemez> (destruktív, csak üres lemezen; 16 TiB fölött -b 8192 kell; 28–32 TB-on kb. 2,5 nap) → a korai meghibásodások kiszűrésére.",
+    "smartctl -a -d sat /dev/disk/by-id/… minden bekapcsoláskor (USB-dokkolón a -d sat kell); új lemeznél beégetés: smartctl -d sat -t long /dev/disk/by-id/…, majd badblocks -b 8192 -t random -wsv /dev/disk/by-id/<lemez> (destruktív, csak üres lemezen; 16 TiB fölött -b 8192 kell; 28–32 TB-on kb. 2,5 nap) → a korai meghibásodások kiszűrésére.",
     "Figyeld ezeket: 5 Reallocated, 187 Reported Uncorrectable, 188 Command Timeout, 197 Current Pending, 198 Offline Uncorrectable, 199 UDMA CRC (kábel). Ha a 197/198 > 0 vagy az 5 nő, cseréld a lemezt.",
     "Online gépen: smartd (napi short, havi long teszt (28 TB-on ~29 óra)) + ZFS ZED e-mail/ntfy értesítés."
    ],
@@ -1318,7 +1318,7 @@
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
     "osszesen": "975 287 Ft",
-    "megjegyzes": "A 16 TB-os tervhez (13,6 TB). A teljes 22,5 TB-hoz a 26–32 TB-os kételemes változat kell (~1,18 M Ft)."
+    "megjegyzes": "A 16 TB-os tervhez (13,6 TB). A teljes 22,4 TB-hoz a 26–32 TB-os kételemes változat kell (~1,18 M Ft)."
    },
    "~3–3,7 millió Ft – 64–66 TB, NAS + offline szett": {
     "elemek": [

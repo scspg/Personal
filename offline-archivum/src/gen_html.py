@@ -596,13 +596,13 @@ def storage_data():
 
 def storage_html():
     """rétegek + ajánlott kompakt összeállítás (a 4c fejezet lényege) HTML-ben."""
-    rows = [("1. Mag – mindig nálad", "0–1. szintű életmentő tudás + 1 kis LLM (~1,5 TB)", "strapabíró SSD 2–4 TB (IP65) + a legfontosabb ~0,5 TB M-DISC lemezen"),
+    rows = [("1. Mag – mindig nálad", "0–1. szintű életmentő tudás + 1 kis LLM (~1,4 TB)", "strapabíró SSD 2–4 TB (IP65) + a legfontosabb ~0,5 TB M-DISC lemezen"),
             ("2. Munka – a gépben", "LLM-modellek, napi anyag (~0,6 TB + tartalék)", "NVMe PCIe 5.0 SSD 4–8 TB (pl. Samsung 9100 PRO 8TB)"),
-            ("3. Teljes archívum – A példány", "minden (~22,5 TB)", "1× 26–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
+            ("3. Teljes archívum – A példány", "minden (~22,4 TB)", "1× 26–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
             ("4. Offline másolat – B példány", "ugyanaz", "1× 26–32 TB HDD más gyártótól (pl. Exos M 28TB + WD Red Pro 26TB), Faraday-tasak + tömített lőszerláda, másik épületben, félévente ellenőrizve"),
             ("5. 30 éves réteg (opcionális)", "harmadik példány", "LTO-9 szalag – csak ~260 TB felett vagy 3+ másolatnál éri meg")]
     t = "".join(f"<tr><td><b>{a}</b></td><td data-l='Mi kerül rá'>{b}</td><td data-l='Ajánlott eszköz'>{c}</td></tr>" for a, b, c in rows)
-    return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 26–32 TB-os HDD-re ráfér (8% tartalékkal ≥24,5 TB kell), de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
+    return ('<p><b>A lényeg:</b> a teljes archívum (~22,4 TB) egyetlen 26–32 TB-os HDD-re ráfér (8% tartalékkal ≥24,5 TB kell), de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
             'Egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3% (becslés a Backblaze Q2 2026 adataiból). '
             '<b>Legkompaktabb ajánlás:</b> 2 db 26–32 TB-os HDD két gyártótól + 1 kis strapabíró SSD a maggal (~1,38 M Ft; M-DISC-kel ~1,47 M Ft). Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
             f'<div class="tablebox"><table class="bund"><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>'
