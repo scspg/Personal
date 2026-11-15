@@ -110,6 +110,16 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
+def human(b):
+    """ember-olvasható méret, tizedesvesszővel"""
+    if not b:
+        return "ismeretlen"
+    for u, f in (("TB", 1e12), ("GB", 1e9), ("MB", 1e6), ("KB", 1e3)):
+        if b >= f:
+            return f"{b / f:.1f} {u}".replace(".", ",")
+    return f"{int(b)} B"
+
+
 def hunum(x, d=1):
     if x is None:
         return "?"
@@ -166,6 +176,10 @@ def prof_score(sc, w):
 ASSET_MAP = {"fixed income": "rates", "bonds": "rates", "bond": "rates", "stocks": "equity", "forex": "fx"}
 REGION_MAP = {"ch": "eu", "europe": "eu", "usa": "us", "world": "global"}
 ALIAS = {}
+HF_SIZES = {}
+DATA_SRC = {"a1_market_exec", "a2_crypto", "a3_predict_sports", "a4_macro_news_alt"}
+NON_DATA_CAT = {"broker", "platform", "pro-status", "execution", "execution-quality", "community", "broker-regulation", "kripto-strategia",
+                "kripto-irodalom", "kripto-jog-ado", "kripto-oss-eszkoz", "kripto-infrastruktura", "kripto-cex-api", "kripto-mev-mempool", "infra", "research"}
 ANALYSIS_SRC = {"a10_methods", "a11_platforms"}   # elemzési tételek (esettanulmány, módszer, jogalanyonkénti bróker-mátrix sor): nem vonjuk össze, csak group-pal kötjük   # eredeti/eldobott id → megtartott id (a specifikáció hivatkozásaihoz)
 
 
@@ -182,9 +196,13 @@ def collect():
             if not url:
                 stats[name]["no_url"] += 1
             nu = norm_url(url)
-            for k in [k for k, v in o.items() if v == ""]:   # minden üres szöveg → null (mesterprompt 2.1)
-                if o.get(k) == "":
-                    o[k] = None
+            def _nul(x):                                  # minden üres szöveg → null, beágyazva is (mesterprompt 2.1)
+                if isinstance(x, dict):
+                    return {k: _nul(v) for k, v in x.items()}
+                if isinstance(x, list):
+                    return [_nul(v) for v in x]
+                return None if x == "" else x
+            o.update(_nul(o))
             for k in ("pit", "survivorship_free", "vintages", "redistribution"):   # logikai mező: szöveg → _note, érték true/false/null
                 v = o.get(k)
                 if isinstance(v, str):
@@ -204,6 +222,11 @@ def collect():
             g = o.get("github")
             if isinstance(g, dict) and (g.get("stars") is None or g.get("last_commit") is None) and not g.get("note"):
                 g["note"] = "nem mérhető (archivált/törölt repó, vagy a mérőszolgáltatás nem adott adatot, 2026-11-15)"
+            if name in DATA_SRC and o.get("cat") not in NON_DATA_CAT:   # adattétel gépi definíciója (mesterprompt 2.1)
+                for k in ("pit", "survivorship_free", "vintages", "revision_policy", "timestamp_semantics"):
+                    if k not in o:
+                        o[k] = None
+                        o.setdefault("pit_note", "PIT-tulajdonság nem vizsgált (2026-11-15)")
             o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
             o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
             if not o.get("notes_hu"):
@@ -253,6 +276,15 @@ def collect():
             if o.get("cat") in ("broker", "platform", "pro-status", "execution", "broker-regulation") and o.get("granularity") in ("tick", "l2", "l3"):
                 o["granularity"] = None                     # bróker/platform nem adatforrás
             items.append(o)
+    ids = {o["id"] for o in items}
+    for o in items:
+        if o.get("related_ids"):
+            rr = []
+            for r in o["related_ids"]:
+                r2 = r if r in ids else ALIAS.get(r) if ALIAS.get(r) in ids else None
+                if r2 and r2 != o["id"] and r2 not in rr:
+                    rr.append(r2)
+            o["related_ids"] = rr
     return items, stats
 
 
@@ -558,7 +590,19 @@ def main():
         ch += ["## Ötletek"] + [f"{esc(s.get('title_hu'))} | új {s.get('novelty', '?')}/10 | {esc(s.get('test_hu'))[:160]}" for s in ideas] + [""]
     open(os.path.join(ROOT, "ALGOTRADING-chat.md"), "w", encoding="utf-8").write("\n".join(ch) + "\n")
     mini = [f"# ALGOTRADING – chat-mini (csak 0–1. szintű tételek, kis kontextusú modellekhez). Kutatás: {DATE}", "",
-            "Formátum: id | név | hozzáférés | url | lényeg. A teljes lista: ALGOTRADING-chat.md; gépi adat: katalogus.jsonl.", ""]
+            "Formátum: id | név | hozzáférés | url | lényeg. A teljes lista: ALGOTRADING-chat.md; gépi adat: katalogus.jsonl. "
+            "Fejlesztői specifikáció: FEJLESZTOI-SPEC.md (olvasási sorrend: §0 → §2 → §12 → §10).", "",
+            "Kulcs kockázati számok (ALGOTRADING.md, Kockázati matematika fejezet, számolt):",
+            "- 1:500, teljes margin-kihasználás: 0,20%-os (EURUSD ~22 pip) ellenirányú mozgás nulláz; stop-out 0,10% (50%) / 0,16% (20%).",
+            "- Referencia-grid (10k USD, 0,05 lot, 20 pip, előny nélkül): stop-out 1 év 35,3%, 3 év 74,7%; átlag minden pályán −32,0%/év.",
+            "- Kosár-stop: −10,3%/év leállással, −22,9%/év újraindítással.",
+            "- Martingale (0,01 lot, 20 pip): csőd 3,6% / 32,6% / 86,3% (100 / 1000 / 5000 ügylet).",
+            "- Túlélési áttétel-plafon: ≤21,8× (JPY 2024), ≤6,90× (CHF 2015); javasolt kemény plafon ≤10× (rögzített párokon ≤5×), stresszveszteség ≤25%.",
+            "- Élesítési farokkapu: P(csőd 1 év) ≤1% t(4) farokkal, 1,5× volatilitással; a referencia-grid elbukik (85,2%).",
+            "- Kelly: 2× Kelly növekedése kis előnynél ≈0, nagyobbnál negatív; ½ Kelly a növekedés ~75%-a.",
+            "- NBP nélkül 20% stop-outnál a stop-outok ~fele negatív egyenleggel zárul.",
+            "- Adó (HU, nem tanácsadás): EU/EGT/OECD/egyezményes felügyelet → ETÜ 15%; offshore (pl. Mauritius) → valószínűleg egyéb jövedelem ~24,9%, veszteség-elszámolás nélkül.",
+            "- EU lakossági tőkeáttétel-korlát: 30:1 fő devizapár (ESMA); a ≤10× effektív áttétel ebbe belefér.", ""]
     for name, title in SOURCES:
         L = sorted([o for o in by_src.get(name, []) if o["tier"] <= 1], key=lambda o: -o["prof"]["kiegyensulyozott"])
         if L:
@@ -592,11 +636,18 @@ def write_dl(items):
          'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"',
          'UA="${UA:-algotrading-archivum-letolto/1.0 (kutatási célú letöltés)}"   # a SEC és több hivatal UA nélkül 403-at ad; saját elérhetőséget az UA-ba a felhasználó írjon',
          'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"',
-         'MAX_GB=${MAX_GB:-500}; REFRESH=${REFRESH:-}   # MAX_GB: a becsült méret felső határa tételenként; REFRESH=1: meglévő fájlok újratöltése',
+         'MAX_GB=${MAX_GB:-50}; REFRESH=${REFRESH:-}   # MAX_GB: a becsült méret felső határa tételenként; REFRESH=1: meglévő fájlok újratöltése',
          'big_ok(){ # becsült bájt',
+         '  [ "$1" -gt 0 ] || { [ -n "${ALLOW_UNKNOWN_SIZE:-}" ] && return 0; echo "KIHAGYVA (ismeretlen méret; ALLOW_UNKNOWN_SIZE=1 engedi): $2" | tee -a "$LOG"; return 1; }',
          '  [ "$1" -le $((MAX_GB*1000000000)) ] && return 0; echo "KIHAGYVA (méret > ${MAX_GB} GB, növeld MAX_GB-t): $2" | tee -a "$LOG"; return 1; }',
-         'sec_ok(){ case "$UA" in *@*) return 0;; *) echo "KIHAGYVA (SEC): a SEC elérhetőséget kér az UA-ban, pl. UA=\"Nev nev@domain.hu\"" | tee -a "$LOG"; return 1;; esac; }', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
-    n, seen_repo, scripted = 0, set(), set()
+         'sec_ok(){ case "$UA" in *@*) return 0;; *) echo "KIHAGYVA (SEC): a SEC elérhetőséget kér az UA-ban, pl. UA=\\"Nev nev@domain.hu\\"" | tee -a "$LOG"; return 1;; esac; }',
+         'url_ok(){ # url id – Content-Length alapján; ismeretlen méret engedett (sok szerver nem küldi)',
+         '  local z; z=$(curl -sIL --max-time 20 -A "$UA" "$1" 2>/dev/null | tr -d "\\r" | awk \'tolower($1)=="content-length:"{v=$2} END{print v+0}\'); [ "${z:-0}" -gt 0 ] || return 0; big_ok "$z" "$2"; }', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
+    n, seen_repo, scripted, seen_hf = 0, set(), set(), set()
+    try:
+        HF_SIZES.update(json.load(open(os.path.join(RES, "hf_sizes.json"), encoding="utf-8")))
+    except (OSError, ValueError):
+        pass
     q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] != "free":
@@ -604,7 +655,7 @@ def write_dl(items):
         d = o.get("download") or {}
         gh = (o.get("github") or {}).get("repo")
         FILE_RE = r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|xml|pdf|h5|nc|zst)(\?|$)"
-        files = [u for u in (d.get("files") or []) if isinstance(u, str) and re.search(FILE_RE, u, re.I)]
+        files = [u for u in ((f.get("url") if isinstance(f, dict) else f) for f in (d.get("files") or [])) if isinstance(u, str) and re.search(FILE_RE, u, re.I)]
         if d.get("method") == "http" and re.search(FILE_RE, str(d.get("url", "")), re.I):
             files = files or [d["url"]]
         if files:                                          # valódi adatfájl elsőbbséget kap a repóval szemben
@@ -612,7 +663,7 @@ def write_dl(items):
                 fn = os.path.basename(u.split("?")[0]) or "file"
                 sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
                 pre = 'sec_ok && ' if "sec.gov" in u else ""
-                L.append(f'{pre}mkdir -p {sub} && if [ -s {sub}/{q(fn)} ] && [ -z "$REFRESH" ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
+                L.append(f'{pre}mkdir -p {sub} && if [ -s {sub}/{q(fn)} ] && [ -z "$REFRESH" ]; then ok {o["id"]}; elif ! url_ok {q(u)} {q(o["id"])}; then :; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
                 n += 1
             scripted.add(o["id"])
             continue
@@ -622,6 +673,13 @@ def write_dl(items):
             if not m:
                 continue
             rt = {"datasets/": " --repo-type dataset", "spaces/": " --repo-type space"}.get(m.group(1) or "", "")
+            hkey = (m.group(1) or "") + m.group(2).lower()
+            if hkey in seen_hf:
+                scripted.add(o["id"])          # ugyanazt a HF-repót egy másik tétel már letölti
+                continue
+            seen_hf.add(hkey)
+            if not o.get("bytes_est") and HF_SIZES.get(o["id"]):
+                o["bytes_est"] = HF_SIZES[o["id"]]; o["bytes_est_note"] = "HF API usedStorage, mért 2026-11-15"
             big = (o.get("bytes_est") or 0) > 5e9
             warn = f'echo "FIGYELEM: {o["id"]} becsült mérete {human(o.get("bytes_est"))}" ; ' if big else ""
             L.append(f'{warn}big_ok {int(o.get("bytes_est") or 0)} {q(o["id"])} && if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
@@ -640,13 +698,19 @@ def write_dl(items):
                      f'else git clone -q --depth 1 --single-branch {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
             scripted.add(o["id"])
+    if any(o["id"] == "mnb-arfolyam-soap" for o in items):   # SOAP POST (HTTPS-en 404, ezért HTTP)
+        L.append('mkdir -p "$DEST/a4_macro_news_alt/mnb-arfolyam-soap" && curl -fsS --max-time 60 -X POST -H "Content-Type: text/xml; charset=utf-8" '
+                 '-H "SOAPAction: http://www.mnb.hu/webservices/MNBArfolyamServiceSoap/GetCurrentExchangeRates" '
+                 '--data \'<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GetCurrentExchangeRates xmlns="http://www.mnb.hu/webservices/"/></soap:Body></soap:Envelope>\' '
+                 'http://www.mnb.hu/arfolyamok.asmx -o "$DEST/a4_macro_news_alt/mnb-arfolyam-soap/aktualis_$(date +%F).xml" && ok mnb-arfolyam-soap || fail mnb-arfolyam-soap')
+        scripted.add("mnb-arfolyam-soap")
     # kézi / regisztrációs / API-kulcsos tételek: TODO-lista, hogy semmi ne vesszen el csendben
     L += ["", "# --- Nem automatizálható ingyenes és regisztrációs tételek (kézi letöltés, API-kulcs vagy weboldal) ---",
           'printf "id\tok\turl\n" > "$DEST/_manual.tsv"',
           'todo(){ printf "%s\t%s\t%s\n" "$1" "$2" "$3" >> "$DEST/_manual.tsv"; }']
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] in ("free", "registration") and o["id"] not in scripted and o.get("cat") not in NON_SOURCE:
-            why = "regisztráció/API-kulcs kell" if o["access"] == "registration" else "weboldal vagy API, nincs közvetlen fájl"
+            why = {"registration": "regisztráció vagy API-kulcs kell"}.get(o["access"], "nyilvános weboldal vagy API, nincs közvetlen letölthető fájl")
             L.append(f'todo {q(o["id"])} {q(why)} {q(o.get("url") or "")}')
     L += ["", 'echo "Kész. Napló: $LOG; kézi és kihagyott tételek: $DEST/_manual.tsv ($(($(wc -l < "$DEST/_manual.tsv")-1)) sor)"']
     p = os.path.join(ROOT, "letolto.sh")

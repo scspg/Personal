@@ -1,6 +1,18 @@
 # ALGOTRADING – chat-mini (csak 0–1. szintű tételek, kis kontextusú modellekhez). Kutatás: 2026-11-15
 
-Formátum: id | név | hozzáférés | url | lényeg. A teljes lista: ALGOTRADING-chat.md; gépi adat: katalogus.jsonl.
+Formátum: id | név | hozzáférés | url | lényeg. A teljes lista: ALGOTRADING-chat.md; gépi adat: katalogus.jsonl. Fejlesztői specifikáció: FEJLESZTOI-SPEC.md (olvasási sorrend: §0 → §2 → §12 → §10).
+
+Kulcs kockázati számok (ALGOTRADING.md, Kockázati matematika fejezet, számolt):
+- 1:500, teljes margin-kihasználás: 0,20%-os (EURUSD ~22 pip) ellenirányú mozgás nulláz; stop-out 0,10% (50%) / 0,16% (20%).
+- Referencia-grid (10k USD, 0,05 lot, 20 pip, előny nélkül): stop-out 1 év 35,3%, 3 év 74,7%; átlag minden pályán −32,0%/év.
+- Kosár-stop: −10,3%/év leállással, −22,9%/év újraindítással.
+- Martingale (0,01 lot, 20 pip): csőd 3,6% / 32,6% / 86,3% (100 / 1000 / 5000 ügylet).
+- Túlélési áttétel-plafon: ≤21,8× (JPY 2024), ≤6,90× (CHF 2015); javasolt kemény plafon ≤10× (rögzített párokon ≤5×), stresszveszteség ≤25%.
+- Élesítési farokkapu: P(csőd 1 év) ≤1% t(4) farokkal, 1,5× volatilitással; a referencia-grid elbukik (85,2%).
+- Kelly: 2× Kelly növekedése kis előnynél ≈0, nagyobbnál negatív; ½ Kelly a növekedés ~75%-a.
+- NBP nélkül 20% stop-outnál a stop-outok ~fele negatív egyenleggel zárul.
+- Adó (HU, nem tanácsadás): EU/EGT/OECD/egyezményes felügyelet → ETÜ 15%; offshore (pl. Mauritius) → valószínűleg egyéb jövedelem ~24,9%, veszteség-elszámolás nélkül.
+- EU lakossági tőkeáttétel-korlát: 30:1 fő devizapár (ESMA); a ≤10× effektív áttétel ebbe belefér.
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 method-vantage-spread-swap-logger | Módszer: Vantage spread-, swap- és rollover-napló… | free | https://www.mql5.com/en/docs/marketinformation/symbolinfotick | Teendő (következtetett módszer): 1) OnTick-ben minden…

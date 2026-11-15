@@ -63,7 +63,9 @@ def md_tables(md, toc=False):
         m = re.match(r"(#{1,4}) (.*)", s)
         if m:
             lv = min(len(m.group(1)) + 1, 4)
-            hid = "s-" + re.sub(r"[^a-z0-9]+", "-", re.sub(r"[^\w\s-]", "", m.group(2).lower()).encode("ascii", "ignore").decode())[:60].strip("-")
+            import unicodedata
+            plain = "".join(c for c in unicodedata.normalize("NFD", m.group(2).lower()) if not unicodedata.combining(c))
+            hid = "s-" + re.sub(r"[^a-z0-9]+", "-", plain)[:60].strip("-")
             heads.append((lv, hid, m.group(2)))
             out.append(f'<h{lv} id="{hid}">{inline(m.group(2))}</h{lv}>')
         elif s.startswith(("- ", "* ")):
@@ -119,7 +121,7 @@ TEMPLATE = r"""<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta 
 :root[data-theme="dark"]{--bg:#0e1116;--card:#161b22;--fg:#e6e9ee;--mut:#9aa4b2;--line:#2a313b;--acc:#5aa9ff;--pos:#4cc27a;--neg:#ff7a70;--chip:#1f2630;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left)) 0 max(16px,env(safe-area-inset-right))}
-h1{font-size:18px;margin:0 0 6px}nav{display:flex;flex-wrap:wrap;gap:2px 4px}pre{overflow-x:auto;background:var(--chip);padding:8px;border-radius:6px;font-size:12px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}#spec pre{max-width:100%}#spec code,#inf code{overflow-wrap:anywhere}.toc ul{columns:2 260px;font-size:13px}.toc .l4{padding-left:12px}#spec h2,#spec h3,#spec h4{scroll-margin-top:90px}nav button{border:0;background:none;color:var(--mut);padding:8px 10px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+h1{font-size:18px;margin:0 0 6px}nav{display:flex;flex-wrap:wrap;gap:2px 4px}pre{overflow-x:auto;background:var(--chip);padding:8px;border-radius:6px;font-size:12px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}#spec pre{max-width:100%}#spec code,#inf code{overflow-wrap:anywhere}.toc ul{columns:2 260px;font-size:13px}.toc .l4{padding-left:12px}#spec [id]{scroll-margin-top:calc(var(--hdr,200px) + 8px)}nav button{border:0;background:none;color:var(--mut);padding:8px 10px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 nav button[aria-current="page"]{color:var(--fg);border-color:var(--acc);font-weight:600}
 main{padding:16px max(16px,env(safe-area-inset-left)) 40px max(16px,env(safe-area-inset-right));max-width:1400px;margin:0 auto}
 section[hidden]{display:none}.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin:0 0 14px}
@@ -186,7 +188,9 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase(
 const SRC={a1_market_exec:"Piac, végrehajtás",a2_crypto:"Kripto",a3_predict_sports:"Predikció, sport",a4_macro_news_alt:"Makró, hírek, alt. adat",a5_oss:"Nyílt szoftver",a6_ai_research:"AI-kutatás, irodalom",a8_infra_legal:"Infra, adó, jog",a9_platform:"Platform",a10_methods:"Bevált módszerek, esettanulmányok",a11_platforms:"Platform- és bróker-összehasonlítás"};
 for(const [k,v] of Object.entries(SRC)){if(D.items.some(o=>o.s===k)){const o=document.createElement("option");o.value=k;o.textContent=v;$("#fs").append(o)}}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.removeAttribute("aria-current"));b.setAttribute("aria-current","page");document.querySelectorAll("main>section").forEach(s=>s.hidden=s.id!==b.dataset.t);try{history.replaceState(null,"","#"+b.dataset.t)}catch(e){}});
-function goHash(){const h=location.hash.slice(1)||"kat";if(h.startsWith("s-"))return;const b=document.querySelector(`#nav button[data-t="${h}"]`);if(b)b.click()}if(location.hash)goHash();window.addEventListener("hashchange",goHash);
+function setHdr(){try{document.documentElement.style.setProperty("--hdr",document.querySelector("header").offsetHeight+"px")}catch(e){}}setHdr();window.addEventListener("resize",setHdr);
+if(innerWidth>=1000){const t=document.querySelector("#spec .toc");if(t)t.open=true}
+function goHash(){const h=location.hash.slice(1)||"kat";const el=document.getElementById(h);if(el&&el.closest("main>section")&&!el.matches("main>section")){const sec=el.closest("main>section");const b=document.querySelector(`#nav button[data-t="${sec.id}"]`);if(b&&sec.hidden){document.querySelectorAll("#nav button").forEach(x=>x.removeAttribute("aria-current"));b.setAttribute("aria-current","page");document.querySelectorAll("main>section").forEach(s=>s.hidden=s!==sec)}requestAnimationFrame(()=>el.scrollIntoView());return}const b=document.querySelector(`#nav button[data-t="${h}"]`);if(b)b.click()}if(location.hash)goHash();window.addEventListener("hashchange",goHash);
 let lim=150,sk=null,sd=-1;const SKEY=[t=>t.t??9,t=>norm(t.n),t=>norm(t.s),t=>norm(t.a),t=>t.e??1e12,null,t=>norm(t.h),t=>norm(t.b)];
 document.querySelectorAll("#tk th").forEach((th,i)=>{th.title="Kattints a rendezéshez";th.onclick=()=>{if(i===5){sk=null}else{sd=sk===i?-sd:1;sk=i}rk()}});
 function rk(){const q=norm($("#q").value),a=$("#fa").value,e=parseFloat($("#fe").value),t=+$("#ft").value,p=$("#fp").value,s=$("#fs").value;
