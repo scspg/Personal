@@ -282,7 +282,8 @@ def main():
                  re.sub(r"(?m)^# ", "### ", re.sub(r"(?m)^## ", "### ", spec)), ""]
         n += 1
 
-    prompt = open(os.path.join(ROOT, ".allapot", "MESTERPROMPT.md"), encoding="utf-8").read()
+    pp = [os.path.join(ROOT, ".allapot", "MESTERPROMPT.md"), os.path.join(HERE, "allapot", "MESTERPROMPT.md")]   # repó / kicsomagolt ZIP
+    prompt = open(next((x for x in pp if os.path.exists(x)), pp[0]), encoding="utf-8").read()
     head = [f"# ALGOTRADING – kvant-, algo- és AI-kereskedési archívum (kutatás: {DATE})", "",
             f"**{len(items)} katalógustétel**, {len(strategies)} stratégia, {len(ideas)} új ötlet. Hozzáférés: "
             + ", ".join(f"{ACCESS[k]} {v}" for k, v in cnt_access.most_common()) + ".", "",

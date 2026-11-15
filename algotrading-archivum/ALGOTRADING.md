@@ -1,6 +1,6 @@
 # ALGOTRADING – kvant-, algo- és AI-kereskedési archívum (kutatás: 2026-11-15)
 
-**1397 katalógustétel**, 119 stratégia, 165 új ötlet. Hozzáférés: ingyenes 919, fizetős 231, freemium 110, regisztrációs 77, intézményi 60.
+**1451 katalógustétel**, 119 stratégia, 165 új ötlet. Hozzáférés: ingyenes 970, fizetős 232, freemium 110, regisztrációs 77, intézményi 62.
 
 > Egy fejlesztőcsapatnak szóló alapanyag egy pénzügyi meta-platformhoz (MetaTrader-alapú végrehajtás, többmodelles súlyozott AI-döntés ördögügyvéddel, predikciós piacok, kripto, makró, hírek, kockázati motor). Minden link a kutatás napján ellenőrzött, kivéve a „nem ellenőrzött” jelölésűeket. Nem befektetési tanácsadás.
 
@@ -17,11 +17,12 @@
 - [9. AI-kereskedés kutatása, LLM-ágensek, súlyozás, validálás, irodalom, benchmark-platformok](#9-ai-kereskedés-kutatása-llm-ágensek-súlyozás-validálás-irodalom-benchmark-platformok) – 255 tétel
 - [10. Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás](#10-infrastruktúra-szerverhelyek-hardver-költözés-adó-szabályozás) – 97 tétel
 - [11. Platform-architektúra és AI-fejlesztési eszközök](#11-platform-architektúra-és-ai-fejlesztési-eszközök) – 107 tétel
-- [12. Stratégia-könyvtár](#12-stratégia-könyvtár) – 119 stratégia
-- [13. Kockázati matematika (1:500, grid, martingale, Kelly)](#13-kockázati-matematika)
-- [14. Hipotézisgyár – új ötletek](#14-hipotézisgyár) – 165 ötlet
-- [15. Szerverhelyek, VPS, hardver, költözési mátrix, magyar adó](#15-szerverhelyek-vps-hardver-költözés-adó)
-- [16. Fejlesztői specifikáció (összefoglaló; teljes: FEJLESZTOI-SPEC.md)](#16-fejlesztői-specifikáció)
+- [12. Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)](#12-bevált-módszerek-statisztikai-összefüggésekből-értelem-és-eredmény-esettanulmányok-módszertár) – 54 tétel
+- [13. Stratégia-könyvtár](#13-stratégia-könyvtár) – 119 stratégia
+- [14. Kockázati matematika (1:500, grid, martingale, Kelly)](#14-kockázati-matematika)
+- [15. Hipotézisgyár – új ötletek](#15-hipotézisgyár) – 165 ötlet
+- [16. Szerverhelyek, VPS, hardver, költözési mátrix, magyar adó](#16-szerverhelyek-vps-hardver-költözés-adó)
+- [17. Fejlesztői specifikáció (összefoglaló; teljes: FEJLESZTOI-SPEC.md)](#17-fejlesztői-specifikáció)
 
 ---
 
@@ -430,6 +431,7 @@ Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a 
 | 1 | [OKX V5 API](https://www.okx.com/docs-v5/en/) | regisztrációs | API ingyenes | 78 | Mért (doksi): WS kapcsolódás 3 kérés/s/IP; subscribe/login 480/óra/kapcsolat; csatornánként 30 WS-kapcsolat/alszámla. Alszámlánként 1000 új/módosított order/2 s; VIP5 felett a fill-ratio alapján 10 000/2 s-ig emelhető. Instrumentumszintű trade-limit; egy orderre egyszerre legfeljebb 3 függő amend. | EU-ban az OKX Europe Ltd. (MFSA, Málta) MiCA-engedéllyel működik (másodlagos forrás: 2025-01-27). Az EU-s termékkör szűkebb lehet, különösen a derivatíváknál. A 30 másodperces adatcsend kapcsolatbontást okoz, ezért ping/pong kell. | mért |
 | 1 | [cryptofeed (bmoscon) – több tőzsdés WS feed handler](https://github.com/bmoscon/cryptofeed) | ingyenes | ingyenes | 78 | Normalizált valós idejű L2/L3 book, trade, funding, OI és likvidáció sok tőzsdéről. Kimenetek: Redis, Arctic, Kafka, Postgres stb. Saját tickadat-archívum építésére ideális, a Tardis-előfizetés olcsó kiváltása az éles gyűjtésben. | A visszamenőleges adatot nem pótolja. A gyűjtőt 24/7 kell üzemeltetni (kiesés esetén lyuk keletkezik). A tőzsdei API-változásokat a közösség követi, néha késve. | mért |
 | 1 | [Cleveland Fed inflációs nowcasting és inflációs várakozások](https://www.clevelandfed.org/indicators-and-data/inflation-nowcasting) | ingyenes | ingyenes | 78 | Napi CPI/PCE nowcast (olaj- és benzinár alapján) – a CPI-meglepetés előrejelzéséhez hasznos; modellalapú várakozási görbe. | A nowcast a konszenzussal együtt mozog; a meglepetés-előrejelző ereje korlátos. | mért |
+| 1 | [Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometrics 2014)](https://doi.org/10.1093/jjfinec/nbt003) | ingyenes | 0 | 78 |  | Csak L2 adattal; FX retailnél nincs központi könyv. | mért |
 | 0 | [Binance matching engine helye: AWS Tokió (ap-northeast-1)](https://cloud.zenlayer.com/blog/crypto-trading-latency-tokyo) | ingyenes | AWS EC2 Tokió díjszabás szerint | 78 | Több másodlagos forrás és latenciamérés szerint a Binance matching engine az AWS ap-northeast-1 régióban fut. Becsült RTT: Tokióból kb. 20–25 ms, Szingapúrból vagy Szöulból 70–100 ms, Európából ~270 ms. Vendor-állítás szerint Tokióban egy bare-metal szerver kb. 2 ms alatt éri el. Az AZ-szintű elhelyezést saját méréssel kell eldönteni (ap-northeast-1a/c/d). | A Binance hivatalosan nem publikálja a pontos régiót és AZ-t. A forrás vendor-blog (következtetett vagy becsült). Ha a japán szervert a Binance korlátozott helyként kezeli (ÁSZF 'b. Eligibility'), az ÁSZF-sértés lehet; a számla jogalanyát nézni kell. | becsült |
 | 2 | [go-ethereum (Geth) végrehajtási kliens](https://github.com/ethereum/go-ethereum) | ingyenes | ingyenes | 78 | Saját ETH node: JSON-RPC, txpool-feliratkozás (pending tx) és trace. A Merge óta konszenzuskliens is kell mellé (pl. Lighthouse). | Az archív node több TB (becsült). A publikus mempool egyre kisebb rész: a privát orderflow (Flashbots Protect, MEV-Share) nem látszik. | mért |
 | 0 | [SEC Insider Transactions (Form 3/4/5) adatkészletek](https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets) | ingyenes | ingyenes | 78 | Negyedéves strukturált Form 4 kivonat; valós időben a Form 4 az EDGAR-ban 2 munkanapon belül megjelenik. Bennfentes vásárlások (különösen klaszteres CEO/CFO vásárlás) a legrobusztusabb publikált anomáliák közé tartoznak. | Az anomália publikált, lecsengés várható (McLean–Pontiff). Ki kell szűrni az opciólehívást (M kód) és a 10b5-1 terv szerinti eladásokat. Valós idejű felhasználáshoz az EDGAR feedet kell figyelni, nem a negyedéves fájlt. | mért |
@@ -438,7 +440,6 @@ Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a 
 | 1 | [Cont, Kukanov, Stoikov (2014): The Price Impact of Order Book Events (OFI)](https://arxiv.org/abs/1011.6402) | ingyenes | 0 | 78 | Az azonosító Crossref/arXiv API-val ellenőrizve. Order Flow Imbalance lineárisan magyarázza a rövid távú árváltozást. J. Financial Econometrics, doi 10.1093/jjfinec/nbt003. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
 | 1 | [Deribit API (opció, perp, futures)](https://docs.deribit.com/) | regisztrációs | API ingyenes | 77 | A BTC/ETH opciós likviditás fő helyszíne (IV-felület, DVOL). Kreditalapú limit: nem-matching kérés 500 kredit, plafon 50 000, visszatöltés 10 kredit/ms. Matching engine: forgalmi sávonként például 5 req/s (burst 20), illetve 30 req/s (burst 100) 25 M USD feletti 7 napos forgalomnál (keresési összefoglaló a doksiból, egymásnak ellentmondó források). | A limitek alszámlánként élnek, és csak előzetes értesítéssel változnak. Elavult harmadik feles számok keringenek (200 req/s). A Deribit nem EU-s MiCA-szolgáltató; a derivatívákra a MiFID II vonatkozik, ezért a magyarországi lakossági hozzáférés jogil | becsült |
 | 1 | [Tőzsdék közti funding-különbözet (pl. Hyperliquid óránkénti vs. CEX 8 órás)](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding) | ingyenes | 0 | 77 | Mért mechanizmus: Hyperliquid funding óránként, az 8 órás ráta 1/8-a; F = átlagos prémium + clamp(kamat − P, ±0,05%); a kamatkomponens fix 0,01%/8 h (11,6% APR a shortoknak); plafon 0,5%/óra (doksi szó szerint). Stratégia: long az alacsony, short a magas funding-helyszínen, delta-semlegesen. Jel: Δf(venue A, B) mínusz a díjak, a slippage és a tőkeköltség. Lecsengés: a publikált anomáliák a publiká | Két helyszín, két margin: az egyik láb likvidálódhat, mielőtt a másik nyer. A mark-price-képzés eltér. On-chain helyszínnél híd- és kivételi késés. Jogi szürke zóna (Hyperliquid EU-ból). | mért |
-| 0 | [NautilusTrader](https://github.com/nautechsystems/nautilus_trader) | ingyenes | ingyenes (nyílt forrás) | 77 | Rust mag, Python API; determinisztikus eseményvezérelt motor, nanoszekundumos időbélyegek, ugyanaz a kód backtestben és élesben. Adapterek: IB, Binance, Bybit, Databento, Betfair, Polymarket stb. A platform eseménymagjának legjobb nyílt referenciája (következtetett). | MT5-adapter nincs (saját adapter kell, pl. ZeroMQ/RPyC hídon); gyors kiadási ütem, API-törések verziók között; LGPL-3.0: módosított motor terjesztésekor forrásközlési kötelezettség. | mért |
 
 ### Kis költségvetés (≤ 100 €/hó tételenként) – 40 tétel, összesen ~1 927 €/hó
 
@@ -537,6 +538,7 @@ Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a 
 | 3 | [Planet (napi 3 m-es műholdképek, Sentinel Hub)](https://www.planet.com/pricing/) | intézményi | egyedi ajánlat | 60 | Napi földfelszín-lefedettség (PlanetScope), nagy felbontás (SkySat); a Sentinel Hub is a Planethez került (a sentinel-hub.com/pricing átirányít). | Intézményi árak, nem publikusak. | mért |
 | 3 | [Kalshi FIX API](https://docs.kalshi.com/fix/connectivity.md) | intézményi | nem publikus | 60 | FIX-kapcsolat (session, hitelesítés külön docs-oldalon) intézményi market makereknek; a Kalshi a CFTC-szabályozott környezet miatt az egyetlen predikciós piac valódi FIX-szel. | Magyarországról nem elérhető. A hozzáférési feltételek és árak nem publikusak. | becsült |
 | 2 | [TrueFX (Integral OCX alapú FX top-of-book tick)](https://www.truefx.com/) | fizetős | Streaming: Professional $4 950/hó, Institutional $7 450/hó (3 szintes mélység, NY/LDN/TK kapcsolat); történeti adat ára nincs feltüntetve (~4 479 €/hó) | 60 | Top-of-book, ms felbontású tick 16+ major párra, Integral OCX bank-market-maker hálózatból (mért, oldal). Régen a regisztrált felhasználóknak ingyenes havi tick-CSV volt (2009-től, becsült) – a mostani oldal ezt nem mutatja. | Az ingyenes történeti letöltés jelenlegi elérhetősége nem ellenőrzött. A streaming ár retailnek aránytalan. EUR ár becsült (Professional, ECB 2026-11-13: 1 EUR=1.1052 USD). | mért |
+| 2 | [D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–)](https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.) | intézményi | ? | 60 | Kevés nyilvános módszertani részlet – inkább a 'technológia mint edge' példája. | Nincs reprodukálható nyilvános eredmény. | mért |
 | 3 | [PrimeXM XCore (brókeroldali MT4/MT5 bridge és likviditás-aggregátor)](https://www.primexm.com/) | intézményi | ? | 59 | Ügyfélenként/szimbólumonként/méretenként állítható markup és routing, risk management modul; hubok London LD4/LD7, New York NY4, Tokió TY3, Szingapúr SG1 (mért). A retail brókerek A/B-book döntése tipikusan ilyen bridge-ben történik – a 'toxikus' (nyerő, latency-arb) ügyfelek külön csoportba kerülhetnek (következtetett). Hogy a Vantage PrimeXM-et, oneZero-t vagy Centroidot használ-e, nem ellenőrzö | Brókeroldali eszköz; ügyfélként nem látod a beállításokat. | mért |
 | 3 | [Lightcast, Revelio Labs, LinkUp (intézményi munkaerőpiaci alt-adat)](https://www.lightcast.io/) | intézményi | egyedi ajánlat | 58 | Álláshirdetés-, létszám- és fluktuáció-adatok cégenként; a LinkUp a cégek saját oldalairól scrape-el (kevesebb duplikáció). | Intézményi, nem publikus ár; a Revelio és a LinkUp oldal a sandboxból 502/403. | becsült |
 | 3 | [Bloomberg B-PIPE (Market Data Feed)](https://aws.amazon.com/financial-services/partner-solutions/bloomberg-b-pipe) | intézményi | ? | 58 | Konszolidált, normalizált valós idejű adatfolyam vállalati alkalmazásokhoz (nem kell terminál). Bloomberg-anyagok szerint kb. 35 millió instrumentum, 330–350+ tőzsde, 5 000+ hozzájáruló; on-prem, hosztolt, AWS és Azure felhő. Ár: egyedi ajánlat (nem publikus). | Intézményi szerződés, jellemzően tőzsdei díjak külön. Magánszemélynek irreleváns; viszonyítási pont a saját adatfolyamhoz. | becsült |
@@ -553,7 +555,6 @@ Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a 
 | 3 | [OptionMetrics IvyDB (US és globális opciós adatbázis, IV-felület)](https://optionmetrics.com/) | intézményi | intézményi | 54 | Az akadémiai opciós kutatás standardja (standardizált IV-felület, volatility surface), WRDS-en keresztül is. Kezdőév 1996 (közismert, becsült). | Csak napi záró adat; intézményi ár. | becsült |
 | 3 | [Aladdin Risk](https://www.blackrock.com/aladdin/products/aladdin-risk) | intézményi | ? | 54 | BlackRock leírása szerint: konzisztens, integrált kockázat-hozam kép eszközosztályokon át, szcenárióelemzés, előrejelzés; Risk Radar küszöbfigyelés, mandátum-compliance, automatikus eszkaláció. Ez az 'Aladdin-kockázat' profil referenciája. | A kockázati modell részletei zártak. | mért |
 | 3 | [WRDS (Wharton Research Data Services)](https://wrds-www.wharton.upenn.edu/) | intézményi | intézményi előfizetés | 53 | A CRSP (survivorship-mentes US árak), Compustat (pont-idejű fundamentumok), IBES (becslések), TAQ, OptionMetrics hozzáférési pontja; Python: wrds 3.5.0 (2026-02-10, mért). | Csak intézményi tagsággal; a licenc nem engedi kereskedelmi célú felhasználást sok adatkörre. | mért |
-| 3 | [Allium (intézményi blokklánc-adattárház)](https://www.allium.so/) | intézményi | egyedi (nem ellenőrzött) | 53 | Snowflake/BigQuery data share sok láncról. Flipside-alternatíva intézményi szinten. | Kis számlához drága és túlméretezett. | nem ellenőrzött |
 
 
 ---
@@ -2470,7 +2471,7 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 | 1 | [Fama & French (1993): Common Risk Factors in the Returns on Stocks and Bonds](https://doi.org/10.1016/0304-405X(93)90023-5) | fizetős | ? | 69 | Az azonosító Crossref/arXiv API-val ellenőrizve. Háromfaktoros modell (piac, SMB, HML) – a kockázati modellek alapja. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
 | 1 | [Kelly, Pruitt, Su (2019): Characteristics Are Covariances (IPCA)](https://doi.org/10.1016/j.jfineco.2019.05.001) | fizetős | ? | 69 | Az azonosító Crossref/arXiv API-val ellenőrizve. Instrumentált PCA: jellemző-függő faktorbetak – nyílt Barra-alternatíva alapja. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
 | 1 | [Black & Litterman (1992): Global Portfolio Optimization](https://doi.org/10.2469/faj.v48.n5.28) | fizetős | ? | 69 | Az azonosító Crossref/arXiv API-val ellenőrizve. Piaci egyensúly + nézetek Bayesi kombinálása – az ágensek 'nézetei' így vihetők portfóliósúlyba. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
-| 1 | [Gatev, Goetzmann, Rouwenhorst (2006): Pairs Trading](https://doi.org/10.1093/rfs/hhj020) | fizetős | ? | 68 | Az azonosító Crossref/arXiv API-val ellenőrizve. Távolság-alapú párkereskedés; a hozam a 2000-es évekre csökkent. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
+| 1 | [Gatev, Goetzmann, Rouwenhorst (2006): Pairs Trading](https://doi.org/10.1093/rfs/hhj020) | fizetős | ? | 68 | Az azonosító Crossref/arXiv API-val ellenőrizve. Távolság-alapú párkereskedés; a hozam a 2000-es évekre csökkent. | Strukturális törés (pl. SNB 2015 EURCHF) – a pár elválik, és a mean-reversion pozíció korlátlanul nő; stop és változáspont-figyelés kötelező. | mért |
 | 1 | [Avellaneda & Lee (2010): Statistical Arbitrage in the US Equities Market](https://doi.org/10.1080/14697680903124632) | fizetős | ? | 68 | Az azonosító Crossref/arXiv API-val ellenőrizve. PCA/ETF-reziduum mean reversion, s-score jelek. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
 | 1 | [Bollerslev (1986): Generalized ARCH (GARCH)](https://doi.org/10.1016/0304-4076(86)90063-1) | fizetős | ? | 68 | Az azonosító Crossref/arXiv API-val ellenőrizve. GARCH(1,1) – a volatilitás-célzás és VaR munkalova. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
 | 1 | [Engle & Granger (1987): Co-Integration and Error Correction](https://doi.org/10.2307/1913236) | fizetős | ? | 68 | Az azonosító Crossref/arXiv API-val ellenőrizve. Kointegráció – párkereskedés elméleti alapja. | Publikált anomália: a hatás a publikálás után gyengül (McLean–Pontiff); költségek után újramérni. | mért |
@@ -2704,7 +2705,7 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 | 1 | [Jane Street Real-Time Market Data Forecasting (Kaggle, 2024)](https://www.kaggle.com/competitions/jane-street-real-time-market-data-forecasting) | regisztrációs | ? | 61 | Valós termelési rendszerekből származó anonimizált idősor-adat; értékelési API. Nyertes megoldások: online tanulás, GRU, segédcélok (harmadik fél összefoglalója – nem ellenőrzött). A 2020-as 'Jane Street Market Prediction' versenyoldal is él. | Kaggle-szabályok: az adat csak a versenyre/kutatásra használható. | mért |
 | 1 | [Jane Street – 'Jane-hez hasonló' értelmezés: statisztikai/ML alapú market maker](https://www.janestreet.com/) | intézményi | ? | 59 | Ha a megrendelő Jane Street-et gondolt: globális ETF/opció/kötvény árjegyző, OCaml-alapú technológia, ML-kutatás. Nyilvános tanulási anyag: két Kaggle-verseny anonimizált valós adatokkal – 'Jane Street Market Prediction' (2020–21) és 'Jane Street Real-Time Market Data Forecasting' (2024–25, 79 jellemző, 9 'responder' – harmadik fél leírása). Tech blog: blog.janestreet.com. | A Jane Street belső modelljei nem nyilvánosak; a Kaggle-adat anonimizált, licence versenyhez kötött. | mért |
 | 2 | [Jev (TypeSafe AI) – kalibrált valószínűségeket adó döntési modell – a 'Javhez' legvalószínűbb értelmezése](https://typesafe.ai/) | fizetős | 0,042 USD / 1M input token; output 0 | 59 | Értelmezés: 'Javhez' ≈ 'Jev-hez' (a '-hez' rag magas hangrendű szóhoz illik, 'Jav' mellett '-hoz' lenne – következtetett). A Jev nem szöveget generál: programállapotot és típusos kérdéseket kap, opciónkénti valószínűséget és konfidenciát ad vissza; nem autoregresszív, 70–500 ms; tanítás: 'Reinforcement Learning for Calibrated Decisions' (RLCD). Kiadás: 2026-09-15, 40 M USD seed (DCVC), alapító Dio | Zárt, súlyok nincsenek; saját API várólistás, Eden AI-on át alfa végpont. Pénzügyi felhasználási eset nincs dokumentálva. A sebesség/ár számok gyártói állítások (nem ellenőrzött). Az értelmezést a megrendelővel meg kell erősíteni. | becsült |
-| 2 | [Jim Simons / Renaissance-szerű statisztikai arbitrázs – tartalmi értelmezés](https://en.wikipedia.org/wiki/Renaissance_Technologies) | intézményi | ? | 49 | A 'statisztikai alapokon működő AI' leírás tartalmilag a Renaissance (Simons) megközelítésére illik: rejtett Markov-modellek, rengeteg gyenge jel kombinációja, rövid tartási idő (Zuckerman könyve alapján – lásd M12 Medallion tételek). Nyelvileg nem illik a 'Javhez' szóhoz. | Nem termék; a módszerek csak részben nyilvánosak. | becsült |
+| 2 | [Jim Simons / Renaissance-szerű statisztikai arbitrázs – tartalmi értelmezés](https://en.wikipedia.org/wiki/Renaissance_Technologies) | intézményi | ? | 49 | A 'statisztikai alapokon működő AI' leírás tartalmilag a Renaissance (Simons) megközelítésére illik: rejtett Markov-modellek, rengeteg gyenge jel kombinációja, rövid tartási idő (Zuckerman könyve alapján – lásd M12 Medallion tételek). Nyelvileg nem illik a 'Javhez' szóhoz. | Túlzott misztifikálás: a konkrét módszerek titkosak, a nyilvános anekdotákból nem lehet visszafejteni. A 2008-as +98% nem reprodukálható célérték. | becsült |
 | 3 | [JARVIS / HuggingGPT (Microsoft) – 'Jarvis-szerű' értelmezés: LLM-vezérlő, amely szakmodelleket hív](https://github.com/microsoft/JARVIS) | ingyenes | 0 | 47 | Ha 'Jarvis' volt: LLM-irányító tervez, kiválasztja és meghívja a specializált modelleket, majd összegzi – ez megfelel az M9 orchestrátor-mintájának. Cikk: HuggingGPT, arXiv 2303.17580. | Kutatási prototípus; 2025-07 óta nincs push (mért). Nem pénzügyi. | mért |
 | 3 | [Java-alapú statisztikai ML (Weka, Deeplearning4j) – 'Javához hasonló' értelmezés](https://ml.cms.waikato.ac.nz/weka) | ingyenes | 0 | 44 | Ha 'Java' volt: a Weka (Waikato Egyetem) klasszikus statisztikai/ML eszköztár, a Deeplearning4j (deeplearning4j.konduit.ai) JVM-es mélytanulás. Kevésbé valószínű értelmezés; a csapat Python-stackje mellett nincs előnye. | Nyelvtanilag gyenge illeszkedés ('Javához' lenne). Ökoszisztéma-hátrány Pythonhoz képest. | mért |
 
@@ -3112,7 +3113,96 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 
 ---
 
-## 12. Stratégia-könyvtár
+## 12. Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
+
+### 12.1. Esettanulmányok – egyéb (17)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 0 | [FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009)](https://doi.org/10.1017/S0022109009090103) | ingyenes | 0 | 77 | A Lo (2004) Adaptive Markets Hypothesis közvetlen empirikus példája. |  | mért |
+| 1 | [Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometrics 2014)](https://doi.org/10.1093/jjfinec/nbt003) | ingyenes | 0 | 80 |  | Csak L2 adattal; FX retailnél nincs központi könyv. | mért |
+| 1 | [Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018)](https://doi.org/10.1016/j.jfineco.2018.05.009) | ingyenes | 0 | 76 |  | A zárás előtti spread-tágulás retail CFD-n megeheti. | mért |
+| 1 | [Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012)](https://doi.org/10.1016/j.jfineco.2012.06.009) | ingyenes | 0 | 75 |  | Egzotikus devizák spreadje retail brókernél. | mért |
+| 1 | [Billion Prices Project – online árak az infláció mérésére (Cavallo & Rigobon 2016)](https://doi.org/10.1257/jep.30.2.151) | ingyenes | 0 | 74 |  | Scraping ÁSZF-kockázat (Z); a minta torzított (online kosár). | mért |
+| 1 | [Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review 2022)](https://doi.org/10.1561/104.00000112) | ingyenes | 0 | 72 | Repó: 1081★. | US-részvény-központú. | mért |
+| 1 | [Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító momentum](https://doi.org/10.1111/j.1540-6261.2008.01379.x) | ingyenes | 0 | 72 |  |  | mért |
+| 1 | [Lazy Prices – Cohen, Malloy, Nguyen (JF 2020)](https://doi.org/10.1111/jofi.12885) | ingyenes | 0 | 72 |  |  | mért |
+| 1 | [Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (1998)](https://doi.org/10.1162/003465398557320) | ingyenes | 0 | 67 |  | Kevés recessziós esemény → kis minta, nagy bizonytalanság. | mért |
+| 1 | [Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspár és MIT-csoport](https://en.wikipedia.org/wiki/Massachusetts_Lottery) | ingyenes | 0 | 64 | A Wikipedia-oldal a 'Cash WinFall' átirányításon keresztül a Massachusetts Lottery-oldal. | A kiskapu bezárul, amint ismert; jogi/ÁSZF-kockázat a bónusz-arbitrázsnál. | mért |
+| 2 | [HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015)](https://doi.org/10.1093/qje/qjv027) | ingyenes | 0 | 69 |  | Latency arbitrage tiltott a legtöbb retail brókernél (Z pont alacsony). | mért |
+| 2 | [Post-earnings announcement drift – Bernard & Thomas (1989)](https://doi.org/10.2307/2491062) | ingyenes | 0 | 68 |  |  | mért |
+| 2 | [Sahm-szabály – munkanélküliségi recesszió-indikátor (2019)](https://en.wikipedia.org/wiki/Sahm_rule) | ingyenes | 0 | 61 |  | Kevés esemény, túlilleszthető küszöb. | mért |
+| 2 | [Mohan Srivastava – a tic-tac-toe kaparós sorsjegy 'singleton' mintázata (Ontario, 2003; Wired 2011)](https://www.wired.com/2011/01/ff-lottery/) | ingyenes | 0 | 58 |  | Egyedi eset; ÁSZF/etika – jelentés, nem kizsákmányolás. | mért |
+| 2 | [MIT Blackjack Team (1979–2000-es évek eleje)](https://en.wikipedia.org/wiki/MIT_Blackjack_Team) | ingyenes | 0 | 54 |  | Kaszinói ÁSZF/kitiltás; a narratíva egy része fikció. | mért |
+| 3 | [Sporthangulat és tőzsde – Edmans, García, Norli (JF 2007)](https://doi.org/10.1111/j.1540-6261.2007.01262.x) | ingyenes | 0 | 60 |  | Ritka esemény → túlilleszkedés. | mért |
+| 3 | [Thorp–Shannon hordható rulett-számítógép (1960–61) és az Eudaemonok](https://doi.org/10.1109/ISWC.1998.729523) | ingyenes | 0 | 48 | Farmer és Packard később a Prediction Companyt alapította. | Illegális kaszinói eszköz (Z=1). | mért |
+
+### 12.2. Esettanulmányok – Verseny (11)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 0 | [Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, LightGBM](https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/) | ingyenes | 0 | 75 | A 2. helyezett írás: Kaggle discussion/323098 (cím mért). | Élő 3 hónap kevés a statisztikai biztonsághoz. | mért |
+| 0 | [Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble](https://en.wikipedia.org/wiki/Netflix_Prize) | ingyenes | 0 | 71 | Koren–Bell–Volinsky: IEEE Computer 2009. | Adatvédelmi kockázat: a 'perturbált' adat is újra-azonosítható volt. | mért |
+| 1 | [Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Nearest Neighbors](https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970) | ingyenes | 0 | 72 | Tanulság: a győztes trükkök gyakran az adat szerkezetének (szivárgásnak) kihasználásai – élőben ellenőrizni kell. | Szivárgás-jellegű feature élőben nem létezik. | mért |
+| 1 | [Numerai – titkosított adatokon tömegesen beküldött modellek + stake-elés](https://numer.ai/) | ingyenes | 0 | 71 | example-scripts 1203★. | A token-ösztönző kockázatos; a feature-ök jelentése ismeretlen. | mért |
+| 1 | [Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised autoencoder + MLP](https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348) | ingyenes | 0 | 65 | Kaggle-diszkusszió tartalma JS-sel töltődik, csak a cím ellenőrizhető. | A nyilvános ranglista túlilleszthető; a privát LB jövőbeli adaton dőlt el. | mért |
+| 2 | [Kaggle Optiver – Trading at the Close (2023–24) – 1. hely](https://www.kaggle.com/competitions/optiver-trading-at-the-close/discussion/487446) | ingyenes | 0 | 64 |  |  | mért |
+| 2 | [Kaggle Rossmann Store Sales (2015) – entitás-beágyazások (Guo & Berkhahn)](https://arxiv.org/abs/1604.06737) | ingyenes | 0 | 64 |  |  | mért |
+| 2 | [Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq (Arthur Suilin)](https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795) | ingyenes | 0 | 62 | Repó 1850★. |  | mért |
+| 2 | [Kaggle Two Sigma: Using News to Predict Stock Movements (2018–19)](https://www.kaggle.com/competitions/two-sigma-financial-news) | ingyenes | 0 | 55 |  |  | mért |
+| 2 | [Kaggle Two Sigma Financial Modeling Challenge (2016–17)](https://www.kaggle.com/competitions/two-sigma-financial-modeling) | ingyenes | 0 | 54 | Egy 8. helyezett írás címe ellenőrizve (discussion/29793). |  | mért |
+| 2 | [Kaggle Ubiquant Market Prediction (2022) – 1. hely: 'Our Betting Strategy'](https://www.kaggle.com/competitions/ubiquant-market-prediction/discussion/338220) | ingyenes | 0 | 54 |  |  | mért |
+
+### 12.3. Esettanulmányok – Kvant pénzügy (9)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 0 | [Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés](https://doi.org/10.1073/pnas.47.1.110) | ingyenes | 0 | 82 | Az állapotfüggő előny + Kelly-méretezés a teljes archívum egyik alapmintája. Thorp Kelly-összefoglalója: World Scientific 2011 (DOI 10.1142/9789814293501_0054). | A teljes Kelly a becsült előny hibájára rendkívül érzékeny; túlbecsült edge esetén csődközeli visszaesés. Kaszinóban kitiltás. | mért |
+| 1 | [Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén (Monemetrics)](https://doi.org/10.1214/aoms/1177697196) | ingyenes | 0 | 75 | A Renaissance-legenda leggyakrabban idézett 'módszere'. Dokumentált: Baum–Welch cikk (1970), Baum szerepe (Wikipedia). | Az 'HMM = Medallion titka' leegyszerűsítés legenda; a HMM-állapotok utólag szépek, élőben késve jeleznek. | mért |
+| 1 | [Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése](https://en.wikipedia.org/wiki/Elwyn_Berlekamp) | ingyenes | 0 | 73 | Kapcsolódó: Kelly (Berlekamp a Bell Labsnál Kelly beosztottja volt – Wikipedia). | Utólagos narratíva; a konkrét jelek nem ismertek. | mért |
+| 1 | [Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, majd stat-arb)](https://en.wikipedia.org/wiki/Princeton_Newport_Partners) | ingyenes | 0 | 68 | Az első piacsemleges fedezeti alap Thorp szerint. A tanulság: árazási modell + fedezés + kockázat szigorú elválasztása. | A hozamszám nem auditált; a jogi kockázat (partnerek) önmagában megölte az alapot – megfelelőség kell. | mért |
+| 2 | [AQR – Quality Minus Junk (Asness–Frazzini–Pedersen 2018/2019)](https://doi.org/10.1007/s11142-018-9470-2) | ingyenes | 0 | 64 |  | Lassú, fundamentális; MT5 FX-hez nem közvetlen. | mért |
+| 2 | [Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown (beszédfelismerés → piac)](https://en.wikipedia.org/wiki/Henry_Laufer) | ingyenes | 0 | 63 | Patterson és Laufer adatai a Wikipedia-oldalaikról; a 'speech recognition → trading' kapcsolat Mercer/Brown IBM-háttere. | A szervezeti tanulság nem bizonyítottan oksági; túlélési torzítás (sok tudós-alapú alap bukott meg). | mért |
+| 2 | [D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–)](https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.) | intézményi | ? | 62 | Kevés nyilvános módszertani részlet – inkább a 'technológia mint edge' példája. | Nincs reprodukálható nyilvános eredmény. | mért |
+| 2 | [Prediction Company – Farmer és Packard (káoszelmélet → statisztikai tanulás, 1991–2018)](https://en.wikipedia.org/wiki/Prediction_Company) | ingyenes | 0 | 60 | Könyv: Thomas A. Bass, The Predictors (1999). | Kevés tény; a 'csak egy vesztes év' másodlagos forrás. | mért |
+| 2 | [Two Sigma – adattudomány-alapú befektetés és nyilvános Kaggle-versenyek](https://en.wikipedia.org/wiki/Two_Sigma) | intézményi | ? | 55 | Részletek a verseny-esettanulmányoknál. | Kevés nyilvános tény; ne építs rá legendát. | mért |
+
+### 12.4. Esettanulmányok – Előrejelzés (8)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 0 | [Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–2015)](https://doi.org/10.1177/0956797614524255) | ingyenes | 0 | 83 | goodjudgment.com (403 a mérésnél, de létező szolgáltatás). | A geopolitikai kérdések nem piaci árak – a piacon már árazott információ ellen nehezebb. | mért |
+| 0 | [M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje](https://doi.org/10.1016/j.ijforecast.2019.04.014) | ingyenes | 0 | 76 | Repó: Mcompetitions/M4-methods (816★). | A pénzügyi idősorokon a pontos szintelőrejelzés kevés kereskedési értéket ad. | mért |
+| 0 | [M5 előrejelzési verseny (2020) – LightGBM dominancia](https://doi.org/10.1016/j.ijforecast.2021.11.013) | ingyenes | 0 | 76 | 1. helyezett írás címe mért (discussion/163684). |  | mért |
+| 0 | [M6 pénzügyi előrejelzési verseny (2022–23)](https://arxiv.org/abs/2310.13357) | ingyenes | 0 | 73 |  |  | mért |
+| 1 | [A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe, Brunet, Nature 2015)](https://doi.org/10.1038/nature14956) | ingyenes | 0 | 73 |  |  | mért |
+| 1 | [Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szimuláció](https://en.wikipedia.org/wiki/Nate_Silver) | ingyenes | 0 | 72 | fivethirtyeight/data 17 501★ (archív). | Kevés választási esemény → a kalibráció nehezen ellenőrizhető. | mért |
+| 1 | [Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Rietz 2008)](https://doi.org/10.1016/j.ijforecast.2008.03.007) | ingyenes | 0 | 70 |  | Kis tétek, kis likviditás; CFTC no-action levél keretei. | mért |
+| 2 | [GraphCast – ML középtávú időjárás-előrejelzés (Lam et al., Science 2023)](https://doi.org/10.1126/science.adi2336) | ingyenes | 0 | 70 |  |  | mért |
+
+### 12.5. Esettanulmányok – Sportfogadás (5)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 0 | [Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multinomiális logit + piaci odds)](https://doi.org/10.1142/9789812819192_0019) | fizetős | ? | 83 | A Bolton–Chapman 1986 (Management Science) cikk a módszertani alap. A 'piaci ár mint prior' a M16 legátvihetőbb mintája. | A számok jórészt sajtó/életrajzi eredetűek; a pari-mutuel jutalék és a saját tétek árhatása nagy. | mért |
+| 0 | [Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtjylland](https://en.wikipedia.org/wiki/Matthew_Benham) | ingyenes | 0 | 75 |  | Az ázsiai piacokhoz való hozzáférés jogilag/ÁSZF szerint korlátozott lehet Magyarországról. | mért |
+| 1 | [Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hove Albion)](https://en.wikipedia.org/wiki/Tony_Bloom) | ingyenes | 0 | 60 |  | Szinte semmi ellenőrizhető módszertan. | mért |
+| 2 | [Haralabos Voulgaris – NBA-fogadás, majd Dallas Mavericks kvant-igazgató](https://en.wikipedia.org/wiki/Haralabos_Voulgaris) | ingyenes | 0 | 58 |  | Legenda és tény keveredik. | mért |
+| 2 | [Billy Walters és a Computer Group – számítógépes sportfogadás](https://en.wikipedia.org/wiki/Billy_Walters_(gambler)) | ingyenes | 0 | 54 |  | A bennfentes-ügy mutatja a jogi kockázatot; a legenda és a tény keveredik. | mért |
+
+### 12.6. Esettanulmányok – Sportelemzés (4)
+
+| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |
+|---|---|---|---|---|---|---|---|
+| 1 | [Expected goals (xG) – lövés-minőség logisztikus modellje](https://en.wikipedia.org/wiki/Expected_goals) | ingyenes | 0 | 74 |  |  | mért |
+| 1 | [Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta)](https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game) | ingyenes | 0 | 69 |  | Túlélési torzítás; a sorozat nem csak a statisztikának köszönhető (erős dobók). | mért |
+| 2 | [Sabermetrika – Bill James Baseball Abstracts (1977–)](https://en.wikipedia.org/wiki/Sabermetrics) | ingyenes | 0 | 60 |  |  | mért |
+| 2 | [Daryl Morey – analitika-alapú NBA (hárompontos és ziccer-preferencia)](https://en.wikipedia.org/wiki/Daryl_Morey) | ingyenes | 0 | 58 |  |  | mért |
+
+
+---
+
+## 13. Stratégia-könyvtár
 
 | Név | Képlet / lényeg | Mikor működik | Mikor hal meg | Lecsengés | MT5-alkalmasság | Bizonyíték |
 |---|---|---|---|---|---|---|
@@ -3238,7 +3328,7 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 
 ---
 
-## 13. Kockázati matematika
+## 14. Kockázati matematika
 
 ### A7 – Kockázati matematika (M10, jogi rész nélkül)
 
@@ -3784,7 +3874,7 @@ A teljes MC-kód (≈100 sor) a fenti logikát vektorizálja 4 000 pályára (se
 
 ---
 
-## 14. Hipotézisgyár
+## 15. Hipotézisgyár
 
 Az újszerűség becsült (0–10); a publikált ötletnél forrás és alacsonyabb pont. Minden ötlet cáfolható teszttel.
 
@@ -3958,7 +4048,7 @@ Az újszerűség becsült (0–10); a publikált ötletnél forrás és alacsony
 
 ---
 
-## 15. Szerverhelyek, VPS, hardver, költözés, adó
+## 16. Szerverhelyek, VPS, hardver, költözés, adó
 
 ### A8 – Infrastruktúra, szerverhely, hardver, költözés, adó és szabályozás – táblák
 
@@ -4088,7 +4178,7 @@ Szabályozási kulcspontok (mért): ESMA lakossági limitek: 30:1 fő devizapár
 
 ---
 
-## 16. Fejlesztői specifikáció
+## 17. Fejlesztői specifikáció
 
 A teljes szöveg külön fájlban: `FEJLESZTOI-SPEC.md`.
 

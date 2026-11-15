@@ -1,5 +1,5 @@
 {
- "items": 1397,
+ "items": 1451,
  "strategies": 119,
  "ideas": 165,
  "stats": {
@@ -52,9 +52,9 @@
    "no_url": 0
   },
   "a10_methods": {
-   "raw": 0,
+   "raw": 77,
    "bad_json": 0,
-   "dup": 0,
+   "dup": 23,
    "no_url": 0
   }
  }

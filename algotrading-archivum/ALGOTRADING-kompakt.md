@@ -1,4 +1,4 @@
-# ALGOTRADING – kompakt (1397 tételből a 0–1. szint)
+# ALGOTRADING – kompakt (1451 tételből a 0–1. szint)
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 
@@ -687,4 +687,38 @@
 - [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) – ingyenes, ingyenes (OSS); Govern–Map–Measure–Manage keretrendszer; a mozgatókar szintjeinek dokumentált kockázatértékelése.
 - [immudb (tamper-evident adatbázis)](https://immudb.io/) – ingyenes, ingyenes (OSS); Kriptográfiailag ellenőrizhető, csak hozzáfűzhető adatbázis; a mozgatókar auditnaplója (minden javaslat, vétó, jóváhagyás, megbízás) visszamenőleg nem módosítható. [GitHub: 9049 cs
 - [Kleppmann: Designing Data-Intensive Applications](https://dataintensive.net/) – fizetős, könyv, ár boltonként; Napló-alapú architektúra, replikáció, exactly-once, stream processing; a csapat közös szókincse az adattóhoz és a buszhoz.
+
+## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
+
+- [Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–2015)](https://doi.org/10.1177/0956797614524255) – ingyenes, 0; goodjudgment.com (403 a mérésnél, de létező szolgáltatás).
+- [Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multinomiális logit + piaci odds)](https://doi.org/10.1142/9789812819192_0019) – fizetős, ?; A Bolton–Chapman 1986 (Management Science) cikk a módszertani alap. A 'piaci ár mint prior' a M16 legátvihetőbb mintája.
+- [Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés](https://doi.org/10.1073/pnas.47.1.110) – ingyenes, 0; Az állapotfüggő előny + Kelly-méretezés a teljes archívum egyik alapmintája. Thorp Kelly-összefoglalója: World Scientific 2011 (DOI 10.1142/9789814293501_0054).
+- [Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometrics 2014)](https://doi.org/10.1093/jjfinec/nbt003) – ingyenes, 0; 
+- [FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009)](https://doi.org/10.1017/S0022109009090103) – ingyenes, 0; A Lo (2004) Adaptive Markets Hypothesis közvetlen empirikus példája.
+- [Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018)](https://doi.org/10.1016/j.jfineco.2018.05.009) – ingyenes, 0; 
+- [M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje](https://doi.org/10.1016/j.ijforecast.2019.04.014) – ingyenes, 0; Repó: Mcompetitions/M4-methods (816★).
+- [M5 előrejelzési verseny (2020) – LightGBM dominancia](https://doi.org/10.1016/j.ijforecast.2021.11.013) – ingyenes, 0; 1. helyezett írás címe mért (discussion/163684).
+- [Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén (Monemetrics)](https://doi.org/10.1214/aoms/1177697196) – ingyenes, 0; A Renaissance-legenda leggyakrabban idézett 'módszere'. Dokumentált: Baum–Welch cikk (1970), Baum szerepe (Wikipedia).
+- [Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012)](https://doi.org/10.1016/j.jfineco.2012.06.009) – ingyenes, 0; 
+- [Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, LightGBM](https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/) – ingyenes, 0; A 2. helyezett írás: Kaggle discussion/323098 (cím mért).
+- [Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtjylland](https://en.wikipedia.org/wiki/Matthew_Benham) – ingyenes, 0; 
+- [Billion Prices Project – online árak az infláció mérésére (Cavallo & Rigobon 2016)](https://doi.org/10.1257/jep.30.2.151) – ingyenes, 0; 
+- [Expected goals (xG) – lövés-minőség logisztikus modellje](https://en.wikipedia.org/wiki/Expected_goals) – ingyenes, 0; 
+- [Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése](https://en.wikipedia.org/wiki/Elwyn_Berlekamp) – ingyenes, 0; Kapcsolódó: Kelly (Berlekamp a Bell Labsnál Kelly beosztottja volt – Wikipedia).
+- [M6 pénzügyi előrejelzési verseny (2022–23)](https://arxiv.org/abs/2310.13357) – ingyenes, 0; 
+- [A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe, Brunet, Nature 2015)](https://doi.org/10.1038/nature14956) – ingyenes, 0; 
+- [Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review 2022)](https://doi.org/10.1561/104.00000112) – ingyenes, 0; Repó: 1081★.
+- [Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító momentum](https://doi.org/10.1111/j.1540-6261.2008.01379.x) – ingyenes, 0; 
+- [Lazy Prices – Cohen, Malloy, Nguyen (JF 2020)](https://doi.org/10.1111/jofi.12885) – ingyenes, 0; 
+- [Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Nearest Neighbors](https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970) – ingyenes, 0; Tanulság: a győztes trükkök gyakran az adat szerkezetének (szivárgásnak) kihasználásai – élőben ellenőrizni kell.
+- [Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szimuláció](https://en.wikipedia.org/wiki/Nate_Silver) – ingyenes, 0; fivethirtyeight/data 17 501★ (archív).
+- [Numerai – titkosított adatokon tömegesen beküldött modellek + stake-elés](https://numer.ai/) – ingyenes, 0; example-scripts 1203★.
+- [Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble](https://en.wikipedia.org/wiki/Netflix_Prize) – ingyenes, 0; Koren–Bell–Volinsky: IEEE Computer 2009.
+- [Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Rietz 2008)](https://doi.org/10.1016/j.ijforecast.2008.03.007) – ingyenes, 0; 
+- [Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta)](https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game) – ingyenes, 0; 
+- [Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, majd stat-arb)](https://en.wikipedia.org/wiki/Princeton_Newport_Partners) – ingyenes, 0; Az első piacsemleges fedezeti alap Thorp szerint. A tanulság: árazási modell + fedezés + kockázat szigorú elválasztása.
+- [Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (1998)](https://doi.org/10.1162/003465398557320) – ingyenes, 0; 
+- [Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised autoencoder + MLP](https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348) – ingyenes, 0; Kaggle-diszkusszió tartalma JS-sel töltődik, csak a cím ellenőrizhető.
+- [Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspár és MIT-csoport](https://en.wikipedia.org/wiki/Massachusetts_Lottery) – ingyenes, 0; A Wikipedia-oldal a 'Cash WinFall' átirányításon keresztül a Massachusetts Lottery-oldal.
+- [Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hove Albion)](https://en.wikipedia.org/wiki/Tony_Bloom) – ingyenes, 0; 
 

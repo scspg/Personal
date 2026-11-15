@@ -1415,6 +1415,62 @@ botorch | BoTorch | free | ingyenes (OSS) | 64/78/70/67 | https://botorch.org/
 mt5-broker-apis | MetaTrader 5 brókeroldali API-k (Manager, Gateway, Server, Report, Web | institutional | brókerlicenc, nem nyilvános | 50/64/54/48 | https://www.metatrader5.com/en/brokers
 mt5manager-pypi | MT5Manager Python csomag (MetaQuotes) | institutional | brókerhozzáférés szükséges | 46/56/47/43 | https://pypi.org/project/MT5Manager/
 
+## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
+cs-gjp-superforecasters | Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–201 | free | 0 | 74/90/88/80 | https://doi.org/10.1177/0956797614524255
+cs-benter-horse-racing | Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multino | paid | ? | 78/87/86/80 | https://doi.org/10.1142/9789812819192_0019
+cs-thorp-blackjack-kelly | Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés | free | 0 | 74/89/86/78 | https://doi.org/10.1073/pnas.47.1.110
+cs-fx-technical-rules-amh | FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009) | free | 0 | 66/89/82/72 | https://doi.org/10.1017/S0022109009090103
+cs-m4-competition | M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2019.04.014
+cs-m5-competition | M5 előrejelzési verseny (2020) – LightGBM dominancia | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2021.11.013
+cs-kaggle-g-research-crypto | Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, Li | free | 0 | 72/79/75/74 | https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/
+cs-smartodds-benham | Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtj | free | 0 | 70/79/78/73 | https://en.wikipedia.org/wiki/Matthew_Benham
+cs-m6-competition | M6 pénzügyi előrejelzési verseny (2022–23) | free | 0 | 62/84/78/69 | https://arxiv.org/abs/2310.13357
+cs-netflix-prize | Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble | free | 0 | 60/82/76/68 | https://en.wikipedia.org/wiki/Netflix_Prize
+cs-cont-order-flow-imbalance | Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometri | free | 0 | 78/84/78/78 | https://doi.org/10.1093/jjfinec/nbt003
+cs-market-intraday-momentum | Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018) | free | 0 | 72/80/76/76 | https://doi.org/10.1016/j.jfineco.2018.05.009
+cs-renaissance-baum-hmm | Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén (Monemetrics | free | 0 | 70/80/76/74 | https://doi.org/10.1214/aoms/1177697196
+cs-fx-currency-momentum | Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012) | free | 0 | 66/83/80/74 | https://doi.org/10.1016/j.jfineco.2012.06.009
+cs-billion-prices-project | Billion Prices Project – online árak az infláció mérésére (Cavallo & R | free | 0 | 71/78/76/71 | https://doi.org/10.1257/jep.30.2.151
+cs-expected-goals-xg | Expected goals (xG) – lövés-minőség logisztikus modellje | free | 0 | 68/80/76/72 | https://en.wikipedia.org/wiki/Expected_goals
+cs-renaissance-berlekamp-1990 | Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése | free | 0 | 73/74/72/74 | https://en.wikipedia.org/wiki/Elwyn_Berlekamp
+cs-ecmwf-quiet-revolution | A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe,  | free | 0 | 62/84/77/68 | https://doi.org/10.1038/nature14956
+cs-chen-zimmermann-open-source-ap | Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review | free | 0 | 60/84/77/68 | https://doi.org/10.1561/104.00000112
+cs-cohen-frazzini-economic-links | Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító mo | free | 0 | 66/78/74/72 | https://doi.org/10.1111/j.1540-6261.2008.01379.x
+cs-lazy-prices | Lazy Prices – Cohen, Malloy, Nguyen (JF 2020) | free | 0 | 66/78/74/72 | https://doi.org/10.1111/jofi.12885
+cs-kaggle-optiver-realized-vol | Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Neares | free | 0 | 72/74/69/74 | https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970
+cs-nate-silver-538 | Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szim | free | 0 | 67/77/74/72 | https://en.wikipedia.org/wiki/Nate_Silver
+cs-numerai | Numerai – titkosított adatokon tömegesen beküldött modellek + stake-el | free | 0 | 66/76/74/68 | https://numer.ai/
+cs-iowa-electronic-markets | Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Ri | free | 0 | 64/77/72/67 | https://doi.org/10.1016/j.ijforecast.2008.03.007
+cs-moneyball-oakland | Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta) | free | 0 | 60/77/72/68 | https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game
+cs-thorp-princeton-newport | Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, m | free | 0 | 64/70/70/68 | https://en.wikipedia.org/wiki/Princeton_Newport_Partners
+cs-yield-curve-recession | Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (19 | free | 0 | 58/75/71/66 | https://doi.org/10.1162/003465398557320
+cs-kaggle-jane-street-2021 | Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised a | free | 0 | 62/69/64/66 | https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348
+cs-cash-winfall | Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspá | free | 0 | 62/66/64/67 | https://en.wikipedia.org/wiki/Massachusetts_Lottery
+cs-starlizard-tony-bloom | Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hov | free | 0 | 60/60/60/60 | https://en.wikipedia.org/wiki/Tony_Bloom
+cs-graphcast | GraphCast – ML középtávú időjárás-előrejelzés (Lam et al., Science 202 | free | 0 | 62/78/72/66 | https://doi.org/10.1126/science.adi2336
+cs-budish-hft-arms-race | HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015) | free | 0 | 64/78/68/60 | https://doi.org/10.1093/qje/qjv027
+cs-pead-bernard-thomas | Post-earnings announcement drift – Bernard & Thomas (1989) | free | 0 | 60/76/70/67 | https://doi.org/10.2307/2491062
+cs-aqr-quality-minus-junk | AQR – Quality Minus Junk (Asness–Frazzini–Pedersen 2018/2019) | free | 0 | 56/72/68/64 | https://doi.org/10.1007/s11142-018-9470-2
+cs-kaggle-optiver-close | Kaggle Optiver – Trading at the Close (2023–24) – 1. hely | free | 0 | 65/65/60/66 | https://www.kaggle.com/competitions/optiver-trading-at-the-close/discussion/487446
+cs-kaggle-rossmann-entity-embeddings | Kaggle Rossmann Store Sales (2015) – entitás-beágyazások (Guo & Berkha | free | 0 | 57/72/65/64 | https://arxiv.org/abs/1604.06737
+cs-renaissance-research-team | Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown (beszé | free | 0 | 58/68/65/63 | https://en.wikipedia.org/wiki/Henry_Laufer
+cs-de-shaw | D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–) | institutional | ? | 60/65/61/64 | https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.
+cs-kaggle-web-traffic | Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq ( | free | 0 | 56/68/62/62 | https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795
+cs-sahm-rule | Sahm-szabály – munkanélküliségi recesszió-indikátor (2019) | free | 0 | 52/69/64/60 | https://en.wikipedia.org/wiki/Sahm_rule
+cs-prediction-company | Prediction Company – Farmer és Packard (káoszelmélet → statisztikai ta | free | 0 | 57/63/60/62 | https://en.wikipedia.org/wiki/Prediction_Company
+cs-sabermetrics-bill-james | Sabermetrika – Bill James Baseball Abstracts (1977–) | free | 0 | 52/68/63/59 | https://en.wikipedia.org/wiki/Sabermetrics
+cs-voulgaris-nba | Haralabos Voulgaris – NBA-fogadás, majd Dallas Mavericks kvant-igazgat | free | 0 | 60/57/56/60 | https://en.wikipedia.org/wiki/Haralabos_Voulgaris
+cs-morey-rockets-analytics | Daryl Morey – analitika-alapú NBA (hárompontos és ziccer-preferencia) | free | 0 | 52/64/59/58 | https://en.wikipedia.org/wiki/Daryl_Morey
+cs-srivastava-scratch-ticket | Mohan Srivastava – a tic-tac-toe kaparós sorsjegy 'singleton' mintázat | free | 0 | 56/61/58/58 | https://www.wired.com/2011/01/ff-lottery/
+cs-two-sigma | Two Sigma – adattudomány-alapú befektetés és nyilvános Kaggle-versenye | institutional | ? | 50/60/55/57 | https://en.wikipedia.org/wiki/Two_Sigma
+cs-kaggle-two-sigma-news | Kaggle Two Sigma: Using News to Predict Stock Movements (2018–19) | free | 0 | 52/58/54/58 | https://www.kaggle.com/competitions/two-sigma-financial-news
+cs-kaggle-two-sigma-fin-modeling | Kaggle Two Sigma Financial Modeling Challenge (2016–17) | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/two-sigma-financial-modeling
+cs-kaggle-ubiquant | Kaggle Ubiquant Market Prediction (2022) – 1. hely: 'Our Betting Strat | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/ubiquant-market-prediction/discussion/338220
+cs-billy-walters-computer-group | Billy Walters és a Computer Group – számítógépes sportfogadás | free | 0 | 54/55/54/54 | https://en.wikipedia.org/wiki/Billy_Walters_(gambler)
+cs-mit-blackjack-team | MIT Blackjack Team (1979–2000-es évek eleje) | free | 0 | 51/57/56/52 | https://en.wikipedia.org/wiki/MIT_Blackjack_Team
+cs-edmans-sports-sentiment | Sporthangulat és tőzsde – Edmans, García, Norli (JF 2007) | free | 0 | 54/66/60/61 | https://doi.org/10.1111/j.1540-6261.2007.01262.x
+cs-thorp-shannon-roulette | Thorp–Shannon hordható rulett-számítógép (1960–61) és az Eudaemonok | free | 0 | 50/49/46/44 | https://doi.org/10.1109/ISWC.1998.729523
+
 ## Stratégiák
 Aritmetikus (fix lépésközű) grid | MT5 8/10 | Szintek: L_k = P0 ± k·Δ, k=1..N. Minden szinten azonos lot q. Ár P-nél a nyitott pozíció n(P)=floor(\|P−P0\|/Δ)·q, a lebegő veszteség ≈ q·Δ·n(n+1)/2 (pontban) →
 Geometrikus (százalékos lépésközű) grid | MT5 6/10 | Szintek: L_k = P0·(1±g)^k. Logáron egyenközű; a lot lehet fix notional (q_k = N/L_k). Széles ártartományú eszközön (kripto, index) a szintsűrűség az árral arány
