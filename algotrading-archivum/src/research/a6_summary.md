@@ -1,9 +1,7 @@
 # A6 – AI döntési réteg, benchmark-platformok, tudásbázis (M9, M12, M13) – összefoglaló
 
-Ellenőrzés: 2026-11-15. Kimenet: `a6_ai_research.jsonl`, 270 tétel (M9: 119, M12: 36, M13: 115). Címkék: 251 mért, 13 becsült, 6 nem ellenőrzött.
-148 tétel cikk vagy hivatkozás (arXiv/DOI/SSRN). Mindegyiket arXiv API vagy Crossref ellenőrizte; a könyvek ISBN-jét az Open Library.
-A GitHub-csillagok és a push-dátumok forrása az ungh.cc API (a GitHub API a sandboxból tiltott), a licenceké a shields.io. A `last_commit` mező a `pushedAt` értéke.
-Árfolyam: 1 EUR = 1,1052 USD (EKB, 2026-11-13).
+Ellenőrzés: 2026-11-15. `a6_ai_research.jsonl`: 270 tétel (M9: 119, M12: 36, M13: 115); 251 mért, 13 becsült, 6 nem ellenőrzött. 148 cikk/hivatkozás (arXiv API vagy Crossref ellenőrizte), könyvek ISBN-je Open Library-ből.
+GitHub-csillag és push-dátum: ungh.cc API (a GitHub API a sandboxból tiltott; `last_commit` = `pushedAt`), licenc: shields.io. Árfolyam: 1 EUR = 1,1052 USD (EKB, 2026-11-13).
 
 ## 1. Ténylap – Medallion / Aladdin / Bloomberg
 
@@ -26,8 +24,7 @@ A GitHub-csillagok és a push-dátumok forrása az ungh.cc API (a GitHub API a s
 | B-PIPE: kb. 35 M instrumentum, 330–350+ tőzsde, on-prem/AWS/Azure; egyedi ár | Bloomberg/AWS anyagok | becsült |
 | BQL: a Bloomberg felhőjében fut; Terminal, Excel (BQL.Query), BQuant (Python) | egyetemi útmutatók | becsült |
 | Funkciókódok (GP, FA, ECO, WIRP, OMON, PORT) | általános ismeret; a Bloomberg-oldal 403-at adott | nem ellenőrzött |
-| Alternatívák havidíja (mérve): Koyfin 39/79/209/299 USD; TradingView éves fizetéssel 12,95–199,95 USD; Quantpedia Premium 599 USD/12 hó | gyártói oldalak | mért |
-| LSEG Workspace kb. 12–24 ezer USD/év; FactSet kb. 12–40 ezer; YCharts kb. 3,6–6 ezer | harmadik fél | becsült |
+| Alternatívák (mérve): Koyfin 39/79/209/299 USD/hó; TradingView 12,95–199,95 USD/hó (éves); Quantpedia Premium 599 USD/12 hó. LSEG kb. 12–24, FactSet kb. 12–40, YCharts kb. 3,6–6 ezer USD/év (becsült) | gyártói oldalak / harmadik fél | mért / becsült |
 
 ## 2. Javasolt döntési architektúra: súlyozott ensemble és ördögügyvéd
 
@@ -68,14 +65,12 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
   - előrelátó reflexió (Wang et al. 2024, „Devil's Advocate”, arXiv 2405.16334);
   - kijelölt ellenvélemény vitában, bíróval (Liang et al. 2023 MAD; Du et al. 2023);
   - a bíró a javaslattevő és a DA vitáját értékeli (Khan et al. 2024; Irving et al. 2018).
-- **Kimenet:** strukturált kockázatlista + p_fail.
-- **Blokkolni csak kemény feltételnél szabad:**
+- **Kimenet:** strukturált kockázatlista + p_fail. **Blokkolni csak kemény feltételnél szabad:**
   - a kalibrált p és a konformális sáv nem zárja ki a nulla várható értéket;
   - a gördülő Brier átlépte a küszöböt (kalibrációs drift);
   - kockázati limit sérül (napi veszteség, kitettség, margin/stop-out távolság 1:500 mellett);
   - adat-/időzítési hiba (elavult hír, look-ahead, injekciógyanús hírszöveg).
-- **Egyébként a DA csak méretet csökkent.** A DA vétójogát a saját mért pontossága (Brier-pontszáma) súlyozza, így a túl óvatos DA súlya automatikusan csökken.
-- **Minden DA-érv auditnaplóba kerül.** Ugyanez vonatkozik a felhasználó javaslataira is.
+- **Egyébként a DA csak méretet csökkent;** vétójogát saját mért Brier-pontszáma súlyozza (a túl óvatos DA súlya csökken). Minden DA-érv auditnaplóba kerül – a felhasználó javaslatainál is.
 
 **2.7 Benchmark az LLM-rétegre.** Csak szennyezésmentes (a tudáshatár utáni) tesztet fogadunk el: StockBench (a legtöbb ágens nem veri a buy-and-hold-ot), LiveTradeBench (élő, Polymarketet is tartalmaz), InvestorBench, FinBen.
 - A FinanceBench szerint az LLM + RAG a kérdések 81%-át hibásan válaszolta meg vagy elutasította (2023): numerikus adatnál kötelező az eszközhasználat.
@@ -83,14 +78,9 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 
 ## 3. „Javhez” – értelmezések
 
-1. **Jev (TypeSafe AI, 2026-09).** Nem szöveget generáló döntési modell: kalibrált opció-valószínűségeket ad, 70–500 ms alatt, RLCD-tanítással. Nyelvtanilag illik („Jev-hez”), és tartalmilag is („statisztikai” AI). **Legvalószínűbb** (becsült). Szerepe: gyors kapuőr-szavazó lehet.
-2. **Jane Street** (a spec sejtése): ML-alapú árjegyző; két nyilvános Kaggle-verseny valós, anonimizált adattal.
-3. **JAX** (Google): numerikus ML-könyvtár; a Bayesi/online súlyozó réteg implementációs alapja lehet.
-4. **Jarvis** (Microsoft JARVIS/HuggingGPT): orchestrátor-minta.
-5. **Java** (Weka, DL4J): gyenge illeszkedés.
-6. **Simons/RenTech**: tartalmi, nem nyelvi egyezés.
-
-**Teendő:** a megrendelővel megerősíteni.
+1. **Jev (TypeSafe AI, 2026-09)** – **legvalószínűbb** (becsült): nem szöveget generáló döntési modell, kalibrált opció-valószínűségek 70–500 ms alatt, RLCD-tanítás; nyelvtanilag („Jev-hez”) és tartalmilag is illik. Szerepe: gyors kapuőr-szavazó.
+2. **Jane Street** (a spec sejtése): ML-alapú árjegyző, két Kaggle-verseny anonimizált valós adattal. 3. **JAX** (Google): a Bayesi/online súlyozó réteg implementációs alapja.
+4. **Jarvis** (JARVIS/HuggingGPT): orchestrátor-minta. 5. **Java** (Weka, DL4J): gyenge illeszkedés. 6. **Simons/RenTech**: tartalmi, nem nyelvi egyezés. **Teendő:** megerősíteni a megrendelővel.
 
 ## 4. Top 10 tétel
 1. TradingAgents (122 566 ★, 2026-11-04, Apache-2.0): Bull/Bear vita, a DA-réteg mintája.
@@ -105,9 +95,5 @@ Eszköz: `arch` (SPA/StepM/MCS), `pypbo`. A küszöbök javaslatok (becsült).
 10. OpenBB (75 412 ★): nyílt Bloomberg-alternatíva adatrétegnek és MCP-nek AI-ágensekhez.
 
 ## 5. Hiányok
-- A Bloomberg, Citadel, SSRN, SEC, Alpha Architect, QuantNet és Wilmott oldalai botvédelem (403) miatt nem voltak letölthetők.
-- Hivatalos Bloomberg-, LSEG-, FactSet- és YCharts-ár nem létezik: csak becslés van.
-- A FinAgent és a FinCon hivatalos kódja nincs azonosítva.
-- A Medallion hozamtáblája csak másodlagos forrásból (Zuckerman, Cornell) érhető el.
-- Az Aladdin VaR-módszertana nem nyilvános.
-- A könyvárakat nem mértem.
+- Botvédelem (403): Bloomberg, Citadel, SSRN, SEC, Alpha Architect, QuantNet, Wilmott. Hivatalos Bloomberg/LSEG/FactSet/YCharts-ár nincs, csak becslés.
+- FinAgent/FinCon hivatalos kódja nem azonosított; a Medallion hozamtáblája csak másodlagos; az Aladdin VaR-módszertana nem nyilvános; könyvárak nem mérve.
