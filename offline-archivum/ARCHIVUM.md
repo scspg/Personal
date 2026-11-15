@@ -209,7 +209,7 @@ A `--focus medicine=2` megszorozza egy kategória pontjait.
 
 ## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16, 32, 64 és 128 TB-ra
 
-A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. LLM-ek: **1–32 TB-ig T2-es gép, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro), legfeljebb 4 modell; **64 és 128 TB-nál T1 szerver, ~2 TB LLM-memória, legfeljebb 8 modell**. Alap és cenzúrázatlan modell is (1–2 TB-on legfeljebb 1 cenzúrázatlan); az LLM legfeljebb a keret 35%-át foglalhatja (1 TB-on 25%-át); szerverformátum is (`--platform server`). **A nagyobb méret a kisebb teljes tartalmát megtartja**, csak bővít vagy jobb változatra cserél. A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.
+A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. LLM-ek: **1–32 TB-ig T2-es gép, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro), legfeljebb 4 modell; **64 és 128 TB-nál T1 szerver, ~2 TB LLM-memória, legfeljebb 8 modell**. Alap és cenzúrázatlan modell is (1–2 TB-on legfeljebb 1 cenzúrázatlan); az LLM legfeljebb a keret 35%-át foglalhatja (1 TB-on 25%-át); szerverformátum is (`--platform server`). **A nagyobb méret a kisebb teljes tudásanyagát megtartja**, csak bővít vagy jobb változatra cserél. Az LLM-ek kivételek: azok a hardverszinthez és a cenzúrázatlan-korláthoz igazodva cserélődhetnek (pl. 2 TB-on a 29 GB-os cenzúrázatlan modell helyére a 188 GB-os erősebb kerül). A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.
 
 ### Összefoglaló
 

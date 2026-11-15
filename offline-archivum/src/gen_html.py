@@ -488,7 +488,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
 <section id="ssd">
   <h2>Hány TB-os SSD kell? – 1-től 128 TB-ig</h2>
   __CORE__
-  <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil; LLM: 1–32 TB-ig T2-es gép ~300 GB memóriával és max. 4 modell, 64–128 TB-nál T1 szerver ~2 TB memóriával és max. 8 modell). A nagyobb méret a kisebb teljes tartalmát megtartja. A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
+  <p class="muted">Kiszámolt tartalom tárhelyenként (a teljes ARCHIVUM-katalógusból, balanced profil; LLM: 1–32 TB-ig T2-es gép ~300 GB memóriával és max. 4 modell, 64–128 TB-nál T1 szerver ~2 TB memóriával és max. 8 modell). A nagyobb méret a kisebb teljes tudásanyagát megtartja (az LLM-ek a hardverszinthez igazodva cserélődhetnek). A sáv a meghajtó teljes kapacitásához viszonyít; 8% tartalék marad. Nyisd le a méretet a teljes listához.</p>
   __SSD__
 </section>
 
