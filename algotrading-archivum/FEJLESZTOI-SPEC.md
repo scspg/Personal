@@ -87,19 +87,19 @@ flowchart LR
 
 | Modul | Felelősség | Nyelv | Fő eszköz / tétel |
 |---|---|---|---|
-| `atp.data` | ingest, normalizálás, szerződés-validálás, snapshot | Python | Pandera [pandera], Iceberg [apache-iceberg], ArcticDB [arcticdb] |
-| `atp.features` | feature-definíciók, point-in-time join | Python | Feast [feast] |
+| `atp.data` | ingest, normalizálás, szerződés-validálás, snapshot | Python | Pandera [oss-pandera], Iceberg [apache-iceberg], ArcticDB [oss-arcticdb] |
+| `atp.features` | feature-definíciók, point-in-time join | Python | Feast [oss-feast] |
 | `atp.core` | eseményhurok, óra (sim/élő), busz-absztrakció | Python, később Rust | NATS [nats], NautilusTrader-minta [nautilustrader-architecture] |
-| `atp.decision` | szavazók, aggregátor, kalibráció, ördögügyvéd | Python | River [river], MAPIE [mapie], scikit-learn [sklearn-calibration] |
+| `atp.decision` | szavazók, aggregátor, kalibráció, ördögügyvéd | Python | River [oss-river], MAPIE [oss-mapie], scikit-learn [sklearn-calibration] |
 | `atp.sizing` | méretezés (vol-target, frakcionális Kelly), szorzók | Python | – |
 | `atp.risk` | pre-trade és post-trade kontrollok, margin-szimuláció | Python | RTS 6 15. cikk minta [eu-rts6-2017-589] |
 | `atp.oms` | megbízás-állapotgép, FIX-szemantika, egyeztetés | Python | FIX [fix-protocol] |
-| `atp.bridge` | MT5-híd (ZeroMQ/TCP), heartbeat, újracsatlakozás | Python + MQL5 | pyzmq [pyzmq], mql-zmq [mql-zmq], SocketCreate [mql5-socketcreate] |
+| `atp.bridge` | MT5-híd (ZeroMQ/TCP), heartbeat, újracsatlakozás | Python + MQL5 | pyzmq [oss-pyzmq], mql-zmq [mql-zmq], SocketCreate [mql5-socketcreate] |
 | `atp.governance` | mozgatókar-szint, policy, HITL, kill switch | Python + Rego | OPA [opa], OpenFeature [openfeature], Telegram [telegram-bot-api] |
 | `atp.audit` | hash-láncolt auditnapló, napi horgony | Python | immudb [immudb] |
 | `atp.config` | séma, kompozíció, verziózás | Python | Hydra [hydra], pydantic-settings [pydantic-settings], JSON Schema [json-schema] |
-| `atp.research` | backtest, keresés, validálás, regiszter-promóció | Python | Optuna [optuna], MLflow [mlflow-registry], pypbo [pypbo] |
-| `atp.obs` | metrikák, trace, LLM-trace | Python | Prometheus [prometheus], OTel [opentelemetry], Langfuse [langfuse] |
+| `atp.research` | backtest, keresés, validálás, regiszter-promóció | Python | Optuna [oss-optuna], MLflow [mlflow-registry], pypbo [oss-pypbo] |
+| `atp.obs` | metrikák, trace, LLM-trace | Python | Prometheus [oss-prometheus], OTel [opentelemetry], Langfuse [langfuse] |
 
 > Csomagnév: `atp` (algotrading platform). Ne legyen `platform`, mert az ütközik a Python standard könyvtárával. (köv.)
 
@@ -156,9 +156,9 @@ sequenceDiagram
 |---|---|---|---|---|
 | A. Tiszta EA | minden logika MQL5-ben | legkisebb késleltetés, MetaQuotes VPS-en is fut | ML/LLM, adattó és tesztelés nehéz; AI-generált MQL5 hibaérzékeny | csak a vészhelyzeti védőlogika maradjon itt |
 | **B. Vékony EA + Python-agy (ZeroMQ vagy natív TCP)** | az EA I/O: tick-küldés, parancs-végrehajtás, helyi védőkorlátok | teljes Python-ökoszisztéma; az EA kicsi és tesztelhető | extra hop (ms-nagyságrend, becs.); a híd hibakezelése kritikus | **ajánlott** |
-| C. MetaTrader5 Python csomag | IPC a futó terminálhoz [mt5-python-package] | hivatalos, egyszerű; `order_check`/`order_send` elérhető (mért) | csak `win_amd64` wheel (mért); Linuxon Wine-Python vagy RPyC [mt5linux]; polling-alapú | kiegészítő: történeti letöltés, egyeztetés |
+| C. MetaTrader5 Python csomag | IPC a futó terminálhoz [mt5-python-package] | hivatalos, egyszerű; `order_check`/`order_send` elérhető (mért) | csak `win_amd64` wheel (mért); Linuxon Wine-Python vagy RPyC [oss-mt5linux]; polling-alapú | kiegészítő: történeti letöltés, egyeztetés |
 | D. Manager/Gateway/Server API | brókeroldali API-k [mt5-broker-apis], [mt5manager-pypi] | szerveroldali hozzáférés | **retail ügyfélnek nem elérhető** (köv.: csak a bróker szerveréhez) | nem releváns |
-| E. Linux/Wine üzem | hivatalos `mt5linux.sh` szkript (mért) [mt5-linux-wine], Docker-image [mt5-docker-gmag11] | egy gépen a Python-stack mellett | Wine-frissítés törhet; headless kijelzőhöz Xvfb/VNC kell | elfogadható; a terminál-verziót rögzíteni |
+| E. Linux/Wine üzem | hivatalos `mt5linux.sh` szkript (mért) [mt5-linux-wine], Docker-image [metatrader5-docker-gmag11] | egy gépen a Python-stack mellett | Wine-frissítés törhet; headless kijelzőhöz Xvfb/VNC kell | elfogadható; a terminál-verziót rögzíteni |
 
 ### 2.1 Híd-protokoll (B út)
 
@@ -391,15 +391,15 @@ Késleltetett visszajelzés: az `i` szavazó `t`-kori szavazatának vesztesége 
 5. Hiperparaméterek: `η ∈ [0,05; 1]`, `α ∈ [0; 0,05]`. Ezeket csak a kutatási hangoláson keresztül hangoljuk, a trial-számlálás alatt (6. fejezet).
 6. Hideg indítás: új szavazó `w_min`-nel indul, és legalább `n_min` lezárt címke után számít.
 
-Elméleti háttér: Hedge/multiplicative weights és fixed-share (Herbster–Warmuth). A forrásokat az A6 gyűjti, itt nem duplikáljuk. A River könyvtár online eszközei használhatók [river].
+Elméleti háttér: Hedge/multiplicative weights és fixed-share (Herbster–Warmuth). A forrásokat az A6 gyűjti, itt nem duplikáljuk. A River könyvtár online eszközei használhatók [oss-river].
 
-**Tulajdonság-tesztek (Hypothesis) [hypothesis]:** `Σw = 1`; minden `w_i ∈ [w_min, w_max]`; azonos veszteségek mellett a súlyok nem változnak; egy domináns szavazó súlya `η·ΔL` arányában monoton nő; NaN-veszteség esetén a súly változatlan, és riasztás megy.
+**Tulajdonság-tesztek (Hypothesis) [oss-hypothesis]:** `Σw = 1`; minden `w_i ∈ [w_min, w_max]`; azonos veszteségek mellett a súlyok nem változnak; egy domináns szavazó súlya `η·ΔL` arányában monoton nő; NaN-veszteség esetén a súly változatlan, és riasztás megy.
 
 ### 4.5 Kalibráció és bizonytalanság
 
 - A szavazónkénti kalibráció rolling ablakon fut, időben a tanító után (purged). Kis mintán Platt, `n > 1000` felett isotonic [sklearn-calibration].
 - Ensemble-szinten újrakalibrálunk, és figyeljük a Brier-pontot és az ECE-t (expected calibration error, 10 bin).
-- A konformális sáv adaptív idősoros változat (például ACI) [mapie]. Ha a hozam-intervallum tartalmazza a 0-t a költségek után, nincs kötés.
+- A konformális sáv adaptív idősoros változat (például ACI) [oss-mapie]. Ha a hozam-intervallum tartalmazza a 0-t a költségek után, nincs kötés.
 
 ### 4.6 Ördögügyvéd-ágens
 
@@ -484,7 +484,7 @@ conf/
 - Kompozíció és felülírás: Hydra [hydra]. Validálás: Pydantic-modell [pydantic-settings]. Export: JSON Schema [json-schema].
 - **Kanonikus hash:** `config_hash = sha256(canonical_json(resolved_config))`. Minden futás, megbízás és auditesemény hordozza.
 - **Verziózás:** a stratégia-konfiguráció SemVer szerint verziózott [semver]. MAJOR = viselkedésváltozás (bármely golden-backtest eltérés), és ez új paper-kaput igényel. MINOR = új opcionális paraméter, alapértéke a régi viselkedést adja. PATCH = dokumentáció és metaadat.
-- Titok nem kerülhet konfigurációba. A titkok helye a SOPS/OpenBao, `SecretStr` típussal [sops], [openbao].
+- Titok nem kerülhet konfigurációba. A titkok helye a SOPS/OpenBao, `SecretStr` típussal [sops], [oss-openbao].
 
 ```python
 class GridATRConfig(BaseModel):
@@ -504,19 +504,19 @@ class GridATRConfig(BaseModel):
 ### 6.2 Kísérletkövetés
 
 - MLflow run minden backtestre és keresési trialre [mlflow-registry], a 3.2-ben felsorolt kötelező tag-ekkel.
-- Az Optuna-study tárolója RDB (Postgres/SQLite). A study-ID az MLflow-tag része [optuna].
-- Adat-verzió: Iceberg/ArcticDB snapshot-ID [apache-iceberg], [arcticdb]. A kisebb, származtatott halmazok DVC-vel verziózhatók [dvc].
+- Az Optuna-study tárolója RDB (Postgres/SQLite). A study-ID az MLflow-tag része [oss-optuna].
+- Adat-verzió: Iceberg/ArcticDB snapshot-ID [apache-iceberg], [oss-arcticdb]. A kisebb, származtatott halmazok DVC-vel verziózhatók [oss-dvc].
 
 ### 6.3 Paraméterkeresés
 
 | Módszer | Mikor | Eszköz |
 |---|---|---|
-| TPE (alapértelmezés) | vegyes, feltételes terek, 50–500 trial | Optuna [optuna] |
+| TPE (alapértelmezés) | vegyes, feltételes terek, 50–500 trial | Optuna [oss-optuna] |
 | CMA-ES | folytonos, 3–20 dimenzió | Optuna |
 | Többcélú NSGA-II | Sharpe és max drawdown, illetve fordulatszám | Optuna |
 | GP-alapú Bayes-optimalizálás | drága, zajos kiértékelés (teljes walk-forward), < 100 trial | Ax/BoTorch [ax-platform], [botorch] |
 | RF-szurrogát (SMAC) | sok kategorikus/feltételes paraméter | SMAC3 [smac3] |
-| Elosztott | több gép/GPU | Ray Tune [ray-tune] |
+| Elosztott | több gép/GPU | Ray Tune [oss-ray] |
 
 A célfüggvény **soha nem a nyers in-sample Sharpe**. A célfüggvény: a purged walk-forward fold-ok OOS-metrikáinak mediánja, mínusz büntetés (fordulatszám-költség, paraméter-instabilitás: a fold-ok közti szórás).
 
@@ -524,7 +524,7 @@ A célfüggvény **soha nem a nyers in-sample Sharpe**. A célfüggvény: a purg
 
 1. **Trial-könyvelés:** minden kipróbált konfiguráció (a sikerteleneket is beleértve) bekerül a study-ba. Az `n_trials_in_study` a Deflated Sharpe Ratio bemenete. A DSR-t és a PBO-t az A6/A7 dokumentálja, itt csak a kaput írjuk elő.
 2. **Lezárt holdout:** a legutóbbi időszak (például 6 hónap) a keresés alatt **gépileg elérhetetlen**. Az adatelérési réteg dátum-tiltást alkalmaz `research` szerepkörben. Ezt csak a végső jelöltre, egyszer lehet feloldani, és a feloldás auditesemény.
-3. **PBO (CSCV)** a study legjobb N konfigurációján: `PBO < 0,2` [pypbo]. A módszer: Bailey–Borwein–López de Prado–Zhu, J. Comput. Finance 20(4), 2017 (mért a risk.net oldalon).
+3. **PBO (CSCV)** a study legjobb N konfigurációján: `PBO < 0,2` [oss-pypbo]. A módszer: Bailey–Borwein–López de Prado–Zhu, J. Comput. Finance 20(4), 2017 (mért a risk.net oldalon).
 4. **DSR ≥ 0,95** a teljes trial-szám figyelembevételével. Több-hipotézis küszöb: t > 3 (Harvey–Liu–Zhu, A6 forrása).
 5. **Paraméter-stabilitás:** a legjobb pont ±10%-os környezetében az OOS-metrika ≥ a csúcs 70%-a. Csak „fennsíkot” fogadunk el, csúcsot nem.
 6. **Keresési költségvetés:** a stratégiánkénti trial-plafon a study indulásakor rögzített, és utólag nem emelhető új study nélkül. Új study esetén a trial-számok összeadódnak a DSR-ben.
@@ -644,14 +644,14 @@ Ajánlás (köv.): fő ágensnek egy terminál-ágens (Claude Code vagy Codex CL
 | Szint | Mit | Eszköz | Kapu |
 |---|---|---|---|
 | Unit | tiszta függvények (margin-képlet, normalizálás) | pytest | 100% a `risk/` és `sizing/` mappában (áglefedettség ≥ 90%) |
-| Property-based | invariánsok, OMS-állapotgép (stateful) | Hypothesis [hypothesis] | 0 ellenpélda, 1000 példa/teszt CI-ban |
+| Property-based | invariánsok, OMS-állapotgép (stateful) | Hypothesis [oss-hypothesis] | 0 ellenpélda, 1000 példa/teszt CI-ban |
 | Golden / regresszió | referencia-backtest equity-görbe, trade-lista | pytest-regressions [pytest-regressions], syrupy [syrupy] | eltérés = piros; frissítés csak `golden-update` címkés PR-ben |
 | Backtest-regresszió | 3 rögzített adat-snapshot × 5 stratégia | `atp.research.regress` | metrika-eltérés < 1e-9 (determinisztikus), Sharpe-változás jelentés |
 | Szerződés | JSON Schema és üzenetek | buf/JSON Schema [buf-protobuf] | nincs breaking change MAJOR nélkül |
-| Adat | Pandera-szerződések | Pandera [pandera] | 0 sértés a clean rétegben |
+| Adat | Pandera-szerződések | Pandera [oss-pandera] | 0 sértés a clean rétegben |
 | Híd-integráció | Python ↔ EA demo-számlán | `tests/bridge` | roundtrip p99 < 50 ms (becs. cél), 0 elveszett `EXEC_REPORT` |
 | LLM red team | injekciós korpusz | promptfoo [promptfoo] | 0 sikeres injekció |
-| Biztonság | SAST, secrets, sérülékenység | Semgrep [semgrep], Gitleaks [gitleaks], pip-audit [pip-audit], OSV [osv-scanner] | 0 high/critical, 0 secret |
+| Biztonság | SAST, secrets, sérülékenység | Semgrep [semgrep], Gitleaks [oss-gitleaks], pip-audit [pip-audit], OSV [osv-scanner] | 0 high/critical, 0 secret |
 
 ### 8.4 CI-pipeline
 
@@ -669,16 +669,16 @@ flowchart LR
 
 ### 8.5 Secrets és ellátási lánc
 
-- **1. fázis:** SOPS + age, titkosított fájlok gitben [sops], [age]; runtime-ban csak memóriában. **2. fázis:** OpenBao vagy Vault, szolgáltatásonkénti policyval és rövid életű tokenekkel [openbao], [hashicorp-vault].
+- **1. fázis:** SOPS + age, titkosított fájlok gitben [sops], [age]; runtime-ban csak memóriában. **2. fázis:** OpenBao vagy Vault, szolgáltatásonkénti policyval és rövid életű tokenekkel [oss-openbao], [hashicorp-vault].
 - A bróker-jelszó külön secret, csak az EA-gép olvassa. Befektetői (read-only) jelszó az elemző komponenseknek, ha a bróker ad ilyet (n.e.).
 - Függőségek: `uv.lock` hash-ekkel [uv]; Renovate minimumRelease-késleltetéssel [renovate]; új függőség előtt OpenSSF Scorecard [ossf-scorecard]; SBOM [syft], [cyclonedx]; aláírt image [sigstore-cosign]; cél: SLSA Build L2 [slsa]; folyamat-ellenőrzőlista: NIST SSDF [nist-ssdf].
-- A közösségi Docker-image-eket (MT5) nem húzzuk be közvetlenül, saját buildet készítünk rögzített base-image hash-sel [mt5-docker-gmag11].
+- A közösségi Docker-image-eket (MT5) nem húzzuk be közvetlenül, saját buildet készítünk rögzített base-image hash-sel [metatrader5-docker-gmag11].
 
 ### 8.6 Megfigyelés
 
-- **Metrikák (Prometheus) [prometheus]:** `tick_to_decision_ms`, `decision_to_ack_ms`, `slippage_pts` (hisztogram), `fill_ratio`, `requote_total`, `margin_level_pct`, `daily_pnl_ccy`, `open_lots`, `autonomy_level`, `veto_total{code}`, `ensemble_ece`, `voter_weight{voter}`, `bridge_heartbeat_age_s`, `llm_tokens_total`, `llm_cost_usd`.
+- **Metrikák (Prometheus) [oss-prometheus]:** `tick_to_decision_ms`, `decision_to_ack_ms`, `slippage_pts` (hisztogram), `fill_ratio`, `requote_total`, `margin_level_pct`, `daily_pnl_ccy`, `open_lots`, `autonomy_level`, `veto_total{code}`, `ensemble_ece`, `voter_weight{voter}`, `bridge_heartbeat_age_s`, `llm_tokens_total`, `llm_cost_usd`.
 - **Riasztások (Alertmanager → Telegram) [alertmanager]:** heartbeat > 5 s; margin-szint < 500%; a napi veszteség eléri a limit 50%-át, illetve 80%-át; ECE > 0,05; vétó-ráta > 3/óra; slippage p95 > a backtest-feltételezés 2×-ese.
-- **Trace:** OpenTelemetry, a GenAI szemantikai konvenciókkal [opentelemetry]. LLM-trace és prompt-verziók: Langfuse [langfuse]. Dashboard: Grafana [grafana]. Naplók: Loki [loki]. Üzemeltetési elvek (SLO, postmortem): Google SRE [google-sre-books].
+- **Trace:** OpenTelemetry, a GenAI szemantikai konvenciókkal [opentelemetry]. LLM-trace és prompt-verziók: Langfuse [langfuse]. Dashboard: Grafana [oss-grafana]. Naplók: Loki [oss-loki]. Üzemeltetési elvek (SLO, postmortem): Google SRE [google-sre-books].
 
 ---
 
@@ -784,7 +784,7 @@ Jelmagyarázat: **+** = felülmúlja a referenciákat ezen a ponton; **≈** = e
 |---|---|---|---|---|---|---|
 | 1 | Valós idejű FX/CFD ár | multi-dealer és saját feedek | piaci adat integráció | saját gyűjtés | a végrehajtó bróker MT5-feedje + referenciafeed (A1) | ≈ (a végrehajtáshoz pontosabb) |
 | 2 | Történeti tick | igen (díjköteles mélység) | korlátozott | évtizedes saját archívum | MT5 export + Dukascopy/TrueFX (A1), raw-réteg | ≈ |
-| 3 | Adattisztítás | szolgáltatói | szolgáltatói | **központi elv** | Pandera-szerződések, kettős forrás összevetése [pandera] | ≈ |
+| 3 | Adattisztítás | szolgáltatói | szolgáltatói | **központi elv** | Pandera-szerződések, kettős forrás összevetése [oss-pandera] | ≈ |
 | 4 | Point-in-time adat | részben | igen | igen | Iceberg-snapshot, ALFRED vintage (A4) [apache-iceberg] | ≈ |
 | 5 | Adatverzió-visszajátszás | – | részben | igen | `data_snapshot_id` minden futásban | + |
 | 6 | Gazdasági naptár (ECO) | igen | – | – | A4 naptár + meglepetés-index | ≈ |
@@ -802,19 +802,19 @@ Jelmagyarázat: **+** = felülmúlja a referenciákat ezen a ponton; **≈** = e
 | 18 | Kommunikáció/chat | igen (erős hálózat) | – | – | Telegram/Slack | − |
 | 19 | Backtest-motor | igen (n.e.) | – | belső | Nautilus/LEAN + MT5 Tester [nautilustrader-architecture], [quantconnect-lean-architecture] | + (eseményvezérelt, paritás) |
 | 20 | Walk-forward / purged CV | – | – | igen (köv.) | A6/A7 módszerek, kötelező kapu | + |
-| 21 | Paraméter-optimalizálás | korlátozott | – | igen | Optuna/Ax [optuna], [ax-platform] | + |
-| 22 | Túlillesztés-kontroll (DSR, PBO) | – | – | igen (köv.) | trial-könyvelés + PBO + DSR [pypbo] | + |
+| 21 | Paraméter-optimalizálás | korlátozott | – | igen | Optuna/Ax [oss-optuna], [ax-platform] | + |
+| 22 | Túlillesztés-kontroll (DSR, PBO) | – | – | igen (köv.) | trial-könyvelés + PBO + DSR [oss-pypbo] | + |
 | 23 | Monte Carlo / szintetikus piac | részben | igen | igen | A7 módszerek | ≈ |
 | 24 | Kísérletkövetés | – | – | belső | MLflow [mlflow-registry] | ≈ |
-| 25 | Feature store | – | – | belső | Feast [feast] | ≈ |
+| 25 | Feature store | – | – | belső | Feast [oss-feast] | ≈ |
 | 26 | Modell-regiszter, champion/challenger | – | részben | belső | MLflow aliasok + árnyékfuttatás | ≈ |
 | 27 | Idősoros alapmodellek | – | – | n.e. | A5/A6 (Chronos, TimesFM) ML-szavazóként | + |
 | 28 | ML-modellek | BQuant (n.e.) | igen | igen | GBM stb. | ≈ |
 | 29 | LLM-ágensek | asszisztens (n.e.) | Copilot-jellegű (n.e.) | n.e. | LLM-szavazók, Dual LLM [dual-llm-pattern] | + |
 | 30 | Sok gyenge jel kombinálása | – | – | **központi elv** | logit-pooling + online súlyok | ≈ |
-| 31 | Online súlyfrissítés | – | – | n.e. | Hedge + fixed share, River [river] | + |
+| 31 | Online súlyfrissítés | – | – | n.e. | Hedge + fixed share, River [oss-river] | + |
 | 32 | Kalibráció | – | – | n.e. | Platt/isotonic, ECE-kapu [sklearn-calibration] | + |
-| 33 | Bizonytalansági sávok | – | részben | n.e. | konformális (MAPIE) [mapie] | + |
+| 33 | Bizonytalansági sávok | – | részben | n.e. | konformális (MAPIE) [oss-mapie] | + |
 | 34 | Ördögügyvéd-vétó | – | – | – | szabály + LLM-kritikus | + (egyedi) |
 | 35 | Rezsimfelismerés | – | igen | igen (köv.) | HMM/változáspont (A7), drift-detektor | ≈ |
 | 36 | Hipotézisgyár | – | – | igen | A7 ötlettár → study-sablonok | ≈ |
@@ -837,10 +837,10 @@ Jelmagyarázat: **+** = felülmúlja a referenciákat ezen a ponton; **≈** = e
 | 53 | Smart order routing | igen | igen | igen | egy bróker; később adapter (F6.3) | − |
 | 54 | Spread-tágulás előrejelzése | – | – | n.e. | A7 ötlet: brókermodell-szavazó | + |
 | 55 | Multibroker-absztrakció | igen | igen | igen | `ExecutionAdapter`-szerződés | ≈ |
-| 56 | Késleltetés-monitorozás | – | – | **erős** | `tick_to_decision_ms` stb. [prometheus] | ≈ |
-| 57 | Megfigyelés / dashboard | igen | igen | belső | Prometheus + Grafana + OTel [grafana], [opentelemetry] | ≈ |
+| 56 | Késleltetés-monitorozás | – | – | **erős** | `tick_to_decision_ms` stb. [oss-prometheus] | ≈ |
+| 57 | Megfigyelés / dashboard | igen | igen | belső | Prometheus + Grafana + OTel [oss-grafana], [opentelemetry] | ≈ |
 | 58 | Manipulálhatatlan auditnapló | n.e. | igen (n.e.) | n.e. | hash-lánc + napi horgony / immudb [immudb] | + |
-| 59 | Secrets-kezelés | – | igen | igen | SOPS → OpenBao [sops], [openbao] | ≈ |
+| 59 | Secrets-kezelés | – | igen | igen | SOPS → OpenBao [sops], [oss-openbao] | ≈ |
 | 60 | Ellátásilánc-biztonság | – | igen | igen | SBOM, cosign, pip-audit, SLSA [syft], [sigstore-cosign], [slsa] | ≈ |
 | 61 | Fokozatos AI-autonómia (mozgatókar) | – | – | – | L0–L4 szintek, policy-kapuk | + (egyedi) |
 | 62 | Promptinjekció-védelem | n.e. | n.e. | – | OWASP LLM01-alapú architektúra + red team [owasp-llm-top10-2025], [promptfoo] | + |

@@ -63,6 +63,46 @@ def cat_label(o, big):
     return lab
 
 
+# fejezetek: (forrás, cím, kategória-szűrő vagy None = a forrás maradéka). Egy forrás több fejezetre bontható; az összefoglaló az első fejezetéhez kerül.
+CHAPTERS = [
+    ("a1_market_exec", "Piaci adatforrások: FX, CFD, részvény, opció, határidős, referenciaadat", {"data", "reference", "research"}),
+    ("a1_market_exec", "Végrehajtás, MetaTrader és más platformok, brókerek, végrehajtási minőség", None),
+    ("a11_platforms", "Kereskedési platformok és API-k összehasonlítása (van-e jobb a jelenleginél)", {"platform"}),
+    ("a11_platforms", "Brókerek és az EU-s professzionális ügyfélstátusz", None),
+    ("a2_crypto", "Kripto: tőzsdék, adatok, on-chain, DeFi, kripto-jog", None),
+    ("a3_predict_sports", "Predikciós piacok és sportfogadás", None),
+    ("a4_macro_news_alt", "Makró és statisztika", {"M3 Makró és statisztika"}),
+    ("a4_macro_news_alt", "Fundamentális és szabályozói adat", {"M2 Fundamentális és szabályozói adat"}),
+    ("a4_macro_news_alt", "Hírek, szentiment, esemény", {"M4 Hírek, szentiment, esemény"}),
+    ("a4_macro_news_alt", "Alternatív adat és magyar források", None),
+    ("a5_oss", "Nyílt szoftver: backtest- és élő motorok, végrehajtás, MetaTrader-hidak, validálás", {"M7-backtest", "M6-mt5-hid", "M6-vegrehajtas", "M7-validalas"}),
+    ("a5_oss", "Nyílt szoftver: adattárolók, kvant-könyvtárak, idősor-alapmodellek, pénzügyi LLM-ek", {"M7-adattarolo", "M1-adateszkoz", "M8-idosor", "M8-kvant-konyvtar", "M8-ts-alapmodell", "M9-penzugyi-llm"}),
+    ("a5_oss", "Nyílt szoftver: MLOps, infrastruktúra, vizualizáció, gyűjtőlisták", None),
+    ("a6_ai_research", "AI döntési réteg: LLM-ágensek, súlyozás, ördögügyvéd, kalibráció, validálás", {"M9 AI döntési réteg"}),
+    ("a6_ai_research", "Benchmark-platformok: Bloomberg, Aladdin, Medallion és a többiek", {"M12 Benchmark-platformok"}),
+    ("a6_ai_research", "Tudás: kulcscikkek, könyvek, kurzusok, közösségek", None),
+    ("a10_methods", "Bevált módszerek I.: esettanulmányok – statisztikai összefüggésekből eredmény", {"case_study"}),
+    ("a10_methods", "Bevált módszerek II.: módszertár", None),
+    ("a8_infra_legal", "Infrastruktúra: szerverhelyek, VPS, colocation, hardver", {"infra-hardware", "infra-latency", "infra-server-location", "infra-vps-colo"}),
+    ("a8_infra_legal", "Adó, jog, szabályozás, költözés", None),
+    ("a9_platform", "Platform-architektúra és AI-fejlesztési eszközök", None),
+]
+
+
+def shift_md(text, add):
+    """címsorok mélyítése `add` szinttel, kódblokkon (```) belül nem"""
+    out, code = [], False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            code = not code
+        elif not code:
+            m = re.match(r"^(#{1,6}) (.*)$", line)
+            if m:
+                line = "#" * min(6, len(m.group(1)) + add) + " " + m.group(2)
+        out.append(line)
+    return "\n".join(out)
+
+
 def slug(s):
     s = s.lower()
     for a, b in zip("áéíóöőúüű", "aeiooouuu"):
@@ -123,6 +163,9 @@ def prof_score(sc, w):
     return round(num / den * 10, 1) if den else 0.0     # 0–100
 
 
+ALIAS = {}   # eredeti/eldobott id → megtartott id (a specifikáció hivatkozásaihoz)
+
+
 def collect():
     items, stats, seen_id, seen_url = [], {}, {}, {}
     for name, _ in SOURCES:
@@ -140,10 +183,14 @@ def collect():
             if iid in seen_id or url_dup:
                 stats[name]["dup"] += 1
                 prev = seen_id.get(iid) or seen_url.get(nu)
+                ALIAS[str(o.get("id") or "")] = prev["id"]
+                ALIAS[iid] = prev["id"]
                 for k in ("notes_hu", "pitfalls_hu"):   # összefésülés: a hosszabb leírás marad
                     if len(str(o.get(k) or "")) > len(str(prev.get(k) or "")):
                         prev[k] = o.get(k)
                 continue
+            if str(o.get("id")) != iid:
+                ALIAS[str(o.get("id"))] = iid
             o["id"] = iid
             o["url"] = url
             o["access"] = o.get("access") if o.get("access") in ACCESS else "paid" if o.get("price") else "free"
@@ -219,6 +266,61 @@ def m16_table(rows):
     return md
 
 
+FAMILY_HU = {"news-event": "Hír- és eseményvezérelt", "grid": "Grid", "stat-arb": "Statisztikai arbitrázs, párok", "carry": "Carry",
+             "seasonality": "Szezonalitás, naptáranomáliák", "sizing": "Pozícióméretezés", "mean-reversion": "Visszahúzódás (mean reversion)",
+             "intraday": "Napon belüli, session-alapú", "momentum": "Momentum", "microstructure": "Mikrostruktúra, order flow", "martingale": "Martingale",
+             "crypto-basis": "Kripto basis és funding", "volatility": "Volatilitás", "ml": "Gépi tanulás", "dl": "Mélytanulás", "regime": "Rezsimfelismerés",
+             "sports-betting": "Sportfogadás", "retail-ta": "Lakossági technikai elemzés (ICT/SMC is)", "trend": "Trendkövetés (CTA)", "rl": "Megerősítéses tanulás",
+             "market-making": "Árjegyzés (market making)", "prediction": "Predikciós piacok"}
+
+
+def fmt_params(p):
+    if isinstance(p, dict):
+        return "; ".join(f"{k}: {v}" for k, v in list(p.items())[:6])
+    if isinstance(p, list):
+        return "; ".join(str(x) for x in p[:6])
+    return str(p or "")
+
+
+def fmt_evidence(ev):
+    ev = ev if isinstance(ev, list) else [ev] if ev else []
+    out = []
+    for e in ev[:3]:
+        if isinstance(e, dict):
+            ref = esc(e.get("ref") or e.get("title") or "forrás")[:90]
+            u = e.get("url") or ""
+            rp = esc(e.get("reported_hu") or "")[:140]
+            lab = esc(e.get("label") or "")[:40]
+            out.append((f"[{ref}]({u})" if str(u).startswith("http") else ref) + (f": {rp}" if rp else "") + (f" ({lab})" if lab else ""))
+        elif isinstance(e, str):
+            out.append(f"[forrás]({e})" if e.startswith("http") else esc(e)[:140])
+    return " · ".join(out)
+
+
+def fmt_repos(rs):
+    rs = rs if isinstance(rs, list) else [rs] if rs else []
+    out = []
+    for r in rs[:3]:
+        if isinstance(r, dict) and str(r.get("url", "")).startswith("http"):
+            out.append(f"[{esc(r.get('repo') or r['url'].split('github.com/')[-1])}]({r['url']})")
+        elif isinstance(r, str) and r.startswith("http"):
+            out.append(f"[{esc(r.split('github.com/')[-1])}]({r})")
+    return " · ".join(out) or "–"
+
+
+def fmt_sources(ds):
+    ds = ds if isinstance(ds, list) else [ds] if ds else []
+    out = []
+    for d in ds[:5]:
+        if isinstance(d, dict):
+            nm = esc(d.get("name") or d.get("id") or "forrás")[:60]
+            u = d.get("url") or ""
+            out.append(f"[{nm}]({u})" if str(u).startswith("http") else nm)
+        elif isinstance(d, str):
+            out.append(f"[link]({d})" if d.startswith("http") else esc(d)[:60])
+    return ", ".join(out)
+
+
 def budget_section(items):
     tiers = [("Ingyenes indulócsomag (0 €/hó)", lambda o: o["access"] in ("free", "registration")),
              ("Kis költségvetés (≤ 100 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 0 < o["price_eur_month"] <= 100),
@@ -243,16 +345,21 @@ def main():
     cnt_access = Counter(o["access"] for o in items)
     toc, body = [], []
     n = 4
-    for name, title in SOURCES:
-        L = by_src.get(name) or []
+    used, seen_src = set(), set()
+    for name, title, flt in CHAPTERS:
+        L = [o for o in by_src.get(name) or [] if o["id"] not in used and (flt is None or o.get("cat") in flt)]
         if not L:
             continue
+        used |= {o["id"] for o in L}
+        first = name not in seen_src
+        seen_src.add(name)
         a = f"{n}-{slug(title)}"
         toc.append(f"- [{n}. {title}](#{a}) – {len(L)} tétel")
         body += ["", "---", "", f"## {n}. {title}", ""]
         summ = read(name.split("_")[0] + "_summary.md") or read(name.split("_")[0] + "_matrix.md")
-        if summ:
-            body += [f"### {n}.0. Összefoglaló – {title.split(':')[0].split(',')[0]}", "", re.sub(r"(?m)^#{1,3} (.*)$", lambda m: f"#### {m.group(1)} ({name.split('_')[0].upper()})", summ), ""]
+        if summ and first:
+            summ = re.sub(r"(?m)^(#{1,3}) (.*)$", lambda m: f"{m.group(1)} {m.group(2)} ({name.split('_')[0].upper()})", summ)
+            body += [f"### {n}.0. Összefoglaló – {title.split(':')[0].split(',')[0]}", "", shift_md(summ, 3), ""]
         cc = Counter(o.get("cat") for o in L)
         big = {c for c, k in cc.items() if k > 40}
         cats = defaultdict(list)
@@ -267,20 +374,25 @@ def main():
         n += 1
     # stratégiák
     if strategies:
-        toc.append(f"- [{n}. Stratégia-könyvtár](#{n}-strategia-konyvtar) – {len(strategies)} stratégia")
+        toc.append(f"- [{n}. Stratégia-könyvtár](#{n}-x) – {len(strategies)} stratégia")
         body += ["", "---", "", f"## {n}. Stratégia-könyvtár", "",
-                 "| Név | Képlet / lényeg | Mikor működik | Mikor hal meg | Lecsengés | MT5-alkalmasság | Bizonyíték |", "|---|---|---|---|---|---|---|"]
-        for s in sorted(strategies, key=lambda s: -(s.get("mt5_fit") or 0)):
-            ev = s.get("evidence")
-            ev = ev if isinstance(ev, list) else [ev] if ev else []
-            evs = " · ".join(f"[forrás]({e})" if isinstance(e, str) and e.startswith("http") else esc(e if isinstance(e, str) else json.dumps(e, ensure_ascii=False))[:120] for e in ev[:4])
-            body.append(f"| {link(s) if s.get('url') else esc(s.get('name'))} | {esc(s.get('formula_hu'))[:300]} | {esc(s.get('works_when_hu'))[:200]} | "
-                        f"{esc(s.get('dies_when_hu'))[:200]} | {esc(s.get('decay_hu'))[:150]} | {s.get('mt5_fit', '?')}/10 | {evs} |")
+                 "Családonként, a FX/CFD-alkalmasság (0–10, a jelenlegi MT-szerű CFD/FX számlára) szerint rendezve. A bizonyíték oszlop a forrás címét és a jelentett eredményt adja; a „szám nem ellenőrzött” jelölésű teljesítményt élesítés előtt saját backtesttel kell igazolni.", ""]
+        fam = defaultdict(list)
+        for x in strategies:
+            fam[FAMILY_HU.get(x.get("sub"), x.get("sub") or "egyéb")].append(x)
+        for j, (f, FL) in enumerate(sorted(fam.items(), key=lambda kv: (-len(kv[1]), kv[0])), 1):
+            body += [f"### {n}.{j}. {f} ({len(FL)})", "",
+                     "| Stratégia | Képlet / lényeg | Paraméterek | Mikor működik | Mikor hal meg | Lecsengés | FX/CFD | Bizonyíték | Implementáció |", "|---|---|---|---|---|---|---|---|---|"]
+            for x in sorted(FL, key=lambda x: -(x.get("mt5_fit") or 0)):
+                body.append(f"| {link(x) if x.get('url') else esc(x.get('name'))} | {esc(x.get('formula_hu'))[:300]} | {esc(fmt_params(x.get('params')))[:200]} | "
+                            f"{esc(x.get('works_when_hu'))[:200]} | {esc(x.get('dies_when_hu'))[:200]} | {esc(x.get('decay_hu'))[:160]} | {x.get('mt5_fit', '?')}/10 | "
+                            f"{fmt_evidence(x.get('evidence'))} | {fmt_repos(x.get('impl_repos'))} |")
+            body.append("")
         n += 1
     risk = read("a7_risk.md")
     if risk:
         toc.append(f"- [{n}. Kockázati matematika (1:500, grid, martingale, Kelly)](#{n}-kockazati-matematika)")
-        body += ["", "---", "", f"## {n}. Kockázati matematika", "", re.sub(r"(?m)^# ", "### ", re.sub(r"(?m)^## ", "### ", risk)), ""]
+        body += ["", "---", "", f"## {n}. Kockázati matematika", "", shift_md(risk, 2), ""]
         n += 1
     if ideas:
         toc.append(f"- [{n}. Hipotézisgyár – új ötletek](#{n}-hipotezisgyar) – {len(ideas)} ötlet")
@@ -288,24 +400,26 @@ def main():
                  "Az újszerűség becsült (0–10); a publikált ötletnél forrás és alacsonyabb pont. Minden ötlet cáfolható teszttel.", "",
                  "| # | Ötlet | Mechanizmus | Adat | Cáfoló teszt | Újszerűség | MT5 | Kockázat |", "|---|---|---|---|---|---|---|---|"]
         for k, s in enumerate(sorted(ideas, key=lambda s: -((s.get("novelty") or 0) + (s.get("mt5_fit") or 0))), 1):
-            ds = s.get("data_sources")
-            ds = ", ".join(map(str, ds[:5])) if isinstance(ds, list) else esc(ds)
+            ds = fmt_sources(s.get("data_sources"))
             body.append(f"| {k} | **{esc(s.get('title_hu'))}** | {esc(s.get('mechanism_hu'))[:300]} | {esc(ds)[:200]} | {esc(s.get('test_hu'))[:250]} | "
                         f"{s.get('novelty', '?')}/10 | {s.get('mt5_fit', '?')}/10 | {esc(s.get('risk_hu'))[:150]} |")
         n += 1
     tab = read("a8_tables.md")
     if tab:
-        toc.append(f"- [{n}. Szerverhelyek, VPS, hardver, költözési mátrix, magyar adó](#{n}-szerverhelyek-vps-hardver-koltozes-ado)")
-        body += ["", "---", "", f"## {n}. Szerverhelyek, VPS, hardver, költözés, adó", "", re.sub(r"(?m)^# ", "### ", re.sub(r"(?m)^## ", "### ", tab)), ""]
+        toc.append(f"- [{n}. Táblák: szerverhelyek, VPS, hardver, költözési mátrix, magyar adó](#{n}-x)")
+        body += ["", "---", "", f"## {n}. Táblák: szerverhelyek, VPS, hardver, költözési mátrix, magyar adó", "", shift_md(tab, 2), ""]
         n += 1
     spec = read("a9_spec.md")
+    ids_all = {o["id"] for o in items}
+    MANUAL_ALIAS = {"ray-tune": "oss-ray"}
+    spec = re.sub(r"\[([a-z0-9][a-z0-9._-]{2,})\]", lambda m: f"[{ALIAS.get(m.group(1)) or MANUAL_ALIAS.get(m.group(1)) or ('oss-' + m.group(1) if 'oss-' + m.group(1) in ids_all else m.group(1))}]", spec)
     pf = os.path.join(HERE, "sections", "platformfuggetlenseg.md")
     if spec and os.path.exists(pf):     # kötelező tervezési elv: a specifikáció végére, minden mást felülír
         spec += "\n\n" + open(pf, encoding="utf-8").read().strip()
     if spec:
         toc.append(f"- [{n}. Fejlesztői specifikáció (összefoglaló; teljes: FEJLESZTOI-SPEC.md)](#{n}-fejlesztoi-specifikacio)")
         body += ["", "---", "", f"## {n}. Fejlesztői specifikáció", "", "A teljes szöveg külön fájlban: `FEJLESZTOI-SPEC.md`.", "",
-                 re.sub(r"(?m)^# ", "### ", re.sub(r"(?m)^## ", "### ", spec)), ""]
+                 shift_md(spec, 2), ""]
         n += 1
 
     pp = [os.path.join(ROOT, ".allapot", "MESTERPROMPT.md"), os.path.join(HERE, "allapot", "MESTERPROMPT.md")]   # repó / kicsomagolt ZIP
@@ -324,7 +438,7 @@ def main():
     for p, w in PROFILES.items():
         scoring.append(f"| {PROFILE_HU[p]} | " + " | ".join(f"{w.get(k, 0):.2f}".replace(".", ",") for k in SCORE_KEYS) + " |")
     scoring += ["", "**Szint:** 0 = nélkülözhetetlen mag · 1 = erősen ajánlott · 2 = bővítés · 3 = luxus vagy intézményi.", ""]
-    md = head + ["", "---", "", "## 1. Mesterprompt", "", re.sub(r"(?m)^(#{1,3}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", prompt), "", "---", ""] \
+    md = head + ["", "---", "", "## 1. Mesterprompt", "", shift_md(prompt, 2), "", "---", ""] \
         + scoring + budget_section(items) + body
     # tartalomjegyzék-horgonyok a tényleges ## címsorokból, GitHub-szabály szerint (ékezet marad, írásjel törlődik, szóköz → kötőjel)
     gh = lambda h: re.sub(r"\s", "-", re.sub(r"[^\w\- ]", "", re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", h).strip().lower()))
@@ -387,7 +501,7 @@ def write_dl(items):
             url = d.get("url") if d.get("method") == "git" and d.get("url") else f"https://github.com/{gh}.git"
             L.append(f'[ -d {sub}/.git ] && git -C {sub} pull -q --ff-only || git clone -q --depth 1 {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}')
             n += 1
-        elif d.get("method") == "http" and str(d.get("url", "")).startswith("http"):
+        elif d.get("method") == "http" and re.search(r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|pdf|h5|nc|zst)(\?|$)", str(d.get("url", "")), re.I):
             L.append(f'mkdir -p {sub} && curl -fsSL --retry 3 -C - -o {sub}/{q(os.path.basename(d["url"].split("?")[0]) or "file")} {q(d["url"])} && ok {o["id"]} || fail {o["id"]}')
             n += 1
         elif d.get("method") == "hf" and d.get("url"):
