@@ -532,7 +532,7 @@
     "ar_huf": null,
     "ar_eur": null,
     "ar_per_tb": "362 USD-tól (4 TB) – becsült, az EU-ba szállítás és a vám még hozzáadódik",
-    "ar_forras": "shop.digistor.com (CDSG, az ioSafe tulajdonosa), 2026-11-14, a 'From $362' ár mért; HUF-ár nincs (USA-beli bolt, a szállítás és a vám még hozzáadódik)",
+    "ar_forras": "shop.digistor.com (CDSG, az ioSafe tulajdonosa), 2026-11-14, a „From $362” ár mért; HUF-ár nincs (USA-beli bolt, a szállítás és a vám még hozzáadódik)",
     "linkek": [
      {
       "bolt": "shop.digistor.com (gyártói bolt)",
@@ -598,9 +598,9 @@
     "tipus": "BDXL 3 rétegű, egyszer írható, 4x",
     "tartossag": {
      "ip": "n/a",
-     "gyartoi_elettartam": "korábban '1000 év'; a Verbatim Japan ma '100+ év' (ISO/IEC 16963)",
+     "gyartoi_elettartam": "korábban „1000 év”; a Verbatim Japan ma „100+ év” (ISO/IEC 16963)",
      "bizonyitek": "China Lake (US DoD, 2009): az M-DISC jobb volt a szerves festékes lemezeknél; francia LNE (2010-12, 90 °C / 85% RH): az M-DISC <250 óra, a Syylex üveglemez >1000 óra",
-     "kritika": "2022 elején a Verbatim megváltoztatta a BD M-DISC összetételét (6x írás, más szín és jelölés); a Wikipédia szerint ma ugyanazt a MABL réteget használja, mint a sima Verbatim BD-R. A Verbatim szerint 'továbbfejlesztés, azonos élettartammal', de független laborteszt nincs, és a Redditen/HN-en azt állítják, hogy már nem 'valódi' M-DISC. Az 1000 éves állítást a Verbatim elhagyta."
+     "kritika": "2022 elején a Verbatim megváltoztatta a BD M-DISC összetételét (6x írás, más szín és jelölés); a Wikipédia szerint ma ugyanazt a MABL réteget használja, mint a sima Verbatim BD-R. A Verbatim szerint „továbbfejlesztés, azonos élettartammal”, de független laborteszt nincs, és a Redditen/HN-en azt állítják, hogy már nem „valódi” M-DISC. Az 1000 éves állítást a Verbatim elhagyta."
     },
     "sebesseg_mb_s": "~18 (4x BD, becsült)",
     "ar_huf": 24111,
@@ -746,7 +746,7 @@
     ],
     "hatranyok": [
      "A meghajtó nagyon drága",
-     "A meghajtó maga is meghibásodhat, és 'civilizáció-újraépítés' után talán nem lesz LTO-9 olvasó – a meghajtót is meg kell őrizni"
+     "A meghajtó maga is meghibásodhat, és „civilizáció-újraépítés” után talán nem lesz LTO-9 olvasó – a meghajtót is meg kell őrizni"
     ],
     "ajanlas_szint": "profi"
    },
@@ -1017,7 +1017,7 @@
      }
     ],
     "elonyok": [
-     "Olcsó 'mentő állomás' az offline lemezek időszakos ellenőrzéséhez"
+     "Olcsó „mentő állomás” az offline lemezek időszakos ellenőrzéséhez"
     ],
     "hatranyok": [
      "Az egyszerű RAID1 nem ellenőriz checksumot – JBOD + ZFS ajánlott"
@@ -1069,7 +1069,7 @@
     "ar_forras": "becsült",
     "linkek": [],
     "elonyok": [
-     "A 'legprofibb' integritás magáncélra (ECC + ZFS + RAIDZ2)",
+     "A „legprofibb” integritás magáncélra (ECC + ZFS + RAIDZ2)",
      "Olcsóbb SAS lemezeket is használhat"
     ],
     "hatranyok": [
@@ -1182,7 +1182,7 @@
     "forras": "https://www.backblaze.com/blog/backblaze-drive-stats-for-q2-2026/"
    },
    "szamitas_10_ev": {
-    "modszer": "P(1 lemez 10 év alatt meghibásodik) = 1-(1-AFR)^10. Két független másolatnál, ha félévente ellenőrzöd és cseréled a hibásat: P(adatvesztés) ≈ 10 év x AFR1 x AFR2 x 0,5 év (az az ablak, amíg egy hiba észrevétlen marad).",
+    "modszer": "P(1 lemez 10 év alatt meghibásodik) = 1-(1-AFR)^10. Két független másolatnál, ha félévente ellenőrzöd és cseréled a hibásat: P(adatvesztés) ≈ 10 év × AFR1 x AFR2 x 0,5 év (az az ablak, amíg egy hiba észrevétlen marad).",
     "egy_masolat": {
      "AFR 0,5% (MG11)": "4,9%",
      "AFR 1,41% (flotta)": "13,2%",
@@ -1232,11 +1232,11 @@
   "adatintegritas": {
    "zfs_btrfs": [
     "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetre: zfs set copies=2 (bit-rot ellen, NEM lemezhiba ellen).",
-    "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B; egylemezes Btrfs-en '-m dup -d dup' a kritikus részre.",
+    "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B; egylemezes Btrfs-en „-m dup -d dup” a kritikus részre.",
     "Ellenőrzött szinkron: zfs send/recv snapshotokkal (a checksumok átmennek), vagy rsync --checksum + SHA256 manifest (hashdeep / sha256sum) minden másolaton."
    ],
    "snapraid_par2": [
-    "Sok, eltérő méretű lemeznél (JBOD a QNAP TR-004 / ICY BOX / D8 házban): SnapRAID, 4-6 adatlemezre 1 paritás, 7+ lemeznél 2 paritás. Utána: snapraid sync, snapraid scrub -p 10 -o 30 (minden ellenőrzéskor), a 'content' fájl legalább 3 lemezen legyen.",
+    "Sok, eltérő méretű lemeznél (JBOD a QNAP TR-004 / ICY BOX / D8 házban): SnapRAID, 4-6 adatlemezre 1 paritás, 7+ lemeznél 2 paritás. Utána: snapraid sync, snapraid scrub -p 10 -o 30 (minden ellenőrzéskor), a „content” fájl legalább 3 lemezen legyen.",
     "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): par2 create -r15 mag.par2 *. Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify."
    ],
    "offline_bekapcsolas": [
@@ -1340,7 +1340,7 @@
    "ar_forras": [
     "ipon.hu, 2026-11-14, mért: hűtőbordás 868 089 Ft (szállítás kb. 9 nap), hűtőborda nélküli 892 190 Ft (kb. 7 nap)",
     "alternate.de, 2026-11-14, mért: hűtőbordás 1 811 EUR, hűtőborda nélküli 2 222 EUR (19% áfával). Magyar áfával kb. 1 933 EUR, azaz kb. 706 600 Ft + UPS (becsült)",
-    "alza.hu (keresőtalálat), becsült: 859 990 Ft, 'nincs készleten' (nem ellenőrzött)"
+    "alza.hu (keresőtalálat), becsült: 859 990 Ft, „nincs készleten” (nem ellenőrzött)"
    ],
    "linkek": [
     {
@@ -1842,7 +1842,7 @@
     "QLC: rosszabb a kikapcsolt állapotú adatmegőrzése",
     "Nagyon drága és nehezen beszerezhető (2026-os hiány)",
     "25 W-ot fogyaszt, ventilátoros hűtés kell",
-    "Magánszemélyként csak ajánlatkéréssel vehető (senetic: 'Add hozzá az ajánlatkéréshez')"
+    "Magánszemélyként csak ajánlatkéréssel vehető (senetic: „Add hozzá az ajánlatkéréshez”)"
    ],
    "ajanlas_szint": "extrem"
   },
@@ -2088,7 +2088,7 @@
     }
    ],
    "elonyok": [
-    "IGEN, létezik USB4-es U.2 ház: ezzel egy 30-122TB-os enterprise SSD hordozható 'egy eszközzé' válik",
+    "IGEN, létezik USB4-es U.2 ház: ezzel egy 30-122TB-os enterprise SSD hordozható „egy eszközzé” válik",
     "U.3-at és 15mm-es meghajtót is fogad"
    ],
    "hatranyok": [
@@ -2204,7 +2204,7 @@
    "ar_forras": [
     "ipon.hu, 2026-11-14, mért: 565 589 Ft (kb. 1 nap)",
     "alternate.de, 2026-11-14, mért: 1 199 EUR (azaz kb. 438 354 Ft; magyar áfával kb. 468 000 Ft + UPS, becsült)",
-    "arukereso (keresőtalálat), becsült: 'legalacsonyabb ár 438 789 Ft', nem ellenőrzött"
+    "arukereso (keresőtalálat), becsült: „legalacsonyabb ár 438 789 Ft”, nem ellenőrzött"
    ],
    "linkek": [
     {
@@ -2316,7 +2316,7 @@
    "hatranyok": [
     "2023 tavaszán az Extreme / Extreme PRO V2 (főleg 4TB és 2TB) és a My Passport SSD hirtelen adatvesztéssel, csatolhatatlansággal hibázott.",
     "A WD 2023 májusában firmware-frissítést adott ki. Az Attingo adatmentő cég hardverhibát (forrasztás, alkatrész) állított, a WD ezt tagadja. Később erősebb epoxis rögzítés is jött.",
-    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. A 2026-11-14-i keresés alapján nincs megerősített ítélet vagy egyezséget, így jogilag nincs lezárva.",
+    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. A 2026-11-14-i keresés alapján nincs megerősített ítélet vagy egyezség, így jogilag nincs lezárva.",
     "Gyakorlati következtetés: a mostani gyártás valószínűleg rendben van, de vásárlás után azonnal frissítsd a firmware-t (SanDisk Dashboard), és SanDisk soha ne legyen az egyetlen példány. A második másolat legyen más gyártótól."
    ],
    "ajanlas_szint": "kozep"
@@ -2517,7 +2517,7 @@
    "ar_per_tb": "85 870 Ft/TB (alternate)",
    "ar_forras": [
     "alternate.de, 2026-11-14, mért: 1 879 EUR",
-    "alza/arukereso/mediamarkt (keresőtalálat), becsült: 253 990-323 490 Ft, az alza szerint 'megszűnt', a MediaMarkt szerint nem elérhető. Valószínűleg régi, kifutó ár."
+    "alza/arukereso/mediamarkt (keresőtalálat), becsült: 253 990-323 490 Ft, az alza szerint „megszűnt”, a MediaMarkt szerint nem elérhető. Valószínűleg régi, kifutó ár."
    ],
    "linkek": [
     {
@@ -2568,7 +2568,7 @@
    "ar_eur": null,
    "ar_per_tb": null,
    "ar_forras": [
-    "Ellenőrzött HU/EU ár nincs. Becsült: 599.99 USD (4TB) bevezető ár. Az alternate.de 'LaCie Rugged SSD Pro 4TB' 1 179.99 EUR-ós tétele valószínűleg a régi TB3-as Pro, nem a Pro5."
+    "Ellenőrzött HU/EU ár nincs. Becsült: 599.99 USD (4TB) bevezető ár. Az alternate.de „LaCie Rugged SSD Pro 4TB” 1 179.99 EUR-ós tétele valószínűleg a régi TB3-as Pro, nem a Pro5."
    ],
    "linkek": [
     {
@@ -2619,7 +2619,7 @@
    ],
    "elonyok": [
     "A legolcsóbb TB-ár a strapabíró kategóriában",
-    "Telefonos 'zsebmásolatnak' ideális"
+    "Telefonos „zsebmásolatnak” ideális"
    ],
    "hatranyok": [
     "Max. 4TB, ma 2TB kapható"
@@ -2691,7 +2691,7 @@
    "ar_forras": [
     "alza.hu (keresőtalálat), becsült: 270 290 Ft, raktáron (az oldal blokkolt, nem ellenőrzött)",
     "emag.hu (keresőtalálat): 184 510 Ft, valószínűleg elavult; mediamarkt.hu: 239 900 Ft, nincs készleten (becsült)",
-    "bestbyte.hu, 2026-11-14, mért: 'Raktáron', de az ár JavaScriptből töltődik, nem olvasható ki",
+    "bestbyte.hu, 2026-11-14, mért: „Raktáron”, de az ár JavaScriptből töltődik, nem olvasható ki",
     "alternate.de, 2026-11-14, mért: 870 QVO 4TB 346 EUR (8TB-ot nem listáz)"
    ],
    "linkek": [
@@ -3032,7 +3032,7 @@
    ],
    "egy_ssd": "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1 − (1 − 0,009)⁵). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, zsarolóvírus, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év.",
    "ssd_plusz_offline_masolat": "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1,6% (a másolat éves meghibásodása kopással és kezeléssel együtt, becsült) × (0,125 + 14/365) ≈ 0,26%. Ha bármelyik példány hibázhat elsőként: ≈0,005%/év, azaz ≈0,02% 5 év alatt. Ez kb. 200-szor kisebb kockázat, és a másolat offline volta a zsarolóvírus, a túlfeszültség és a véletlen törlés ellen is véd.",
-   "kovetkeztetes": "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). 'Soha ne vesszen el' = minimum 2 példány, ebből 1 offline + checksum + scrub."
+   "kovetkeztetes": "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). „Soha ne vesszen el” = minimum 2 példány, ebből 1 offline + checksum + scrub."
   },
   "ket_eszkozos_minimal_setup": {
    "elv": "A: aktív, strapabíró példány (IP65, ütésálló). B: offline példány MÁS gyártótól, Faraday-zsákban, egy zárt fémdobozban (kettős árnyékolás), szivacsbetéttel ütés ellen, vízzáró tömítéssel. Nincs rajta kábel. Ellenőrzés: egy bent lévő telefonnak nem szabad térerőt kapnia.",
