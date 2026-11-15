@@ -87,7 +87,7 @@ flowchart LR
 
 | Modul | Felelősség | Nyelv | Fő eszköz / tétel |
 |---|---|---|---|
-| `atp.data` | ingest, normalizálás, szerződés-validálás, snapshot | Python | Pandera [oss-pandera], Iceberg [apache-iceberg], ArcticDB [oss-arcticdb] |
+| `atp.data` | ingest, normalizálás, szerződés-validálás, snapshot | Python | Pandera [oss-pandera], Iceberg [oss-iceberg], ArcticDB [oss-arcticdb] |
 | `atp.features` | feature-definíciók, point-in-time join | Python | Feast [oss-feast] |
 | `atp.core` | eseményhurok, óra (sim/élő), busz-absztrakció | Python, később Rust | NATS [nats], NautilusTrader-minta [nautilustrader-architecture] |
 | `atp.decision` | szavazók, aggregátor, kalibráció, ördögügyvéd | Python | River [oss-river], MAPIE [oss-mapie], scikit-learn [sklearn-calibration] |
@@ -98,7 +98,7 @@ flowchart LR
 | `atp.governance` | mozgatókar-szint, policy, HITL, kill switch | Python + Rego | OPA [opa], OpenFeature [openfeature], Telegram [telegram-bot-api] |
 | `atp.audit` | hash-láncolt auditnapló, napi horgony | Python | immudb [immudb] |
 | `atp.config` | séma, kompozíció, verziózás | Python | Hydra [hydra], pydantic-settings [pydantic-settings], JSON Schema [json-schema] |
-| `atp.research` | backtest, keresés, validálás, regiszter-promóció | Python | Optuna [oss-optuna], MLflow [mlflow-registry], pypbo [oss-pypbo] |
+| `atp.research` | backtest, keresés, validálás, regiszter-promóció | Python | Optuna [oss-optuna], MLflow [oss-mlflow], pypbo [oss-pypbo] |
 | `atp.obs` | metrikák, trace, LLM-trace | Python | Prometheus [oss-prometheus], OTel [opentelemetry], Langfuse [langfuse] |
 
 > Csomagnév: `atp` (algotrading platform). Ne legyen `platform`, mert az ütközik a Python standard könyvtárával. (köv.)
@@ -156,7 +156,7 @@ sequenceDiagram
 |---|---|---|---|---|
 | A. Tiszta EA | minden logika MQL5-ben | legkisebb késleltetés, MetaQuotes VPS-en is fut | ML/LLM, adattó és tesztelés nehéz; AI-generált MQL5 hibaérzékeny | csak a vészhelyzeti védőlogika maradjon itt |
 | **B. Vékony EA + Python-agy (ZeroMQ vagy natív TCP)** | az EA I/O: tick-küldés, parancs-végrehajtás, helyi védőkorlátok | teljes Python-ökoszisztéma; az EA kicsi és tesztelhető | extra hop (ms-nagyságrend, becs.); a híd hibakezelése kritikus | **ajánlott** |
-| C. MetaTrader5 Python csomag | IPC a futó terminálhoz [mt5-python-package] | hivatalos, egyszerű; `order_check`/`order_send` elérhető (mért) | csak `win_amd64` wheel (mért); Linuxon Wine-Python vagy RPyC [oss-mt5linux]; polling-alapú | kiegészítő: történeti letöltés, egyeztetés |
+| C. MetaTrader5 Python csomag | IPC a futó terminálhoz [metatrader5-python] | hivatalos, egyszerű; `order_check`/`order_send` elérhető (mért) | csak `win_amd64` wheel (mért); Linuxon Wine-Python vagy RPyC [oss-mt5linux]; polling-alapú | kiegészítő: történeti letöltés, egyeztetés |
 | D. Manager/Gateway/Server API | brókeroldali API-k [mt5-broker-apis], [mt5manager-pypi] | szerveroldali hozzáférés | **retail ügyfélnek nem elérhető** (köv.: csak a bróker szerveréhez) | nem releváns |
 | E. Linux/Wine üzem | hivatalos `mt5linux.sh` szkript (mért) [mt5-linux-wine], Docker-image [metatrader5-docker-gmag11] | egy gépen a Python-stack mellett | Wine-frissítés törhet; headless kijelzőhöz Xvfb/VNC kell | elfogadható; a terminál-verziót rögzíteni |
 
@@ -368,7 +368,7 @@ flowchart TB
 ### 4.2 Szavazók
 
 - **Statisztikai:** paraméteres modellek explicit feltételezésekkel. Mindegyik `p_up`-ot ad a horizontra (pl. z-score → logisztikus leképezés, majd kalibráció).
-- **ML:** az MLflow-regiszterből `@champion` aliasszal töltve [mlflow-registry]. A `@challenger` árnyékban fut, súlyt nem kap, csak pontozzuk.
+- **ML:** az MLflow-regiszterből `@champion` aliasszal töltve [oss-mlflow]. A `@challenger` árnyékban fut, súlyt nem kap, csak pontozzuk.
 - **LLM:** a Dual LLM minta szerint [dual-llm-pattern]. A karanténba zárt LLM a szöveget fix JSON-sémába alakítja (`event_type`, `direction`, `certainty`, `source_ids[]`, `published_ts`). A szavazót **determinisztikus** kód képzi ebből. A `rationale` szabad szöveg csak naplózásra szolgál, a döntés nem épülhet rá. A szavazat `taint="untrusted_text"` jelölést kap.
 - **Szabály (rule):** például „nincs új grid-szint magas hatású hír előtt ±N perccel”.
 
@@ -503,9 +503,9 @@ class GridATRConfig(BaseModel):
 
 ### 6.2 Kísérletkövetés
 
-- MLflow run minden backtestre és keresési trialre [mlflow-registry], a 3.2-ben felsorolt kötelező tag-ekkel.
+- MLflow run minden backtestre és keresési trialre [oss-mlflow], a 3.2-ben felsorolt kötelező tag-ekkel.
 - Az Optuna-study tárolója RDB (Postgres/SQLite). A study-ID az MLflow-tag része [oss-optuna].
-- Adat-verzió: Iceberg/ArcticDB snapshot-ID [apache-iceberg], [oss-arcticdb]. A kisebb, származtatott halmazok DVC-vel verziózhatók [oss-dvc].
+- Adat-verzió: Iceberg/ArcticDB snapshot-ID [oss-iceberg], [oss-arcticdb]. A kisebb, származtatott halmazok DVC-vel verziózhatók [oss-dvc].
 
 ### 6.3 Paraméterkeresés
 
@@ -785,7 +785,7 @@ Jelmagyarázat: **+** = felülmúlja a referenciákat ezen a ponton; **≈** = e
 | 1 | Valós idejű FX/CFD ár | multi-dealer és saját feedek | piaci adat integráció | saját gyűjtés | a végrehajtó bróker MT5-feedje + referenciafeed (A1) | ≈ (a végrehajtáshoz pontosabb) |
 | 2 | Történeti tick | igen (díjköteles mélység) | korlátozott | évtizedes saját archívum | MT5 export + Dukascopy/TrueFX (A1), raw-réteg | ≈ |
 | 3 | Adattisztítás | szolgáltatói | szolgáltatói | **központi elv** | Pandera-szerződések, kettős forrás összevetése [oss-pandera] | ≈ |
-| 4 | Point-in-time adat | részben | igen | igen | Iceberg-snapshot, ALFRED vintage (A4) [apache-iceberg] | ≈ |
+| 4 | Point-in-time adat | részben | igen | igen | Iceberg-snapshot, ALFRED vintage (A4) [oss-iceberg] | ≈ |
 | 5 | Adatverzió-visszajátszás | – | részben | igen | `data_snapshot_id` minden futásban | + |
 | 6 | Gazdasági naptár (ECO) | igen | – | – | A4 naptár + meglepetés-index | ≈ |
 | 7 | Kamatvárakozás (WIRP) | igen | részben | – | futures-implikált + predikciós piac (A3) | + |
@@ -805,7 +805,7 @@ Jelmagyarázat: **+** = felülmúlja a referenciákat ezen a ponton; **≈** = e
 | 21 | Paraméter-optimalizálás | korlátozott | – | igen | Optuna/Ax [oss-optuna], [ax-platform] | + |
 | 22 | Túlillesztés-kontroll (DSR, PBO) | – | – | igen (köv.) | trial-könyvelés + PBO + DSR [oss-pypbo] | + |
 | 23 | Monte Carlo / szintetikus piac | részben | igen | igen | A7 módszerek | ≈ |
-| 24 | Kísérletkövetés | – | – | belső | MLflow [mlflow-registry] | ≈ |
+| 24 | Kísérletkövetés | – | – | belső | MLflow [oss-mlflow] | ≈ |
 | 25 | Feature store | – | – | belső | Feast [oss-feast] | ≈ |
 | 26 | Modell-regiszter, champion/challenger | – | részben | belső | MLflow aliasok + árnyékfuttatás | ≈ |
 | 27 | Idősoros alapmodellek | – | – | n.e. | A5/A6 (Chronos, TimesFM) ML-szavazóként | + |

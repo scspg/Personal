@@ -328,7 +328,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
   - `vintages` (true/false/null);
   - `revision_policy` (szöveg);
   - `timestamp_semantics` (pl. „esemény ideje UTC”, „közzététel ideje”, „nap vége”).
-- **Esettanulmány (`cat: case_study`) és módszer (`cat: method`):** a forrástételektől eltérően ugyanarra a cikkre vagy oldalra hivatkozhat, mint egy katalógustétel. Ez nem duplikáció, mert nem forrás, hanem elemzés.
+- **Elemzési tételek** (A10 esettanulmány `cat: case_study` és módszer `cat: method`; A11 jogalanyonkénti bróker- és platform-mátrixsor): ugyanarra a cikkre vagy oldalra hivatkozhatnak, mint egy forrástétel. Ez nem duplikáció, mert nem forrás, hanem elemzés. A build nem vonja össze őket, hanem a `group` mezővel köti a megfelelő forrástételhez. Egy bróker több jogalanya (pl. EU-s és offshore) külön sor, mert a jogi és adó-besorolásuk eltér.
   - Plusz mezők: `who`, `data_hu`, `method_hu`, `result_hu`, `result_verified`, `why_worked_hu`, `died_hu`, `improve_hu` (egy konkrét, tesztelhető változtatás), `platform_use_hu`, `code_urls`.
 - **Stratégia (`a7_strategies.jsonl`, `cat: strategy`) plusz mezői:**
   - `sub` (család);

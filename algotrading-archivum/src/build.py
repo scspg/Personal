@@ -165,11 +165,12 @@ def prof_score(sc, w):
 
 ASSET_MAP = {"fixed income": "rates", "bonds": "rates", "bond": "rates", "stocks": "equity", "forex": "fx"}
 REGION_MAP = {"ch": "eu", "europe": "eu", "usa": "us", "world": "global"}
-ALIAS = {}   # eredeti/eldobott id → megtartott id (a specifikáció hivatkozásaihoz)
+ALIAS = {}
+ANALYSIS_SRC = {"a10_methods", "a11_platforms"}   # elemzési tételek (esettanulmány, módszer, jogalanyonkénti bróker-mátrix sor): nem vonjuk össze, csak group-pal kötjük   # eredeti/eldobott id → megtartott id (a specifikáció hivatkozásaihoz)
 
 
 def collect():
-    items, stats, seen_id, seen_url = [], {}, {}, {}
+    items, stats, seen_id, seen_url, seen_name = [], {}, {}, {}, {}
     for name, _ in SOURCES:
         L, bad = load(name)
         stats[name] = {"raw": len(L), "bad_json": bad, "dup": 0, "no_url": 0}
@@ -188,10 +189,17 @@ def collect():
             o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
             if not o.get("notes_hu"):
                 o["notes_hu"] = " ".join(x for x in (o.get("method_hu"), o.get("result_hu")) if x)[:400] or None
-            url_dup = nu and nu in seen_url and name != "a10_methods"   # esettanulmány/módszer nem forrástétel: ugyanarra a cikkre hivatkozhat
+            analysis = name in ANALYSIS_SRC
+            nk = re.sub(r"[^a-z0-9]", "", re.sub(r"\(.*?\)|–.*$| - .*$", "", str(o.get("name", "")).lower()))
+            name_dup = len(nk) >= 4 and nk in seen_name and not analysis and seen_name[nk]["_src"] != name
+            url_dup = (nu and nu in seen_url and not analysis) or name_dup
+            if analysis and not o.get("group"):           # elemzési sor: összekötés a forrástétellel, nem összevonás
+                hit = seen_url.get(nu) or (seen_name.get(nk) if len(nk) >= 4 else None)
+                if hit:
+                    o["group"] = hit.get("group") or hit["id"]   # esettanulmány/módszer nem forrástétel: ugyanarra a cikkre hivatkozhat
             if iid in seen_id or url_dup:
                 stats[name]["dup"] += 1
-                prev = seen_id.get(iid) or seen_url.get(nu)
+                prev = seen_id.get(iid) or seen_url.get(nu) or seen_name.get(nk)
                 ALIAS[str(o.get("id") or "")] = prev["id"]
                 ALIAS[iid] = prev["id"]
                 for k in ("notes_hu", "pitfalls_hu"):   # összefésülés: a hosszabb leírás marad
@@ -219,6 +227,10 @@ def collect():
             seen_id[iid] = o
             if nu:
                 seen_url[nu] = o
+            if len(nk) >= 4 and not analysis:
+                seen_name.setdefault(nk, o)
+            if o.get("cat") in ("broker", "platform", "pro-status", "execution", "broker-regulation") and o.get("granularity") in ("tick", "l2", "l3"):
+                o["granularity"] = None                     # bróker/platform nem adatforrás
             items.append(o)
     return items, stats
 
@@ -262,9 +274,10 @@ def price(o):
 
 
 def table(rows, prof="kiegyensulyozott"):
-    md = ["| Szint | Név | Hozzáférés | Ár | Pont | Mire jó | Buktató | Ellenőrzés |", "|---|---|---|---|---|---|---|---|"]
+    md = ["| Szint | Név | Hozzáférés | Ár (ár ellenőrzése) | Pont | Mire jó | Buktató | Tétel ellenőrzése |", "|---|---|---|---|---|---|---|---|"]
     for o in rows:
-        md.append(f"| {o['tier']} | {link(o)} | {ACCESS[o['access']]} | {price(o)} | {o['prof'][prof]:.0f} | "
+        pv = o.get("price_verified") or ("–" if o["access"] in ("free", "registration") else "nincs jelölve")
+        md.append(f"| {o['tier']} | {link(o)} | {ACCESS[o['access']]} | {price(o)} ({pv}) | {o['prof'][prof]:.0f} | "
                   f"{esc(o.get('notes_hu'))[:400]} | {esc(o.get('pitfalls_hu'))[:250]} | {o['verified']} |")
     return md
 
@@ -345,17 +358,21 @@ def fmt_sources(ds):
     return ", ".join(out)
 
 
+NON_SOURCE = {"case_study", "method", "strategy", "kripto-strategia", "kripto-irodalom"}
+
+
 def budget_section(items):
     tiers = [("Ingyenes indulócsomag (0 €/hó)", lambda o: o["access"] in ("free", "registration")),
              ("Kis költségvetés (≤ 100 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 0 < o["price_eur_month"] <= 100),
              ("Profi (100–1000 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 100 < o["price_eur_month"] <= 1000),
              ("Intézményi (> 1000 €/hó vagy egyedi ár)", lambda o: o["access"] == "institutional" or (isinstance(o.get("price_eur_month"), (int, float)) and o["price_eur_month"] > 1000))]
     md = ["## 3. Költségvetés szerinti válogatás – a „gyors pénz – aktív automatizált kereskedés” profil sorrendjében", "",
-          "Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a kutatás napján érvényesek (mért = az oldalon látott, becsült = számított vagy közvetett).", ""]
+          "Csak forrástételek (adat, szoftver, szolgáltatás, bróker); esettanulmány, módszer és stratégia nem. **Az árak tételenként értendők, és nem adandók össze:** "
+          "egy szinten belül sok tétel egymás alternatívája (pl. több VPS-szolgáltató vagy AI-kódoló eszköz). Az ár mellett zárójelben az ár saját ellenőrzése áll "
+          "(mért = a szolgáltató oldalán látott, becsült = átszámított vagy közvetett). Ár nélküli fizetős tétel itt nem szerepel; azok a fejezetekben vannak, „egyedi ár” jelöléssel.", ""]
     for title, f in tiers:
-        sel = sorted([o for o in items if f(o)], key=lambda o: -o["prof"]["gyors_mt5"])[:40]
-        tot = sum(o.get("price_eur_month") or 0 for o in sel if isinstance(o.get("price_eur_month"), (int, float)))
-        md += [f"### {title} – {len(sel)} tétel" + (f", összesen ~{hunum(tot, 0)} €/hó" if tot else ""), ""] + table(sel, "gyors_mt5") + [""]
+        sel = sorted([o for o in items if f(o) and o.get("cat") not in NON_SOURCE], key=lambda o: -o["prof"]["gyors_mt5"])[:40]
+        md += [f"### {title} – a legjobb {len(sel)} tétel", ""] + table(sel, "gyors_mt5") + [""]
     return md
 
 
@@ -517,16 +534,31 @@ def write_dl(items):
     """Letöltő szkript: csak ingyenes/regisztráció nélküli, automatikusan letölthető tételek (git klón, http fájl, HF)."""
     L = ["#!/usr/bin/env bash", "# ALGOTRADING – ingyenes források letöltése. Használat: DEST=/abszolut/ut bash letolto.sh",
          "set -u", 'DEST=${DEST:-}', 'case "$DEST" in /*) ;; *) echo "DEST abszolút út kell (pl. DEST=/mnt/algo)" >&2; exit 2;; esac',
-         'DEST=$(realpath -m -- "$DEST")', 'case "$DEST" in /|/bin|/boot|/dev|/etc|/home|/lib*|/proc|/root|/run|/sbin|/sys|/usr|/var|/private|/System) echo "Tiltott DEST: $DEST" >&2; exit 2;; esac',
-         'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
+                  '[ -n "$DEST" ] || { echo "DEST üres" >&2; exit 2; }',
+         'DEST=$(realpath -m -- "$DEST" 2>/dev/null || python3 -c "import os,sys; print(os.path.realpath(sys.argv[1]))" "$DEST" 2>/dev/null)',
+         '[ -n "$DEST" ] || { echo "DEST nem oldható fel (nincs realpath -m és python3)" >&2; exit 2; }', 'case "$DEST" in /|/bin|/boot|/dev|/etc|/home|/lib*|/proc|/root|/run|/sbin|/sys|/usr|/var|/private|/System) echo "Tiltott DEST: $DEST" >&2; exit 2;; esac',
+         'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"',
+         'UA="${UA:-algotrading-archivum-letolto/1.0 (kutatási célú letöltés)}"   # a SEC és több hivatal UA nélkül 403-at ad; saját elérhetőséget az UA-ba a felhasználó írjon',
+         'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
     n, seen_repo = 0, set()
+    q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] != "free":
             continue
         d = o.get("download") or {}
         gh = (o.get("github") or {}).get("repo")
+        FILE_RE = r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|pdf|h5|nc|zst)(\?|$)"
+        files = [u for u in (d.get("files") or []) if isinstance(u, str) and re.search(FILE_RE, u, re.I)]
+        if d.get("method") == "http" and re.search(FILE_RE, str(d.get("url", "")), re.I):
+            files = files or [d["url"]]
+        if files:                                          # valódi adatfájl elsőbbséget kap a repóval szemben
+            for u in files[:20]:
+                fn = os.path.basename(u.split("?")[0]) or "file"
+                sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
+                L.append(f'mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
+                n += 1
+            continue
         sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
-        q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
         if d.get("method") == "git" or (gh and re.match(r"^[\w.-]+/[\w.-]+$", gh)):
             url = d.get("url") if d.get("method") == "git" and d.get("url") else f"https://github.com/{gh}.git"
             if not re.match(r"^https://(github\.com|gitlab\.com|codeberg\.org|bitbucket\.org)/[\w.-]+/[\w.-]+(\.git)?/?$", url):
@@ -537,10 +569,6 @@ def write_dl(items):
             seen_repo.add(key)
             L.append(f'if [ -d {sub}/.git ]; then git -C {sub} pull -q --ff-only && ok {o["id"]} || fail {o["id"]}; '
                      f'else git clone -q --depth 1 --filter=blob:limit=50m {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
-            n += 1
-        elif d.get("method") == "http" and re.search(r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|pdf|h5|nc|zst)(\?|$)", str(d.get("url", "")), re.I):
-            fn = os.path.basename(d["url"].split("?")[0]) or "file"
-            L.append(f'mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else curl -fsSL --retry 3 -o {sub}/{q(fn)}.part {q(d["url"])} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
         elif d.get("method") == "hf" and d.get("url"):
             m = re.match(r"^(?:https?://huggingface\.co/)?(datasets/|spaces/)?([\w.-]+/[\w.-]+)", str(d["url"]))
