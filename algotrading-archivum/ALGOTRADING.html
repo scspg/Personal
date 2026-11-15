@@ -1818,6 +1818,7 @@ if ! uv --version 2&gt;/dev/null | grep -q &quot;${UV_VERSION}&quot;; then   # P
   export PATH=&quot;$HOME/.local/bin:$PATH&quot;
 fi
 uv --version | grep -q &quot;^uv ${UV_VERSION}&quot;
+export UV_PYTHON_BIN_DIR=&quot;$PWD/.uv-bin&quot;              # a Python-shim ne kerüljön a ~/.local/bin-be
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c &quot;import sys; assert sys.version.split()[0] == &#x27;${PYTHON_VERSION}&#x27;&quot;
 uv sync --locked
@@ -1838,7 +1839,8 @@ grep -qE &#x27;^/?atp/risk/&#x27; .github/CODEOWNERS
 uv run python -c &quot;import atp.contracts&quot;
 uv run python -m atp.tools.export_schemas --out schemas/generated/ --check   # újragenerál ideiglenes mappába, diff a commitolt változattal
 uv run lint-imports
-# F0.7
+# F0.7 (önállóan is futtatható)
+set -a; source tools/versions.env; set +a
 opa version | grep -q &quot;^Version: ${OPA_VERSION}&quot;
 gitleaks version | grep -q &quot;${GITLEAKS_VERSION}&quot;
 osv-scanner --version | grep -q &quot;${OSV_SCANNER_VERSION}&quot;

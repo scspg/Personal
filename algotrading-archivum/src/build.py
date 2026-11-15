@@ -226,7 +226,8 @@ def collect():
                 for k in ("pit", "survivorship_free", "vintages", "revision_policy", "timestamp_semantics"):
                     if k not in o:
                         o[k] = None
-                        o.setdefault("pit_note", "PIT-tulajdonság nem vizsgált (2026-11-15)")
+                if all(o.get(k) is None for k in ("pit", "survivorship_free", "vintages", "revision_policy", "timestamp_semantics")) and not o.get("pit_note"):
+                    o["pit_note"] = "PIT-tulajdonság nem vizsgált (2026-11-15)"
             o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
             o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
             if not o.get("notes_hu"):
@@ -281,6 +282,14 @@ def collect():
             if o.get("cat") in ("broker", "platform", "pro-status", "execution", "broker-regulation") and o.get("granularity") in ("tick", "l2", "l3"):
                 o["granularity"] = None                     # bróker/platform nem adatforrás
             items.append(o)
+    by_url = defaultdict(list)
+    for o in items:
+        by_url[norm_url(o.get("url"))].append(o)
+    for o in items:                                       # elemzési sor ↔ azonos URL-ű forrássor összekötése
+        if o["_src"] in ANALYSIS_SRC:
+            for x in by_url.get(norm_url(o.get("url")), []):
+                if x["_src"] not in ANALYSIS_SRC and x["id"] not in (o.get("related_ids") or []):
+                    o["related_ids"] = (o.get("related_ids") or []) + [x["id"]]
     ids = {o["id"] for o in items}
     for o in items:
         if o.get("related_ids"):
@@ -619,9 +628,15 @@ def main():
             f.write(json.dumps({k: v for k, v in o.items() if not k.startswith("_")} | {"src": o["_src"]}, ensure_ascii=False) + "\n")
     if spec:
         open(os.path.join(ROOT, "FEJLESZTOI-SPEC.md"), "w", encoding="utf-8").write(spec + "\n")
+    def _nul(x):
+        if isinstance(x, dict):
+            return {k: _nul(v) for k, v in x.items()}
+        if isinstance(x, list):
+            return [_nul(v) for v in x]
+        return None if x == "" else x
     for fn, L in (("strategiak.jsonl", strategies), ("otletek.jsonl", ideas)):
         with open(os.path.join(ROOT, fn), "w", encoding="utf-8") as f:
-            for o in L:
+            for o in map(_nul, L):
                 f.write(json.dumps({k: v for k, v in o.items() if not k.startswith("_")}, ensure_ascii=False) + "\n")
     write_dl(items)
     json.dump({"items": len(items), "strategies": len(strategies), "ideas": len(ideas), "stats": stats},
@@ -705,10 +720,12 @@ def write_dl(items):
             n += 1
             scripted.add(o["id"])
     if any(o["id"] == "mnb-arfolyam-soap" for o in items):   # SOAP POST (HTTPS-en 404, ezért HTTP)
-        L.append('mkdir -p "$DEST/a4_macro_news_alt/mnb-arfolyam-soap" && curl -fsS --max-time 60 -X POST -H "Content-Type: text/xml; charset=utf-8" '
+        L.append('MNBF="$DEST/a4_macro_news_alt/mnb-arfolyam-soap/aktualis_$(date +%F).xml"; '
+                 'if [ -s "$MNBF" ] && [ -z "$REFRESH" ]; then ok mnb-arfolyam-soap; else '
+                 'mkdir -p "$DEST/a4_macro_news_alt/mnb-arfolyam-soap" && curl -fsS --max-time 60 -X POST -H "Content-Type: text/xml; charset=utf-8" '
                  '-H "SOAPAction: http://www.mnb.hu/webservices/MNBArfolyamServiceSoap/GetCurrentExchangeRates" '
                  '--data \'<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GetCurrentExchangeRates xmlns="http://www.mnb.hu/webservices/"/></soap:Body></soap:Envelope>\' '
-                 'http://www.mnb.hu/arfolyamok.asmx -o "$DEST/a4_macro_news_alt/mnb-arfolyam-soap/aktualis_$(date +%F).xml" && ok mnb-arfolyam-soap || fail mnb-arfolyam-soap')
+                 'http://www.mnb.hu/arfolyamok.asmx -o "$MNBF" && ok mnb-arfolyam-soap || fail mnb-arfolyam-soap; fi')
         scripted.add("mnb-arfolyam-soap")
     # kézi / regisztrációs / API-kulcsos tételek: TODO-lista, hogy semmi ne vesszen el csendben
     L += ["", "# --- Nem automatizálható ingyenes és regisztrációs tételek (kézi letöltés, API-kulcs vagy weboldal) ---",

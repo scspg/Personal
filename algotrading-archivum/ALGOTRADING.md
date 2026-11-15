@@ -333,7 +333,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
  "tier": 0, "group": null, "related_ids": [], "notes_hu": "…", "pitfalls_hu": null, "verified": "mért|becsült|nem ellenőrzött", "checked": "2026-11-15"}
 ```
 
-**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura. A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). Ha egy adatforrás-fájlban lévő tétel nem adat (cikk, SDK, ÁSZF, díjoldal), `pit_applicable: false` kizárja a PIT-mezők alól. A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
+**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura, kripto-cex-api, kripto-mev-mempool, infra, research (azonos a `build.py` NON_DATA_CAT halmazával). A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). Ha egy adatforrás-fájlban lévő tétel nem adat (cikk, SDK, ÁSZF, díjoldal), `pit_applicable: false` kizárja a PIT-mezők alól. A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
 
 **Pontozás (0–10):**
 - R: relevancia a platformhoz;
@@ -7264,6 +7264,7 @@ if ! uv --version 2>/dev/null | grep -q "${UV_VERSION}"; then   # PEP 668: Ubunt
   export PATH="$HOME/.local/bin:$PATH"
 fi
 uv --version | grep -q "^uv ${UV_VERSION}"
+export UV_PYTHON_BIN_DIR="$PWD/.uv-bin"              # a Python-shim ne kerüljön a ~/.local/bin-be
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c "import sys; assert sys.version.split()[0] == '${PYTHON_VERSION}'"
 uv sync --locked
@@ -7284,7 +7285,8 @@ grep -qE '^/?atp/risk/' .github/CODEOWNERS
 uv run python -c "import atp.contracts"
 uv run python -m atp.tools.export_schemas --out schemas/generated/ --check   # újragenerál ideiglenes mappába, diff a commitolt változattal
 uv run lint-imports
-# F0.7
+# F0.7 (önállóan is futtatható)
+set -a; source tools/versions.env; set +a
 opa version | grep -q "^Version: ${OPA_VERSION}"
 gitleaks version | grep -q "${GITLEAKS_VERSION}"
 osv-scanner --version | grep -q "${OSV_SCANNER_VERSION}"

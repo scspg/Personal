@@ -2101,6 +2101,7 @@ if ! uv --version 2>/dev/null | grep -q "${UV_VERSION}"; then   # PEP 668: Ubunt
   export PATH="$HOME/.local/bin:$PATH"
 fi
 uv --version | grep -q "^uv ${UV_VERSION}"
+export UV_PYTHON_BIN_DIR="$PWD/.uv-bin"              # a Python-shim ne kerüljön a ~/.local/bin-be
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c "import sys; assert sys.version.split()[0] == '${PYTHON_VERSION}'"
 uv sync --locked
@@ -2121,7 +2122,8 @@ grep -qE '^/?atp/risk/' .github/CODEOWNERS
 uv run python -c "import atp.contracts"
 uv run python -m atp.tools.export_schemas --out schemas/generated/ --check   # újragenerál ideiglenes mappába, diff a commitolt változattal
 uv run lint-imports
-# F0.7
+# F0.7 (önállóan is futtatható)
+set -a; source tools/versions.env; set +a
 opa version | grep -q "^Version: ${OPA_VERSION}"
 gitleaks version | grep -q "${GITLEAKS_VERSION}"
 osv-scanner --version | grep -q "${OSV_SCANNER_VERSION}"

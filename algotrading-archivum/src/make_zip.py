@@ -3,7 +3,7 @@
 import os, zipfile, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 TS = (2026, 11, 15, 0, 0, 0)
-FILES = ["ALGOTRADING-chat-mini.md", "ALGOTRADING.md", "ALGOTRADING.html", "ALGOTRADING-kompakt.md", "ALGOTRADING-chat.md", "FEJLESZTOI-SPEC.md", "katalogus.jsonl", "strategiak.jsonl", "otletek.jsonl", "letolto.sh"]
+FILES = ["VEGSO-PONTOZAS.md", "ALGOTRADING-chat-mini.md", "ALGOTRADING.md", "ALGOTRADING.html", "ALGOTRADING-kompakt.md", "ALGOTRADING-chat.md", "FEJLESZTOI-SPEC.md", "katalogus.jsonl", "strategiak.jsonl", "otletek.jsonl", "letolto.sh"]
 out = os.path.join(ROOT, "ALGOTRADING.zip")
 with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     def add(src, arc):

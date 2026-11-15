@@ -6,6 +6,7 @@ Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform épít�
 
 | Fájl | Mire való |
 |---|---|
+| `VEGSO-PONTOZAS.md` | A minőségkapu eredménye: hat független átnéző négy körben (végső átlag 93,6), és pontosan mi hiányzik a 95-höz. |
 | `ALGOTRADING.html` | Böngészőben megnyitható. Szűrhető katalógus (ár, hozzáférés, profil), stratégiák, ötletek, infrastruktúra-táblák és kalkulátorok (1:500 margin és stop-out, grid-csőd Monte Carlo, Kelly). Internet nélkül is működik. |
 | `ALGOTRADING.md` | A teljes anyag: mesterprompt, pontozás, költségvetés szerinti válogatás, fejezetenként a tételek, stratégia-könyvtár, kockázati matek, hipotézisgyár, szerverhely- és adótáblák, fejlesztői specifikáció. |
 | `FEJLESZTOI-SPEC.md` | A fejlesztőcsapatnak: architektúra, MT5-híd, döntési réteg ördögügyvéddel, kockázati motor, a „mozgatókar” jogosultsági szintjei, ütemterv ellenőrizhető átvételi feltételekkel. |

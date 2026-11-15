@@ -291,7 +291,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
  "tier": 0, "group": null, "related_ids": [], "notes_hu": "…", "pitfalls_hu": null, "verified": "mért|becsült|nem ellenőrzött", "checked": "2026-11-15"}
 ```
 
-**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura. A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). Ha egy adatforrás-fájlban lévő tétel nem adat (cikk, SDK, ÁSZF, díjoldal), `pit_applicable: false` kizárja a PIT-mezők alól. A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
+**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura, kripto-cex-api, kripto-mev-mempool, infra, research (azonos a `build.py` NON_DATA_CAT halmazával). A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). Ha egy adatforrás-fájlban lévő tétel nem adat (cikk, SDK, ÁSZF, díjoldal), `pit_applicable: false` kizárja a PIT-mezők alól. A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
 
 **Pontozás (0–10):**
 - R: relevancia a platformhoz;
