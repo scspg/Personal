@@ -18,6 +18,6 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for r, _, fs in sorted(os.walk(d)):
             if "__pycache__" in r: continue
             for f in sorted(fs):
-                if f.endswith((".py", ".jsonl", ".md", ".json", ".yaml")):
+                if f.endswith((".py", ".jsonl", ".md", ".json", ".yaml")) and not (d == HERE and r == HERE and f == "OLVASS-EL.md"):
                     p = os.path.join(r, f); add(p, "ALGOTRADING/" + sub + "/" + os.path.relpath(p, d))
 print(f"OK: {out} ({os.path.getsize(out)/1e6:.2f} MB)")

@@ -1,6 +1,6 @@
 # ALGOTRADING – olvass el először
 
-Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform építéséhez. A középpontban az aktív, automatizált kereskedés áll, platform- és brókerfüggetlen alapokon (a jelenlegi eszköz MetaTrader 5 és Vantage 1:500, de cserélhető); mellette kripto, predikciós piacok, sportfogadás, makró, hírek és kockázati motor. Kutatás: 2026-11-15. Nem befektetési, adó- vagy jogi tanácsadás.
+Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform építéséhez. A középpontban az aktív, automatizált kereskedés áll, platform- és brókerfüggetlen alapokon (a jelenlegi eszköz MetaTrader – MT4 vagy MT5, ezt a specifikáció Q1 kérdése rögzíti – és Vantage 1:500, de cserélhető); mellette kripto, predikciós piacok, sportfogadás, makró, hírek és kockázati motor. Kutatás: 2026-11-15. Nem befektetési, adó- vagy jogi tanácsadás.
 
 ## Mit hol találsz
 
@@ -18,7 +18,7 @@ Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform épít�
 
 ## Fejlesztőknek – innen indulj
 
-1. `FEJLESZTOI-SPEC.md` – először a 12. fejezet (platform- és brókerfüggetlenség, minden mást felülír), aztán a 0–3. fejezet (célok, architektúra, szerződések), végül az ütemterv átvételi feltételekkel.
+1. `FEJLESZTOI-SPEC.md` – a specifikáció saját olvasási sorrendje: §0 (célok, elvek) → §2 (szerződések, `contracts.py`) → §12 (platform- és brókerfüggetlenség; ütközés esetén ez dönt) → §10 (ütemterv, átvételi feltételek). A HTML „Fejlesztői spec” fülén kattintható tartalomjegyzék van.
 2. `forras/allapot/MESTERPROMPT.md` – a kutatás és a katalógus specifikációja (séma, rubrika, profilsúlyok).
 3. `ALGOTRADING.md` 25–27. fejezet – stratégiák, kockázati matek, hipotézisgyár; 6–7. fejezet – platform- és bróker-összehasonlítás.
 4. A „Nyitott kérdések az ügyfélnek” szakasz a specifikációban: ezekre a válasz az F1 fázis feltétele.

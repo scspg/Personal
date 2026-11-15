@@ -21,7 +21,7 @@ def jl(p):
     return out
 
 
-def md_tables(md):
+def md_tables(md, toc=False):
     """egyszerű MD → HTML: címsorok, bekezdések, csőtáblák, felsorolás, linkek"""
     E = html.escape
     def inline(s):
@@ -29,7 +29,7 @@ def md_tables(md):
         s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank" rel="noopener">\1</a>', s)
         s = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", s)
         return re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
-    out, rows, ul, code, buf = [], [], False, False, []
+    out, rows, ul, code, buf, heads, lang = [], [], False, False, [], [], ""
     def flush():
         nonlocal rows
         if rows:
@@ -41,9 +41,10 @@ def md_tables(md):
         s = line.strip()
         if s.startswith("```"):
             if code:
-                out.append("<pre><code>" + E("\n".join(buf)) + "</code></pre>"); buf = []
+                note = '<p class="mut">Mermaid-diagram forrása – megjelenítés: mermaid.live vagy bármely Markdown-néző, amely ismeri a mermaidot.</p>' if lang == "mermaid" else ""
+                out.append(note + "<pre><code>" + E("\n".join(buf)) + "</code></pre>"); buf = []
             else:
-                flush()
+                flush(); lang = s[3:].strip().lower()
             code = not code
             continue
         if code:
@@ -62,7 +63,9 @@ def md_tables(md):
         m = re.match(r"(#{1,4}) (.*)", s)
         if m:
             lv = min(len(m.group(1)) + 1, 4)
-            out.append(f"<h{lv}>{inline(m.group(2))}</h{lv}>")
+            hid = "s-" + re.sub(r"[^a-z0-9]+", "-", re.sub(r"[^\w\s-]", "", m.group(2).lower()).encode("ascii", "ignore").decode())[:60].strip("-")
+            heads.append((lv, hid, m.group(2)))
+            out.append(f'<h{lv} id="{hid}">{inline(m.group(2))}</h{lv}>')
         elif s.startswith(("- ", "* ")):
             if not ul:
                 out.append("<ul>"); ul = True
@@ -72,6 +75,9 @@ def md_tables(md):
     flush()
     if ul:
         out.append("</ul>")
+    if toc and heads:
+        items = "".join(f'<li class="l{lv}"><a href="#{hid}">{E(t)}</a></li>' for lv, hid, t in heads if lv <= 4)
+        out.insert(0, f'<details class="toc"><summary>Tartalomjegyzék ({sum(1 for h in heads if h[0] <= 4)} szakasz)</summary><ul>{items}</ul></details>')
     return "\n".join(out)
 
 
@@ -99,7 +105,7 @@ def main():
             "y": s.get("novelty"), "f": s.get("mt5_fit"), "r": (s.get("risk_hu") or "")[:200]} for s in ideas]
     data = json.dumps({"items": cat_items, "strat": st, "ideas": idz}, ensure_ascii=False).replace("</", "<\\/")
     page = TEMPLATE.replace("__DATA__", data).replace("__TABLES__", md_tables(tables) if tables else "<p>A táblák a kutatás végén kerülnek ide.</p>") \
-        .replace("__SPEC__", md_tables(spec) if spec else "<p>A fejlesztői specifikáció külön fájlban: FEJLESZTOI-SPEC.md.</p>") \
+        .replace("__SPEC__", md_tables(spec, toc=True) if spec else "<p>A fejlesztői specifikáció külön fájlban: FEJLESZTOI-SPEC.md.</p>") \
         .replace("__N__", str(len(items))).replace("__NS__", str(len(strat))).replace("__NI__", str(len(ideas)))
     open(os.path.join(ROOT, "ALGOTRADING.html"), "w", encoding="utf-8").write(page)
     print(f"OK: ALGOTRADING.html ({len(page)//1024} KB), {len(items)} tétel")
@@ -113,7 +119,7 @@ TEMPLATE = r"""<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta 
 :root[data-theme="dark"]{--bg:#0e1116;--card:#161b22;--fg:#e6e9ee;--mut:#9aa4b2;--line:#2a313b;--acc:#5aa9ff;--pos:#4cc27a;--neg:#ff7a70;--chip:#1f2630;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left)) 0 max(16px,env(safe-area-inset-right))}
-h1{font-size:18px;margin:0 0 6px}nav{display:flex;flex-wrap:wrap;gap:2px 4px}pre{overflow-x:auto;background:var(--chip);padding:8px;border-radius:6px;font-size:12px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}nav button{border:0;background:none;color:var(--mut);padding:8px 10px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+h1{font-size:18px;margin:0 0 6px}nav{display:flex;flex-wrap:wrap;gap:2px 4px}pre{overflow-x:auto;background:var(--chip);padding:8px;border-radius:6px;font-size:12px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}#spec pre{max-width:100%}#spec code,#inf code{overflow-wrap:anywhere}.toc ul{columns:2 260px;font-size:13px}.toc .l4{padding-left:12px}#spec h2,#spec h3,#spec h4{scroll-margin-top:90px}nav button{border:0;background:none;color:var(--mut);padding:8px 10px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 nav button[aria-current="page"]{color:var(--fg);border-color:var(--acc);font-weight:600}
 main{padding:16px max(16px,env(safe-area-inset-left)) 40px max(16px,env(safe-area-inset-right));max-width:1400px;margin:0 auto}
 section[hidden]{display:none}.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin:0 0 14px}
@@ -147,15 +153,17 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 <label>Lot<input id="mlot" type="number" value="1" step="0.01"></label><label>Kontraktusméret<input id="mc" type="number" value="100000"></label>
 <label>Ár<input id="mp" type="number" value="1.08" step="0.0001"></label><label>Pipméret<input id="mpip" type="number" value="0.0001" step="0.0001"></label>
 <label>Stop-out % (brókerfüggő)<input id="mso" type="number" value="50"></label>
+<label>Előbeállítás<select id="mpre"><option value="">egyedi</option><option value="50">EU/UK lakossági (50%, kötelező NBP)</option><option value="20">egyes offshore ECN-számlák (20%)</option></select></label>
 <label>Jegyzett deviza → számladeviza árfolyam<input id="mfx" type="number" value="1" step="0.0001"></label></div><p class="out" id="mo"></p>
-<p class="mut">Képlet: margin = lot × kontraktus × ár × (jegyzett deviza → számladeviza) / áttétel; USD-számlán XXX/USD párnál az átváltás 1, USD/JPY-nál 1/árfolyam, EUR/GBP-nél a GBP/USD árfolyam; stop-out, ha tőke / margin × 100 &lt; stop-out%. A számlát elvivő ellenirányú mozgás = (tőke − SO% × margin) / (lot × kontraktus). A stop-out szint brókerenként és jogalanyonként eltér (pl. EU/UK lakossági 50%, egyes offshore ECN-számlák 20%); a saját értéket a számlaszerződésből és a szimbólum-specifikációból kell venni.</p></div>
+<p class="mut">Képlet: margin = lot × kontraktus × ár × FX / áttétel, ahol FX = jegyzett deviza → számladeviza árfolyam (a „Jegyzett deviza → számladeviza” mező); USD-számlán XXX/USD párnál az átváltás 1, USD/JPY-nál 1/árfolyam, EUR/GBP-nél a GBP/USD árfolyam; stop-out, ha tőke / margin × 100 &lt; stop-out%. A számlát elvivő ellenirányú mozgás = (tőke − SO% × margin) / (lot × kontraktus). A stop-out szint brókerenként és jogalanyonként eltér (pl. EU/UK lakossági 50%, egyes offshore ECN-számlák 20%); a saját értéket a számlaszerződésből és a szimbólum-specifikációból kell venni.</p></div>
 <div class="card"><h2>Grid-csőd Monte Carlo</h2><div class="row">
 <label>Egyenleg<input id="gb" type="number" value="1000"></label><label>Áttétel<input id="gl" type="number" value="500"></label>
 <label>Lot/szint<input id="glot" type="number" value="0.01" step="0.01"></label><label>Rács (pip)<input id="gs" type="number" value="20"></label>
 <label>Célprofit (pip)<input id="gt" type="number" value="20"></label><label>Max szint<input id="gn" type="number" value="30"></label>
 <label>Éves vol %<input id="gv" type="number" value="8"></label><label>Spread (pip)<input id="gsp" type="number" value="1"></label>
 <label>Nap<input id="gd" type="number" value="250"></label><label>Szimuláció<input id="gm" type="number" value="400"></label>
-<label>Stop-out %<input id="gso" type="number" value="50"></label>
+<label>Stop-out % (brókerfüggő)<input id="gso" type="number" value="50"></label>
+<label>Előbeállítás<select id="gpre"><option value="">egyedi</option><option value="50|1">EU/UK lakossági: 50%, NBP van</option><option value="20|0">offshore ECN: 20%, NBP nincs</option></select></label>
 <label>Negatívegyenleg-védelem<select id="gnbp"><option value="0">nincs (a veszteség túlléphet)</option><option value="1">van (nulla alá nem megy)</option></select></label><button class="go" id="grun">Futtatás</button></div><p class="out" id="go"></p>
 <p class="mut">Modell: csak long rács EURUSD-szerű párra (ár 1,08, 100 000-es kontraktus), óránkénti geometriai bolyongás, drift nélkül, swap nélkül. Minden szint külön zár +célprofitnál. Determinisztikus mag: ugyanaz a bemenet ugyanazt adja. Becslés, nem előrejelzés: a valódi piac vastagabb farkú, és rezsimeket vált.</p></div>
 <div class="card"><h2>Kelly-méretezés</h2><div class="row">
@@ -178,7 +186,7 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase(
 const SRC={a1_market_exec:"Piac, végrehajtás",a2_crypto:"Kripto",a3_predict_sports:"Predikció, sport",a4_macro_news_alt:"Makró, hírek, alt. adat",a5_oss:"Nyílt szoftver",a6_ai_research:"AI-kutatás, irodalom",a8_infra_legal:"Infra, adó, jog",a9_platform:"Platform",a10_methods:"Bevált módszerek, esettanulmányok",a11_platforms:"Platform- és bróker-összehasonlítás"};
 for(const [k,v] of Object.entries(SRC)){if(D.items.some(o=>o.s===k)){const o=document.createElement("option");o.value=k;o.textContent=v;$("#fs").append(o)}}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.removeAttribute("aria-current"));b.setAttribute("aria-current","page");document.querySelectorAll("main>section").forEach(s=>s.hidden=s.id!==b.dataset.t);try{history.replaceState(null,"","#"+b.dataset.t)}catch(e){}});
-function goHash(){const b=document.querySelector(`#nav button[data-t="${location.hash.slice(1)}"]`);if(b)b.click()}if(location.hash)goHash();window.addEventListener("hashchange",goHash);
+function goHash(){const h=location.hash.slice(1)||"kat";if(h.startsWith("s-"))return;const b=document.querySelector(`#nav button[data-t="${h}"]`);if(b)b.click()}if(location.hash)goHash();window.addEventListener("hashchange",goHash);
 let lim=150,sk=null,sd=-1;const SKEY=[t=>t.t??9,t=>norm(t.n),t=>norm(t.s),t=>norm(t.a),t=>t.e??1e12,null,t=>norm(t.h),t=>norm(t.b)];
 document.querySelectorAll("#tk th").forEach((th,i)=>{th.title="Kattints a rendezéshez";th.onclick=()=>{if(i===5){sk=null}else{sd=sk===i?-sd:1;sk=i}rk()}});
 function rk(){const q=norm($("#q").value),a=$("#fa").value,e=parseFloat($("#fe").value),t=+$("#ft").value,p=$("#fp").value,s=$("#fs").value;
@@ -193,6 +201,8 @@ if(!(B>0&&Lv>0&&lot>0&&C>0&&P>0&&pip>0&&SO>=0&&SO<5&&FX>0)){$("#mo").innerHTML='
 const notional=lot*C*P*FX,m=notional/Lv,ml=m>0?B/m*100:Infinity,mv=(B-SO*m)/(lot*C*FX);
 if(m>B){$("#mo").innerHTML=`<span class="neg">A szükséges margin (${fmt(m,2)}) nagyobb az egyenlegnél (${fmt(B,2)}): ez a pozíció nem nyitható meg.</span>`;return}
 $("#mo").innerHTML=`Névérték: <b>${fmt(notional,0)} USD</b> · lekötött margin: <b>${fmt(m,2)} USD</b> · margin-szint: <b>${fmt(ml,0)}%</b><br>`+(mv<=0?`<span class="neg">Már nyitáskor stop-out alatt.</span>`:`Stop-out ennyi ellenirányú mozgásnál: <b class="neg">${fmt(mv,5)}</b> (${fmt(mv/P*100,3)}%, ${fmt(mv/pip,1)} pip). Tényleges áttétel: <b>${fmt(notional/B,1)}×</b>.`)}
+$("#mpre").onchange=()=>{if($("#mpre").value){$("#mso").value=$("#mpre").value;mcalc()}};
+$("#gpre").onchange=()=>{const v=$("#gpre").value;if(v){const[a,b]=v.split("|");$("#gso").value=a;$("#gnbp").value=b}};
 ["#mb","#ml","#mlot","#mc","#mp","#mpip","#mso","#mfx"].forEach(s=>$(s).addEventListener("input",mcalc));mcalc();
 function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function grid(){const B=+$("#gb").value,Lv=+$("#gl").value,lot=+$("#glot").value,S=+$("#gs").value*1e-4,T=+$("#gt").value*1e-4,N=+$("#gn").value,vol=+$("#gv").value/100,sp=+$("#gsp").value*1e-4,days=+$("#gd").value,M=Math.max(1,Math.min(3000,Math.round(+$("#gm").value)||1)),SO=+$("#gso").value/100,C=100000;
@@ -206,7 +216,7 @@ if(!dead){let fl=0;for(const e of pos)fl+=(P-e)*lot*C;bal+=fl;surv.push(bal)}fin
 if(k<M){$("#go").textContent=`Számolás… ${k}/${M}`;setTimeout(chunk,0);return}$("#grun").disabled=false;
 fin.sort((a,b)=>a-b);const q=p=>fin[Math.min(fin.length-1,Math.floor(p*fin.length))];
 const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN;
-$("#go").innerHTML=`<b>Átlagos végső tőke MINDEN pályán: <span class="${mean(fin)<B?"neg":"pos"}">${fmt(mean(fin),0)}</span></b> (kezdő ${fmt(B,0)}; ${fmt((mean(fin)/B-1)*100,1)}%) · csak a túlélők átlaga: ${fmt(mean(surv),0)} – a túlélők önmagukban túlélési torzítás<br>`+(NBP?"":`Nulla alá ment stop-outok: <b class="neg">${neg}</b> (${fmt(neg/M*100,1)}%) – negatívegyenleg-védelem nélkül tartozás keletkezik<br>`)+`Stop-out valószínűsége ${days} nap alatt: <b class="${ruin/M>0.05?"neg":"pos"}">${fmt(ruin/M*100,1)}%</b> (${ruin}/${M})<br>Végső tőke mediánja: <b>${fmt(q(.5),0)}</b> · 5%: ${fmt(q(.05),0)} · 95%: ${fmt(q(.95),0)} · átlagos lezárt ügylet/szimuláció: ${fmt(trades/M,0)}`}chunk()}
+$("#go").innerHTML=`<b>Átlagos végső tőke MINDEN pályán: <span class="${mean(fin)<B?"neg":"pos"}">${fmt(mean(fin),0)}</span></b> (kezdő ${fmt(B,0)}; ${fmt((mean(fin)/B-1)*100,1)}%) · csak a túlélők átlaga: ${fmt(mean(surv),0)} – a túlélők önmagukban túlélési torzítás<br>`+(NBP?"":`Nulla alá ment stop-outok: <b class="neg">${neg}</b> (a stop-outok ${ruin?fmt(neg/ruin*100,1):0}%-a, az összes pálya ${fmt(neg/M*100,1)}%-a) – negatívegyenleg-védelem nélkül tartozás keletkezik<br>`)+`Stop-out valószínűsége ${days} nap alatt: <b class="${ruin/M>0.05?"neg":"pos"}">${fmt(ruin/M*100,1)}%</b> (${ruin}/${M})<br>Végső tőke mediánja: <b>${fmt(q(.5),0)}</b> · 5%: ${fmt(q(.05),0)} · 95%: ${fmt(q(.95),0)} · átlagos lezárt ügylet/szimuláció: ${fmt(trades/M,0)}`}chunk()}
 $("#grun").onclick=grid;
 function kelly(){const p=+$("#kp").value,b=+$("#kb").value;if(!(p>0&&p<1&&b>0)){$("#ko").innerHTML='<span class="neg">0 &lt; p &lt; 1 és b &gt; 0 kell.</span>';return}const f=p-(1-p)/b,g=x=>x<=0?0:x>=1?-Infinity:p*Math.log(1+b*x)+(1-p)*Math.log(1-x);
 $("#ko").innerHTML=f<=0?`<span class="neg">Negatív várható érték: f* = ${fmt(f,3)} – ne kössön.</span>`:`f* = <b>${fmt(f*100,1)}%</b> tétenként · növekedés/tét: ½ Kelly ${fmt(g(f/2)*100,3)}% · Kelly ${fmt(g(f)*100,3)}% · 2× Kelly <span class="neg">${2*f>=1?"csőd (a teljes tőke kockán, egy vesztes tét nulláz)":fmt(g(2*f)*100,3)+"%"}</span>`}
