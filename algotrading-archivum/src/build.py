@@ -249,7 +249,12 @@ def collect():
                 for k in ("notes_hu", "pitfalls_hu"):   # összefésülés: a hosszabb leírás marad
                     if len(str(o.get(k) or "")) > len(str(prev.get(k) or "")):
                         prev[k] = o.get(k)
-                for k, v in o.items():                   # a kidobott rekord többletmezői átkerülnek (pl. A11 mátrixpont, belépő jogalany)
+                same_product = (nk and re.sub(r"[^a-z0-9]", "", re.sub(r"\(.*?\)|–.*$| - .*$", "", str(prev.get("name", "")).lower())) == nk) or iid == prev["id"]
+                FACT = {"price", "price_eur_month", "price_eur_once", "price_verified", "license", "history_from", "redistribution", "exchange_fees",
+                        "pit", "survivorship_free", "vintages", "revision_policy", "timestamp_semantics", "bytes_est", "download", "github", "access", "tier", "scores"}
+                for k, v in o.items():                   # többletmezők átvétele; tényadat csak ugyanarról a termékről (azonos név), nem csak azonos URL-ről
+                    if k.startswith("_") or (k in FACT and not same_product):
+                        continue
                     if k not in prev or prev.get(k) in (None, "", [], {}):
                         prev[k] = v
                 prev.setdefault("also_in", []).append(name)

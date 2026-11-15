@@ -25,7 +25,7 @@ exchange-calendars | 0 | exchange_calendars – 50+ tőzsde kereskedési naptár
 mnb-intezmenykereso | 0 | MNB Intézménykereső + figyelmeztetések (magyar engedély-ellenőrzés) | Brókerek | free | 0 | 57/82/70/62 | https://intezmenykereso.mnb.hu/ | Ellenőrizhető, hogy egy bróker (vagy EU-s útlevéllel működő cég) jogosult-e…
 vantage-regulatory-warnings | 0 | Vantage – felügyeleti figyelmeztetések és eljárások… | Brókerek | free | 0 | 55/78/67/58 | https://www.financemagnates.com/forex/brokers/dutch-regulator-investigates-vantage-for-illegal-cfd-offering/ | Becsült…
 vantage-margin-stop-out | 0 | Vantage margin call és stop-out szintek | Brókerek | free | 0 | 58/67/61/54 | https://global.vantagehelpcenter.com/hc/en-us/articles/10954321892367-What-is-the-margin-call-level-and-how-is-it-calculated | Globális help center: margin call 50%, stop-out 20% margin levelnél…
-vantage-global-limited-vfsc | 0 | Vantage Global Limited (VFSC, Vanuatu) – történeti jogalany… | Brókerek | registration | Standard STP: 0 jutalék, spread ~1.0… | 56/64/61/52 | https://www.vantagemarkets.com/ | Történeti adat: korábban a Vantage nemzetközi (nem EU/UK/AU) ügyfeleit…
+vantage-global-limited-vfsc | 0 | Vantage Global Limited (VFSC, Vanuatu) – történeti jogalany… | Brókerek | registration | ? | 56/64/61/52 | https://www.vantagemarkets.com/ | Történeti adat: korábban a Vantage nemzetközi (nem EU/UK/AU) ügyfeleit…
 vantage-client-agreement-abusive | 0 | Vantage Global Limited Client Agreement – EA, scalping, arbitrázs… | Brókerek | free | 0 | 50/66/60/48 | https://www.vantagemarkets.com/company-profile/legal-documentation/vantageglobal-clientagreement | A 2025.08-as és 2023.05-ös Vantage Global Limited Client Agreement…
 vantage-payout-reputation | 0 | Vantage kifizetési reputáció (FPA, Trustpilot, Financial Commission) | Brókerek | free | 0 | 48/62/54/48 | https://www.forexpeacearmy.com/forex-reviews/6219/vantage-markets-review | Trustpilot TrustScore ~4.3 (keresési kivonat, becsült). FPA-n 2026-ban több…
 databento | 1 | Databento (CME/US equities/OPRA/ICE nyers piaci adat L1–L3) | Piaci adatforrások | freemium | Usage-based (CME történeti, $/GB) \\|… | 80/86/82/79 | https://databento.com/ | Intézményi minőségű, nanomásodperces időbélyegű nyers feed…
@@ -34,7 +34,7 @@ mql5-custom-symbols | 1 | MT5 Custom Symbols + CustomTicksAdd… | Kutatási for
 massive-polygon | 1 | Massive (korábban Polygon.io) – US részvény/opció/index/FX/kripto API | Piaci adatforrások | freemium | Stocks: Basic $0, Starter $29… | 72/80/74/71 | https://massive.com/ | 2025 októberében rebrandelt Polygon.io…
 thetadata | 1 | Theta Data (olcsó US opciós és részvény tick-adat) | Piaci adatforrások | freemium | Options: Value $40/hó… | 74/78/74/74 | https://www.thetadata.net/ | Az OPRA tick-szintű opciós adat legolcsóbb forrása retailnek; helyi 'Terminal'…
 eia-open-data | 1 | EIA Open Data API (US olaj, gáz, áram statisztikák) | Piaci adatforrások | registration | ingyenes API-kulccsal | 70/81/76/74 | https://www.eia.gov/opendata/ | Egységes REST API: heti kőolaj- és termékkészletek (WPSR, szerda 10:30 ET)…
-libzmq-pyzmq | 1 | ZeroMQ (libzmq) és pyzmq | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 68/83/72/69 | https://github.com/zeromq/libzmq | Az EA-hidak alap-üzenetkezelője; pyzmq: 4 184 csillag, utolsó push 2026.11.03…
+libzmq-pyzmq | 1 | ZeroMQ (libzmq) és pyzmq | Végrehajtás, MetaTrader, API-k | free | 0 | 68/83/72/69 | https://github.com/zeromq/libzmq | Az EA-hidak alap-üzenetkezelője; pyzmq: 4 184 csillag, utolsó push 2026.11.03…
 fix-protocol-standard | 1 | FIX Protocol szabvány (FIX Trading Community) | Végrehajtás, MetaTrader, API-k | free | 0 | 68/84/72/69 | https://www.fixtrading.org/standards/ | FIX 4.2/4.4/5.0SP2 üzenetspecifikációk, FIXT, SBE (Simple Binary Encoding)…
 us-treasury-yield-curve | 1 | US Treasury Daily Par Yield Curve Rates (CSV/XML) | Piaci adatforrások | free | ingyenes | 65/86/75/68 | https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv | Napi par hozamgörbe (1 hó–30 év), éves CSV-letöltés…
 entsoe-transparency | 1 | ENTSO-E Transparency Platform… | Piaci adatforrások | registration | ingyenes, API-tokennel | 72/78/73/72 | https://transparency.entsoe.eu/ | Európai áram: terhelés és előrejelzés, termelés forrásonként, határkeresztező…
@@ -98,11 +98,11 @@ truefx | 2 | TrueFX (Integral OCX alapú FX top-of-book tick) | Piaci adatforrá
 oanda-v20-api | 2 | OANDA v20 REST API (FX/CFD árak, történeti gyertyák, kereskedés) | Végrehajtás, MetaTrader, API-k | registration | ? | 58/64/58/56 | https://developer.oanda.com/rest-live-v20/introduction/ | 
 firstrate-data | 2 | FirstRate Data… | Piaci adatforrások | paid | bundle-áras, egyszeri vásárlás… | 52/68/64/57 | https://firstratedata.com/ | 
 exness | 2 | Exness (FSA Seychelles, CySEC, FSCA… – 'unlimited' leverage) | Brókerek | registration | ? | 58/65/60/52 | https://www.exness.com/ | 
-dwxconnect | 2 | Darwinex DWX Connect (fájl-alapú MT4/MT5 ↔ Python híd) | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/66/58/58 | https://github.com/darwinex/dwxconnect | 
+dwxconnect | 2 | Darwinex DWX Connect (fájl-alapú MT4/MT5 ↔ Python híd) | Végrehajtás, MetaTrader, API-k | free | 0 | 54/66/58/58 | https://github.com/darwinex/dwxconnect | 
 twelve-data | 2 | Twelve Data (részvény, FX, kripto REST/WS) | Piaci adatforrások | freemium | Basic $0 (8 kredit/perc, 800/nap); Grow… | 56/64/56/55 | https://twelvedata.com/ | 
 lobster | 2 | LOBSTER (akadémiai Nasdaq limit order book rekonstrukció) | Piaci adatforrások | paid | akadémiai előfizetés (nem ellenőrzött) | 49/66/62/56 | https://lobsterdata.com/ | 
 simplefix-pyfixmsg | 2 | simplefix és pyfixmsg – könnyű Python FIX üzenetkezelők | Végrehajtás, MetaTrader, API-k | free | 0 | 56/64/54/58 | https://github.com/da4089/simplefix | 
-mql5-python-integration-joaopeuko | 2 | Mql5-Python-Integration (mqpy) – Python EA-keret a MetaTrader5… | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://github.com/Joaopeuko/Mql5-Python-Integration | 
+mql5-python-integration-joaopeuko | 2 | Mql5-Python-Integration (mqpy) – Python EA-keret a MetaTrader5… | Végrehajtás, MetaTrader, API-k | free | 0 | 54/62/55/56 | https://github.com/Joaopeuko/Mql5-Python-Integration | 
 ea31337-framework | 2 | EA31337 – nyílt MQL4/MQL5 EA-keretrendszer és stratégiák | Kutatási források | free | ingyenes (nyílt forrás) | 54/61/56/56 | https://github.com/EA31337/EA31337 | 
 cqg-data-factory | 2 | CQG Data Factory (történeti futures tick és bar) | Piaci adatforrások | paid | tételenként (nem ellenőrzött) | 50/64/60/56 | https://www.cqgdatafactory.com/ | 
 intrinio | 2 | Intrinio (US részvény/opció/fundamentum adat) | Piaci adatforrások | paid | csomagonként (nem ellenőrzött) | 54/62/56/55 | https://intrinio.com/ | 
@@ -113,7 +113,7 @@ ivolatility | 2 | IVolatility (opciós IV-adatok, IV-index, történeti felület
 tick-data-suite | 2 | Tick Data Suite (eareview.net, Birt) – MT4/MT5 tick-backtest… | Piaci adatforrások | paid | előfizetés… | 50/61/57/52 | https://eareview.net/tick-data-suite | 
 financial-modeling-prep | 2 | Financial Modeling Prep (FMP) – fundamentumok, árak, naptárak API | Piaci adatforrások | freemium | Free 250 hívás/nap; Starter ~$22–29/hó… | 51/61/54/52 | https://site.financialmodelingprep.com/ | 
 fx-blue | 2 | FX Blue (MT4/MT5 statisztika, trade copier, publikus számla-elemzés) | Végrehajtási minőség mérése | free | 0 | 52/60/54/52 | https://www.fxblue.com/ | 
-dwx-zeromq-connector | 2 | Darwinex DWX ZeroMQ Connector (Python ↔ MT4) | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/56/49/58 | https://github.com/darwinex/dwx-zeromq-connector | 
+dwx-zeromq-connector | 2 | Darwinex DWX ZeroMQ Connector (Python ↔ MT4) | Végrehajtás, MetaTrader, API-k | free | ingyenes (OSS) | 54/56/49/58 | https://github.com/darwinex/dwx-zeromq-connector | 
 finnhub | 2 | Finnhub (freemium globális részvény, FX, fundamentum API) | Piaci adatforrások | freemium | ingyenes szint + fizetős csomagok… | 51/60/52/50 | https://finnhub.io/ | 
 vantage-global-prime-llp-fca | 2 | Vantage Global Prime LLP (FCA, UK) | Brókerek | registration | ? | 46/60/52/46 | https://www.fca.org.uk/news/warnings/vantagemarketscom | 
 alpha-vantage | 2 | Alpha Vantage (freemium részvény/FX/kripto/technikai indikátor API) | Piaci adatforrások | freemium | Free 25 kérés/nap; Premium… | 48/58/52/50 | https://www.alphavantage.co/ | 
@@ -1287,7 +1287,7 @@ reloc-singapore | 2 | Szingapúr | Költözés, adórezidencia | free | 0 | 49/6
 reloc-estonia | 2 | Észtország | Költözés, adórezidencia | free | 0 | 52/64/57/54 | https://taxsummaries.pwc.com/estonia/individual/taxes-on-personal-income | 
 hw-nic-mellanox-cx4lx-amazon | 2 | Mellanox ConnectX-4 Lx EN 2×25 GbE (MCX4121A-ACAT) – amazon.de | Hardver | paid | 168.37 USD | 54/60/52/58 | https://www.amazon.de/dp/B011HVAZ78 | 
 hw-gpu-rtx5080 | 2 | GeForce RTX 5080 16 GB (Gainward Python III) | Hardver | paid | 795490 HUF | 48/62/54/53 | https://ipon.hu/shop/termek/gainward-python-iii-geforce-rtx-5080-16gb-gddr7-dlss4-ne75080019t2-gb2035t/2531706 | 
-hw-shops-hu-eu-access | 2 | Boltelérés gépi árgyűjtéshez (2026-11-15) | Hardver | free | 775238 HUF | 49/61/52/54 | https://ipon.hu/ | 
+hw-shops-hu-eu-access | 2 | Boltelérés gépi árgyűjtéshez (2026-11-15) | Hardver | free | 0 | 49/61/52/54 | https://ipon.hu/ | 
 fca-cfd-retail-rules | 2 | FCA (UK) CFD-szabályok lakossági ügyfélnek | Szabályozás | free | 0 | 48/62/54/52 | https://www.fca.org.uk/publication/impact-assessments/mifid-ii-client-categorisation.pdf | 
 reloc-slovakia | 2 | Szlovákia | Költözés, adórezidencia | free | 0 | 52/59/52/52 | https://taxsummaries.pwc.com/slovak-republic/individual/income-determination | 
 hw-psu-1000w-gold | 2 | 1000 W 80 Plus Gold tápegység (be quiet! Pure Power 12) | Hardver | paid | 45991 HUF | 46/60/50/51 | https://ipon.hu/shop/termek/be-quiet-pure-power-12-1000w-80-plus-gold-tapegyseg/2325035 | 
@@ -1298,7 +1298,7 @@ equinix-cross-connect | 3 | Cross-connect és colocation az Equinixben (LD4/NY4)
 hw-nic-solarflare | 3 | AMD Solarflare X2522/X3522 (Onload kernel-bypass) | Hardver | paid | ? | 54/56/46/54 | https://www.amd.com/en/products/accelerators/alveo.html | 
 cns-commercial-network-services | 3 | Commercial Network Services (CNS) – NY4 hosting/cross-connect | VPS és colocation | paid | ? | 50/49/41/52 | https://fortex.com/en/news/fortex-and-cns-release-fiber-cross-connect-ny4/ | 
 reloc-puerto-rico | 3 | Puerto Rico (Act 60) | Költözés, adórezidencia | free | 0 | 45/48/44/45 | https://taxsummaries.pwc.com/puerto-rico/individual/other-tax-credits-and-incentives | 
-reloc-monaco | 3 | Monaco | Költözés, adórezidencia | free | 0 | 42/43/37/39 | https://taxsummaries.pwc.com/ | 
+reloc-monaco | 3 | Monaco | Költözés, adórezidencia | free | 0 | 42/43/37/39 | https://legimonaco.mc/code/code-taxes-chiffre-affaires@2026.08.01 | 
 
 ## Platform-architektúra és AI-fejlesztési eszközök
 nautilustrader-architecture | 0 | NautilusTrader architektúra-dokumentáció | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 79/94/86/80 | https://nautilustrader.io/docs/latest/concepts/architecture | Dokumentált elvek (mért az oldalon): NautilusKernel, MessageBus…
