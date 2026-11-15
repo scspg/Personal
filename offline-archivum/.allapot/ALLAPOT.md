@@ -132,3 +132,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## 6. kör – SZKRIPT (átlag 93,8): rv6_all.patch alkalmazva (gh_release tag→v-tag→latest, GH_RELEASE_MAX_MB, DEST-normalizálás, df-alapú figyelmeztetés, V3 csapat-keresés, JS tie-break). KÖVETKEZŐ: 7. pontozó kör mindhárom átnézővel.
 
 ## 7. kör – UX 92,7 (min 90) / ADAT 92,2 – JAVÍTVA: SanDisk pont (sent()), 10 angol notes + 5 size_status magyarul, tizedes linkcímkék/előnyök/modellmegjegyzések, szoftvertábla szélesség (td overflow-wrap), Alternatívák linkek, ~1M sor, szorzójel ×; gh_release: alap platformszűrés (Linux x86-64, Windows x64, APK), tételkeret = tétel bytes×1,2 (≥50 MB), ellenőrzőösszeg-fájlok kizárva, duplikált bináris tételeknél kihagyva (binaries_item), python3 a toolcheckben, GITHUB_TOKEN-figyelmeztetés; bowditch bytes. Szkript 7. kör eredménye még nem jött meg.
+
+## 7. kör – SZKRIPT: átlag 95,0 (min 91) → rv7_gh_release.patch alkalmazva (261d94a). 8. kör fut: UX + ADAT átnéző. Ha ≥90 mindenhol és átlag ≥95 → VÉGSŐ több szemszögű átnézés (AI-ágens próbafuttatás, kezdő felhasználó, túlélési/orvosi/mezőgazdasági szakértő, adatmegőrzés) → make_zip → SendUserFile.
