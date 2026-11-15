@@ -641,6 +641,7 @@ def write_dl(items):
          'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"',
          'UA="${UA:-algotrading-archivum-letolto/1.0 (kutatási célú letöltés)}"   # a SEC és több hivatal UA nélkül 403-at ad; saját elérhetőséget az UA-ba a felhasználó írjon',
          'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"',
+         '# Méretőr: HF-letöltés mért mérettel (MAX_GB), fájl Content-Length alapján; a git-klónok sekélyek (--depth 1, egy ág), méretkorlát alól kivételek – a repók jellemzően MB–GB nagyságrendűek.',
          'MAX_GB=${MAX_GB:-50}; REFRESH=${REFRESH:-}   # MAX_GB: a becsült méret felső határa tételenként; REFRESH=1: meglévő fájlok újratöltése',
          'big_ok(){ # becsült bájt',
          '  [ "$1" -gt 0 ] || { [ -n "${ALLOW_UNKNOWN_SIZE:-}" ] && return 0; echo "KIHAGYVA (ismeretlen méret; ALLOW_UNKNOWN_SIZE=1 engedi): $2" | tee -a "$LOG"; return 1; }',
@@ -684,7 +685,7 @@ def write_dl(items):
                 continue
             seen_hf.add(hkey)
             if not o.get("bytes_est") and HF_SIZES.get(o["id"]):
-                o["bytes_est"] = HF_SIZES[o["id"]]; o["bytes_est_note"] = "HF API usedStorage, mért 2026-11-15"
+                o["bytes_est"] = HF_SIZES[o["id"]]; o["bytes_est_note"] = "HF tree API, main ág fájlméret-összege (ténylegesen letöltött méret), mért 2026-11-15; 1000+ fájlos repónál alsó becslés lehet"
             big = (o.get("bytes_est") or 0) > 5e9
             warn = f'echo "FIGYELEM: {o["id"]} becsült mérete {human(o.get("bytes_est"))}" ; ' if big else ""
             L.append(f'{warn}big_ok {int(o.get("bytes_est") or 0)} {q(o["id"])} && if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
