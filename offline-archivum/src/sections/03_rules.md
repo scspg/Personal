@@ -15,7 +15,7 @@
 | 9 | **Rate limit / robots** | `wget-mirror` esetén `--wait=1`. Archive.org-on maximum néhány párhuzamos kapcsolat. Fiók nélkül ne kérj túl sokat egyszerre. |
 | 10 | **Letöltött kód futtatása** | Telepítőt és szkriptet csak hivatalos forrásból és ellenőrzött checksummal futtass. Ellenőrizetlen bináris ne fusson. |
 | 11 | **Áramellátás** | Egy archívum annyit ér, amennyi az olvasóeszköz. Kell egy alacsony fogyasztású gép (Raspberry Pi 5 kb. 5–10 W, laptop, Android) és napelem. Az elektronika tönkremehet, ezért kell a papír is. |
-| 12 | **Redundancia** | 3-2-1 elv: 3 példány, 2 különböző adathordozón, 1 máshol tárolva. HDD-t évente meg kell járatni. Hosszú távra M-DISC vagy szalag. Az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (gyártófüggő, **becsült**). |
+| 12 | **Redundancia** | 3-2-1 elv: 3 példány, 2 különböző adathordozón, 1 máshol tárolva. A HDD-t félévente (legalább évente) be kell kapcsolni és végig kell olvasni (4c). Hosszú távra M-DISC vagy szalag. Az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (gyártófüggő, **becsült**). |
 | 13 | **Nem minden eljárásleírás** | A Wikipedia leír, de nem tanít meg. A tier 0–2 gyakorlati anyagok (CD3WD, FAS, Hesperian, NAVEDTRA, Survivor Library) adják a „hogyan”-t, ezeket nem szabad a lexikon miatt kihagyni. |
 | 14 | **Az LLM hallucinál** | Az offline LLM keresésre, magyarázatra és fordításra jó. Orvosi, vegyi és szerkezeti kérdésben **mindig a forrásdokumentum dönt**. Ha lehet, RAG kell a ZIM/PDF anyagra. |
 | 15 | **Frissítés** | Évente egyszer érdemes újragenerálni: ugyanezzel a szkripttel, az új snapshotok az OPDS-ből jönnek. |

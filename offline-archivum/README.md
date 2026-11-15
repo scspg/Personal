@@ -7,14 +7,15 @@
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
    less dl.sh && DEST=/media/usb/archivum bash dl.sh
    ```
+   **Windowson:** PowerShellben (rendszergazdaként) `wsl --install`, újraindítás után az Ubuntu ablakban futtasd ugyanezt; a D: meghajtó ott `/mnt/d/...` (pl. `DEST=/mnt/d/archivum`).
 3. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
 
 ## Fájlok
 | Fájl | Méret | Mire való |
 |---|---|---|
 | `ARCHIVUM-LLM.html` | 0,9 MB | interaktív kalkulátor, eszközmátrix, modelltábla (AA v5, % Opus 5.5), szoftver- és modellkönyvtár (kereshető), SSD-tervező, tárolóválasztó (Tárolók fül) |
-| `ARCHIVUM.md` | 2,2 MB | teljes katalógus: 1263 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
-| `ARCHIVUM-kompakt.md` | 1,6 MB | ugyanez kevesebb LLM-kvanttal (899 tétel) – hosszú kontextusú modellnek |
+| `ARCHIVUM.md` | 2,2 MB | teljes katalógus: 1270 tétel (ebből 609 LLM-kvant), prompt, szabályok, receptek, szkriptek |
+| `ARCHIVUM-kompakt.md` | 1,6 MB | ugyanez kevesebb LLM-kvanttal (906 tétel) – hosszú kontextusú modellnek |
 | `ARCHIVUM-chat.md` | 0,1 MB | rövid összefoglaló chatbe: csomagok, SSD-méretek, LLM-rangsor, eszközajánlások, legjobb szoftverek |
 | `eszkozok/select_items.py` | – | letöltési terv a tárhelyhez (`--budget 2TB --hw T2 --mem 300GB --emit-sh dl.sh`) |
 | `eszkozok/llm_calc.py` | – | LLM-kalkulátor (`--preset all`, vagy saját: `--gpu 32:1790 --ram 128 --ram-bw 96`) |

@@ -19,6 +19,38 @@
   },
   "termekek": [
    {
+    "id": "hdd-wd-redpro-26",
+    "kategoria": "hdd_internal",
+    "nev": "WD Red Pro 26TB (WD260KFGX)",
+    "kapacitas_tb": 26,
+    "tipus": "3,5\" SATA, 7200 rpm, CMR, OptiNAND (nem HAMR)",
+    "tartossag": {
+     "mtbf_ora": 2500000,
+     "workload_tb_ev": 550,
+     "garancia": "5 év",
+     "backblaze": "rokon WD HC590 26TB: élettartam-AFR 0,84% (Q2 2026)"
+    },
+    "sebesseg_mb_s": "~265 (gyártói)",
+    "ar_huf": 509281,
+    "ar_eur": 1393.0,
+    "ar_per_tb": "19 587 Ft/TB (német áfával; magyar áfával ~20 900 Ft/TB)",
+    "ar_forras": "alternate.de, 2026-11-15, mért: 1393 EUR (19% német áfával; magyar szállításnál kb. +6,7%)",
+    "linkek": [
+     {
+      "bolt": "alternate.de",
+      "url": "https://www.alternate.de/WD/Red-Pro-NAS-Festplatte-26-TB/html/product/100126007"
+     }
+    ],
+    "elonyok": [
+     "A teljes 22,5 TB-os archívumhoz 8% tartalékkal elég (≥24,5 TB kell)",
+     "Másik gyártó és nem HAMR: valódi diverzitás a Seagate Exos M mellé"
+    ],
+    "hatranyok": [
+     "Magyar boltban nem találtam; az alternate.de-ről ajánlatkéréssel szállítható"
+    ],
+    "ajanlas_szint": "profi"
+   },
+   {
     "id": "hdd-toshiba-mg10afa22te",
     "kategoria": "hdd_internal",
     "nev": "Toshiba MG10F 22TB SATA (MG10AFA22TE)",
@@ -532,7 +564,7 @@
     "ar_huf": null,
     "ar_eur": null,
     "ar_per_tb": "362 USD-tól (4 TB) – becsült, az EU-ba szállítás és a vám még hozzáadódik",
-    "ar_forras": "shop.digistor.com (CDSG, az ioSafe tulajdonosa), 2026-11-14, a „From $362” ár mért; HUF-ár nincs (USA-beli bolt, a szállítás és a vám még hozzáadódik)",
+    "ar_forras": "becsült: shop.digistor.com „From $362” (4 TB), HUF-ár nincs; szállítás és vám külön",
     "linkek": [
      {
       "bolt": "shop.digistor.com (gyártói bolt)",
@@ -1200,20 +1232,20 @@
    "konkluzio": "Az 1 elsődleges + 1 offline (más helyen, más gyártótól) másolat ~20%-ról ~0,3%-ra viszi le a 10 éves adatvesztési kockázatot (~70x javulás), és csak +1 lemezbe kerül. Ez a minimum logikus kompromisszum. A korrelált hibák (azonos gyártási sorozat, közös lakás, közös villám) ezt rontják, ezért: két különböző gyártó, két helyszín, az offline lemez Faraday-tasakban."
   },
   "kompakt_2_eszkoz": {
-   "28_TB": {
+   "26_32_TB": {
     "eszkoz_1_elsodleges": "Seagate Exos M 28TB (ipon, 578 590 Ft, mért, előrendelés) dokkolóban; ZFS, havi scrub",
-    "eszkoz_2_offline": "Seagate IronWolf Pro 32TB (alza, ~575 890 Ft, becsült) vagy második Exos M 28TB; Faraday-tasak + lőszerláda, másik épületben",
-    "vedelem": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP, zsarolóvírus. 28 TB fölött ma Magyarországon csak Seagate kapható: ezért két különböző termékcsalád / gyártási sorozat.",
-    "osszesen": "~1 214 887 Ft (Exos M 28 + IronWolf Pro 32, becsült ár) – 1 217 587 Ft (2× Exos M 28, mért ár)",
-    "megjegyzes": "A HAMR új technológia, nincs még hosszú távú Backblaze-adata, ezért a B példányt félévente végig kell olvasni. Ha nincs készleten: 2× Toshiba MG10 22TB (pcx, 376 290 Ft/db, két gyártó helyett két sorozat) és a 9 TB-os Debian-tükör nélküli archívum (~13,5 TB)."
+    "eszkoz_2_offline": "WD Red Pro 26TB (alternate.de 1393 €  magyar áfával ~543 403 Ft) – MÁS GYÁRTÓ  nem HAMR; antisztatikus tasak + hab + Faraday-tasak + tömített lőszerláda + szilikagél  másik épületben",
+    "vedelem": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP, zsarolóvírus; gyártó- és technológia-diverzitás (HAMR + nem HAMR).",
+    "megjegyzes": "A HAMR új technológia, ezért a B példányt félévente végig kell olvasni. Ha nincs készleten: 2× Toshiba MG10 22TB és a 9 TB-os Debian-tükör nélküli archívum (~13,5 TB).",
+    "osszesen": "~1 182 400 Ft; a maggal (Samsung T7 Shield 2TB, ipon 198 391 Ft) ~1 380 791 Ft; M-DISC-kel ~1 470 591 Ft"
    },
    "24_TB": {
     "eszkoz_1_elsodleges": "Seagate IronWolf Pro 24TB (pcx, 448 790 Ft, mért) ICY BOX IB-RD3621U3 dokkolóban (21 040 Ft); ZFS egylemezes pool, havi scrub",
-    "eszkoz_2_offline": "WD Ultrastar DC HC590 24TB (ipon, 527 889 Ft, mért; SAS – SAS-HBA vagy SAS-dokkoló kell) – MÁS GYÁRTÓ; antisztatikus tasak + hab + Faraday Defense NEST-Z (27 797 Ft) + MFH .50 cal lőszerláda (~11 570 Ft, becsült), másik épületben",
+    "eszkoz_2_offline": "Toshiba MG10AFA22TE 22TB SATA (pcx, 376 290 Ft, mért) – MÁS GYÁRTÓ, ugyanabba az USB-dokkolóba; Faraday-tasak + lőszerláda, másik épületben",
     "vedelem": "1 lemezhiba, tűz/víz/lopás/villám (ha a B példány máshol van), EMP (Faraday), zsarolóvírus (offline).",
     "plusz_opcionalis_mag": "A legfontosabb ~0,5 TB 5x M-DISC BDXL-en (24 111 Ft) + Verbatim író (65 689 Ft): víz, EMP, mágnesesség, zsarolóvírus ellen.",
-    "osszesen": "~1 037 086 Ft + SAS-HBA vagy SAS-dokkoló (becsült 40–100 ezer Ft); M-DISC maggal + ~90 ezer Ft",
-    "megjegyzes": "Csak a 16 TB-os tervhez (13,6 TB) vagy a teljes archívum kissé megvágott változatához (pl. a 9 TB-os Debian-tükör nélkül) – a teljes 22,5 TB-hoz 8% tartalékkal ≥28 TB kell."
+    "osszesen": "~885 487 Ft",
+    "megjegyzes": "A 16 TB-os tervhez (13,6 TB) – a teljes 22,5 TB-hoz ≥24,5 TB kell."
    },
    "miert_nem_raid1_egy_dobozban": "A RAID1 egy dobozban a lemezhibát túléli, de a tüzet, vizet, lopást, túlfeszültséget és EMP-t nem, ha a doboz csatlakoztatva van. Két külön, egymástól távol tárolt eszköz ugyanakkora térfogatban mindezt lefedi.",
    "32_TB": {
@@ -1231,17 +1263,21 @@
   },
   "adatintegritas": {
    "zfs_btrfs": [
-    "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetre: zfs set copies=2 (bit-rot ellen, NEM lemezhiba ellen).",
-    "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B; egylemezes Btrfs-en „-m dup -d dup” a kritikus részre.",
+    "Offline lemezenként: ZFS single-disk pool (zpool create -o ashift=12 -O compression=zstd -O checksum=sha256 arch1 /dev/disk/by-id/...). A kritikus datasetet így hozd létre, írás előtt: zfs create -o copies=2 arch1/mag (csak az utána írt adatra hat; a ~1,5 TB mag ~3 TB-ot foglal; bit-rot ellen, NEM lemezhiba ellen).",
+    "Scrub: az online példányon havonta (zpool scrub), az offline lemezen minden bekapcsoláskor. Btrfs-nél: btrfs scrub start -B /mnt/arch; egylemezes Btrfs-en a mag külön partícióján: mkfs.btrfs -m dup -d dup /dev/… (a profil az egész fájlrendszerre vonatkozik, és felezi a kapacitást).",
     "Ellenőrzött szinkron: zfs send/recv snapshotokkal (a checksumok átmennek), vagy rsync --checksum + SHA256 manifest (hashdeep / sha256sum) minden másolaton."
    ],
    "snapraid_par2": [
     "Sok, eltérő méretű lemeznél (JBOD a QNAP TR-004 / ICY BOX / D8 házban): SnapRAID, 4-6 adatlemezre 1 paritás, 7+ lemeznél 2 paritás. Utána: snapraid sync, snapraid scrub -p 10 -o 30 (minden ellenőrzéskor), a „content” fájl legalább 3 lemezen legyen.",
-    "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): par2 create -r15 mag.par2 *. Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify."
+    "par2 a kritikus mappákra (M-DISC és egylemezes másolatok): (cd <mappa> && par2 create -R -r15 mag.par2 *). Így 15%-nyi sérülés javítható. Ellenőrzés: par2 verify mag.par2; javítás: par2 repair mag.par2 mag.par2; javítás: par2 repair mag.par2."
    ],
    "offline_bekapcsolas": [
     "Félévente (legalább évente) kapcsold be: SMART-ellenőrzés + teljes scrub/olvasás + a hibák javítása a másik másolatból.",
-    "5-7 évente migrálj új lemezre (ez a technológiaváltás miatt is fontos), és a régi lemezt tartsd meg harmadik példánynak, amíg működik."
+    "5-7 évente migrálj új lemezre (ez a technológiaváltás miatt is fontos), és a régi lemezt tartsd meg harmadik példánynak, amíg működik.",
+    "Leválasztás előtt: zpool export arch2; csatlakoztatás után: zpool import arch2.",
+    "Minden szinkron előtt az A példányon: zfs snapshot -r arch1@ÉÉÉÉ-HH-NN (zsarolóvírus / rossz parancs ellen); a B-re rsync --delete-t ne használj.",
+    "Az A példány és a gép túlfeszültség-védett elosztón és line-interaktív szünetmentesen (650–1000 VA) legyen; zivatarkor a dokkolót húzd ki.",
+    "A B doboz tartalmazzon laminált lapot (pool neve, lemez-sorozatszám, utolsó ellenőrzés dátuma, a helyreállítás parancsai) és egy Linux live USB-t ZFS-támogatással – a ZFS-lemezt Windows, macOS és telefon nem olvassa."
    ],
    "tarolasi_klima": [
     "Hőmérséklet 10-25 °C, ideálisan stabil 15-20 °C, ingadozás nélkül. Páratartalom 20-50% RH, kondenzáció nélkül (szilikagél a dobozba, színváltós, és cseréld).",
@@ -1249,9 +1285,9 @@
     "LTO-nál: 16-25 °C, 20-50% RH, függőlegesen, gyári tokban."
    ],
    "smart": [
-    "smartctl -a /dev/sdX minden bekapcsoláskor; új lemeznél beégetés: smartctl -t long, majd badblocks -wsv (destruktív, csak üres lemezen) → a korai meghibásodások kiszűrésére.",
+    "smartctl -a -d sat /dev/disk/by-id/… minden bekapcsoláskor (USB-dokkolón a -d sat kell); új lemeznél beégetés: smartctl -t long, majd badblocks -b 8192 -t random -wsv /dev/disk/by-id/<lemez> (destruktív, csak üres lemezen; 16 TiB fölött -b 8192 kell; 28–32 TB-on kb. 2,5 nap) → a korai meghibásodások kiszűrésére.",
     "Figyeld ezeket: 5 Reallocated, 187 Reported Uncorrectable, 188 Command Timeout, 197 Current Pending, 198 Offline Uncorrectable, 199 UDMA CRC (kábel). Ha a 197/198 > 0 vagy az 5 nő, cseréld a lemezt.",
-    "Online gépen: smartd (napi short, heti long teszt) + ZFS ZED e-mail/ntfy értesítés."
+    "Online gépen: smartd (napi short, havi long teszt (28 TB-on ~29 óra)) + ZFS ZED e-mail/ntfy értesítés."
    ],
    "diverzifikacio": "Két másolat = két gyártó (pl. Toshiba + Seagate vagy WD), két vásárlási sorozat, két helyszín. A Backblaze szerint ugyanazon a kapacitáson belül is 6x különbség lehet a modellek AFR-je között."
   },
@@ -1275,14 +1311,14 @@
     "osszesen": "~375 187 Ft",
     "megjegyzes": "A 2026-os HDD-árakon 400 ezer Ft-ból 22 TB-ot csak egy példányban lehet venni (Toshiba MG10 22TB, 376 290 Ft) – ez NEM 3-2-1, csak ha a mag (≤5 TB) külön rugged lemezre is kerül."
    },
-   "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
+   "~1 millió Ft – 22–24 TB, két gyártó, M-DISC mag (a 16 TB-os tervhez)": {
     "elemek": [
-     "1. (online): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
-     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-HBA vagy SAS-dokkoló kell, becsült 40–100 ezer Ft) – más gyártó; egy második IronWolf Pro 24TB olcsóbb, de azonos gyártó, ezért nem ajánlott; védelem: NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
+     "1. (használatban): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
+     "2. (offline, másik helyen): Toshiba MG10AFA22TE 22TB SATA – pcx 376 290 Ft (más gyártó, ugyanabba a dokkolóba); védelem: NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
-    "osszesen": "~1 167 000–1 227 000 Ft (1 126 886 Ft + SAS-HBA/dokkoló)",
-    "megjegyzes": "A teljes 22,5 TB-hoz kevés (24 TB-on 94%-os telítettség); a teljes archívumhoz a 28 TB-os kételemes változat kell (~1,2 M Ft)."
+    "osszesen": "975 287 Ft",
+    "megjegyzes": "A 16 TB-os tervhez (13,6 TB). A teljes 22,5 TB-hoz a 26–32 TB-os kételemes változat kell (~1,18 M Ft)."
    },
    "~3–3,7 millió Ft – 64–66 TB, NAS + offline szett": {
     "elemek": [
@@ -1339,7 +1375,7 @@
    "ar_per_tb": "108 511 Ft/TB (hűtőbordás, ipon)",
    "ar_forras": [
     "ipon.hu, 2026-11-14, mért: hűtőbordás 868 089 Ft (szállítás kb. 9 nap), hűtőborda nélküli 892 190 Ft (kb. 7 nap)",
-    "alternate.de, 2026-11-14, mért: hűtőbordás 1 811 EUR, hűtőborda nélküli 2 222 EUR (19% áfával). Magyar áfával kb. 1 933 EUR, azaz kb. 706 600 Ft + UPS (becsült)",
+    "alternate.de, 2026-11-14, mért: hűtőbordás 1 811 EUR, hűtőborda nélküli 2 222 EUR (19% áfával). Magyar áfával kb. 1 933 EUR, azaz kb. 706 600 Ft + szállítás (UPS futár) (becsült)",
     "alza.hu (keresőtalálat), becsült: 859 990 Ft, „nincs készleten” (nem ellenőrzött)"
    ],
    "linkek": [
@@ -3050,7 +3086,7 @@
   },
   "javaslat": {
    "gaming_pc_munkameghajto_llm": {
-    "profi": "Samsung 9100 PRO 8TB (hűtőbordás MZ-VAP8T0CW), ipon 868 089 Ft (mért); vagy alternate.de ajánlatkéréssel kb. 706 600 Ft + UPS (becsült, magyar áfával). A CPU-ra kötött Gen5 M.2_1 slotba kerüljön. Egy 700GB-os modell kb. 50 s alatt töltődik be. A meglévő Kingston 4TB marad második meghajtónak.",
+    "profi": "Samsung 9100 PRO 8TB (hűtőbordás MZ-VAP8T0CW), ipon 868 089 Ft (mért); vagy alternate.de ajánlatkéréssel kb. 706 600 Ft + szállítás (UPS futár) (becsült, magyar áfával). A CPU-ra kötött Gen5 M.2_1 slotba kerüljön. Egy 700GB-os modell kb. 50 s alatt töltődik be. A meglévő Kingston 4TB marad második meghajtónak.",
     "kozep": "Crucial T705 4TB, ipon 301 890 Ft (75 473 Ft/TB, mért), vagy Samsung 9100 PRO 4TB hűtőbordás 319 990 Ft. A meglévő Kingston 4TB-tal együtt 8TB Gen5, két különböző gyártótól.",
     "megjegyzes": "A modellek olvasás-túlsúlyosak, így a TBW mellékes. A munkameghajtó NEM archívum, mindenről legyen külső másolat."
    },

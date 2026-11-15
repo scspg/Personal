@@ -20,12 +20,12 @@ def load():
     return d, prods
 
 
-LABEL = {"28_TB": "28–32 TB – a teljes archívumhoz (ajánlott)", "24_TB": "24 TB – két gyártó, a 16 TB-os tervhez", "32_TB": "32 TB – a legkisebb térfogat a teljes archívumhoz", "5_TB_mag": "5 TB-os mag – zsebméret",
+LABEL = {"26_32_TB": "26–32 TB – a teljes archívumhoz (ajánlott)", "24_TB": "24 TB – két gyártó, a 16 TB-os tervhez", "32_TB": "32 TB – a legkisebb térfogat a teljes archívumhoz", "5_TB_mag": "5 TB-os mag – zsebméret",
          "gaming_pc_munkameghajto_llm": "Gamer PC munkameghajtó (LLM-ek)", "gyors_hordozhato_masolat": "Gyors hordozható másolat",
          "enterprise_30_120tb_all_flash": "Vállalati all-flash, 30–120 TB", "profi": "profi", "kozep": "közép", "kozep_olcso": "közép / olcsó",
          "olcsobb_qlc": "olcsóbb (QLC)", "profi_tlc": "profi (TLC)", "oszinte_ertekeles": "őszinte értékelés", "megjegyzes": "megjegyzés",
          "8_TB": "8 TB", "16_TB": "16 TB", "32_TB_e": "32 TB", "64_TB": "64 TB", "128_TB": "128 TB"}
-BUNDLE_CAP = {"~150": "5 TB HDD + 0,5 TB M-DISC", "~400": "2 × 8 TB", "~1 m": "2 × 24 TB + 0,5 TB M-DISC (a 16 TB-os tervhez)", "~3": "66 TB NAS + 84 TB offline", "Extr": "132 TB + 132 TB (HDD vagy LTO)"}
+BUNDLE_CAP = {"~150": "5 TB HDD + 0,5 TB M-DISC", "~400": "2 × 8 TB", "~1 m": "24 + 22 TB + 0,5 TB M-DISC (a 16 TB-os tervhez)", "~3": "66 TB NAS + 84 TB offline", "Extr": "132 TB + 132 TB (HDD vagy LTO)"}
 BUNDLE_SURV = {"~150": "lemezhiba (2 példány); a mag víz, EMP és zsarolóvírus ellen is (M-DISC)", "~400": "1 lemezhiba; ha a B példány máshol van: tűz, víz, lopás; Faraday: EMP",
                "~1 m": "1 lemezhiba, tűz/víz/lopás (külön helyszín), EMP (Faraday), zsarolóvírus (offline); a mag 3. médiumon is",
                "~3": "1 lemezhiba a NAS-ban + teljes offline másolat másik helyen", "Extr": "2 lemezhiba a NAS-ban + teljes offline másolat; LTO-val 30 év bekapcsolás nélkül"}
@@ -95,6 +95,32 @@ def src_tag(p):
     return "mért" if "mért" in f else ("becsült" if f else "–")
 
 
+def prod_index():
+    """termékrövidnév → első bolti link (az összeállítás-sorok linkeléséhez)."""
+    import re as _r
+    _, prods = load()
+    idx = []
+    for p in prods:
+        L = [l for l in (p.get("linkek") or []) if l.get("url") and "nem ellenőrizhető" not in str(l.get("bolt"))]
+        if not L:
+            continue
+        base = _r.split(r" \(| – ", p.get("nev") or "")[0].strip()
+        base = _r.sub(r"\s+(SATA|SAS)$", "", base)
+        if len(base) >= 8:
+            idx.append((base, L[0]["url"], L[0].get("bolt")))
+        for code in _r.findall(r"\(([A-Z0-9][A-Z0-9-]{6,})\)", p.get("nev") or ""):   # típuskód is (pl. MG10AFA22TE)
+            idx.append((code, L[0]["url"], L[0].get("bolt")))
+    return sorted(idx, key=lambda x: -len(x[0]))
+
+
+def linkify_md(text):
+    t = text
+    for base, url, bolt in prod_index():
+        if base in t and f"]({url})" not in t:
+            t = t.replace(base, f"[{base}]({url})", 1)
+    return t
+
+
 def section(plans):
     d, prods = load()
     hd, sx = d["hdd"], d["ssd_extra"]
@@ -108,18 +134,18 @@ def section(plans):
     c = lambda x: f"{x:.1f}".replace(".", ",")
     md = ["---", "", "## 4c. Tárolók: mit vegyél, és hogyan oszd szét, hogy soha ne vesszen el", "",
           "> **Kutatás dátuma:** 2026-11-14. **Árak:** ipon.hu, pcx.hu, aqua.hu, senetic.hu, alternate.de, amazon.de – „mért” = a bolt oldalán látott ár, „becsült” = keresőtalálat vagy számítás. "
-          "Az arukereso.hu, az alza.hu, az emag.hu, az edigital.hu és a mediamarkt.hu az ellenőrzéskor blokkolta az automatikus lekérést – vásárlás előtt ott is nézd meg az árat. Árfolyam: 1 EUR = 365,60 Ft (EKB, 2026-11-13).",
+          "Az arukereso.hu, az alza.hu, az emag.hu, az edigital.hu és a mediamarkt.hu az ellenőrzéskor blokkolta az automatikus lekérést – vásárlás előtt ott is nézd meg az árat. Árfolyam: 1 EUR = 365,60 Ft (EKB, 2026-11-13). Az alternate.de-s árak 19%-os német áfával; magyar szállításnál kb. +6,7%.",
           "> **Piaci helyzet:** 2025 vége óta az AI-adatközpontok miatt hiány van; az SSD-k a 2025-ös ár 2–4-szeresébe, a HDD-k kb. +50%-ba kerülnek. Az árak gyorsan változnak.", "",
           "### A lényeg – egy mondatban", "",
-          f"**A teljes archívum ({c(tot)} TB) egyetlen 28–32 TB-os HDD-re ráfér (24 TB-on 94%-os telítettséggel már nem marad tartalék) – ez a „minden egyben” fizikai minimum. "
+          f"**A teljes archívum ({c(tot)} TB) egyetlen 26–32 TB-os HDD-re ráfér (8% tartalékkal ≥24,5 TB kell; 24 TB kevés, 26 TB már elég) – ez a „minden egyben” fizikai minimum. "
           "De egyetlen példány 10 év alatt kb. 13–22% eséllyel elvész; egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3%-ra csökken (~70×). "
-          "Ezért a logikus, legkompaktabb megoldás: 2 db 28–32 TB-os HDD (egy használatban, egy Faraday-tasakban, lőszerládában, másik helyen) + egy kicsi, strapabíró SSD a létfontosságú maggal.**", "",
+          "Ezért a logikus, legkompaktabb megoldás: 2 db 26–32 TB-os HDD két különböző gyártótól (egy használatban, egy Faraday-tasakban, lőszerládában, másik helyen) + egy kicsi, strapabíró SSD a létfontosságú maggal.**", "",
           "### Mi hova kerüljön – rétegek", "",
           "| Réteg | Mi kerül rá | Méret (32 TB-os terv) | Ajánlott eszköz | Miért |", "|---|---|---|---|---|",
           f"| **1. Mag** (mindig nálad, bármikor olvasható) | 0–1. szintű tudás: orvoslás, víz, élelem, túlélés, alapkönyvtár + 1 kis LLM | ~{c(t01 + 0.05)} TB | strapabíró SSD 2–4 TB, alapajánlat: **Samsung T7 Shield 4TB** (IP65, 3 m esés, ~317 ezer Ft, becsült; a 2 TB-os ipon 198 391 Ft, mért) **és** a legfontosabb ~0,5 TB M-DISC BDXL lemezeken; olcsóbb HDD-s változat: LaCie Rugged 5TB (nem vízálló) vagy ADATA HD710 Pro (IP68) | telefonról, laptopról is olvasható, víz- és ütésálló; az M-DISC áram, mágnes és zsarolóvírus ellen véd |",
           f"| **2. Munka** (gyors, a gépben) | az LLM-modellek + amit naponta használsz | ~{c(sz(llm))} TB + tartalék | NVMe PCIe 5.0 SSD 4–8 TB a gamer PC-ben | a modell betöltése 8 TB-os Gen5-ről ~50 s; ez NEM archívum, mindenről van másolat |",
-          f"| **3. Teljes archívum** (A példány, használatban) | minden: 2–5. szint, nagy tükrök, térképek, lexikonok | ~{c(tot)} TB | 1 db 28–32 TB HDD (CMR) dokkolóban, ZFS-sel | a legolcsóbb TB-ár, havi ellenőrzéssel önjavító |",
-          f"| **4. Offline másolat** (B példány) | ugyanaz, mint a 3. | ~{c(tot)} TB | 1 db 28–32 TB HDD, **más gyártótól vagy termékcsaládtól**, antisztatikus tasak + Faraday-tasak + tömített acél lőszerláda + szilikagél, **másik épületben** | tűz, víz, lopás, villám, EMP, zsarolóvírus, rossz parancs ellen; félévente be kell kapcsolni és végigolvasni |",
+          f"| **3. Teljes archívum** (A példány, használatban) | minden: 2–5. szint, nagy tükrök, térképek, lexikonok | ~{c(tot)} TB | 1 db 26–32 TB HDD (CMR) dokkolóban, ZFS-sel | a legolcsóbb TB-ár, havi ellenőrzéssel önjavító |",
+          f"| **4. Offline másolat** (B példány) | ugyanaz, mint a 3. | ~{c(tot)} TB | 1 db 26–32 TB HDD, **más gyártótól** (pl. Exos M 28TB + WD Red Pro 26TB), antisztatikus tasak + Faraday-tasak + tömített acél lőszerláda + szilikagél, **másik épületben** | tűz, víz, lopás, villám, EMP, zsarolóvírus, rossz parancs ellen; félévente be kell kapcsolni és végigolvasni |",
           "| **5. (opcionális) 30 éves réteg** | a teljes archívum harmadik példánya | 22–128 TB | LTO-9 szalag (kazetta ~2 000 Ft/TB) | csak ~260 TB felett vagy 3+ másolatnál éri meg a ~4 M Ft-os meghajtó miatt; a meghajtót is meg kell őrizni |", "",
           "### Ajánlott összeállítások árszintenként", "",
           "| Keret | Összeállítás | Kapacitás | Ár | Mit bír ki | Megjegyzés / alternatíva |", "|---|---|---|---|---|---|"]
@@ -127,15 +153,15 @@ def section(plans):
     for k, v in J.items():
         el = v.get("elemek") or []
         key = next((b for b in BUNDLE_CAP if k.startswith(b)), "")
-        md.append(f"| **{_e(k)}** | " + "<br>".join(_e(x) for x in el) + f" | {BUNDLE_CAP.get(key, '–')} | {_e(BUNDLE_PRICE.get(key) or v.get('osszesen'))} | "
+        md.append(f"| **{_e(k)}** | " + "<br>".join(linkify_md(_e(x)) for x in el) + f" | {BUNDLE_CAP.get(key, '–')} | {_e(BUNDLE_PRICE.get(key) or v.get('osszesen'))} | "
                   f"{BUNDLE_SURV.get(key, '–')} | {_e(v.get('megjegyzes') or v.get('alternativa') or '–')} |")
     K2 = hd.get("kompakt_2_eszkoz") or {}
-    md += ["", "### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre; a B példány vizet, ütést, EMP-t is túlél)", "",
+    md += ["", "### A legkompaktabb kételemes megoldás (a „minden egyben” kérésre; a B példány vizet, EMP-t és – habban, kikapcsolva – mérsékelt ütést is túlél)", "",
            "| Változat | 1. eszköz | 2. eszköz (offline) | Védelem | Összesen |", "|---|---|---|---|---|"]
     for k, v in K2.items():
         if not isinstance(v, dict):
             continue
-        md.append(f"| **{lab(k)}** | {_e(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1'))} | {_e(v.get('eszkoz_2_offline') or v.get('eszkoz_2'))} | "
+        md.append(f"| **{lab(k)}** | {linkify_md(_e(v.get('eszkoz_1_elsodleges') or v.get('eszkoz_1')))} | {linkify_md(_e(v.get('eszkoz_2_offline') or v.get('eszkoz_2')))} | "
                   f"{_e(v.get('vedelem') or v.get('plusz_opcionalis_mag') or '')}{(' ' + _e(v['megjegyzes'])) if v.get('megjegyzes') else ''} | {_e(v.get('osszesen'))} |")
     if K2.get("miert_nem_raid1_egy_dobozban"):
         md += ["", f"*Miért nem egy RAID1-es doboz?* {_e(K2['miert_nem_raid1_egy_dobozban'])}"]

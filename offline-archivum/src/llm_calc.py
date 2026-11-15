@@ -14,7 +14,7 @@ Becslési modell (NEM mérés):
             dense: 1,7 bit 0,15 · 2,6 bit 0,6 · 3,5 bit 0,85 · 4+ bit mint MoE)
   döntés = okosság x (1 + 5% minden sebesség-duplázásért a minimum felett, max +20%)
   csapat: V3 = fő + gyors segéd (≤30% memória, ≥3,5 bit, ≥ ~2x minimum tok/s), pontszám = fő + 0,25 x segéd
-          V4 = fő + másik cenzúra-típusú partner (+ gyors segéd), pontszám = fő + 0,35 x partner (azonos modellcsaládnál 0,6-os szorzó)
+          V4 = fő + másik cenzúra-típusú partner (+ gyors segéd), pontszám = fő + 0,6 × partner (azonos modellcsaládnál 0,6-os szorzó)
 
 Használat:
   python3 llm_calc.py ARCHIVUM.md --preset all                 # a beépített eszközprofilok (lásd PRESETS)
@@ -280,7 +280,7 @@ def team(dev, vs, mixed):
             if mixed and v2["llm_bits"] < 3.5 and v2.get("moe") is False:
                 continue
             same = family(v1) == family(v2)
-            w = (0.35 if mixed else 0.25) * (0.6 if same else 1.0)
+            w = (0.6 if mixed else 0.25) * (0.6 if same else 1.0)   # vegyes csapat: az erős partner is számít
             score = usable(v1, r1[0], dev.min_tps) + w * usable(v2, r2[0], dev.min_tps)
             if best is None or score > best[0]:
                 best = (score, [(v1, r1, "fő modell"), (v2, r2, "partner (" + ("cenzúrázatlan" if v2["cat"] == "ai_models_uncensored" else "alap") + ")" if mixed else "gyors segéd / router")])

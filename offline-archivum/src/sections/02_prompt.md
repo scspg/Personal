@@ -57,10 +57,11 @@ MUNKAMENET:
    Másold a meghajtóra az ARCHIVUM.md-t, az ARCHIVUM-LLM.html-t, a select_items.py-t és a llm_calc.py-t is.
 8. Olvasóprogramok: töltsd le a tool-* elemeket (Kiwix desktop/Android, kiwix-tools, VLC, PDF-olvasó,
    llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), Windows/macOS/Linux/Android változatban.
-9. Második példány (ha van második meghajtó – lásd 4c fejezet):
-   - `rsync -a --checksum <cél>/ <második>/` az offline példányra (más gyártó, utána leválasztva, Faraday-tasakba);
-   - `par2 create -r10` a 0–1. szintű mappákra (10% javító paritás);
-   - sha256 manifest mindkét példányon (`find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256`), és ellenőrzés a másolat gyökerében: `(cd <második> && sha256sum -c MANIFEST.sha256)`.
+9. Második példány (ha van második meghajtó – lásd 4c fejezet), ebben a sorrendben:
+   - a forráson a 0–1. szintű mappákra: `(cd <mappa> && par2 create -R -r10 mag.par2 *)` (10% javító paritás);
+   - a forráson: `(cd <cél> && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256)`;
+   - másolás: `rsync -a --checksum <cél>/ <második>/` (más gyártó lemezére; utána leválasztva, Faraday-tasakba);
+   - ellenőrzés a másolaton: `(cd <második> && sha256sum -c --quiet MANIFEST.sha256)` – a másolaton a manifestet NE generáld újra.
 10. Zárójelentés:
    - mi jött le (OK), mi bukott (FAIL), mennyi hely maradt;
    - a KÉZI TEENDŐK listája linkkel és árral (fizetős, regisztrációs, fizikai könyv);

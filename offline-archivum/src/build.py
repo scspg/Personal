@@ -202,14 +202,14 @@ def ssd_section(plans):
            "- **128 TB:** + a teljes PyPI-tükör (51,5 TB) – csak ha Python-fejlesztés internet nélkül is fontos. Érdemi tudásanyag ezen felül már nincs.", "",
            "### Melyik meghajtót vedd", "",
            "- **Munkameghajtó (a gépben):** NVMe SSD, TLC NAND, DRAM-cache-sel, magas TBW-értékkel. A gyors SSD a modellek **betöltését** gyorsítja, a futásukat nem.",
-           "- **Archív példány (fiókban):** az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (gyártófüggő, becslés). **Hosszú távra HDD** (CMR, nem SMR) vagy **M-DISC** kell. A HDD-t évente egyszer érdemes bekapcsolni és ellenőrizni.",
+           "- **Archív példány (fiókban):** az SSD áram nélkül 1–3 évig tartja megbízhatóan az adatot (gyártófüggő, becslés). **Hosszú távra HDD** (CMR, nem SMR) vagy **M-DISC** kell. A HDD-t félévente (legalább évente) kapcsold be és olvasd végig (lásd 4c).",
            "- **3-2-1 szabály:** 3 példány, 2 különböző adathordozón, 1 máshol tárolva. Javasolt összeállítás:\n"
            "  - 1 NVMe a gépben;\n"
            "  - 1 külső SSD vagy HDD otthon, fémdobozban (EMP és villám ellen);\n"
            "  - 1 HDD máshol;\n"
            "  - a 0. szint kinyomtatva.",
            "- **Fájlrendszer:** exFAT (minden gép olvassa) vagy ext4. **FAT32-t ne használj**, mert 4 GB fölötti fájlt nem kezel.",
-           "- **Ellenőrzés:** minden fájl SHA-256 összegét mentsd egy `manifest`-be. Évente futtasd le a `sha256sum -c` ellenőrzést, és cseréld ki a hibás példányt.", ""]
+           "- **Ellenőrzés:** minden fájl SHA-256 összegét mentsd egy `manifest`-be. Félévente futtasd le a `sha256sum -c` ellenőrzést, és cseréld ki a hibás példányt.", ""]
     for b, p in plans:
         g = {}
         for i in p["items"]:
@@ -234,12 +234,27 @@ IMPERSONAL = [("nem ellenőriztem", "nem ellenőrzött"), ("Nem ellenőriztem", 
 HUNUM = re.compile(r"(?<![\w./-])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|GB/s|TB/s|tok/s|bit\b|B\b|EUR|USD|-szer|×))")
 
 
+TABNUM = re.compile(r"(?<![\w./-])(\d{1,4})\.(\d{1,3})(?![\d.\w/-])")
+
+
+def _tabnum(text):
+    """táblasorokban (| … |) a magányos tizedespontos számok tizedesvesszőre (verziók, URL-ek, kódblokkok nem)."""
+    out, code = [], False
+    for ln in text.split("\n"):
+        if ln.startswith("```"):
+            code = not code
+        elif not code and ln.startswith("|"):
+            ln = "`".join(TABNUM.sub(r"\1,\2", part) if k % 2 == 0 else part for k, part in enumerate(ln.split("`")))
+        out.append(ln)
+    return "\n".join(out)
+
+
 def impersonal(t):
     """kézikönyv-hang: első személy és belső ellenőrzési zaj nélkül (a JSONL url_status mezőit nem érinti: ott szó szerinti adat)."""
     head, sep, rest = t.partition("```jsonl")
     for a, b in IMPERSONAL:
         head = head.replace(a, b)
-    head = HUNUM.sub(r"\1,\2\3", head)
+    head = _tabnum(HUNUM.sub(r"\1,\2\3", head))
     if sep:
         js, sep2, tail = rest.partition("```")
         for a, b in IMPERSONAL:
@@ -247,6 +262,31 @@ def impersonal(t):
         tail = HUNUM.sub(r"\1,\2\3", tail)
         return head + sep + js + sep2 + tail
     return head
+
+
+def device_digest():
+    """chat-változatba: a fő eszközprofilok V1–V4 eredménye tömören (a 6.10 fejezet és a HTML kalkulátor ugyanígy számol)."""
+    import llm_calc as L
+    vs = L.load(OUT)
+    keys = [k for k in ("s24-ultra", "iphone-15-pro", "pavilion-16", "zbook-g3a-192", "ms-s1-x2", "gamer-pc-128", "gamer-2gpu-pro128", "srv-epyc") if k in L.PRESETS]
+    def cell(res):
+        if not res:
+            return "–"
+        out = []
+        for v, r, role in res:
+            if "alternatíva" in str(role):
+                continue
+            name = (v["name"].split(" · ") + [""])[1] or v["name"].split(" · ")[0]
+            out.append(f"{cut(name, 42)} ({round(100 * v['llm_aa'] / L.OPUS)}%, ~{round(r[0])} tok/s)")
+        return "<br>".join(out) or "–"
+    md = ["### 6.10b Mi fut a gépeiden – a 4 változat tömören", "",
+          "> V1 = legokosabb cenzúrázatlan · V2 = legokosabb alap · V3 = alap csapat · V4 = alap + cenzúrázatlan csapat. % = az AA v5 pont az Opus 5.5-höz (59,1) képest. Becslés, nem mérés.", "",
+          "| Eszköz | V1 | V2 | V3 | V4 |", "|---|---|---|---|---|"]
+    for k in keys:
+        d = L.Device(**L.PRESETS[k])
+        r = L.evaluate(d, vs)
+        md.append(f"| **{L.PRESETS[k]['name']}** | " + " | ".join(cell(r.get(x)) for x in ("V1", "V2", "V3", "V4")) + " |")
+    return "\n".join(md)
 
 
 def oss_digest(items):
@@ -446,11 +486,12 @@ def main():
             "### 6.5 Cenzúrázatlan modellek",
             grab(full, r"#### Rangsor: cenzúrázatlan", r"\*\*Gyakorlati gépkonfigurációk"),
             grab(full, r"### 6\.10 ", r"#### Telefonok").split("**Saját eszközre:**")[0],
+            device_digest(),
             "### 6.11 GeForce-korlátozások és feloldásuk – a lényeg",
             grab(full, r"\*\*A lényeg:\*\*", r"#### Korlátozások generációnként"),
             "## 9. Captcha-mentes webes keresés és letöltés",
             grab(full, r"### 9\.1 ", r"### 9\.2 ")]
-    chat_txt = "\n\n".join(c for c in chat if c) + "\n"
+    chat_txt = _re.sub(r"\n{3,}", "\n\n", "\n\n".join(c for c in chat if c)) + "\n"
     chp = os.path.join(HERE, "..", "ARCHIVUM-chat.md")
     open(chp, "w", encoding="utf-8").write(chat_txt)
     print(f"OK: {chp}  méret={os.path.getsize(chp)/1e3:.0f} KB")
@@ -466,6 +507,7 @@ def main():
    python3 eszkozok/select_items.py ARCHIVUM.md --budget 1TB --hw T3 --mem 160GB --emit-sh dl.sh
    less dl.sh && DEST=/media/usb/archivum bash dl.sh
    ```
+   **Windowson:** PowerShellben (rendszergazdaként) `wsl --install`, újraindítás után az Ubuntu ablakban futtasd ugyanezt; a D: meghajtó ott `/mnt/d/...` (pl. `DEST=/mnt/d/archivum`).
 3. **Chatbe** (eszköz nélküli AI-nak) az `ARCHIVUM-chat.md`-t add be.
 
 ## Fájlok

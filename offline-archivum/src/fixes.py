@@ -316,6 +316,24 @@ for _k, _v in BINARY_ITEM.items():
 PATCH.setdefault("soilgrids-1km", {})["download"] = {"method": "wget-mirror", "url": "https://files.isric.org/soilgrids/latest/data_aggregated/1000m/",
                                                      "wget_args": "-l 2 -A tif -R index.html*"}
 
+# --- végső szakértői átnézés (2026-11-15) ---
+PATCH6 = {
+    "usda-complete-guide-home-canning-2015": {"tier": 0},
+    "special-forces-medical-handbook-st-31-91b": {"tier": 2},
+    "who-model-formulary-2008": {"tier": 1},
+    "katasztrofavedelem-lakossagi-kiadvanyok": {"tier": 1, "download": {"method": "http", "urls": [
+        "https://jasz.katasztrofavedelem.hu/application/uploads/documents/2019-08/63348.pdf",
+        "https://veszprem.katasztrofavedelem.hu/application/uploads/documents/2025-04/85885.pdf"]},
+        "bytes": 857_985 + 927_997, "size_status": "measured:2026-11-15:content-length (2 PDF; a megyei oldalakon továbbiak)"},
+    "voroskereszt-kiadvanyok": {"tier": 1},
+    "kx-wp-en-med": {"subsumed_by": ["kx-wp-en-maxi"]},
+    "fema-wood-gas-generator-1989": {"notes": "FIGYELEM: a fagáz szén-monoxidot tartalmaz – csak a szabadban üzemeltesd, CO-érzékelővel. 1 992 702 bájt. Másik szkennelés: archive.org DTIC_ADA208249 (3,4 MB). Bővített változat a Biomass Energy Foundation 2001-es jegyzeteivel: femasimplifiedwoodgasgeneratormar1989withbiomassenergyfoundation2001."},
+    "hu-gomba-klasszikusok": {"notes": "FIGYELEM: a korabeli könyvek ehetőnek tartják a begöngyöltszélű cölöpgombát (Paxillus involutus), amely ma ismerten halálos vérbontó mérgezést okoz – gombát csak mai határozóval és szakellenőrrel. Istvánffy 102 793 181 B; Cserey https://www.mek.oszk.hu/10900/10910/10910.pdf 43 767 892 B. Egyik sem helyettesít egy mai határozót: vegyél egy friss magyar gombahatározót (pl. „Gombák – Képes határozó”, Kossuth, 2024; ár nem ellenőrzött)."},
+    "ifrc-first-aid-guidelines-2020": {"notes": "4 432 256 bájt. Az ILCOR/ERC 2025 előtti kiadás – az újraélesztéshez az erc-guidelines-2025-layperson az irányadó."},
+}
+for _k, _v in PATCH6.items():
+    PATCH.setdefault(_k, {}).update(_v)
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {

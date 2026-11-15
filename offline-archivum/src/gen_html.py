@@ -104,7 +104,7 @@ header.top{display:grid;gap:10px}
 .chip.u{background:var(--unc-soft);border-color:transparent;color:var(--unc)}
 .chip.a{background:var(--base-soft);border-color:transparent;color:var(--base)}
 .chip.est{border-style:dashed}
-nav.tabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;overflow-x:visible;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line)}
 nav.tabs{scrollbar-width:none}
 nav.tabs::-webkit-scrollbar{display:none}
 nav.tabs a{white-space:nowrap;flex:none;font:600 13px var(--f-body);color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:6px}
@@ -285,7 +285,7 @@ function team(dev,mixed){const cap=dev.capacity()-EMBED_GB;
       if(mixed&&v1.u===v2.u) continue;
       if(!mixed&&(r2[0]<Math.max(hTps,1.2*r1[0])||r2[2]>hMax||v2.bits<3.5)) continue;
       if(mixed&&v2.bits<3.5&&v2.moe===false) continue;
-      const w=(mixed?0.35:0.25)*(v1.f===v2.f?0.6:1); const s=usable(v1,r1[0],dev.min_tps)+w*usable(v2,r2[0],dev.min_tps);
+      const w=(mixed?0.6:0.25)*(v1.f===v2.f?0.6:1); const s=usable(v1,r1[0],dev.min_tps)+w*usable(v2,r2[0],dev.min_tps);
       if(!best||s>best[0]) best=[s,[[v1,r1,'fő modell'],[v2,r2,mixed?('partner ('+(v2.u?'cenzúrázatlan':'alap')+')'):'gyors segéd / router']]];}}
   if(best&&mixed){const used=best[1].reduce((s,m)=>s+m[1][2],0), groups=new Set(best[1].map(m=>m[0].g)); let h=null;
     const vu=best[1].reduce((s,m)=>s+vramOf(m[1]),0);
@@ -306,7 +306,7 @@ const huft=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+'\
 const norm=s=>String(s??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function meter(aa,u,est){const p=Math.min(110,100*aa/OPUS);return `<div class="meter" title="AA v5 ${fmt(aa)} / Opus 5.5 ${OPUS}"><div class="track"><div class="fill${u?' u':''}" style="width:${Math.min(100,p)}%"></div></div><span class="val">${est?'~':''}${pct(aa)}%</span></div>`;}
-function memberHTML([v,r,role]){return `<div class="member"><div class="mname">${esc(v.m)}</div><div class="role">${esc(role)} · <span class="chip ${v.u?'u':'a'}">${v.u?'cenzúrázatlan':'alap'}</span></div>
+function memberHTML([v,r,role]){return `<div class="member"><div class="mname">${esc((v.q.split(' · ')[0])||v.m)}</div><div class="hint">${esc(v.m)}</div><div class="role">${esc(role)} · <span class="chip ${v.u?'u':'a'}">${v.u?'cenzúrázatlan':'alap'}</span></div>
   ${meter(v.aa,v.u,v.est)}
   <div class="kv"><span>AA v5 <b>${v.est?'~':''}${fmt(v.aa)}</b></span><span class="q">${esc(v.q)}</span><span><b>${fmt(v.bits,1)}</b> bit</span><span>fájl <b>${gb(v.b)}</b></span><span>memória <b>${fmt(r[2],0)} GB</b></span><span>~<b>${fmt(r[0],0)}</b> tok/s</span><span>${esc(r[1])}</span><span>${v.act?(v.moe!==false?'MoE, ':'dense, ')+fmt(v.act,1)+'B aktív':''}</span></div>
   <div class="cmdrow"><code class="cmd">${esc(v.dl)}</code><button type="button" data-copy="${esc(v.dl)}">Másolás</button></div></div>`;}
@@ -336,10 +336,14 @@ function formToDevice(){const n=(id,def=0,min=0,max=1e7)=>{const x=parseFloat(F(
     unified:n('uni'),unified_usable:n('uniu',80,10,100)/100,unified_bw:n('unibw'),nodes:n('nodes',1,1,16),hop_ms:n('hop',3,0,1000),
     formats:['any','mac','server','android'].filter(f=>F('fmt_'+f).checked).join(',')||'any',min_tps:n('mintps',5,0.5,1000),fix_ms:n('fixms',10,0,1000),
     vram_bw_mult:1+n('oc',0,0,30)/100,tensor_parallel:F('tp').checked,tp_eff:n('tpeff',85,30,100)/100});}
-function calc(){const d=formToDevice(); render(d,evaluate(d),F('out'));}
+function phoneDefaults(){const n=id=>parseFloat(F(id).value)||0;   // saját eszköz: kis unified memória GPU nélkül = telefon → telefonos alapértékek
+  if(F('preset').value||F('preset').dataset.dirty!=='1') return; if(!(n('uni')>0&&n('uni')<=24&&!n('g1gb'))) return;
+  for(const [id,v] of [['uniu',62],['fixms',25],['mintps',4]]) if(F(id).dataset.touched!=='1') F(id).value=v;}
+function calc(){phoneDefaults(); const d=formToDevice(); render(d,evaluate(d),F('out'));}
+['uniu','fixms','mintps'].forEach(id=>F(id)&&F(id).addEventListener('input',()=>{F(id).dataset.touched='1';}));
 /* ---------- eszközmátrix ---------- */
 function matrix(){const rows=Object.entries(PRESETS).map(([k,p])=>{const d=new Device(p),r=evaluate(d);
-  const cell=x=>x?x.filter(m=>!String(m[2]).includes('alternatíva')).map(([v,rr,role])=>`<div class="mcell"><span><span class="chip ${v.u?'u':'a'}">${v.est?'~':''}${pct(v.aa)}%</span> ${esc(v.m.replace(/\s*\(.*?\)/g,''))}</span><small>${esc((v.q.split(' · ')[0]||'').slice(0,40))} · ${fmt(v.bits,1)} bit · ${gb(v.b)} · ~${fmt(rr[0],0)} tok/s · ${esc(role)}</small></div>`).join(''):'<span class="empty">—</span>';
+  const cell=x=>x?x.filter(m=>!String(m[2]).includes('alternatíva')).map(([v,rr,role])=>`<div class="mcell"><span><span class="chip ${v.u?'u':'a'}">${v.est?'~':''}${pct(v.aa)}%</span> ${esc((v.q.split(' · ')[0])||v.m.replace(/\s*\(.*?\)/g,''))}</span><small>${esc((v.q.split(' · ')[0]||'').slice(0,40))} · ${fmt(v.bits,1)} bit · ${gb(v.b)} · ~${fmt(rr[0],0)} tok/s · ${esc(role)}</small></div>`).join(''):'<span class="empty">—</span>';
   return `<tr><td class="dev">${esc(p.name)}<br><small class="muted">~${fmt(d.capacity(),d.capacity()<20?1:0)} GB</small></td><td data-l="V1 cenzúrázatlan">${cell(r.V1)}</td><td data-l="V2 alap">${cell(r.V2)}</td><td data-l="V3 csapat">${cell(r.V3)}</td><td data-l="V4 vegyes csapat">${cell(r.V4)}</td></tr>`;}).join('');
   F('matrix').innerHTML=`<table class="matrix"><thead><tr><th>Eszköz</th><th>V1 – cenzúrázatlan</th><th>V2 – alap</th><th>V3 – csapat (alap)</th><th>V4 – vegyes csapat</th></tr></thead><tbody>${rows}</tbody></table>`;}
 /* ---------- modelltábla ---------- */
@@ -429,6 +433,7 @@ BODY = """<title>ARCHIVUM LLM-kalkulátor</title>
       </fieldset>
       <details class="adv" open><summary>Unified memória (Mac, Strix Halo, telefon)</summary><fieldset>
         <div class="row3"><label>Memória (GB)<input id="uni" type="number" min="0" step="1"></label><label>GPU-nak jut %<input id="uniu" type="number" min="10" max="100"></label><label>Sávszél. (GB/s)<input id="unibw" type="number" min="0" step="1"></label></div>
+        <p class="hint">Tipikus sávszélesség: telefon (LPDDR5X) ≈ 50–77 GB/s · Apple M4 Max ≈ 546 · Strix Halo / MS-S1 ≈ 256 · DDR5-6000 kétcsatornás ≈ 96 GB/s. Telefonnál (≤24 GB, GPU nélkül) a kalkulátor telefonos alapértékeket tölt be (62%, 25 ms, 4 tok/s).</p>
         <div class="row"><label>Gépek száma (klaszter)<input id="nodes" type="number" min="1" max="16"></label><label>Hálózati késleltetés gépenként (ms)<input id="hop" type="number" min="0" step="0.5"></label></div>
       </fieldset></details>
       <details class="adv" open><summary>Feloldás / túlhajtás (GeForce)</summary><fieldset>
@@ -593,13 +598,13 @@ def storage_html():
     """rétegek + ajánlott kompakt összeállítás (a 4c fejezet lényege) HTML-ben."""
     rows = [("1. Mag – mindig nálad", "0–1. szintű életmentő tudás + 1 kis LLM (~1,5 TB)", "strapabíró SSD 2–4 TB (IP65) + a legfontosabb ~0,5 TB M-DISC lemezen"),
             ("2. Munka – a gépben", "LLM-modellek, napi anyag (~0,6 TB + tartalék)", "NVMe PCIe 5.0 SSD 4–8 TB (pl. Samsung 9100 PRO 8TB)"),
-            ("3. Teljes archívum – A példány", "minden (~22,5 TB)", "1× 28–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
-            ("4. Offline másolat – B példány", "ugyanaz", "1× 28–32 TB HDD más gyártótól / termékcsaládtól, Faraday-tasak + tömített lőszerláda, másik épületben, félévente ellenőrizve"),
+            ("3. Teljes archívum – A példány", "minden (~22,5 TB)", "1× 26–32 TB CMR HDD dokkolóban, ZFS, havi scrub"),
+            ("4. Offline másolat – B példány", "ugyanaz", "1× 26–32 TB HDD más gyártótól (pl. Exos M 28TB + WD Red Pro 26TB), Faraday-tasak + tömített lőszerláda, másik épületben, félévente ellenőrizve"),
             ("5. 30 éves réteg (opcionális)", "harmadik példány", "LTO-9 szalag – csak ~260 TB felett vagy 3+ másolatnál éri meg")]
     t = "".join(f"<tr><td><b>{a}</b></td><td data-l='Mi kerül rá'>{b}</td><td data-l='Ajánlott eszköz'>{c}</td></tr>" for a, b, c in rows)
-    return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 28–32 TB-os HDD-re ráfér (24 TB-on már nem marad tartalék), de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
+    return ('<p><b>A lényeg:</b> a teljes archívum (~22,5 TB) egyetlen 26–32 TB-os HDD-re ráfér (8% tartalékkal ≥24,5 TB kell), de egy példány 10 év alatt kb. 13–22% eséllyel elvész. '
             'Egy második, offline, más gyártótól származó példánnyal ez kb. 0,1–0,3% (becslés a Backblaze Q2 2026 adataiból). '
-            '<b>Legkompaktabb ajánlás:</b> 2 db 28–32 TB-os HDD + 1 kis strapabíró SSD a maggal. Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
+            '<b>Legkompaktabb ajánlás:</b> 2 db 26–32 TB-os HDD két gyártótól + 1 kis strapabíró SSD a maggal (~1,38 M Ft; M-DISC-kel ~1,47 M Ft). Árak 2026-11-14-én (ipon, pcx, aqua, alternate.de, amazon.de); vásárlás előtt ellenőrizd.</p>'
             f'<div class="tablebox"><table class="bund"><thead><tr><th>Réteg</th><th>Mi kerül rá</th><th>Ajánlott eszköz</th></tr></thead><tbody>{t}</tbody></table></div>'
             + storage_bundles_html())
 
@@ -608,7 +613,14 @@ def storage_bundles_html():
     import gen_storage as G, html
     d, prods = G.load()
     hd = d["hdd"]
-    E = lambda x: html.escape(G.hunum(str(x or "")))
+    IDX = G.prod_index()
+    def E(x):
+        t = html.escape(G.hunum(str(x or "")))
+        for base, url, bolt in IDX:
+            b = html.escape(base)
+            if b in t and url not in t:
+                t = t.replace(b, f'<a href="{html.escape(url)}" target="_blank" rel="noopener">{b}</a>', 1)
+        return t
     rows = []
     for k, v in (hd.get("javaslat") or {}).items():
         key = next((b for b in G.BUNDLE_CAP if k.startswith(b)), "")
@@ -629,7 +641,7 @@ def storage_bundles_html():
     nt = (f'<p class="hint"><b>{E(note.get("nev"))}</b> – ' + E(" ".join(G.sent(x) for x in (note.get("hatranyok") or []) + (note.get("elonyok") or []))) + "</p>") if note else ""
     return ('<h3>Ajánlott összeállítások árszintenként</h3><div class="tablebox"><table class="bund"><thead><tr><th>Keret</th><th>Összeállítás</th><th>Kapacitás</th><th>Ár</th><th>Mit bír ki</th></tr></thead><tbody>'
             + "".join(rows) + '</tbody></table></div>'
-            '<h3>A legkompaktabb kételemes megoldás („minden egyben”; 1 lemezhibát túlél, a B példány vizet, ütést, EMP-t is)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th>Védelem, megjegyzés</th><th>Összesen</th></tr></thead><tbody>'
+            '<h3>A legkompaktabb kételemes megoldás („minden egyben”; 1 lemezhibát túlél, a B példány vizet, EMP-t és – habban, kikapcsolva – mérsékelt ütést is)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th>Védelem, megjegyzés</th><th>Összesen</th></tr></thead><tbody>'
             + "".join(k2) + '</tbody></table></div>'
             '<details><summary>Ha mégis egyetlen eszköz kell – méretenként</summary><div class="tablebox"><table class="bund"><tbody>' + "".join(one) + '</tbody></table></div>'
             '<p class="hint">Egy doboz közös ponton hibázik (táp, túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs) – a RAID nem mentés.</p></details>'

@@ -160,7 +160,7 @@ Az alapmodellek pontjai (csak alap, mért):
 | **T2** | 256–1000 GB unified/RAM/VRAM (2× Strix Halo / MS-S1, Mac Studio 512 GB, 2× Mac exo, EPYC 768 GB + GPU, DGX Station, 6090 + RTX Pro) | 512 GB Mac: DeepSeek-V4.1-Flash MLX oQ4e (432 GB). 2× Mac / 768 GB+: Kimi K3.1 Pro KLX-IQ2_XXS (710 GB) | GLM-5.3 MLX 4bit (418 GB); MiniMax-M3.1-Flash oQ4e (249 GB) |
 | **T3** | Gamer PC 24–32 GB VRAM + 64–192 GB RAM | 128–192 GB RAM: Qwen3.8-Flash-Next UD-Q4_K_XL (111 GB) MoE-offloaddal. Csak GPU: Qwen3.8-27B Q4/Q5 (17–20 GB) | GLM-5.3-Flash UD-Q3_K_XL (148 GB); Gemma-4-31B QAT (17,7 GB) |
 | **T4** | Laptop: MacBook 36–128 GB, vagy Windows 8–16 GB VRAM | 64 GB Mac: Qwen3.8-27B MLX 8bit (29,5 GB). 16 GB VRAM: Qwen3.8-27B UD-Q3_K_XL (13 GB) | Gemma-4-26B-A4B (gyors MoE), Gemma-4-12B QAT (7 GB) |
-| **T5** | Telefon 8–16 GB RAM | 12–16 GB: Gemma-4-12B QAT q4_0 (7 GB). 8 GB: Gemma-4-E4B / E2B QAT (5,2 / 3,4 GB) | Qwen3.5-4B Q4_K_M (2,7 GB), LFM3-1.7B (1,1 GB) |
+| **T5** | Telefon 8–16 GB RAM | 16 GB: Gemma-4-12B QAT q4_0 (7 GB). 12 GB (pl. S24 Ultra, ~7,4 GB jut a modellnek): Qwen3.5-4B Q8 / Gemma-4-E4B. 8 GB: Qwen3.5-4B Q4 / Gemma-4-E2B QAT (3,4 GB) | Qwen3.5-4B Q4_K_M (2,7 GB), LFM3-1.7B (1,1 GB) |
 
 - **Ökölszabály:** a modellfájl mérete + 10–20% (KV cache) férjen el a memóriában.
 - **Kódban:** `--hw T3 --mem 160GB` szűr, a `--platform mac|server` engedi az MLX vagy a vLLM-formátumokat. Alapból csak a mindenhol futó GGUF és Ollama formátum szerepel.
@@ -335,9 +335,9 @@ def uncensored_ranking(items):
                    f"{esc(r['ugi'])} | {len(vs)} | {size} | {esc(lowtxt)} | {esc(cut(m.get('license'), 28))} |")
     out += ["",
             "**Hogyan olvasd:**",
-            "- **Okosság:** az 1–4. hely a legokosabb, de ehhez szerver vagy nagy workstation kell.",
+            "- **Okosság:** az 1–2. helyhez ≥256 GB memória (T2) kell; a 3–4. hely már 128 GB RAM-os gamer PC-n is fut.",
             "- **Gamer PC:** a legjobb választás a Qwen3.8-Flash-Next abliterated v2 (94–111 GB) és a Qwen3.8-27B abliterated (14–29 GB). Egyetlen videokártyán a Qwen3.8-27B abliterated fut.",
-            "- **Laptop, telefon:** a Gemma-4 heretic változatai mért veszteség nélkül érhetők el.",
+            "- **Laptop, telefon:** a Gemma-4-26B-A4B és -E4B heretic mérten veszteség nélküli; a 31B-é mért −6%, a 12B és E2B becsült −7%.",
             "- **Arete-27B:** nem általános cenzúramentesítés, csak a propaganda-keretezést távolítja el.",
             "- **Kimi K3.1 Pro-ból nincs cenzúrázatlan változat.** A Kimi-K3 abliterated régebbi és gyengébb alapra épül (AA 17,4), a minősége nem ellenőrzött.",
             ""]
