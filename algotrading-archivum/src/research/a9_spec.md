@@ -350,6 +350,8 @@ class Instrument(Frozen):
     outcome_token_id: str | None = None       # Polymarket: az outcome token ID, nem a market_id
     leverage_class: str                       # kulcs a VenueProfile.margin_model.leverage_by_class-ba
     session_class: str = "default"            # kulcs a VenueProfile.sessions-be
+    fee_category: str | None = None           # pl. Polymarket "crypto", "geopolitics" (CLOB market-info)
+    fee_rate: Decimal | None = Field(default=None, ge=0)   # felülírja a CommissionRule.amount-ot
     peg_risk: bool = False                    # rögzített/menedzselt árfolyam vagy volt floor (pl. EURCHF)
     @model_validator(mode="after")
     def _check(self) -> "Instrument":
@@ -373,7 +375,7 @@ class Capabilities(Frozen):
     tif: tuple[TIF, ...]
     post_only: bool
     reduce_only: Literal["native", "emulated", "none"]
-    client_order_id: Literal["native", "comment", "none"]   # MT5: "comment"
+    client_order_id: Literal["native", "order_hash", "comment", "none"]   # MT5: comment; order_hash: §3.3
     client_order_id_max_len: int = Field(ge=0)               # bróker-csonkítási teszt méri
     cancel_on_disconnect: bool
     dead_man: Literal["none", "venue_heartbeat", "venue_countdown", "ea_local"]
@@ -427,11 +429,18 @@ class SessionWindow(Frozen):
     close: str = Field(pattern=r"^\d{2}:\d{2}$")
 
 class CommissionRule(Frozen):
-    applies_to: tuple[str, ...]               # canonical_id vagy glob, pl. "FX:*"
+    applies_to: tuple[str, ...] = Field(min_length=1)   # canonical_id vagy glob, pl. "FX:*"
     kind: Literal["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract",
                   "prob_quadratic", "none"]          # prob_quadratic: amount × qty × p(1−p) (Polymarket, Kalshi)
-    amount: Decimal
+    amount: Decimal                           # prob_quadratic: plafon, ha az Instrument.fee_rate hiányzik
     currency: Ccy
+    rounding: Literal["none", "ceil", "half_up"] = "none"   # Kalshi: ceil 0,01-re (nem direkt tag)
+    rounding_step: Decimal | None = Field(default=None, gt=0)
+    @model_validator(mode="after")
+    def _rounding(self) -> "CommissionRule":
+        if (self.rounding == "none") != (self.rounding_step is None):
+            raise ValueError("rounding != none <=> rounding_step kötelező")
+        return self
 
 class FeeTier(Frozen):
     tier: str
@@ -440,7 +449,7 @@ class FeeTier(Frozen):
     taker_bps: Decimal
 
 class SwapRule(Frozen):
-    applies_to: tuple[str, ...]
+    applies_to: tuple[str, ...] = Field(min_length=1)
     kind: Literal["points_per_lot", "pct_annual", "funding", "none"]
     long: Decimal
     short: Decimal
@@ -448,7 +457,7 @@ class SwapRule(Frozen):
 
 class RateLimitBucket(Frozen):
     name: str
-    scope: Literal["account", "connection", "ip", "endpoint"]
+    scope: Literal["account", "connection", "ip", "signer", "endpoint"]   # ip: pl. Cloudflare; signer: aláíró kulcs
     capacity: int = Field(gt=0)               # token
     refill_per_s: Decimal = Field(gt=0)
     cost: dict[str, Annotated[int, Field(ge=0)]]   # művelet -> token, pl. {"submit": 10} (Kalshi)
@@ -1012,7 +1021,8 @@ Kötelező szabályok:
 ### 3.3 Idempotencia és egyeztetés (általános)
 
 1. A `client_order_id` UUIDv7, a mag generálja. A `PendingNew` eseményt **`fsync`-kel** írjuk az eseménynaplóba, mielőtt az adapter bármit küldene.
-2. Ha a venue natív kliens-azonosítót ad (`capabilities.client_order_id = native`), az adapter azt használja, a venue pedig elutasítja a duplikátumot. Ha `comment` (MT5), a §4.4 szerinti rövid ID és ID→ticket térkép kell. Ha `none`, csak `post_only=False` piaci megbízás és szigorú egyeztetés engedélyezett, L3+ tilos.
+2. Ha a venue natív kliens-azonosítót ad (`capabilities.client_order_id = native`), az adapter azt használja, a venue pedig elutasítja a duplikátumot. Ha `order_hash`, az adapter a venue-oldali azonosítót **beküldés előtt** determinisztikusan kiszámolja (Polymarket: az aláírt EIP-712 megbízás hash-e), `fsync`-kel naplózza, és egyeztetéskor erre keres; ez idempotencia szempontjából `native`-nak számít, GTC limit és L3+ engedett. Ha `comment` (MT5), a §4.4 szerinti rövid ID és ID→ticket térkép kell. Ha `none`, csak `post_only=False` piaci megbízás és szigorú egyeztetés engedélyezett, GTC limit és L3+ tilos.
+   - **Polymarket (ellenőrizendő, F6.4):** a profil addig `client_order_id: none`, amíg a próba nem igazolja, hogy a beküldés előtt számolt order hash megegyezik a CLOB által visszaadott order ID-val; utána `order_hash`.
 3. **Indulási egyeztetés** (minden `connect()` után): az eseménynaplóból felépített állapotot összevetjük a venue pillanatképével. Eltérés esetén a venue az igazság a pozícióra, a napló a szándékra. Minden eltérés `RECONCILE` auditesemény, és amíg a diff nem 0, az adapter `reconciling` állapotban marad (új nyitás tiltva, zárás engedett).
 4. **Folyamatos egyeztetés:** 1–5 s-onként `positions()` és `open_orders()`; a diff a `recon_diff` metrika.
 
@@ -1360,7 +1370,7 @@ Elméleti háttér: Hedge/multiplicative weights, fixed share (Herbster–Warmut
 ### 5.6 Kalibráció és bizonytalanság
 
 - A szavazónkénti kalibráció rolling ablakon fut, időben a tanító után (purged). Kis mintán Platt, `n > 1000` felett isotonic [sklearn-calibration].
-- Ensemble-szinten újrakalibrálunk, és figyeljük a Brier-pontot és az ECE-t. **ECE-becslés:** 10 egyenlő tömegű (kvantilis) bin, és a döntésekhez a **bootstrap 95%-os felső korlát** (B = 1000, a lezárt címkéken blokk-bootstrap a horizont hosszával). **Hiszterézis:** a vétó és az L2 → L1 visszaesés akkor kapcsol, ha a felső korlát > 0,05; visszakapcsolás csak 3 egymást követő, nem átfedő ablak után, amelyekben a felső korlát ≤ 0,03. Így a 200 címkés ablak zaja nem csapkodja a szintet.
+- Ensemble-szinten újrakalibrálunk, és figyeljük a Brier-pontot és az ECE-t. **Két mező:** `ece` = pontbecslés, **csak riportra**; `ece_ub` = bootstrap felső korlát, **minden döntés** (c_calib, `CALIB_DEGRADED`, L2 → L1, F5.3) ezt használja. **ECE-becslés:** 10 egyenlő tömegű (kvantilis) bin, és a döntésekhez a **bootstrap 95%-os felső korlát** (B = 1000, a lezárt címkéken blokk-bootstrap a horizont hosszával). **Hiszterézis:** a vétó és az L2 → L1 visszaesés akkor kapcsol, ha a felső korlát > 0,05; visszakapcsolás csak 3 egymást követő, nem átfedő ablak után, amelyekben a felső korlát ≤ 0,03. Így a 200 címkés ablak zaja nem csapkodja a szintet.
 - A konformális sáv adaptív idősoros változat (például ACI) [mapie]. Ha a hozam-intervallum a költségek után tartalmazza a 0-t, nincs nyitás.
 
 ### 5.7 Méretező: egy alap, korlátos szorzók
@@ -1377,7 +1387,7 @@ Elméleti háttér: Hedge/multiplicative weights, fixed share (Herbster–Warmut
 | `c = c_edge · c_calib · c_dis · c_crit · c_aut` | **korlátos bizalmi szorzó**, minden tényező ∈ [0, 1], tehát c ∈ [0, 1] | – |
 | `c_edge` | `min(1, kelly(p_ens, payoff_b) / k_ref)`, `kelly(p, b) = max(0, p − (1−p)/b)`; strukturális javaslatnál 1 | `k_ref` = 0,10 |
 | `payoff_b` | nettó nyereség/veszteség arány: `(TP-táv − költség)/(SL-táv + költség)` a stratégia barrier-konfigurációjából; TP nélküli stratégiánál az OOS-kötésekből becsült érték az MLflow-ban | – |
-| `c_calib` | 1, ha ECE ≤ 0,02; lineárisan 0-ig 0,05-nél | – |
+| `c_calib` | 1, ha `ece_ub` ≤ 0,02; lineárisan 0-ig 0,05-nél (`ece_ub` = az ECE bootstrap felső korlátja, §5.6) | – |
 | `c_dis` | `1 − min(1, D / D_max)` | `D_max` = 1,0 logit (= a `DISAGREEMENT` vétó küszöbe) |
 | `c_crit` | `Critique.conf_mult = 1 − 0,5·severity` ∈ [0,5; 1] | – |
 | `c_aut` | L2: 1; L3 az első 30 napban: 0,5; utána 1 | – |
@@ -1405,8 +1415,8 @@ def c_edge(p: float | None, b: float | None, k_ref: float = 0.10) -> float:
     return min(1.0, kelly_frac(p, b) / k_ref)
 
 
-def c_calib(ece: float, lo: float = 0.02, hi: float = 0.05) -> float:
-    return 1.0 if ece <= lo else max(0.0, (hi - ece) / (hi - lo))
+def c_calib(ece_ub: float, lo: float = 0.02, hi: float = 0.05) -> float:
+    return 1.0 if ece_ub <= lo else max(0.0, (hi - ece_ub) / (hi - lo))   # ece_ub: bootstrap felső korlát
 
 
 def c_dis(d: float | None, d_max: float = 1.0) -> float:
@@ -1453,7 +1463,7 @@ Két rétegből áll: (1) **determinisztikus szabálykészlet** (vétójog), (2)
 | Kód | Feltétel (alapértelmezés, konfigurálható) |
 |---|---|
 | `RISK_LIMIT` | az előszimuláció (`RiskDecision.approve = false`) bármely limitet sért (§6) |
-| `CALIB_DEGRADED` | az ensemble ECE-jének bootstrap felső korlátja > 0,05 (egyenlő tömegű binek, §5.6, hiszterézissel), vagy a Brier skill score < 0 az utolsó N = 200 lezárt címkén |
+| `CALIB_DEGRADED` | az ensemble `ece_ub`-je (az ECE bootstrap felső korlátja) > 0,05 (egyenlő tömegű binek, §5.6, hiszterézissel), vagy a Brier skill score < 0 az utolsó N = 200 lezárt címkén |
 | `DATA_STALE` | a tick kora > 2 s, tick-rés, feature-hiány, vagy a Pandera-kapu bukott |
 | `UNTRUSTED_SOLE_DRIVER` | a `p_ens` irányát egyedül `untrusted_text` szavazó dönti el (nélküle az ébren lévők `ℓ_ens` előjele más vagy 0) |
 | `SINGLE_SOURCE_NEWS` | a hír-alapú szavazat < 2 független forrásra épül |
@@ -1573,7 +1583,7 @@ A szint számlánként él. A demo/paper számlán a rendszer automatikusan köt
 |---|---|---|---|---|---|
 | L0 | Leállítva | semmit, csak adatgyűjtés és `reduce_only` zárás | – | kill vagy indulás | – |
 | L1 | Javaslat | javaslatot küld, nem köt | dönt és kézzel köt | F3 és F4 kész | – |
-| L2 | Jóváhagyással kötés | `OrderIntent`-et készít, jóváhagyás után megy ki (TTL 60 s, árelmozdulás-korlát) | jóváhagy vagy elutasít (Telegram + TOTP) | ≥ 30 nap L1, paper-kapu (F5.1), farokkapu (§6.6) | az ECE bootstrap felső korlátja > 0,05 → L1 (hiszterézissel, §5.6) |
+| L2 | Jóváhagyással kötés | `OrderIntent`-et készít, jóváhagyás után megy ki (TTL 60 s, árelmozdulás-korlát) | jóváhagy vagy elutasít (Telegram + TOTP) | ≥ 30 nap L1, paper-kapu (F5.1), farokkapu (§6.6) | `ece_ub` > 0,05 → L1 (hiszterézissel, §5.6) |
 | L3 | Korlátozott autonómia | önállóan köt a sávon belül (névérték, napi veszteség, instrumentumlista, időablak); a sávon kívül L2 | napi review, kill | micro-live kapu (F5.4, ≥ 20 kereskedési nap L2) | napi veszteséglimit, 3 vétó/óra, drift → L2 vagy L0 |
 | L4 | Teljes autonómia | stratégián belül teljes, a kockázati motor keretein belül | heti review, kill | skálázási kapu (F6.1), **≥ 90 nap L3** | bármely kemény limit → L0 |
 
@@ -1719,7 +1729,9 @@ decision := "need_approval" if {
 }
 ```
 
-A policy bemenete: `{level, intent: OrderIntent JSON, venue: {venue_id, position_mode, blocked_jurisdictions}, instrument: {canonical_id, peg_risk}, ctx: {kill_active, client_jurisdiction, own_position_qty, own_position_ids, notional_acct, post_trade_eff_leverage, stress_loss_pct, daily_pnl_pct, approved_config_hash, dead_man_armed}}`. Az `own_position_qty` netting számlán a nettó saját pozíció, hedging számlán a `position_id` által megjelölt pozíció előjeles mennyisége. A `ctx` értékeit a kockázati motor számolja (`RiskDecision`), a `Decimal` stringként érkezik. **Minden kötelező mező hiánya vagy nem numerikus értéke `MISSING_INPUT`-ot ad (fail-closed)**, a `data.risk.*` hiánya is. A `data.blocked_venues` a `policy/data/blocked_venues.json` fájlból jön; magyar ügyfélre (`HU`) a kiinduló lista: `polymarket_clob` (SZTFH ideiglenes ISP-blokk 2026-01-16 óta, A3/A8 mért), `betfair_ex` (SZTFH-blokk 2023-09 óta, becs.), `kalshi` (EU-ból korlátozott, HU-t is érinti, becs.). A lista módosítása `CONFIG_CHANGE` auditesemény és négy szem. Az `opa test` lefedi: minden szint × (sávon belül, kívül), kill, blokkolt venue, áttétel- és stresszlimit, kilépés kill alatt, hiányzó dead-man L3-on, konfigurációs hash eltérése; **minden kötelező mező hiánya és nem numerikus értéke** (pl. `"post_trade_eff_leverage": "abc"`, hiányzó `stress_loss_pct`, hiányzó `data.risk`) → `deny` + `MISSING_INPUT`; **azonos oldali `reduce_only`** (long pozícióra `buy`) → `deny` + `INVALID_REDUCE_ONLY`; hedging számlán `position_id` nélküli vagy idegen `position_id`-jű zárás → `deny`.
+A policy bemenete: `{level, intent: OrderIntent JSON, venue: {venue_id, position_mode, blocked_jurisdictions}, instrument: {canonical_id, peg_risk}, ctx: {kill_active, client_jurisdiction, own_position_qty, own_position_ids, notional_acct, post_trade_eff_leverage, stress_loss_pct, daily_pnl_pct, approved_config_hash, dead_man_armed}}`. Az `own_position_qty` netting számlán a nettó saját pozíció, hedging számlán a `position_id` által megjelölt pozíció előjeles mennyisége. A `ctx` értékeit a kockázati motor számolja (`RiskDecision`), a `Decimal` stringként érkezik. **Minden kötelező mező hiánya vagy nem numerikus értéke `MISSING_INPUT`-ot ad (fail-closed)**, a `data.risk.*` hiánya is. A `valid_number` csak sima tizedes stringet fogad (`1E+1`, `+5`, `NaN` → `MISSING_INPUT`), ezért a governance-réteg az OPA-bemenet összeállításakor **minden `Decimal`-t `format(d.normalize(), "f")`-fel** alakít (ugyanaz, mint a `hashing._default`); teszt: `tests/governance/test_opa_input_decimals.py` (`Decimal("1E+1")` → `"10"`, `Decimal("+5")` → `"5"`, `Decimal("-0.50")` → `"-0.5"`, és a kész bemenet minden numerikus mezője illeszkedik a `valid_number` mintájára).
+
+**A fenti Rego eddig nem futott OPA-val** (az átnézők környezetében a futtatás tiltott volt): kézzel ellenőrzött, ellenőrizendő. Az `opa check --strict policy/` és az `opa test policy/ -v` (OPA 1.22.0, `tools/versions.env`) **PR-kapu az F2-től**, és az F4 átvétele előtt kötelezően zöld (F4.4). A `data.blocked_venues` a `policy/data/blocked_venues.json` fájlból jön; magyar ügyfélre (`HU`) a kiinduló lista: `polymarket_clob` (SZTFH ideiglenes ISP-blokk 2026-01-16 óta, A3/A8 mért), `betfair_ex` (SZTFH-blokk 2023-09 óta, becs.), `kalshi` (EU-ból korlátozott, HU-t is érinti, becs.). A lista módosítása `CONFIG_CHANGE` auditesemény és négy szem. Az `opa test` lefedi: minden szint × (sávon belül, kívül), kill, blokkolt venue, áttétel- és stresszlimit, kilépés kill alatt, hiányzó dead-man L3-on, konfigurációs hash eltérése; **minden kötelező mező hiánya és nem numerikus értéke** (pl. `"post_trade_eff_leverage": "abc"`, hiányzó `stress_loss_pct`, hiányzó `data.risk`) → `deny` + `MISSING_INPUT`; **azonos oldali `reduce_only`** (long pozícióra `buy`) → `deny` + `INVALID_REDUCE_ONLY`; hedging számlán `position_id` nélküli vagy idegen `position_id`-jű zárás → `deny`.
 
 ### 7.3 Limitek (alapértelmezés a micro-live fázisra, `conf/risk/micro_live.yaml`)
 
@@ -1921,7 +1933,7 @@ flowchart LR
   P[push/PR] --> L[uv sync --locked<br/>ruff + mypy + lint-imports]
   L --> SEC[gitleaks + semgrep<br/>pip-audit + osv-scanner]
   SEC --> UT[pytest unit + hypothesis<br/>contracts + adapters sim]
-  UT --> POL[opa check + opa test]
+  UT --> POL[opa check --strict + opa test -v<br/>PR-kapu F2-től]
   POL --> GD[golden + backtest-regresszió<br/>LLM-replay]
   GD --> RT[promptfoo red team<br/>ha prompt/modell változott]
   RT --> MQ[MQL5-fordítás Wine alatt<br/>figyelmeztetés = hiba]
@@ -1971,20 +1983,26 @@ dev = [
   "import-linter==2.15",
   "pip-audit==2.10.1",
   "pytest-regressions==2.11.0",
-  "syrupy==2026.4.6.124150327040",
+  "syrupy==6.1.1",
 ]
 
 [tool.uv]
 required-version = "==0.13.6"
 ```
 
-A `uv sync` a `dev` csoportot alapból telepíti, így az F0.3 `uv run pip-audit` parancsa a projektkörnyezetben fut.
+A `uv sync` a `dev` csoportot alapból telepíti, így az F0.3 `uv run pip-audit` parancsa a projektkörnyezetben fut. A pinek a PyPI JSON-ja szerint nem visszavontak (mért, 2026-11-15; a syrupy korábbi `2026.4.6…` kiadása visszavont, ezért 6.1.1).
+
+A Python-verziót a repó gyökerében lévő `.python-version` fájl kényszeríti (a `uv python install` és a `uv sync` ezt olvassa):
+
+```text
+3.12.16
+```
 - A közösségi Docker-image-eket (MT5) nem húzzuk be közvetlenül; saját build rögzített base-image hash-sel [mt5-docker-gmag11].
 
 ### 9.6 Megfigyelés
 
-- **Metrikák (Prometheus) [prometheus]:** `tick_to_decision_ms`, `decision_to_ack_ms`, `slippage_ticks` (hisztogram, venue × instrumentum), `markout_bps{tau}`, `fill_ratio`, `requote_total`, `eff_leverage`, `stress_loss_pct`, `x_stop_out`, `margin_level_pct`, `daily_pnl_acct`, `autonomy_level`, `veto_total{code}`, `ensemble_ece`, `voter_weight{voter}`, `adapter_heartbeat_age_s{venue}`, `recon_diff{venue}`, `clock_offset_us`, `llm_tokens_total`, `llm_cost_usd`, `llm_cache_miss_total`.
-- **Riasztások (Alertmanager → Telegram) [alertmanager]:** heartbeat > 5 s; `x_stop_out` < 2 × ES₉₉,₉; `eff_leverage` > 8× (a 10× előtt); `stress_loss_pct` > 20%; a napi veszteség a limit 50%-ánál és 80%-ánál; ECE > 0,05; vétó-ráta > 3/óra; csúszás p95 > a modell 2×-ese; `recon_diff` ≠ 0 30 s-nál tovább; `|clock_offset_us|` > 5000.
+- **Metrikák (Prometheus) [prometheus]:** `tick_to_decision_ms`, `decision_to_ack_ms`, `slippage_ticks` (hisztogram, venue × instrumentum), `markout_bps{tau}`, `fill_ratio`, `requote_total`, `eff_leverage`, `stress_loss_pct`, `x_stop_out`, `margin_level_pct`, `daily_pnl_acct`, `autonomy_level`, `veto_total{code}`, `ensemble_ece`, `ensemble_ece_ub`, `voter_weight{voter}`, `adapter_heartbeat_age_s{venue}`, `recon_diff{venue}`, `clock_offset_us`, `llm_tokens_total`, `llm_cost_usd`, `llm_cache_miss_total`.
+- **Riasztások (Alertmanager → Telegram) [alertmanager]:** heartbeat > 5 s; `x_stop_out` < 2 × ES₉₉,₉; `eff_leverage` > 8× (a 10× előtt); `stress_loss_pct` > 20%; a napi veszteség a limit 50%-ánál és 80%-ánál; `ece_ub` > 0,05; vétó-ráta > 3/óra; csúszás p95 > a modell 2×-ese; `recon_diff` ≠ 0 30 s-nál tovább; `|clock_offset_us|` > 5000.
 - **Trace:** OpenTelemetry a GenAI szemantikai konvenciókkal [opentelemetry]; LLM-trace és prompt-verziók: Langfuse [langfuse]; dashboard: Grafana [grafana]; naplók: Loki [loki]; üzemeltetési elvek (SLO, postmortem): Google SRE [google-sre-books].
 
 ---
@@ -2067,7 +2085,8 @@ A blokkok `bash -euo pipefail` alatt futnak: a blokk exit 0-val ér véget, ha m
 
 | # | Bemenet | Elvárt kimenet |
 |---|---|---|
-| F0.1 | új, üres klón | a függőségek a lockfájlból települnek; a pytest lefut (üres repón exit 5 is elfogadott) |
+| F0.1 | új, üres klón | a rögzített uv (0.13.6) és Python (3.12.16, `.python-version`) települ; a függőségek a lockfájlból települnek; a pytest lefut (üres repón exit 5 is elfogadott) |
+| F0.7 | `tools/versions.env` | a CLI-eszközök a rögzített verzión futnak (opa, gitleaks, osv-scanner, sops, age) |
 | F0.2 | teljes git-történet | nincs titok |
 | F0.3 | `uv.lock` | nincs ismert high/critical sérülékenység |
 | F0.4 | `secrets/dev.enc.yaml` | SOPS-szal visszafejthető, plaintext titok nincs a repóban |
@@ -2076,6 +2095,11 @@ A blokkok `bash -euo pipefail` alatt futnak: a blokk exit 0-val ér véget, ha m
 
 ```bash
 # F0.1
+source tools/versions.env
+python3 -m pip install --user "uv==${UV_VERSION}"     # vagy: uv self update "${UV_VERSION}" (önálló telepítésnél)
+uv --version | grep -q "^uv ${UV_VERSION}"
+uv python install                                    # a .python-version (3.12.16) szerint
+uv run python -c "import sys; assert sys.version.split()[0] == '${PYTHON_VERSION}'"
 uv sync --locked
 rc=0; uv run pytest -q || rc=$?; test "$rc" -eq 0 -o "$rc" -eq 5
 # F0.2 (gitleaks 8.30.1, tools/versions.env; hogy a `detect` alparancs ezen a verzión még támogatott-e a `gitleaks git` mellett, ellenőrizendő)
@@ -2094,6 +2118,12 @@ grep -qE '^/?atp/risk/' .github/CODEOWNERS
 uv run python -c "import atp.contracts"
 uv run python -m atp.tools.export_schemas --out schemas/generated/ --check   # újragenerál ideiglenes mappába, diff a commitolt változattal
 uv run lint-imports
+# F0.7
+opa version | grep -q "^Version: ${OPA_VERSION}"
+gitleaks version | grep -q "${GITLEAKS_VERSION}"
+osv-scanner --version | grep -q "${OSV_SCANNER_VERSION}"
+sops --version | grep -q "${SOPS_VERSION}"
+age --version | grep -q "${AGE_VERSION}"
 ```
 
 ### 10.4 F1 – Adat, Sim és MT5-adapter
@@ -2194,7 +2224,7 @@ uv run pytest tests/adapters/test_contract.py -q --adapter ccxt_testnet --demo
 uv run pytest tests/decision/test_weights_props.py -q --hypothesis-profile=ci
 # F3.2
 uv run python -m atp.decision.eval --window post_cutoff --report out/eval.json
-jq -e '(.gate == "PASS" or .gate == "FAIL") and has("ece") and has("bss") and has("llm_eval_floor") and (.window_start >= .llm_eval_floor)' out/eval.json
+jq -e '(.gate == "PASS" or .gate == "FAIL") and has("ece") and has("ece_ub") and has("bss") and has("llm_eval_floor") and (.window_start >= .llm_eval_floor)' out/eval.json
 # F3.3 (a promptfoo verziója a tools/versions.env-ben; hiba esetén ≠ 0 kilépés a rögzített verzión ellenőrizendő)
 source tools/versions.env
 npx --yes "promptfoo@${PROMPTFOO_VERSION}" eval -c tests/redteam/promptfooconfig.yaml
@@ -2211,7 +2241,7 @@ uv run pytest tests/sizing/test_golden_sizes.py tests/core/test_stage_order.py t
 | F4.1 | napi veszteség szimulált átlépése | új nyitás tiltva, szint L0, short-gamma flatten, auditesemény |
 | F4.2 | kill-gyakorlat K1–K6, 5 függő megbízás + 2 pozíció, minden adapteren | a §6.5 időkorlátai; `pending_after = 0`; a pozíciók a flatten-politika szerint |
 | F4.3 | `/kill` nem engedélyezett `user_id`-ről; `/kill` engedélyezett `user_id`-ről TOTP nélkül; visszakapcsolás TOTP nélkül, hibás vagy újrahasznált TOTP-val | az első elutasítva + riasztás; a második azonnal K4; a visszakapcsolás elutasítva |
-| F4.4 | OPA-policy-k | minden szabály-eset tesztelve, a blokkolt venue is |
+| F4.4 | OPA-policy-k; OPA-bemenet Decimal-normalizálása | `opa check --strict` és `opa test -v` zöld (PR-kapu F2-től, itt kötelező); minden szabály-eset tesztelve, a blokkolt venue, a `MISSING_INPUT` és a nem sima tizedes string is; a normalizáló teszt zöld |
 | F4.5 | a policy-motor leállítva | nyitó intent `deny`, `reduce_only` `allow` |
 | F4.6 | auditnapló 10 000 eseménnyel; egy eseményben az `actor` utólag átírva | `verify` a hibás `seq`-et adja és exit 2; az érintetlen napló exit 0 |
 | F4.7 | L2 jóváhagyás 61 s után; módosult `intent_hash`; hibás HMAC | lejárt vagy érvénytelen, nem megy ki |
@@ -2236,6 +2266,7 @@ done
 # F4.4
 opa check --strict policy/
 opa test policy/ -v
+uv run pytest tests/governance/test_opa_input_decimals.py -q
 # F4.6
 rc=0; uv run python -m atp.audit.verify --db tests/fixtures/audit/tampered.db --from 0 || rc=$?; test "$rc" -eq 2
 uv run python -m atp.audit.verify --db tests/fixtures/audit/clean.db --from 0
@@ -2257,7 +2288,7 @@ aws s3api get-object-lock-configuration --bucket "$ATP_WORM_BUCKET" \
 |---|---|---|
 | F5.1 | ≥ 30 kereskedési nap paper (demo), ≥ 200 fill | nem-romlási próba nem bukik (`PSR(SR_exp) ≥ 0,05`); a csúszás és a fill-arány SPRT-je H₀-t fogadja el |
 | F5.2 | a jelölt konfiguráció studyja | a §8.4 1–9. kapuja PASS |
-| F5.3 | élő számla L1-en ≥ 30 naptári nap | a javaslatok és a kézi kötések naplózva; ECE ≤ 0,05 |
+| F5.3 | élő számla L1-en ≥ 30 naptári nap | a javaslatok és a kézi kötések naplózva; `ece_ub` ≤ 0,05 |
 | F5.4 | micro live (élő számla, minimális méret, L2) ≥ 20 kereskedési nap | 0 kemény limit-sértés; `recon_diff = 0`; SPRT H₀ |
 | F5.5 | kanári deploy | egy instrumentum, 1 óra; utána automatikus bővítés, vagy visszaállás – visszaálláskor a parancs nem nulla kóddal lép ki |
 
@@ -2270,7 +2301,7 @@ uv run python -m atp.research.gate --study "$STUDY_ID" --report out/gate.json
 jq -e '.cpcv.pass and .pbo < 0.2 and .dsr >= 0.95 and .bh_fdr.discovery and .holdout.pass and .plateau.pass and (.tail.pass or (.short_gamma | not))' out/gate.json
 # F5.3, F5.4
 uv run python -m atp.ops.level_report --account live --level 1 --min-days 30 --report out/l1.json
-jq -e '.days >= 30 and .ece <= 0.05' out/l1.json
+jq -e '.days >= 30 and .ece_ub <= 0.05' out/l1.json
 uv run python -m atp.ops.daily_report --account live --min-trading-days 20 --report out/micro.json
 jq -e '.violations == 0 and .recon_diff == 0 and .sprt_slippage == "accept_h0"' out/micro.json
 # F5.5 (visszagörgetéskor a make nem nulla kóddal lép ki)
@@ -2285,6 +2316,7 @@ jq -e '.smoke == "PASS" and .rolled_back == false' out/canary.json
 | F6.1 | ≥ 90 nap L3 | max drawdown ≤ a tervezett; vétó-ráta stabil; kalibráció rendben; `PSR(0) ≥ 0,95` **és** n ≥ MinTRL. Ha n < MinTRL, a riport `UNDECIDED`: a kapu nem megy át, a stratégia L3-on marad (ez nem bukás) |
 | F6.2 | méret-emelés lépcsőzetesen (×1,5 lépcsőnként, legalább 2 hét/lépcső, minden lépcső előtt farokkapu) | a csúszás lépcsőnként legfeljebb 25%-kal nő |
 | F6.3 | harmadik adapter (cTrader demo, A11 migrációs út) | ugyanaz az adapter-szerződés zöld szimulátoron és felvett visszajátszáson |
+| F6.4 | Polymarket order-hash próba (ellenőrizendő; felvett válaszokon, élő hívás csak jogi engedéllyel, nem HU-ból) | a beküldés előtt számolt EIP-712 order hash megegyezik a CLOB válaszának order ID-jával → a profil `client_order_id: order_hash`, GTC limit engedett; különben `none` marad |
 
 ```bash
 # F6.1
@@ -2296,6 +2328,8 @@ uv run python -m atp.ops.capacity_report --account live --report out/capacity.js
 jq -e '[.steps[] | .slippage_increase_pct <= 25] | all' out/capacity.json
 # F6.3
 uv run pytest tests/adapters/test_contract.py -q --adapter ctrader_replay
+# F6.4
+uv run pytest tests/adapters/polymarket/test_order_hash_id.py -q
 ```
 
 
@@ -2403,7 +2437,7 @@ Mindegyikhez alapértelmezés tartozik: ha a válasz nem jön meg az F1 végéig
 
 ### 11.3 Hiányok és ellenőrizendő pontok
 
-- **Ellenőrizendő API- és viselkedési részletek** (az első használat előtt teszttel): az MT5 `comment` tényleges hossza és megőrzése brókerenként (F1.8); a `FileFlush` lemezre írási garanciája Windows alatt; a MetaEditor `/compile` és `/log` kapcsolói Wine alatt; a MetaTrader5 Python csomag 3.12-es wheele; a ccxt sandbox/demo módja, a Binance `countdownCancelAll` elérése ccxt-ből, a hívássúlya és az, hogy törli-e a `reduce_only` védőstopokat (F4.11); a Kalshi YES/NO-leképezés és pozíció-előjel a demón; a Polymarket pUSD-tokencíme; a Kalshi dead-man megoldása és tokenköltségei (az exec átnéző szerint alapból 10 token/kérés, Basic szinten kb. 10 megbízás/s; a profil `rate_limits` vödrébe kerül); a w32time 1 ms alatti pontossága virtualizált Windows VPS-en (F1.12-kapu); az osv-scanner `uv.lock`-támogatása; a gitleaks alparancsa; a promptfoo kilépési kódja.
+- **Ellenőrizendő API- és viselkedési részletek** (az első használat előtt teszttel): az MT5 `comment` tényleges hossza és megőrzése brókerenként (F1.8); a `FileFlush` lemezre írási garanciája Windows alatt; a MetaEditor `/compile` és `/log` kapcsolói Wine alatt; a MetaTrader5 Python csomag 3.12-es wheele; a ccxt sandbox/demo módja, a Binance `countdownCancelAll` elérése ccxt-ből, a hívássúlya és az, hogy törli-e a `reduce_only` védőstopokat (F4.11); a Kalshi YES/NO-leképezés és pozíció-előjel a demón; a Polymarket pUSD-tokencíme, a kategóriánkénti díjráta a CLOB market-info végpontból, a rate-limit scope-ja (IP vagy aláíró) és az order hash mint venue-azonosító (F6.4); a teljes Rego-blokk OPA-futtatása (F4.4); a Kalshi dead-man megoldása és tokenköltségei (az exec átnéző szerint alapból 10 token/kérés, Basic szinten kb. 10 megbízás/s; a profil `rate_limits` vödrébe kerül); a w32time 1 ms alatti pontossága virtualizált Windows VPS-en (F1.12-kapu); az osv-scanner `uv.lock`-támogatása; a gitleaks alparancsa; a promptfoo kilépési kódja.
 - **Citadel / Citadel Securities mérnöki előadásai:** nyilvános, ellenőrizhető forrást nem találtunk (a careers oldal 403-at adott). Nincs katalógustétel.
 - **Jane Street Tech Talks:** az oldal létezik (mért), a címlistát gépileg nem tudtuk kinyerni.
 - **MT5 Manager/Gateway API részletes dokumentációja:** bejelentkezéshez kötött (support.metaquotes.net). A retail számára nem elérhetőség következtetés.

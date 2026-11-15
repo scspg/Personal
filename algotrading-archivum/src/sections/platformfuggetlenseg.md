@@ -21,16 +21,18 @@ A MetaTrader 5 és a Vantage a **jelenlegi** végrehajtási hely, nem a platform
 | `server_tz` | objektum: `mode (utc \| iana \| ny_plus)`, `iana`, `ny_plus_hours` | igen | a DST-szabályt a mód adja (§3.4) |
 | `sessions` | `{osztály: [ {days[], open "HH:MM", close "HH:MM"} ]}`, `default` kötelező | igen | szerveridőben |
 | `rollover_server_time` | `"HH:MM"` | igen | |
-| `commissions` | lista: `applies_to[]` (glob), `kind`, `amount`, `currency` | igen | instrumentumonkénti jutalék |
+| `commissions` | lista: `applies_to[]` (glob, ≥ 1), `kind`, `amount`, `currency`, `rounding (none \| ceil \| half_up)`, `rounding_step` | igen | instrumentumonkénti jutalék; `prob_quadratic`-nál az `amount` csak plafon, az `Instrument.fee_rate` az irányadó; Kalshi: `rounding: ceil`, `rounding_step: "0.01"` (nem direkt tag; direkt tagnál 0.0001, A3 `kalshi-fees`) |
 | `fee_tiers` | lista: `tier, min_30d_volume, maker_bps, taker_bps` | nem | tőzsdei díjsávok |
 | `swaps` | lista: `applies_to[]`, `kind (points_per_lot \| pct_annual \| funding \| none)`, `long`, `short`, `triple_day` | igen | instrumentumonkénti swap |
-| `rate_limits` | lista: `name, scope, capacity, refill_per_s, cost{művelet: token}` | igen | token-vödrök, pl. Kalshi írási tokenek (`submit: 10`) |
+| `rate_limits` | lista: `name, scope (account \| connection \| ip \| signer \| endpoint), capacity, refill_per_s, cost{művelet: token}` | igen | token-vödrök, pl. Kalshi írási tokenek (`submit: 10`); Polymarket: Cloudflare-IP és aláírószintű limitek |
 | `capabilities` | `Capabilities` (§2.3) | igen | TIF, post_only, reduce_only, kliens-ID, cancel-on-disconnect, dead-man (`dead_man_scope`, `dead_man_timeout_s`, `dead_man_guaranteed`), végrehajtási mód |
 | `symbol_map` | `{canonical_id: venue_symbol}` | igen | a brókerszimbólum csak itt és az `instruments.yaml`-ban |
 | `mt` | objektum vagy `null`: `owned_magic_ranges, foreign_magics, manual_magic, comment_max_len, terminal_builds_allowed` | csak `mt4`/`mt5`-n (máshol `null`) | magic-allowlist, együttélés (§3.5) |
 | `server_location` | `region, datacenter, verified` | igen | |
 | `tos_flags` | `ea_allowed, latency_arbitrage, carry_trade_abuse_clause, scalping_min_hold_s, notes` | igen | ÁSZF-jelzők |
 | `sources` | lista: `field, source, checked` | igen (≥ 1) | forrás és dátum mezőnként |
+
+Az `Instrument` díjmezői: `fee_category` és `fee_rate` (pl. Polymarket: kategóriánként 0,04–0,07, geopolitika 0); az adapter `instruments()` metódusa a CLOB market-info végpontjából tölti (ellenőrizendő), és ha a `fee_rate` hiányzik, a költségmodell a profil plafonjával számol, és a riportban `FEE_CEILING` jelölést ad.
 
 A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.leverage_by_class[...]` = λ. A `peg_risk` az `Instrument` mezője (gazdasági tulajdonság), és ez kapcsolja be az 5×-ös plafont.
 
@@ -115,8 +117,16 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
         "properties": {
           "applies_to": {"$ref": "#/$defs/globs"},
           "kind": {"enum": ["per_lot_side", "per_lot_round_turn", "bps_notional", "per_contract", "prob_quadratic", "none"]},
-          "amount": {"$ref": "#/$defs/dec"}, "currency": {"$ref": "#/$defs/ccy"}
-        }
+          "amount": {"$ref": "#/$defs/dec"}, "currency": {"$ref": "#/$defs/ccy"}, "rounding": {"enum": ["none", "ceil", "half_up"], "default": "none"},
+          "rounding_step": {"anyOf": [{"$ref": "#/$defs/pos"}, {"type": "null"}]}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"rounding": {"enum": ["ceil", "half_up"]}}, "required": ["rounding"]},
+            "then": {"required": ["rounding_step"], "properties": {"rounding_step": {"$ref": "#/$defs/pos"}}},
+            "else": {"properties": {"rounding_step": {"type": "null"}}}
+          }
+        ]
       }
     },
     "fee_tiers": {
@@ -144,8 +154,9 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
       "items": {
         "type": "object", "additionalProperties": false, "required": ["name", "scope", "capacity", "refill_per_s", "cost"],
         "properties": {
-          "name": {"type": "string"}, "scope": {"enum": ["account", "connection", "ip", "endpoint"]}, "capacity": {"type": "integer", "minimum": 1},
-          "refill_per_s": {"$ref": "#/$defs/pos"}, "cost": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+          "name": {"type": "string"}, "scope": {"enum": ["account", "connection", "ip", "signer", "endpoint"]},
+          "capacity": {"type": "integer", "minimum": 1}, "refill_per_s": {"$ref": "#/$defs/pos"},
+          "cost": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
         }
       }
     },
@@ -159,7 +170,7 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
       "properties": {
         "order_types": {"type": "array", "items": {"enum": ["market", "limit", "stop", "stop_limit"]}},
         "tif": {"type": "array", "items": {"enum": ["GTC", "IOC", "FOK", "GTD", "DAY"]}}, "post_only": {"type": "boolean"},
-        "reduce_only": {"enum": ["native", "emulated", "none"]}, "client_order_id": {"enum": ["native", "comment", "none"]},
+        "reduce_only": {"enum": ["native", "emulated", "none"]}, "client_order_id": {"enum": ["native", "order_hash", "comment", "none"]},
         "client_order_id_max_len": {"type": "integer", "minimum": 0}, "cancel_on_disconnect": {"type": "boolean"},
         "dead_man": {"enum": ["none", "venue_heartbeat", "venue_countdown", "ea_local"]},
         "dead_man_timeout_s": {"anyOf": [{"$ref": "#/$defs/dec"}, {"type": "null"}]}, "partial_fills": {"type": "boolean"},
@@ -227,7 +238,8 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
   "$defs": {
     "dec": {"type": ["string", "number"], "pattern": "^-?[0-9]+(\\.[0-9]+)?$"},
     "pos": {"type": ["string", "number"], "pattern": "^[0-9]*[1-9][0-9]*(\\.[0-9]+)?$|^0\\.[0-9]*[1-9][0-9]*$", "exclusiveMinimum": 0},
-    "ccy": {"type": "string", "pattern": "^[A-Z0-9]{2,10}$"}
+    "ccy": {"type": "string", "pattern": "^[A-Z0-9]{2,10}$"},
+    "nonneg": {"type": ["string", "number"], "pattern": "^[0-9]+(\\.[0-9]+)?$", "minimum": 0}
   },
   "required": [
     "canonical_id", "venue_id", "venue_symbol", "asset_class", "payoff", "qty_unit", "base_ccy", "quote_ccy", "settle_ccy", "contract_size",
@@ -247,7 +259,8 @@ A leverage-osztály leképezése: `Instrument.leverage_class` → `margin_model.
     "expiry": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
     "funding_interval_h": {"anyOf": [{"type": "integer", "minimum": 1, "maximum": 24}, {"type": "null"}]},
     "outcome_token_id": {"anyOf": [{"type": "string", "pattern": "^[0-9]+$"}, {"type": "null"}]}, "leverage_class": {"type": "string"},
-    "session_class": {"type": "string", "default": "default"}, "peg_risk": {"type": "boolean", "default": false}
+    "session_class": {"type": "string", "default": "default"}, "fee_category": {"type": ["string", "null"]},
+    "fee_rate": {"anyOf": [{"$ref": "#/$defs/nonneg"}, {"type": "null"}]}, "peg_risk": {"type": "boolean", "default": false}
   },
   "allOf": [
     {
@@ -300,7 +313,7 @@ sessions:
     - {days: [fri], open: "00:05", close: "23:55"}
 rollover_server_time: "00:00"
 commissions:
-  - {applies_to: ["FX:*"], kind: per_lot_round_turn, amount: "6", currency: USD}
+  - {applies_to: ["FX:*"], kind: per_lot_round_turn, amount: "6", currency: USD, rounding: none}
 swaps:
   - {applies_to: ["FX:EURUSD"], kind: points_per_lot, long: "-7.1", short: "2.3", triple_day: wed}
 rate_limits:
@@ -415,19 +428,20 @@ sessions:
     - {days: [mon, tue, wed, thu, fri, sat, sun], open: "00:00", close: "23:59"}
 rollover_server_time: "00:00"
 commissions:
-  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD}   # kategóriánként eltér; a maker nem fizet
+  # díj = rate × qty × p(1−p); a rate kategóriánként 0,04–0,07, geopolitika 0 – az Instrument.fee_rate az irányadó,
+  # az amount csak plafon (FEE_CEILING jelöléssel), ha a fee_rate hiányzik; a maker nem fizet
+  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD, rounding: none}
 swaps:
   - {applies_to: ["PRED:POLY:*"], kind: none, long: "0", short: "0"}
 rate_limits:
-  - {name: clob_general, scope: account, capacity: 9000, refill_per_s: "900", cost: {order_status: 1, open_orders: 1}}
-  - {name: clob_post_order, scope: account, capacity: 5000, refill_per_s: "200", cost: {submit: 1, replace: 1}}
-  - {name: clob_heartbeat, scope: account, capacity: 10, refill_per_s: "1", cost: {heartbeat: 1, arm_dead_man: 1}}
+  - {name: clob_general, scope: ip, capacity: 9000, refill_per_s: "900", cost: {order_status: 1, open_orders: 1}}
+  - {name: clob_post_order, scope: signer, capacity: 5000, refill_per_s: "200", cost: {submit: 1, replace: 1}}
 capabilities:
   order_types: [market, limit]
   tif: [GTC, GTD, FOK, IOC]
   post_only: false                   # ellenőrizendő
   reduce_only: none
-  client_order_id: none
+  client_order_id: none             # ellenőrizendő: order_hash, ha az F6.4 próba igazolja (§3.3)
   client_order_id_max_len: 0
   cancel_on_disconnect: false
   dead_man: venue_heartbeat
@@ -453,9 +467,9 @@ tos_flags:
   notes: "VPN-tilalom az ÁSZF-ben; HU: SZTFH ideiglenes ISP-blokk 2026-01-16 óta"
 sources:
   - {field: account_currency, source: "pUSD collateral (docs.polymarket.com); a Polygon-tokencím ide írandó – ellenőrizendő", checked: "2026-11-15"}
-  - {field: rate_limits, source: "A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000)", checked: "2026-11-15"}
+  - {field: rate_limits, source: "A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000); a scope (Cloudflare-IP, illetve aláíró) az exec átnéző szerint – becsült, ellenőrizendő; heartbeat-vödör nincs, mert nincs forrás", checked: "2026-11-15"}
   - {field: capabilities.dead_man_timeout_s, source: "A3 polymarket-order-heartbeat", checked: "2026-11-15"}
-  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként", checked: "2026-11-15"}
+  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő)", checked: "2026-11-15"}
 ```
 
 ```yaml
@@ -477,6 +491,8 @@ sources:
   min_notional: "1"
   expiry: "2026-12-31T23:59:59Z"
   outcome_token_id: "123456789012345678901234567890"
+  fee_category: crypto               # az instruments() a CLOB market-info végpontból tölti (ellenőrizendő)
+  fee_rate: "0.07"
   leverage_class: none
 ```
 

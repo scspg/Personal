@@ -1,4 +1,4 @@
-# ALGOTRADING – kompakt (1632 tételből a 0–1. szint)
+# ALGOTRADING – kompakt (1633 tételből a 0–1. szint)
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 

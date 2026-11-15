@@ -619,7 +619,7 @@ reddit-data-api | 2 | Reddit Data API (+ PRAW) | M4 Hírek, szentiment, esemény
 ilostat | 2 | ILOSTAT | M3 Makró és statisztika | free | ingyenes | 45/61/54/53 | https://www.ilo.org/ilostat | 
 reinhart-rogoff | 2 | Reinhart–Rogoff válságadatbázis | M3 Makró és statisztika | free | ingyenes | 44/61/55/55 | https://carmenreinhart.com/data/ | 
 hf-financial-news-misc | 2 | További HF pénzügyi hírkorpuszok… | M4 Hírek, szentiment, esemény | free | ingyenes | 43/54/52/49 | https://huggingface.co/datasets/ashraq/financial-news-articles | 
-lseg-news-mrn | 3 | LSEG (Reuters) News és Machine Readable News (MRN) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat (nem publikus)… | 82/84/81/81 | https://www.lseg.com/en/data-analytics/products/workspace | 
+lseg-news-mrn | 3 | LSEG (Reuters) News és Machine Readable News (MRN) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat (nem publikus) | 82/84/81/81 | https://www.lseg.com/en/data-analytics/financial-news-service/machine-readable-news | 
 bloomberg-terminal-news | 3 | Bloomberg Terminal (hírek, ECO-naptár, BN/First Word) | M4 Hírek, szentiment, esemény | institutional | ~31 980 USD/év/terminál (becsült)… | 80/82/80/80 | https://www.bloomberg.com/professional/products/bloomberg-terminal/ | 
 dow-jones-newswires | 3 | Dow Jones Newswires (+ Factiva archívum, DJ Developer API) | M4 Hírek, szentiment, esemény | paid | ~110 USD/felhasználó/hó vendoron át… | 76/78/74/76 | https://www.dowjones.com/professional/newswires/ | 
 ravenpack | 3 | RavenPack (hír-analitika, esemény-taxonómia) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat | 76/76/72/75 | https://www.ravenpack.com/ | 
@@ -1181,6 +1181,7 @@ tradinggpt-paper | 2 | TradingGPT: többágenses rendszer rétegzett memóriáva
 stockagent | 2 | StockAgent – LLM-alapú kereskedés szimulált valós környezetben | M9 AI döntési réteg | free | 0 | 42/50/48/44 | https://github.com/MingyuJ666/Stockagent | 
 bloomberg-bql-bquant | 3 | Bloomberg Query Language (BQL) és BQuant | M12 Benchmark-platformok | paid | ? | 58/72/64/60 | https://guides.nyu.edu/bloombergguide/bloomberg-query-language-bql | 
 bloomberg-b-pipe | 3 | Bloomberg B-PIPE (Market Data Feed) | M12 Benchmark-platformok | institutional | ? | 58/72/60/58 | https://aws.amazon.com/financial-services/partner-solutions/bloomberg-b-pipe | 
+lseg-workspace | 3 | LSEG Workspace (korábban Refinitiv Eikon) | M12 Benchmark-platformok | paid | kb. 12–24 ezer USD/év (becsült)… | 58/72/61/58 | https://www.lseg.com/en/data-analytics/products/workspace | 
 aladdin-risk | 3 | Aladdin Risk | M12 Benchmark-platformok | institutional | ? | 54/74/66/56 | https://www.blackrock.com/aladdin/products/aladdin-risk | 
 aladdin-platform | 3 | BlackRock Aladdin – befektetéskezelési és kockázati platform | M12 Benchmark-platformok | institutional | ? | 52/72/63/55 | https://www.blackrock.com/aladdin | 
 bloomberg-blpapi | 3 | Bloomberg API (blpapi) Python SDK | M12 Benchmark-platformok | paid | ? | 56/68/58/56 | https://pypi.org/project/blpapi/ | 
