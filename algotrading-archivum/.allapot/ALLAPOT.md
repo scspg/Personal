@@ -16,3 +16,7 @@ Független kiadás (nem az ARCHIVUM része). Forrás-spec: `.allapot/MESTERPROMP
 2. [FUT] 9 kutatóágens → src/research/a1..a9
 3. build (md/kompakt/chat/html/jsonl/letöltő), pontozás, profilok
 4. 6 átnéző → javítás → ≥90/≥95 → ZIP, commit, átadás
+
+## Build-lánc KÉSZ (src/): build.py (research/*.jsonl → md/kompakt/chat/katalogus.jsonl/letolto.sh/FEJLESZTOI-SPEC.md, dedup id+url, profilpont 5 profil), gen_html.py (szűrhető katalógus, stratégiák, ötletek, a8 táblák, kalkulátorok: margin/stop-out, grid-csőd MC, Kelly – böngészőben tesztelve, 400px OK, 0 JS-hiba), make_zip.py (reprodukálható).
+Futtatás: cd src && python3 -I build.py && python3 -I gen_html.py && python3 -I make_zip.py ; böngészőteszt: node $S/algo_check.js <html> <png>
+9 ágens fut (a1..a9) → research/. Utána: build, átnézők (6), javítás.
