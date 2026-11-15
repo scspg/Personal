@@ -1,7 +1,7 @@
 # A8 – Infrastruktúra, szerverhely, hardver, költözés, adó és szabályozás – táblák
 
 Ellenőrzés napja: 2026-11-15. Árfolyam: EKB 2026-11-13, 1 EUR = 365,60 HUF = 1,1052 USD = 0,83559 GBP (mért).
-Címkék: **mért** = forrásban vagy saját lekérdezéssel látott érték; **becsült** = számolt vagy proxyból becsült; **nem ellenőrzött** = nem sikerült forrással igazolni.
+Címkék: **mért** = forrásban vagy saját lekérdezéssel látott érték (jogszabálynál: a net.jogtar.hu hatályos szövege, 2026-11-15); **számolt** = mért bemenetből Pythonnal számolt; **becsült** = proxyból becsült; **következtetett** = a forrás szövegéből levont, de nem kimondott következmény; **nem ellenőrzött** = nem sikerült forrással igazolni.
 Ez nem jogi vagy adótanács: tények és források. A források URL-jei a `a8_infra_legal.jsonl` tételeiben szerepelnek (az `id` oszlop alapján kereshetők).
 
 ---
@@ -85,7 +85,7 @@ Késleltetés: WonderNetwork város–város átlagping 2026-11-15 (mért); Mona
 
 | Ország | Tőzsdei/CFD/forex nyereség | Kripto | Fogadás / predikciós piac | Illetőség | Bróker, tőkeáttétel | LD / NY / TY (ms) | Megélhetés (PLI) | Szabályozói megjegyzés |
 |---|---|---|---|---|---|---|---|---|
-| Magyarország | ETÜ 15%, szocho nincs (mért); offshore CFD ≈ 24,9% egyéb jövedelem (becsült) | 15%, szocho nincs, korlátlan veszteségkiegyenlítés (mért) | Engedélyes: mentes (mért); Polymarket blokkolva (mért) | 183 nap / állandó lakóhely (nem ellenőrzött) | ESMA 30:1 (mért); offshore 1:500 (mért, Vantage) | 27,9 / 107,6 / 237,7 (mért) | 68,3 (mért) | NAV CRS-alapú vizsgálat (mért) |
+| Magyarország | ETÜ 15%, szocho nincs (mért); offshore CFD ≈ 24,9% egyéb jövedelem (becsült) | 15%, szocho nincs, korlátlan időbeli veszteségkiegyenlítés (mért) | Engedélyes: nem jövedelem, 76. § (4) (mért); engedély nélküli szervező: a nyeremény címén kapott teljes bevétel jövedelem, 76. § (1) (szöveg: mért; alkalmazás: következtetett); Polymarket blokkolva (mért) | 183 nap / állandó lakóhely (nem ellenőrzött) | ESMA 30:1 (mért); offshore 1:500 (mért, Vantage – a Help Center szerint VIG Group, Mauritius FSC) | 27,9 / 107,6 / 237,7 (mért) | 68,3 (mért) | NAV CRS-alapú vizsgálat (mért) |
 | Ciprus | Értékpapír és származékos „titles” mentes (mért); CFD/forex nincs nevesítve (nem ellenőrzött) | 8% flat (mért) | nem ellenőrzött | 183 nap vagy 60 napos szabály (mért) | CySEC, ESMA 30:1 (mért) | 64,2 / 171,5 / 302,9 (mért, Limassol) | 95,1 (mért) | Non-dom: osztalék és kamat SDC-mentes (mért) |
 | Málta | Részvény/értékpapír: marginális kulcs (mért); non-dom külföldi nyeresége nem adózik (mért) | nem ellenőrzött | nem ellenőrzött | nem ellenőrzött | MFSA, ESMA 30:1 (becsült) | 43,9 / 113,8 / 244,5 (mért) | 93,1 (mért) | Remittance basis (mért) |
 | Portugália | 28% flat (mért) | nem ellenőrzött | Polymarket blokkolva (mért, sajtó) | IFICI: előtte 5 évig nem rezidens (mért) | ESMA 30:1 (becsült) | 47,9 / 114,6 / 279,7 (mért) | 85,0 (mért) | NHR 2024-től megszűnt; IFICI csak jogosult tevékenységre (mért) |
@@ -108,17 +108,80 @@ Késleltetés: WonderNetwork város–város átlagping 2026-11-15 (mért); Mona
 
 | Jövedelem | Minősítés | Kulcs | Szocho | Veszteség | Forrás (id) |
 |---|---|---|---|---|---|
-| CFD/forex EGT-s (vagy OECD-s, illetve egyezményes és felügyelt) brókernél | ETÜ, Szja 67/A (mért) | 15% (mért) | nincs (mért) | Tárgyév + 2 előző év adókiegyenlítés (mért) | hu-szja-tv-67a-etu, hu-szja-tv-67a-6-adokiegyenlites |
-| CFD/forex nem EGT-s, nem OECD-s, egyezmény nélküli államban működő brókernél (pl. Mauritius/Kajmán/Vanuatu) | Nem ETÜ (mért feltétel) → egyéb jövedelem (becsült) | 15% a 89%-on (mért szabály, becsült alkalmazás) | 13% a 89%-on, felső határ nélkül (becsült) | Nincs elhatárolás (becsült) | hu-szja-tv-29-egyeb-jovedelem, hu-dtt-lista-kozbeszerzes-2026 |
+| CFD/forex MNB-felügyelt, vagy EGT-, OECD- vagy egyezményes államban működő, ott felügyelt brókernél (minden feltételt lásd 5.2) | ETÜ, Szja 67/A (mért) | 15% (mért) | nincs (mért) | Adókiegyenlítés 67/A (6)–(8) szerint: az adóévben és/vagy az előző két évben keletkezett, a keletkezés évének bevallásában feltüntetett veszteség × bevalláskori kulcs, legfeljebb az adóévben és/vagy az előző két évben bevallott ETÜ-jövedelem adója, a már érvényesített kiegyenlítéssel csökkentve (mért). Egy veszteség tehát a keletkezés évében és a következő két adóévben használható fel (háromévi ablak). A katalógustétel nevében szereplő „2+1 év” megfogalmazás pontatlan (következtetett) | hu-szja-tv-67a-etu, hu-szja-tv-67a-6-adokiegyenlites |
+| CFD/forex nem EGT-s, nem OECD-s, egyezmény nélküli államban működő brókernél (pl. Mauritius – a Vantage Help Center szerinti VIG Group; korábbi források szerint Kajmán/Vanuatu) | Nem ETÜ, mert a 67/A (3) b) pont államfeltétele nem teljesül (mért feltétel; Mauritius nincs a hatályos egyezmények listáján, mért) → egyéb jövedelem (becsült) | 15% a 89%-on (mért szabály, becsült alkalmazás) | 13% a 89%-on, felső határ nélkül (becsült) | Nincs elhatárolás (becsült) | hu-szja-tv-29-egyeb-jovedelem, hu-dtt-lista-kozbeszerzes-2026 |
 | Külföldi brókernél önadózás | Bevallás saját nyilvántartás alapján (mért, 67/A (5)) | – | – | – | hu-szja-tv-67a-etu |
 | Kriptoeszköz-ügylet | Szja 67/C (mért) | 15% (mért) | nincs (mért) | Korlátlan időbeli kiegyenlítés, de max. az adóév és 2 előző év adója; nyilvántartás kötelező (mért) | hu-szja-tv-67c-kripto, hu-2025-lxxxiii-kripto-veszteseg |
-| Kis értékű kripto | Mentes, ha ügyletenként ≤ minimálbér 10%-a és évente ≤ minimálbér (mért) | – | – | – | hu-szja-tv-67c-kripto |
+| Kis értékű kripto | Ügyleti bevételt nem kell megállapítani, ha (1) az ügyletből származó **bevétel** (nem a nyereség) ≤ a minimálbér 10%-a, (2) a bevétel megszerzésének **napján** más, azonos tárgyú ügyletből nem szerez bevételt, és (3) az adóévben az ilyen bevételek összege ≤ a minimálbér. Szja 67/C (2) utolsó mondata (mért, net.jogtar.hu, hatály 2026.X.1.–XII.31.). Ha bármelyik feltétel sérül, a mentesség az adott ügyletre nem jár (következtetett) | – | – | – | hu-szja-tv-67c-kripto |
 | Engedélyes szerencsejáték/fogadás | Nem jövedelem, 76. § (4) (mért) | 0 (mért) | – | – | hu-szja-tv-76-nyeremeny |
-| Engedély nélküli külföldi fogadóiroda / Polymarket | Nem „jogszerűen szervezett” → nem mentes (becsült) | nem ellenőrzött (valószínűleg egyéb jövedelem) | nem ellenőrzött | – | hu-szja-tv-76-nyeremeny, sztfh-polymarket-block-2026 |
+| Engedély nélküli külföldi fogadóiroda | Nem „jogszerűen szervezett” → a 76. § (4) mentessége nem jár (következtetett). A 76. § (1) szerint a fogadásból származó nyeremény (adóköteles nyeremény) címén kapott **bevétel egészét** jövedelemnek kell tekinteni (mért, net.jogtar.hu, hatály 2026.X.1.–XII.31.): a teljes kifizetés a jövedelem, nem a tétekkel csökkentett nettó nyereség (következtetett a szövegből) | 15%, 8. § (1) (mért szöveg; a 76. §-ra alkalmazva következtetett). Külföldi, nem kifizető szervezőnél a bevallás módja nem ellenőrzött | nem ellenőrzött | Nincs nettósítás: a vesztes fogadások nem csökkentik a nyertesek jövedelmét (következtetett) | hu-szja-tv-76-nyeremeny |
+| Polymarket (predikciós piac) | **Nyitott kérdés.** Lehetséges minősítések: fogadás → 76. § (1), teljes bevétel; kriptoeszközzel végrehajtott ügylet → 67/C (USDC-ben elszámolt pozíció); egyéb jövedelem. NAV-állásfoglalást nem találtunk (nem ellenőrzött) | nem ellenőrzött | nem ellenőrzött | a minősítéstől függ | hu-szja-tv-76-nyeremeny, sztfh-polymarket-block-2026 |
 | Alacsony adókulcsú államból származó osztalék, kamat, árfolyamnyereség | Egyéb jövedelem (mért, PwC) | 15% (mért) | 13% (mért) | – | hu-alacsony-adokulcsu-allam |
 | Kft. (TAO) | 9% társasági adó (mért), majd osztalék | 9% + 15% szja (mért) | 13% az osztalékra, felső határig (mért) | Elhatárolás: nem ellenőrzött | hu-tao-tv-19-9szazalek |
 | KIVA | 10% a kivett jövedelemre; TAO és szocho helyett (mért) | 10% (mért) + 15% szja az osztalékra (becsült) | a tagnál felső határig (becsült) | nem ellenőrzött | hu-kiva-katv-21-10szazalek |
 
 Hatásos teher 100 egység nyereségre (becsült): ETÜ 15; offshore CFD egyéb jövedelemként ≈ 24,9; kripto 15; Kft. + osztalék ≈ 34,5 (a szocho felső határa felett ≈ 22,7); KIVA + osztalék ≈ 10 + 13,5 + szocho.
 
-Szabályozási kulcspontok (mért): ESMA lakossági limitek: 30:1 fő devizapár, 20:1 egyéb devizapár, arany és fő index, 10:1 egyéb nyersanyag, 5:1 részvény, 2:1 kripto; 50%-os margin close-out; negatívegyenleg-védelem. Szakmai ügyfél: 3 feltételből 2 (negyedévente átlagosan 10 jelentős ügylet 4 negyedéven át; 500 000 EUR feletti portfólió; legalább 1 év pénzügyi szakmai munka). Vantage stop-out 20% (mért). NAV: CRS/DAC2 adat-összevetés és jogkövetési vizsgálat 2025 novemberétől (mért). DAC8 és MiCA részletei nem ellenőrzöttek (az EUR-Lex nem volt letölthető).
+Szabályozási kulcspontok (mért):
+- **ESMA lakossági limitek:** 30:1 fő devizapár; 20:1 egyéb devizapár, arany és fő index; 10:1 egyéb nyersanyag; 5:1 részvény; 2:1 kripto. 50%-os margin close-out, negatívegyenleg-védelem.
+- **Szakmai ügyfél (kérésre):** a három feltételből **legalább kettő** kell, egy önmagában nem elég (Bszt. 49. § (1), mért, net.jogtar.hu, 2026-11-15; MiFID II II. melléklet):
+  - a) az előző egy évben negyedévente átlagosan legalább 10 ügylet, egyenként 40 000 EUR értékben, vagy az év során összesen 400 000 EUR értékben;
+  - b) a pénzügyi eszközökből álló portfólió és a betétek együtt meghaladják az 500 000 EUR-t;
+  - c) legalább 1 év releváns munkaviszony a pénzügyi szektorban.
+  - A szakmai minősítéssel megszűnik az ESMA lakossági tőkeáttételi limitje és az 50%-os close-out, és elveszhet a negatívegyenleg-védelem (mért, mifid2-annex-ii-professional-client).
+  - **Megjegyzés** (számolt + következtetett): az A7-ben ajánlott ≤ 10× effektív tőkeáttétel a 30:1 lakossági limiten belül van; 1:30 mellett 10× effektív áttételnél a margin level 30/10 = 300%. Józan méretezéshez tehát a szakmai státusz ritkán szükséges. A magasabb brókeráttétel csak a nagyobb kitettséget engedi.
+- **Stop-out mint brókerprofil-adat:** EU/UK lakossági számlán 50%, kötelező negatívegyenleg-védelemmel. Egyes offshore ECN-számlákon 20%: a Vantage globális Help Center szerint „all trading platforms” 20% (mért, cikk frissítve 2025-09-12). Ez példa, nem általános érték; a saját számla értéke a szerződésből és a terminálból olvasandó (A7 1.1).
+- **NAV:** CRS/DAC2 adat-összevetés és jogkövetési vizsgálat 2025 novemberétől (mért).
+- **MiCA** – (EU) 2023/1114 rendelet (mért, EUR-Lex szöveg, https://eur-lex.europa.eu/eli/reg/2023/1114/oj):
+  - alkalmazandó 2024-12-30-tól, a III. és IV. cím (ART, EMT) 2024-06-30-tól (149. cikk);
+  - a 2024-12-30 előtt nemzeti jog szerint működő kriptoszolgáltatók legfeljebb 2026-07-01-ig vagy az engedélyről szóló döntésig működhettek tovább; a tagállam ezt rövidíthette (143. cikk (3)).
+- **DAC8** – a Tanács (EU) 2023/2226 irányelve a 2011/16/EU módosításáról (mért, EUR-Lex szöveg, https://eur-lex.europa.eu/eli/dir/2023/2226/oj):
+  - átültetés 2025-12-31-ig, alkalmazás 2026-01-01-től;
+  - a kriptoeszköz-szolgáltatók adatait a naptári év végét követő 9 hónapon belül kell cserélni.
+  - A magyar átültető jogszabályt nem ellenőriztük (nem ellenőrzött).
+
+### 5.1 Szerződő jogalany és befektetővédelem (Vantage példáján)
+
+- **A Vantage globális Help Center** („Who is Vantage?”, frissítve 2026-11-05) ezeket a jogalanyokat sorolja fel (mért, Zendesk API):
+  - VIG Group – Mauritius Financial Services Commission (FSC), licenc GB20026165;
+  - Vantage Markets (Pty) Ltd – FSCA (Dél-Afrika), 51268;
+  - Vantage Global Prime Pty Ltd – ASIC (Ausztrália), AFSL 428901.
+- **VFSC (Vanuatu) és CIMA (Kajmán) jogalanyt a cikk már nem említ**; ezek korábbi forrásokból származnak (vantage-entities-helpcenter-2026).
+- **A mérvadó forrás a saját Client Agreement.** A Help Center szerint is az ügyfélszerződésben megnevezett jogalany határozza meg a szabályokat és a védelmeket, és az egyik jogalany védelmei nem vonatkoznak automatikusan a másikra (mért). A súgó és ez a táblázat csak kiindulópont.
+- **ETÜ-következmény:**
+  - Mauritius nem EGT-állam, nem OECD-tag, és nem szerepel a Magyarországgal hatályos kettősadó-egyezményt kötött államok listáján (mért, Közbeszerzési Hatóság útmutató, 2026-05-21; hu-dtt-lista-kozbeszerzes-2026). Ezért a VIG Group-pal kötött CFD/forex ügylet nem ETÜ (következtetett a 67/A (3) b) pontból).
+  - Dél-Afrika szerepel az egyezmény-listán (mért). Az FSCA-jogalanynál a bb) feltétel (FSCA–MNB információcsere) és a bc) feltétel nem ellenőrzött.
+  - Ausztrália OECD-tagállam, és szerepel az egyezmény-listán (a lista: mért). Hogy az ASIC-jogalany magyar ügyfelet fogad-e, nem ellenőrzött.
+- **BEVA (Befektető-védelmi Alap):** a kártalanítás felső határa személyenként és Alap-tagonként összevontan **100 000 EUR**. 1 millió Ft-ig 100%-os, felette 1 millió Ft és az e feletti rész 90%-a.
+  - Forrás: Tpt. (2001. évi CXX. tv.) 217. § (2); megállapította a 2015. évi LXXXV. tv. 18. § (1), **hatályos 2016-01-01-től** (mért, net.jogtar.hu, 2026-11-15).
+  - A korábbi „20 000 EUR” érték téves BEVA-ra. A Tpt.-ben 20 000 EUR csak a 2007-12-31-ig tartó EU-csatlakozási átmeneti szabályban szerepel (415. § (2) b), mért). A katalógus investor-protection-offshore-vs-eu tételét ehhez kell igazítani.
+  - A BEVA csak a tagjai (magyar engedélyes befektetési vállalkozások) ügyfeleit védi. Mauritiusi, dél-afrikai vagy más EGT-n kívüli jogalanynál nem alkalmazandó (következtetett).
+
+### 5.2 Az ETÜ összes feltétele – Szja 67/A (3) (mért, net.jogtar.hu, hatály 2026.X.1.–XII.31.)
+
+**Az ügylet tárgya és módja:**
+- befektetési szolgáltatóval vagy annak közreműködésével kötött ügylet;
+- csereügyletnek nem minősülő pénzügyi eszközre (a zárt körben kibocsátott értékpapír kivételével) vagy árura; vagy pénzügyi elszámolással lezáródó azonnali deviza/valuta-ügylet;
+- megfelel az ügyletre vonatkozó törvényi előírásoknak;
+- nem ETÜ az az ügylet, amelynél a magánszemély vagy vele érdekközösségben lévő személy által meghatározott, a szokásos piaci értéktől eltérő árat alkalmaznak.
+
+**Emellett a következők egyike teljesül:**
+- **a)** az MNB (Felügyelet) által felügyelt tevékenység tárgya; **vagy**
+- **b)** EGT-államban, OECD-tagállamban vagy olyan államban működő befektetési szolgáltatóval (közreműködésével) kötötték, amellyel Magyarországnak kettős adóztatást elkerülő egyezménye van, **és** együttesen:
+  - **ba)** az adott állam hatáskörrel rendelkező felügyeleti hatósága felügyeli;
+  - **bb)** nem EGT-állam esetén biztosított az információcsere az adott felügyeleti hatóság és az MNB között;
+  - **bc)** a magánszemély rendelkezik a szolgáltató által a nevére kiállított igazolással, amely az adóévben megkötött **valamennyi ügylet minden**, az adókötelezettséghez szükséges adatát tartalmazza.
+
+**Bevallás és veszteség:**
+- Külföldi, nem kifizető szolgáltatónál önadózás saját nyilvántartás vagy a szolgáltatói bizonylatok alapján (67/A (5) b)).
+- Veszteség: lásd az 5. tábla ETÜ-sorát (67/A (6)–(8)).
+
+### 5.3 Magyar kripto-validálási rezsim – dátumok (az A2 ágenssel összehangolva)
+
+| Esemény | Dátum | Forrás / címke |
+|---|---|---|
+| A validálási kötelezettség és a két új Btk.-tényállás hatálybalépése | **2025-07-01** | A2: hu-kripto-validalas-2025-hatalyon-kivul-2026 (The Block; sajtó) |
+| A Revolut felfüggeszti a kriptoszolgáltatást Magyarországon | 2025-07-17 | A2 (sajtó); az a8 katalógus hu-kriptotorveny-2024-vii-validalas tételében szereplő 2025-12-18 ennek ellentmond, az A2-höz igazítandó (nem ellenőrzött elsődleges forrásból) |
+| Az Országgyűlés elfogadja a visszavonó törvényt (143 igen, 46 nem) | **2026-07-28** (sajtójelentés) | A2 és a8 egyezik (sajtó) |
+| Kihirdetés a Magyar Közlönyben | 2026-07-31 | A2 (sajtó), nem ellenőrzött |
+| Hatálybalépés | forrásonként eltér (a Pénzcentrum szerint 2026-08-07) | nem ellenőrzött, a Magyar Közlönyben ellenőrizendő |

@@ -10,7 +10,8 @@
 
 - 1:500 tőkeáttételnél teljes margin-kihasználás mellett **0,2%-os** ellenmozgás nullázza a számla tőkéjét, és már **0,10%** (50% stop-out) ill. **0,16%** (20% stop-out) után kényszerzárás jön `[számított, 1. fejezet]`.
 - EURCHF 2015-01-14 → 2015-01-15: ECB-fixing 1,2010 → 1,0280, **−14,4%** egy nap alatt `[számított ECB-adatból]`; ennél a mozgásnál már 7× effektív tőkeáttétel fölött a veszteség meghaladja a számla tőkéjét `[számított]`.
-- Egy 10 000 USD-s számlán 0,05 lot/szint, 20 pipes, korlátlan kétirányú EURUSD-grid MC-szimulációjában a stop-out valószínűsége **1 éven belül 38,8%, 3 éven belül 76,8%**, és a **minden pályára vett** várható hozam 1 év alatt **−35%** `[számított, 3.3. fejezet; paraméterek ott]`.
+- Egy 10 000 USD-s számlán 0,05 lot/szint, 20 pipes, korlátlan kétirányú EURUSD-grid MC-szimulációjában a stop-out valószínűsége **1 éven belül 35,3%, 3 éven belül 74,7%**. A **minden pályára vett átlagos** hozam 1 év alatt **−32,0%**, miközben a túlélők medián equity-je 11 453 USD (+14,5%). Aki csak a túlélők mediánját mutatja, túlélési torzítást (survivorship bias) közöl `[számított, 3.3. fejezet; paraméterek és kód ott, seed = 42]`.
+- Ugyanott 20%-os stop-out mellett a stop-outok **51,5%-a negatív egyenleggel** zárul (0,10 lotnál 50,2%, átlagos equity a stop-outkor −127 USD). Negatív egyenleg védelem (NBP) nélkül ez adósság `[számított, 3.3]`.
 - A tartósan (300+ napig) daytrade-elő brazil egyének 97%-a veszített `[forrás: Chague–De-Losso–Giovannetti 2019, SSRN, https://doi.org/10.2139/ssrn.3423101, absztrakt]`.
 
 ---
@@ -20,14 +21,39 @@
 ### 1.1 Definíciók (MT5)
 
 - **Margin (Forex, leverage-alapú):** `Margin = Lot × ContractSize / Leverage` a margin-devizában; CFD „Contracts Leverage” típusnál `Lot × ContractSize × Ár / Leverage` `[forrás: MetaTrader 5 súgó, https://www.metatrader5.com/en/terminal/help/trading_advanced/margin_forex – WebFetch 2026-11-15]`. USD-számlán EURUSD-nél a margin USD-ben: `Lot × 100 000 × EURUSD / 500`.
+- **Figyelem: a `Lot × Contract × Ár / Leverage` alak és a 10 USD/lot pipérték csak XXX/USD párra és USD-számlára érvényes** `[következtetett]`. Az általános alak átváltással:
+
+  ```
+  Margin_számla = Lot × ContractSize / Leverage × Árf(bázisdeviza → számladeviza)
+  P&L_számla    = Lot × ContractSize × ΔÁr × Árf(jegyzési deviza → számladeviza)
+  Pipérték      = Lot × ContractSize × pipméret × Árf(jegyzési deviza → számladeviza)
+  ```
+
+  Számpéldák, 1 lot = 100 000 bázisdeviza, 1:500, ECB-fixing 2026-11-13 (EURUSD 1,1052; USDJPY 160,00; GBPUSD 1,3227 keresztárfolyamként) `[számított]`:
+
+  | Pár / számla | Margin / lot | Pipérték / lot |
+  |---|---|---|
+  | EURUSD / USD | 221,04 USD | 10,00 USD |
+  | USDJPY / USD | 200,00 USD (a bázis maga USD) | 6,25 USD (1 000 JPY / 160,00) |
+  | EURJPY / USD | 221,04 USD | 6,25 USD |
+  | EURGBP / USD | 221,04 USD | 13,23 USD |
+  | EURUSD / EUR | 200,00 EUR | 9,05 EUR |
+
+  A kódban az árfolyam-átváltás a brókertől kapott aktuális keresztárfolyammal történik (MT5: `SYMBOL_CURRENCY_MARGIN`, `SYMBOL_CURRENCY_PROFIT`, `SYMBOL_TRADE_TICK_VALUE`), nem fix 10 USD-vel `[következtetett]`.
 - **Equity** = Balance + lebegő P&L (+ swap, − jutalék).
 - **Szabad margin** = Equity − Used margin.
 - **Margin level** = Equity / Used margin × 100% `[forrás: Vantage súgó, WebSearch-összefoglaló 2026-11-15]`.
 - **Stop-out:** ha a margin level ≤ SO, a szerver a legnagyobb veszteségű pozíciótól kezdve zár.
-  - Vantage UK (FCA, retail): **50%** `[forrás: helpcenter.vantagemarkets.co.uk, WebSearch-összefoglaló; az oldal curl-lel 403-at adott → közvetlenül nem ellenőrzött]`.
-  - Vantage STP/ECN számlák 2025-02-09-től: margin call **50%**, stop-out **20%**; a sajtóközlemény lábjegyzete szerint nem vonatkozik az UK és AU ügyfelekre `[forrás: PR Newswire közlemény (pl. https://www.prnewswire.com/no/pressemeldinger/vantage-forbedrer-handelsmiljoet-med-margin-call-og-stop-out-justeringer-302377570.html), WebSearch-összefoglaló; a lábjegyzet az arab nyelvű változatban – nem ellenőrzött szó szerint]`.
-  - ESMA retail CFD-szabály: 50%-os, számlaszintű margin close-out, 30:1 major FX-limit, számlaszintű negatív egyenleg védelem `[forrás: ESMA, https://www.esma.europa.eu/press-news/esma-news/esma-adopts-final-product-intervention-measures-cfds-and-binary-options, curl 200]`.
-  - **A saját MT5-számla tényleges SO-értékét a terminálból kell kiolvasni:** `AccountInfoDouble(ACCOUNT_MARGIN_SO_SO)` és `ACCOUNT_MARGIN_SO_MODE` `[következtetett: MQL5-standard]`.
+- **A stop-out szint és a negatív egyenleg védelem (NBP) brókerprofil-adat, nem univerzális konstans** `[következtetett, a MESTERPROMPT platformfüggetlenségi elve]`. A kockázati motor minden számítása (1.2, 3.x, 5.3) a szerződő jogalany profiljából olvassa: SO-szint, SO-mód (százalék vagy pénzösszeg), margin call szint, NBP (kötelező / a bróker szabályzata szerint / nincs), max. tőkeáttétel eszközosztályonként. Példák:
+
+  | Brókerprofil (példa) | Stop-out | NBP | Max. lakossági FX-áttétel | Forrás / címke |
+  |---|---|---|---|---|
+  | EU-s lakossági ügyfél (ESMA-termékintervenció, nemzeti szabályokban rögzítve) | 50%, számlaszintű close-out | **kötelező**, számlaszintű | 30:1 fő devizapár | `[forrás: ESMA, https://www.esma.europa.eu/press-news/esma-news/esma-adopts-final-product-intervention-measures-cfds-and-binary-options, curl 200]` |
+  | UK lakossági ügyfél (FCA) | 50% | **kötelező** | 30:1 | FCA-szabály: `[nem ellenőrzött elsődleges forrásból]`; Vantage UK súgó 50%: `[forrás: helpcenter.vantagemarkets.co.uk, WebSearch-összefoglaló; curl 403]` |
+  | Egyes offshore ECN/STP számlák (példa: Vantage globális jogalany) | **20%** („on all trading platforms”); margin call 50% | jogi garancia nincs; a bróker szabályzata szerinti automatikus nullázás a „jogosult” számlákra, PAMM/MAM kizárva | 1:500 | `[forrás: Vantage globális Help Center, „What is stop-out…” (frissítve 2025-09-12) és „How can I resolve a negative balance?” (frissítve 2026-10-23), Zendesk API, lekérve 2026-11-15]`; margin call 50% és az UK/AU-kivétel: PR Newswire-közlemény (pl. https://www.prnewswire.com/no/pressemeldinger/vantage-forbedrer-handelsmiljoet-med-margin-call-og-stop-out-justeringer-302377570.html) `[WebSearch-összefoglaló]` |
+
+  A Vantage-értékek egy példaprofil, nem általános szabály. Más brókernél, más jogalanynál vagy másik számlatípuson eltérhetnek. A kötelező erejű forrás a saját ügyfélszerződés (Client Agreement) `[következtetett]`.
+- **A saját MT5-számla tényleges SO-értékét a terminálból kell kiolvasni:** `AccountInfoDouble(ACCOUNT_MARGIN_SO_SO)` és `ACCOUNT_MARGIN_SO_MODE` `[következtetett: MQL5-standard]`. Más platformon (cTrader, FIX, IBKR) az adapter tölti ki ugyanezt a profilmezőt.
 
 ### 1.2 Levezetés: mekkora ellenmozgás viszi el a számlát?
 
@@ -164,13 +190,18 @@ A ruin-távolság x* az E₀ − L(x*) = SO·M(x*) egyenlet legkisebb megoldása
 - A gridet **nem a margin, hanem a lebegő veszteség** viszi el.
 - Ezért szinte közömbös, hogy a stop-out 20% vagy 50% (lásd a táblázatot).
 
-**Ruin-valószínűség adott horizonton.** Feltevés: driftmentes GBM log-áron, σ éves volatilitással. A reflexiós elv szerint:
+**Ruin-valószínűség adott horizonton.** Feltevés: a log-ár driftmentes Brown-mozgás, σ éves volatilitással. A reflexiós elv szerint:
 
 ```
 P( min_{t≤T} ln(P_t/P₀) ≤ −d ) = 2·(1 − Φ( d / (σ√T) ))
+
+d = ln(P₀ / P*) = −ln(1 − x*·Δ/P₀)      (log-távolság a ruin-árig, long grid)
 ```
 
-ahol d = x*·Δ/P₀.
+ahol P* = P₀ − x*·Δ a ruin-ár.
+
+- A képlet a **log-árra** vonatkozik, ezért a távolságot is log-ban kell mérni. Az előző változat a lineáris d = x*·Δ/P₀ távolságot használta. Long gridnél ez kisebb a log-távolságnál, ezért a ruin-valószínűséget **túlbecsülte** (konzervatív hiba): például 0,01 lot / 20 pip mellett 1 évre 0,64% a helyes 0,26% helyett, 3 évre 11,5% a helyes 8,25% helyett `[számított]`.
+- Short gridnél (ellenmozgás felfelé) a log-távolság ln(1 + x*·Δ/P₀), ami **kisebb** a lineárisnál, így ott a lineáris képlet alulbecsülne. Ugyanerre a gridre felfelé: d = 16,6%, P(ruin) 1 év 1,22%, 3 év 14,8% `[számított]`.
 
 - σ = 6,63% = az EURUSD realizált éves volatilitása az utolsó 3 évben `[számított ECB-adatból]`.
 - Teljes 1999–2026-os mintán σ = 9,21% `[számított]`.
@@ -181,17 +212,19 @@ ahol d = x*·Δ/P₀.
 - spread 1 pip;
 - korlátlan szintszám.
 
-Eredmények `[számított]`:
+Eredmények, log-távolsággal (long oldal) `[számított; kód: Függelék A]`:
 
-| Lot/szint | Δ (pip) | SO | Szintek a stop-outig | Ellenmozgás (pip) | Ellenmozgás (%) | P(ruin) 1 hó | 3 hó | 1 év | 3 év |
-|---|---|---|---|---|---|---|---|---|---|
-| 0,01 | 20 | 50% | 99 | 1 998 | 18,1% | ≈0 | ≈0 | 0,6% | 11,6% |
-| 0,01 | 10 | 50% | 140 | 1 407 | 12,7% | ≈0 | 0,01% | 5,5% | 26,8% |
-| 0,05 | 20 | 50% | 44 | 893 | 8,1% | 0,002% | 1,5% | 22,3% | 48,2% |
-| 0,05 | 20 | 20% | 44 | 899 | 8,1% | 0,002% | 1,4% | 22,0% | 47,9% |
-| 0,10 | 20 | 50% | 31 | 631 | 5,7% | 0,29% | 8,5% | 39,0% | 61,9% |
-| 0,10 | 50 | 50% | 20 | 1 013 | 9,2% | ≈0 | 0,6% | 16,7% | 42,5% |
-| 0,20 | 30 | 50% | 18 | 551 | 5,0% | 0,93% | 13,3% | 45,2% | 66,4% |
+| Lot/szint | Δ (pip) | SO | Szintek a stop-outig | Ellenmozgás (pip) | Ellenmozgás (%) | d = log-távolság | P(ruin) 1 hó | 3 hó | 1 év | 3 év |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0,01 | 20 | 50% | 99 | 1 998 | 18,1% | 19,9% | ≈0 | ≈0 | 0,26% | 8,25% |
+| 0,01 | 10 | 50% | 140 | 1 407 | 12,7% | 13,6% | ≈0 | 0,004% | 4,0% | 23,6% |
+| 0,05 | 20 | 50% | 44 | 892 | 8,1% | 8,4% | 0,001% | 1,1% | 20,4% | 46,3% |
+| 0,05 | 20 | 20% | 44 | 899 | 8,1% | 8,5% | 0,001% | 1,0% | 20,1% | 46,0% |
+| 0,10 | 20 | 50% | 31 | 631 | 5,7% | 5,9% | 0,21% | 7,6% | 37,6% | 60,9% |
+| 0,10 | 50 | 50% | 20 | 1 013 | 9,2% | 9,6% | ≈0 | 0,37% | 14,7% | 40,3% |
+| 0,20 | 30 | 50% | 18 | 551 | 5,0% | 5,1% | 0,76% | 12,3% | 44,1% | 65,6% |
+
+A zárt alak egyoldali (csak a long oldal csődje) és normális innovációjú. A 3.3 MC kétirányú gridet és t(4)-farkat modellez, ezért ugyanarra a konfigurációra magasabb csődvalószínűséget ad (0,05 lot / 20 pip: 20,4% vs. 35,3% 1 évre) `[számított + következtetett]`.
 
 **Olvasat** `[következtetett]`:
 - (i) Kétszer sűrűbb grid ugyanazzal a lottal kb. kétszer akkora kitettséget jelent ugyanazon távolságon, így a ruin-távolság √2-vel csökken (20→10 pip: 18,1% → 12,7%).
@@ -230,27 +263,38 @@ Eredmények `[számított]`:
 - swap −0,5 pip/lot/éjszaka minden nyitott pozícióra;
 - stop-out ellenőrzése minden órában;
 - 4 000 pálya (3 évnél 2 000);
-- seed = 42.
+- seed = 42;
+- **nincs NBP:** a stop-outkori equity nem csonkolódik 0-ra, a negatív érték adósságként marad a pályán;
+- kosár-stop: ha a lebegő veszteség eléri a −20% E₀-t, minden pozíció piaci áron zár, és a grid az aktuális áron újraközpontozódik.
 
-Eredmények `[számított]`:
+Eredmények, 1 év `[számított; kód: Függelék A, seed = 42]`. Minden sorban a **túlélők mediánja mellett a minden pályára vett medián és átlag** is szerepel. Az átlag a várható érték becslése, ez a mérvadó:
 
-| Konfiguráció | Esemény | P(esemény) | Medián idő az eseményig | Medián végső equity (túlélők) | **Várható hozam (minden pálya)** |
-|---|---|---|---|---|---|
-| 0,01 lot, Δ = 20, SO 50% | stop-out | 1,6% | 10,0 hó | 9 972 USD | **−8,1%** |
-| 0,05 lot, Δ = 20, SO 50% | stop-out | 38,8% | 7,0 hó | 11 502 USD | **−35,2%** |
-| 0,10 lot, Δ = 20, SO 50% | stop-out | 62,8% | 5,3 hó | 14 451 USD | **−50,1%** |
-| 0,10 lot, Δ = 20, SO 20% | stop-out | 61,4% | 5,3 hó | 14 449 USD | **−49,7%** (átlagos equity a stop-outnál: −106 USD → negatív egyenleg) |
-| 0,05 lot, Δ = 10, SO 50% | stop-out | 67,6% | 5,2 hó | 12 267 USD | **−62,9%** |
-| 0,05 lot, Δ = 20, max 10 szint, kosár-stop −20% | kosár-stop | 90,2% (legalább egyszer) | 4,1 hó | 11 862 USD | **−10,5%** |
-| 0,05 lot, Δ = 20, σ × 1,5 = 9,95% | stop-out | 67,0% | 5,0 hó | 14 261 USD | **−57,2%** |
-| 0,05 lot, Δ = 20, 3 év | stop-out | 76,8% | 12,9 hó | 16 120 USD | **−65,0%** |
+| Konfiguráció | Esemény | P(esemény) | Medián idő az eseményig | Medián végső equity (túlélők) | Medián végső equity (minden pálya) | **Átlagos végső equity (minden pálya) = várható hozam** | Átlagos equity a stop-outkor | Negatív egyenleggel záruló stop-outok |
+|---|---|---|---|---|---|---|---|---|
+| 0,01 lot, Δ = 20, SO 50% | stop-out | 1,3% | 9,8 hó | 9 912 USD | 9 898 USD | **9 151 USD (−8,5%)** | −32 USD | 10 / 51 (19,6%) |
+| 0,05 lot, Δ = 20, SO 50% (**referencia-grid**) | stop-out | 35,3% | 7,3 hó | 11 453 USD | 8 801 USD | **6 800 USD (−32,0%)** | +69 USD | 284 / 1 413 (20,1%) |
+| 0,05 lot, Δ = 20, SO 20% | stop-out | 34,8% | 7,3 hó | 11 420 USD | 8 815 USD | **6 778 USD (−32,2%)** | −93 USD | **717 / 1 392 (51,5%)** |
+| 0,10 lot, Δ = 20, SO 50% | stop-out | 61,8% | 5,2 hó | 14 331 USD | 331 USD | **5 070 USD (−49,3%)** | +108 USD | 495 / 2 470 (20,0%) |
+| 0,10 lot, Δ = 20, SO 20% | stop-out | 60,8% | 5,3 hó | 14 287 USD | 107 USD | **5 031 USD (−49,7%)** | **−127 USD** | **1 221 / 2 433 (50,2%)** |
+| 0,05 lot, Δ = 10, SO 50% | stop-out | 66,9% | 5,2 hó | 12 288 USD | 302 USD | **3 771 USD (−62,3%)** | +103 USD | 524 / 2 677 (19,6%) |
+| 0,05 lot, Δ = 20, max 10 szint, kosár-stop −20%, **az első kosár-stop után leáll** | kosár-stop | 88,7% | 4,1 hó | 11 639 USD | 8 588 USD | **8 967 USD (−10,3%)** | stop-out nincs; átlagos equity a kosár-stopkor 8 634 USD | – |
+| ugyanez, **az EA a kosár-stop után újraindul** (új közép, ugyanazzal a lottal) | kosár-stop | 88,7% (legalább egyszer); átlag 1,81 kosár-stop/pálya | 4,1 hó (az első) | 11 639 USD | 7 771 USD | **7 710 USD (−22,9%)** | stop-out 0,67%; equity ≤ 50% E₀: 22,0% | 3 / 27 |
+| 0,05 lot, Δ = 20, σ × 1,5 = 9,95% | stop-out | 67,2% | 4,9 hó | 14 211 USD | 200 USD | **4 224 USD (−57,8%)** | −14 USD | 858 / 2 688 (31,9%) |
+| 0,05 lot, Δ = 20, **3 év** | stop-out | 74,7% | 12,7 hó | 16 140 USD | 212 USD | **3 818 USD (−61,8%)** | +59 USD | 295 / 1 493 (19,8%) |
+
+Az előző változat ugyanerre a modellre egy nem archivált implementációval kissé eltérő számokat adott (pl. 38,8% / −35,2% / 76,8%; kosár-stop −10,5%). A fenti sorok mind ugyanabból a kódból és seedből jönnek, ezért egymással összevethetők `[számított]`.
 
 **Kulcsmegfigyelések** `[számított + következtetett]`:
 
-1. **Túlélési torzítás.** A ≥ 0,05 lotos konfigurációkban a túlélők medián equity-je +15–45% (1 év), illetve +61% (3 év). A *minden pályára* vett várható hozam viszont −8% és −65% között van. Az MQL5 Market és a myfxbook „sikeres grid” görbéi a túlélő ágat mutatják.
-2. **A 20% vs. 50% stop-out szinte közömbös** (62,8% vs. 61,4%). Az alacsonyabb SO-nál viszont a diszkrét óránkénti árfolyamon és vastag farkon az **átlagos equity a stop-outnál negatív** (−106 USD) → NBP nélkül adósság.
-3. **A kosár-stop a ruint kisebb, gyakori veszteségekre cseréli:** 90% eséllyel legalább egyszer elveszít ~14%-ot (átlagos equity az eseménynél 8 639 USD). A várható érték így is negatív (−10,5%), de nincs teljes csőd. **A grid stop nélkül nem „biztonságos”, csak a veszteségeloszlást tolja a farokba.**
-4. **Vol-rezsim:** 1,5× volatilitásnál a ruin 38,8% → 67,0%. Ezért kötelező a vol-alapú lot-skálázás (strat-regime-garch-vol-filter, strat-sizing-vol-targeting).
+1. **Túlélési torzítás.** A ≥ 0,05 lotos konfigurációkban a túlélők medián equity-je +14–43% (1 év), illetve +61% (3 év). A *minden pályára* vett átlag viszont −8,5% és −62% között van, a minden pályára vett medián pedig 0,10 lotnál már csak 331 USD. **A csak a túlélők mediánját mutató bemutatás (backtest-riport, MQL5 Market, myfxbook „sikeres grid” görbe, HTML-kalkulátor) túlélési torzítás**: a stop-outba futott pályák eltűnnek a képből. Minden grid-eredmény mellé kötelező a minden pályára vett átlag és a csődarány.
+2. **A 20% vs. 50% stop-out a csőd valószínűségén szinte nem változtat** (60,8% vs. 61,8%), a **veszteség mélységén viszont igen.** 20%-os SO mellett óránkénti ellenőrzéssel és t(4)-farokkal a stop-outok **kb. fele (50,2–51,5%) negatív egyenleggel** zárul, az átlagos equity a stop-outkor −93 / −127 USD. 50%-os SO mellett ez az arány kb. 20%. NBP nélkül a negatív rész a bróker behajtható követelése.
+   - Összevetésül, az `ALGOTRADING.html` grid-kalkulátorának alapbeállításain (1 000 USD, 0,01 lot, max. 30 szint, σ 8%, 250 nap, 400 pálya, normális innováció) az átnéző Python-portja szerint 50%-os SO mellett 231 stop-outból 54 (23,4%), 20%-os SO mellett 230-ból 124 (53,9%) zárul nulla alatt. A kalkulátor ezeket csendben 0-ra állítja, vagyis hallgatólagosan NBP-t feltételez `[számított, az átnéző html_grid_port.py-jával újrafuttatva]`.
+3. **A kosár-stop a ruint kisebb, gyakori veszteségekre cseréli,** de csak akkor, ha a kereskedés az első kosár-stop után **leáll.**
+   - Leállással: 88,7% eséllyel egyszer elveszít kb. 14%-ot, és a várható hozam −10,3%.
+   - Ha az EA újraindul, a veszteségek ismétlődnek: átlag 1,81 kosár-stop évente, −22,9% várható hozam, 22% esély a tőke felének elvesztésére.
+   - A −10,5%/−10,3% tehát **feltételes szám** („leállás az első kosár-stop után”), nem egy folyamatosan futó EA éves várható vesztesége.
+   - **A grid stop nélkül nem „biztonságos”, csak a veszteségeloszlást tolja a farokba.**
+4. **Vol-rezsim:** 1,5× volatilitásnál a ruin 35,3% → 67,2%. Ezért kötelező a vol-alapú lot-skálázás (strat-regime-garch-vol-filter, strat-sizing-vol-targeting).
 
 **A modell korlátai** `[következtetett]`:
 - nincs benne valódi mean-reversion edge (driftmentes);
@@ -259,7 +303,42 @@ Eredmények `[számított]`:
 - nincs hétvégi gap;
 - nincs spread-tágulás rolloverkor.
 
-A valódi EA-paraméterekkel és a Vantage-szimbólumspecifikációval (a1 ágens) újra kell futtatni. A kód a függelékben van.
+A valódi EA-paraméterekkel és a szerződő bróker szimbólumspecifikációjával (a1 ágens; a brókerprofilból) újra kell futtatni. A kód a függelékben van.
+
+### 3.3.1 Élesítés előtti farokteszt (kapu)
+
+Grid, martingale vagy bármely, lebegő veszteséget halmozó stratégia csak akkor mehet élesbe, ha mindhárom feltétel teljesül `[következtetett; a küszöbök kockázati döntések, nem mért értékek]`:
+
+1. **MC-kapu:** P(csőd 1 éven belül) ≤ 1%.
+   - Modell: Student-t(4) innovációk, a realizált volatilitás 1,5-szerese, legalább 4 000 pálya.
+   - Csőd = stop-out **vagy** az equity a kezdő tőke 50%-a alá esik (amelyik előbb jön).
+   - A tényleges EA-paraméterekkel fut, beleértve a kosár-stop utáni újraindítás logikáját.
+2. **Sokknap-visszajátszás:** a stresszveszteség ≤ 25% E₀ minden alábbi napon, **a grid még megnyitható szintjeivel együtt** (folytonos út: minden szint megnyílik útközben), valamint gap-esetben (a stop- vagy kosár-stop megbízás nem teljesül a szintjén, hanem csak a mozgás végén). A mozgások ECB-fixingből `[számított]`:
+
+   | Sokknap | Pár | Mozgás (ECB-fixing, előző munkanaphoz) |
+   |---|---|---|
+   | 2008-12-19 | EURUSD | −4,63% (log −4,74%) |
+   | 2015-01-15 (SNB) | EURCHF | −14,40% |
+   | 2016-06-24 (Brexit) | GBPUSD / EURGBP | −7,84% / +5,42% |
+   | 2016-10-07 (GBP flash crash) | GBPUSD / EURGBP | −2,64% / +2,30% (az ázsiai órákban történt intraday zuhanást a napi fixing nem mutatja) |
+   | 2024-08-05 (jen-carry) | USDJPY | −4,49% |
+
+3. **Áttétel-plafon:** az effektív tőkeáttétel a legrosszabb megnyitható állapotban is ≤ 10× (rögzített vagy floorral védett párokon ≤ 5×), lásd 5.3.
+
+**Eredmény** (MC: 1 év, t(4), σ × 1,5 = 9,95%, 4 000 pálya, seed = 42; visszajátszás: a mozgást az EURUSD-gridre alkalmazva, üres gridből indulva) `[számított]`:
+
+| Konfiguráció (10 000 USD, EURUSD) | P(stop-out) | P(csőd: stop-out vagy ≤ 50% E₀) | Átlagos hozam (minden pálya) | Legrosszabb sokknap-veszteség | Max. effektív áttétel (a legmélyebb nyitható állapotban, E₀-hoz mérve) | Kapu |
+|---|---|---|---|---|---|---|
+| **Referencia-grid:** 0,05 lot, Δ = 20, korlátlan szint | 67,2% | 85,2% | −57,8% | CHF-2015: a mozgás közben stop-out (folytonos úton 313% E₀); 2008: 31,5%; Brexit GBPUSD: 91,8%; JPY-2024: 29,7% | 22× E₀-hoz mérve a stop-outnál (44 szint × 0,05 lot) | **megbukik** (mindhárom feltételen) |
+| 0,01 lot, Δ = 20, korlátlan szint | 12,0% | 31,6% | −19,4% | CHF-2015: 62,6%; Brexit GBPUSD: 18,4% | 9,0× a stop-outnál (99 szint × 0,01 lot) | **megbukik** (MC és CHF-visszajátszás) |
+| 0,05 lot, max. 10 szint, kosár-stop −20%, leállás | 0% | 0% | −12,3% (99,6% eséllyel kosár-stop) | folytonos úton ≤ 20% (a kosár-stop zár); ha a kosár-stop nem teljesül a −20%-on (gap, nincs ár), 10 nyitott szinttel a teljes mozgásra: CHF-2015 74,2%, Brexit GBPUSD 37,8% | 5,4× | MC-kapu igen, **gap-visszajátszáson megbukik** |
+| ugyanez, újraindulással | 17,6% | 66,9% | −52,9% | mint fent | 5,4× | **megbukik** |
+| 0,01 lot, max. 10 szint, kosár-stop −5%, újraindulással | 0% | 0% | −9,8% | gap-esetben is ≤ 14,8% (CHF-2015) | 1,1× | **átmegy**, de a várható érték negatív |
+
+**Olvasat** `[következtetett]`:
+- A referencia-grid egyik feltételt sem teljesíti.
+- A kapu szükséges, nem elégséges feltétel. Az utolsó sor átmegy, mégis évi kb. −10%-ot veszít, mert a modellben nincs edge. A kapu csak azt zárja ki, hogy egy farokesemény elvigye a számlát; a nyereségességet a walk-forward és a költségmodell (M7) dönti el.
+- A gap-sorok miatt a kosár-stop önmagában nem stresszvédelem. A stresszveszteség-limitet a nyitható szintek számával és a lotmérettel kell tartani.
 
 ### 3.4 Martingale – zárt alak és diszkrét DP
 
@@ -420,13 +499,38 @@ Napi veszteség, % `[számított]`:
 
 **Követelmény a gridhez:** a nyitott kitettségnek (a lebegő plusz a még nyitható szintekkel együtt) túl kell élnie egy ilyen napi mozgást, úgy hogy a margin level a stop-out fölött marad.
 
-**Képlet:**
+**Képlet (túlélési plafon).** Lineáris P&L mellett egy x relatív ellenmozgás után E₀ − N·x ≥ SO·N/λ kell, vagyis:
 
 ```
-L_eff,max = (1 − SO/λ·L_eff) / x_stressz  ≈  1/x_stressz
+L_eff = N/E₀  ≤  1 / (x + SO/λ)
 ```
 
-Ez a 4,5%-os JPY-mozgásra L_eff ≤ 22, a 14,4%-os CHF-sokkra L_eff ≤ 6,9 `[számított]`.
+**Számpélda** `[számított]`: JPY-2024, x = 4,49%, SO = 50%, λ = 500 → SO/λ = 0,001 → L ≤ 1/0,0459 = **21,8×**. CHF-2015, x = 14,40% → L ≤ 1/0,145 = **6,90×**.
+
+| Sokknap (x) | SO 50%, 1:500 | SO 20%, 1:500 | SO 50%, 1:30 (ESMA) | 25%-os stresszlimit: L ≤ 0,25/x | Veszteség 10× mellett | Veszteség 5× mellett |
+|---|---|---|---|---|---|---|
+| EURUSD 2008-12-19 (4,63%) | 21,2× | 21,4× | 15,9× | 5,4× | 46,3% | 23,1% |
+| EURCHF 2015-01-15 (14,40%) | 6,90× | 6,92× | 6,22× | 1,7× | 144% | 72,0% |
+| GBPUSD 2016-06-24 (7,84%) | 12,6× | 12,7× | 10,5× | 3,2× | 78,4% | 39,2% |
+| EURGBP 2016-06-24 (5,42%) | 18,1× | 18,3× | 14,1× | 4,6× | 54,2% | 27,1% |
+| GBPUSD 2016-10-07 (2,64%) | 36,5× | 37,3× | 23,2× | 9,5× | 26,4% | 13,2% |
+| USDJPY 2024-08-05 (4,49%) | 21,8× | 22,1× | 16,2× | 5,6× | 44,9% | 22,5% |
+
+`[számított, ECB-fixing; az intraday szélsőérték nagyobb lehet]`
+
+A λ = 500-as brókeráttétel mellett az SO/λ tag elhanyagolható (≤ 0,1 százalékpont). λ = 30-nál viszont már számít (0,5/30 = 1,67 százalékpont).
+
+**Három, egymásra épülő limit** `[következtetett; a küszöbök kockázati döntések]`:
+1. **Túlélési plafon** = 1/(x + SO/λ). Ez a matematikai határ, nem célérték: 21,8× (JPY-2024), 6,90× (CHF-2015), a felsorolt sokknapok közül a nem rögzített párokon a legszigorúbb 12,6× (GBPUSD, Brexit).
+2. **Kemény effektív áttétel-plafon: ≤ 10×, rögzített (peggelt vagy floorral védett) párokon ≤ 5×.**
+   - Az OPA-szabályban és az EA-ban is be kell állítani, a legrosszabb megnyitható grid-állapotra számolva.
+   - A 10× minden nem rögzített sokknap túlélési plafonja alatt marad (min. 12,6×), az 5× a CHF-2015 6,90×-e alatt.
+   - Az ESMA 30:1 lakossági limitjén belül van: 10× effektív áttételnél 1:30 mellett a margin level 30/10 = 300%.
+3. **Stresszveszteség-limit: ≤ 25% E₀ minden történelmi sokknapon**, a grid még megnyitható szintjeivel együtt.
+   - Statikus pozícióra ebből L ≤ 0,25/x: kb. 5,4–5,6× a 2008-as EURUSD- és a 2024-es JPY-napra, 3,2× a Brexit-GBPUSD-re, 1,7× a CHF-2015-re.
+   - **Ez a kötő feltétel.** A 10× plafon mellett egy 2008- vagy 2024-szerű nap 45–46%-ot vinne el, egy rögzített páron 5× mellett a CHF-2015 72%-ot.
+   - A plafon tehát felső korlát, a tényleges méretet a stresszlimit adja.
+   - Gridnél a veszteséget a 3.3.1 visszajátszásával kell számolni: folytonos úton minden szint megnyílik, a veszteség kvadratikus. A referencia-grid már a 2008-as EURUSD-napon 31,5%-ot veszítene üres gridből indulva.
 
 ---
 
@@ -454,9 +558,12 @@ Ez a 4,5%-os JPY-mozgásra L_eff ≤ 22, a 14,4%-os CHF-sokkra L_eff ≤ 6,9 `[s
 |---|---|---|---|---|
 | Vantage Global Prime LLP | FCA (UK) | igen (retail, számlaszintű) | 30:1 (ESMA/FCA-szabály) | FCA/ESMA-szabály `[forrás: ESMA, curl 200]`; jogalany-hozzárendelés: review-oldalak `[nem ellenőrzött]` |
 | Vantage Global Prime Pty Ltd | ASIC (AU) | igen (retail) | 30:1 (ASIC retail CFD-szabály) | review-oldalak `[nem ellenőrzött]` |
-| Nemzetközi jogalany (VFSC, Vanuatu; a források a nevet eltérően adják meg: „Vantage Global Limited” / „Vantage International Group”, licencszám 700271) | VFSC | „best effort” vagy nem garantált a források szerint | ezt a jogalanyt kötik az 1:500-hoz (következtetett) | review-oldalak, WebSearch-összefoglaló `[nem ellenőrzött; az elsődleges forrás az ügyfélszerződés (Client Agreement)]` |
+| VIG Group (a globális Help Center szerint) | Mauritius FSC, licenc GB20026165 | jogi garancia nincs; a Help Center szerint automatikus nullázás a „jogosult” számlákra (PAMM/MAM kizárva) | ezt a jogalanyt kötik az 1:500-hoz `[következtetett]` | `[forrás: Vantage globális Help Center, „Who is Vantage?”, frissítve 2026-11-05, Zendesk API]` |
+| Vantage Markets (Pty) Ltd | FSCA (Dél-Afrika) 51268 | nem ellenőrzött | nem ellenőrzött | ugyanott `[forrás]` |
+| Korábbi források: Vantage Global Ltd (VFSC 700271), Vantage International Group Ltd (CIMA) | VFSC / CIMA | „best effort” a review-oldalak szerint | – | review-oldalak, régebbi súgócikk `[nem ellenőrzött]`; **a 2026-11-05-i Help Center már nem sorolja fel őket** |
 
-- **Következmény** `[következtetett]`: az 1:500 szinte biztosan offshore jogalanyt jelent, ahol az NBP nem jogi garancia. A 2.1 fejezet szerinti gap után a negatív egyenleg **behajtható követelés** lehet.
+- A Help Center szerint az ügyfélszerződésben (Client Agreement) megnevezett jogalany határozza meg a szabályokat és a védelmeket, és az egyik jogalany védelmei nem vonatkoznak automatikusan a másikra `[forrás: ugyanott]`. **A mérvadó forrás a saját Client Agreement**, nem a súgó és nem ez a táblázat.
+- **Következmény** `[következtetett]`: az 1:500 szinte biztosan offshore jogalanyt jelent, ahol az NBP nem jogi garancia. A 2.1 fejezet szerinti gap után a negatív egyenleg **behajtható követelés** lehet. A 3.3 MC szerint 20%-os SO mellett a stop-outok kb. fele negatív egyenleggel zárul.
 - **A pontos ÁSZF-ellenőrzés az a8 ágens feladata** (M10 jogi rész).
 
 ### 6.3 Egyéb partnerkockázatok (röviden, számokkal, ahol van)
@@ -479,14 +586,20 @@ Ez a 4,5%-os JPY-mozgásra L_eff ≤ 22, a 14,4%-os CHF-sokkra L_eff ≤ 6,9 `[s
 | 2 | Ellenmozgás 50% / 20% stop-outig, teljes kihasználásnál | 0,10% / 0,16% | számított |
 | 3 | Ellenmozgás a nulla equityig L_eff = 20 / 50 / 100 mellett | 5% / 2% / 1% | számított |
 | 4 | SNB 2015, EURCHF napi változás (ECB-fixing) | −14,4% | számított (ECB-adat) |
-| 5 | Grid 0,05 lot/20 pip/10k USD: P(stop-out) 1 év / 3 év (MC) | 38,8% / 76,8% | számított |
-| 6 | Ugyanez: várható hozam minden pályán, 1 év | −35% | számított |
+| 5 | Grid 0,05 lot/20 pip/10k USD: P(stop-out) 1 év / 3 év (MC, seed = 42) | 35,3% / 74,7% | számított |
+| 6 | Ugyanez, 1 év: átlagos hozam minden pályán / túlélők medián equity-je | −32,0% / 11 453 USD (+14,5%) | számított |
+| 6a | Ugyanez SO 20%-kal: negatív egyenleggel záruló stop-outok aránya (NBP nélkül) | 51,5% (0,10 lotnál 50,2%, átlag −127 USD) | számított |
+| 6b | Kosár-stop (max. 10 szint, −20%): várható hozam leállással / újraindulással | −10,3% / −22,9% | számított |
+| 6c | Reflexiós ruin 0,01 lot/20 pip, log-távolsággal, 1 év / 3 év | 0,26% / 8,25% | számított |
 | 7 | Martingale 0,01 lot/20 pip/10k USD: P(csőd) 1 000 trade alatt | 32,6% | számított |
 | 8 | 2× Kelly növekedése | 0 (fölötte negatív) | számított |
 | 9 | ½ Kelly: P(valaha a kezdő tőke 50%-ára esik) | 12,5% | számított |
 | 10 | EURUSD napi 99% VaR / 99,9% EVT ES | 1,54% / 2,95% | számított |
-| 11 | Ajánlott max L_eff a JPY-2024 / CHF-2015 stresszre | ≤22 / ≤6,9 | számított |
-| 12 | Vantage stop-out: UK retail / STP-ECN (nem UK/AU) | 50% / 20% | forrás (WebSearch) |
+| 11 | Túlélési plafon 1/(x + SO/λ) a JPY-2024 / CHF-2015 stresszre | ≤21,8× / ≤6,90× | számított |
+| 11a | Kemény effektív áttétel-plafon (rögzített párokon) | ≤10× (≤5×) | következtetett (kockázati döntés) |
+| 11b | Stresszveszteség-limit ≤25% E₀ → statikus L_eff a JPY-2024 / CHF-2015 napra | ≤5,6× / ≤1,7× | számított |
+| 11c | Farokteszt-kapu: referencia-grid P(csőd 1 év, t(4), σ × 1,5) | 85,2% → megbukik (küszöb ≤1%) | számított |
+| 12 | Stop-out példaprofilok: EU/UK lakossági / egyes offshore ECN (pl. Vantage globális) | 50% kötelező NBP-vel / 20% NBP-garancia nélkül | forrás (ESMA; Vantage Help Center) – brókerprofil-adat |
 
 ---
 
@@ -503,8 +616,10 @@ def grid_kstar(E0, q, delta_pips, SO, P, lev=500, pipv=10, cs=100_000, spread=1.
     eq = E0 - (k*xs - k*(k+1)/2)*delta_pips*q*pipv - k*spread*q*pipv
     mg = k*q*cs*P/lev
     i = np.where((k > 0) & (eq <= SO*mg))[0][0]; return int(k[i]), xs[i]*delta_pips
-def p_ruin_reflection(d_rel, sigma, T):            # 3.1
-    return 2*(1 - stats.norm.cdf(d_rel/(sigma*np.sqrt(T))))
+def p_ruin_reflection(d_rel, sigma, T):            # 3.1, d_rel = x*·Δ/P₀ (lineáris távolság)
+    d_log = -np.log(1 - d_rel)                       # log-távolság (long grid); short: np.log(1 + d_rel)
+    return 2*(1 - stats.norm.cdf(d_log/(sigma*np.sqrt(T))))
+def stress_lev(x, SO, lev=500): return 1/(x + SO/lev)   # 5.3 túlélési plafon
 def p_run(n, K, p_loss):                           # 3.4: P(legalább egy >=K hosszú vesztes sorozat)
     st = np.zeros(K); st[0] = 1; hit = 0
     for _ in range(n):
@@ -516,12 +631,53 @@ def evt_var_es(loss, a, q_u=0.95):                 # 5.2 POT-GPD
     u = np.quantile(loss, q_u); exc = loss[loss > u] - u
     xi, _, beta = stats.genpareto.fit(exc, floc=0); n, nu = len(loss), len(exc)
     var = u + beta/xi*((n/nu*(1-a))**(-xi) - 1); es = (var + beta - xi*u)/(1 - xi); return var, es
-# MC grid (3.3): óránkénti t(4)-innovációk, kétirányú grid, nL/nS állapot:
-#   vétel: n = max(n, floor(x)); zárás: n = min(n, ceil(x)); realizált += eladások*Δ*pipv − vételek*spread*pipv
-#   lebegő = −(n*x − n(n+1)/2)*Δ*pipv ; stop-out ha equity <= SO*margin
 ```
 
-A teljes MC-kód (≈100 sor) a fenti logikát vektorizálja 4 000 pályára (seed = 42); futásidő néhány perc.
+**Grid MC (3.3, 3.3.1)** – a táblázatok minden sora ebből a függvényből jön (seed = 42; az 1. kör átnézőjének grid_mc.py-ja, kiegészítve a minden pályára vett átlaggal, a negatív stop-outok számával és a 50%-os csődküszöbbel):
+
+```python
+import math, numpy as np
+def run(q=0.05, D=20, SO=0.5, sigma=0.0663, years=1, paths=4000, seed=42, max_lv=None, basket=None,
+        freeze=False, E0=10_000.0, P0=1.1052, lam=500, spread=1.0, swap=-0.5, pipv=10.0, cs=100_000):
+    rng = np.random.default_rng(seed); H = int(6048*years); sh = sigma/math.sqrt(6048)
+    logp = np.full(paths, math.log(P0)); nL = np.zeros(paths); nS = np.zeros(paths); real = np.zeros(paths)
+    alive = np.ones(paths, bool); so_f = np.zeros(paths, bool); eq_so = np.full(paths, np.nan)
+    r50 = np.zeros(paths, bool); hits = np.zeros(paths, int); base = np.full(paths, P0); pip = 1e-4
+    for h in range(H):
+        logp = np.where(alive, logp + sh*rng.standard_t(4, paths)/math.sqrt(2.0), logp); P = np.exp(logp)
+        X = (base - P)/(D*pip); Y = -X
+        def side(n, X):                                   # TP-zárás a ceil(X) szint fölött, nyitás floor(X)-ig
+            new = np.where(X >= 1, np.floor(X), 0); keep = np.where(X > 0, np.ceil(X), 0)
+            if max_lv: new = np.minimum(new, max_lv)
+            nc = np.minimum(n, keep); op = np.maximum(new - nc, 0); return nc + op, n - nc, op
+        nLn, cL, oL = side(nL, X); nSn, cS, oS = side(nS, Y)
+        dr = (cL + cS)*D*q*pipv - (oL + oS)*spread*q*pipv
+        if (h + 1) % 24 == 0: dr = dr + (nLn + nSn)*swap*q*pipv        # swap éjszakánként
+        real = np.where(alive, real + dr, real); nL = np.where(alive, nLn, nL); nS = np.where(alive, nSn, nS)
+        Xc, Yc = np.clip(X, 0, None), np.clip(Y, 0, None)
+        fl = -(nL*Xc - nL*(nL + 1)/2)*D*q*pipv - (nS*Yc - nS*(nS + 1)/2)*D*q*pipv
+        eq = E0 + real + fl; mg = (nL + nS)*q*cs*P/lam
+        if basket is not None:                            # kosár-stop: zárás piaci áron, új közép
+            hit = alive & (fl <= -basket*E0)
+            real = np.where(hit, real + fl, real); hits += hit
+            nL = np.where(hit, 0, nL); nS = np.where(hit, 0, nS); base = np.where(hit, P, base)
+            if freeze: alive &= ~hit                      # freeze=True: leállás az első kosár-stop után
+            eq = E0 + real + np.where(hit, 0, fl); mg = (nL + nS)*q*cs*P/lam
+        r50 |= (eq <= 0.5*E0) & (alive | (hits > 0))
+        so = alive & (mg > 0) & (eq <= SO*mg)             # nincs NBP: a negatív equity megmarad
+        eq_so = np.where(so, eq, eq_so); real = np.where(so, eq - E0, real)
+        nL = np.where(so, 0, nL); nS = np.where(so, 0, nS); so_f |= so; r50 |= so; alive &= ~so
+    P = np.exp(logp); X = np.clip((base - P)/(D*pip), 0, None); Y = np.clip((P - base)/(D*pip), 0, None)
+    fl = -(nL*X - nL*(nL + 1)/2)*D*q*pipv - (nS*Y - nS*(nS + 1)/2)*D*q*pipv
+    final = E0 + real + np.where(alive, fl, 0); surv = ~so_f & (hits == 0)
+    return dict(p_so=so_f.mean(), p_ruin=r50.mean(), mean_ret=final.mean()/E0 - 1, med_all=np.median(final),
+                med_surv=np.median(final[surv]), mean_eq_so=np.nanmean(eq_so[so_f]),
+                neg_so=int((eq_so[so_f] < 0).sum()), n_so=int(so_f.sum()), p_basket=(hits > 0).mean())
+# Példák: run(q=0.05) ; run(q=0.10, SO=0.2) ; run(max_lv=10, basket=0.20, freeze=True) ; ... freeze=False
+#         farokteszt: run(q=0.05, sigma=0.0663*1.5)
+```
+
+Futásidő konfigurációnként kb. 10–30 másodperc.
 
 ## Függelék B – Hivatkozások (ellenőrzés módja)
 
@@ -538,3 +694,8 @@ A teljes MC-kód (≈100 sor) a fenti logikát vektorizálja 4 000 pályára (se
 - **CRS IN10230 (SNB 2015)** https://www.everycrsreport.com/reports/IN10230.html – curl 200.
 - **MT5 margin-képletek** https://www.metatrader5.com/en/terminal/help/trading_advanced/margin_forex – WebFetch.
 - **Vantage stop-out (UK súgó)** https://helpcenter.vantagemarkets.co.uk/hc/en-gb/articles/11933242268303 – curl 403, tartalom csak WebSearch-összefoglalóból → részben ellenőrzött.
+- **Vantage globális Help Center** (Zendesk API, lekérve 2026-11-15; az 1. kör átnézője):
+  - „Who is Vantage?” https://global.vantagehelpcenter.com/hc/en-us/articles/10945714674959-Who-is-Vantage – frissítve 2026-11-05;
+  - „What is stop-out and how is it calculated?” https://global.vantagehelpcenter.com/hc/en-us/articles/10948711085839-What-is-stop-out-and-how-is-it-calculated – frissítve 2025-09-12;
+  - „How can I resolve a negative balance?” https://global.vantagehelpcenter.com/hc/en-us/articles/10573019826063-How-can-I-resolve-a-negative-balance – frissítve 2026-10-23.
+- **1. körös kockázati átnézés** (`.allapot/review1/risk.md`): a log-távolság, a kosár-stop újraindítás, a negatív stop-outok és a HTML-port számai innen indultak; minden itt közölt számot újrafuttattunk.
