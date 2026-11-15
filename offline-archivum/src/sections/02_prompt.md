@@ -56,6 +56,7 @@ MUNKAMENET:
 7. Rendszerezés: <cél>/<kategória>/<id>/... Írj egy <cél>/INDEX.md és <cél>/index.html fájlt
    (id, név, mire jó, hogyan nyitható meg, méret, sha256), plusz egy manifest.json-t.
    Másold a meghajtóra az ARCHIVUM.md-t, az ARCHIVUM-LLM.html-t, a select_items.py-t és a llm_calc.py-t is.
+   A dl.sh a végén magától megírja a <cél>/INDEX.md (tartalomjegyzék) és a <cél>/manifest.json fájlt; `MANIFEST=1` esetén a teljes SHA-256 listát is (MANIFEST.sha256 – nagy meghajtón órákig tart). Ezeket egészítsd ki az index.html-lel és a „hogyan nyitható meg” leírásokkal.
 8. Olvasóprogramok: töltsd le a tool-* elemeket (Kiwix desktop/Android, kiwix-tools, VLC, PDF-olvasó,
    llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), a Telepítő-platformok szerint (alap: Windows, Linux, Android; macOS csak ha kérték).
 9. Második példány (ha van második meghajtó – lásd 4c fejezet), ebben a sorrendben:

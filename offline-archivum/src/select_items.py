@@ -336,6 +336,8 @@ def main():
                         continue
                     if size_of(v) - size_of(chosen[k]) > cap:
                         continue
+                    if chosen[k]["tier"] == 0 and v["tier"] > 0:       # 0. szintű tételt nem cserélünk hátrébb sorolt változatra
+                        continue
                     if size_of(v) > size_of(chosen[k]) and fits(v, chosen[k]):
                         used += size_of(v) - size_of(chosen[k]); chosen[k] = v
                         break
@@ -352,7 +354,7 @@ def main():
     # 4) átfedések kiszűrése (pl. Wikipedia-orvosi részhalmaz, ha a teljes WP bent van), majd újratöltés
     for _ in range(10):
         ids = {v["id"] for v in chosen.values() if v["download"]["method"] != "agent"}   # AI-feladat nem helyettesít automatikus letöltést
-        drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl]
+        drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl and v["tier"] > 0]   # 0. szint mindig marad (korán töltődik)
         if not drop:
             break
         for k in drop:
@@ -494,6 +496,7 @@ def write_sh(plan, path, dest):
          '      || git -C "$g" fetch -q --depth 1 origin "+HEAD:refs/heads/snapshot" || return 1',
          '    git -C "$g" symbolic-ref HEAD refs/heads/snapshot',
          '  fi',
+         '  git -C "$g" fsck --connectivity-only -q 2>/dev/null || { echo "FIGYELEM: git fsck hiba: $g" >&2; return 1; }   # integritás',
          '  if [ -n "${BUNDLE:-}" ]; then   # BUNDLE=1: +1x hely; sekély tükörből nem klónozható bundle lenne',
          '    if [ -f "$g/shallow" ]; then echo "FIGYELEM: $g sekély – a BUNDLE-höz GIT_FULL=1 kell"; else git -C "$g" bundle create "${g%.git}.bundle" --all; fi',
          '  fi; }',
@@ -527,6 +530,10 @@ def write_sh(plan, path, dest):
             share = 10 if d.get("todo_note") else 2          # a tervezett méret legalább 50%-a (todo_note-os készletnél 10%-a) legyen meg
             minh = max(1, int((d.get("auto_bytes") or size_of(v) or 0) / 1000 / (2 if d.get("auto_bytes") else share)))
             guard = f'[ "$(du -sk "{sub}" | cut -f1)" -ge {minh} ]'
+            sums = [u.rsplit("/", 1)[-1].replace("%20", " ") for u in us if re.search(r"(sha1|sha256|md5)(sums?)?(\.txt)?$", u, re.I)]
+            if sums:     # a forrás saját ellenőrzőösszeg-fájlja: a letöltött fájlokra lefuttatva
+                tool = "sha256sum" if "256" in sums[0].lower() else "md5sum" if "md5" in sums[0].lower() else "sha1sum"
+                guard += f' && (cd "{sub}" && {tool} -c --ignore-missing --quiet {q(sums[0])})'
             if len(us) == 1:
                 L.append(f'fetch {q(us[0])} "{sub}" && {guard} && ok {vid} || fail {vid}')
             elif us:      # több fájl: mind letöltődik, tételenként egy ítélet (részleges hiba = FAIL)
@@ -599,6 +606,13 @@ def write_sh(plan, path, dest):
             L.append(f'# KÉZI ({m}): {c(d.get("note"))} {c(d.get("url"))}')
             L.append(f'echo "TODO {v["id"]} ({m})" | tee -a "$LOG" "$RUNLOG"')
         L.append("")
+    # tartalomjegyzék (INDEX.md, manifest.json) a meghajtóra; MANIFEST=1: SHA-256 lista is (nagy meghajtón órákig tart)
+    idx = ["# ARCHIVUM – tartalomjegyzék", "", "| Szint | Azonosító | Név | Méret | Mappa |", "|---|---|---|---|---|"]
+    idx += [f"| {v['tier']} | {v['id']} | {c(v.get('name'))[:90].replace('|', '/')} | {human(size_of(v))} | {v['cat']}/{v['id']} |" for v in plan]
+    man = json.dumps([{k: v.get(k) for k in ("id", "name", "cat", "tier", "bytes", "bytes_est", "license", "info_url")} | {"path": f"{v['cat']}/{v['id']}"} for v in plan], ensure_ascii=False)
+    L.append("cat > \"$DEST/INDEX.md\" <<'ARCHIVUM_INDEX_EOF'\n" + "\n".join(idx) + "\nARCHIVUM_INDEX_EOF")
+    L.append("cat > \"$DEST/manifest.json\" <<'ARCHIVUM_MANIFEST_EOF'\n" + man + "\nARCHIVUM_MANIFEST_EOF")
+    L.append('if [ -n "${MANIFEST:-}" ]; then (cd "$DEST" && find . -type f ! -name MANIFEST.sha256 ! -name "_log*" -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256) && echo "MANIFEST.sha256 kész"; fi')
     L.append('echo "Kész. Napló: $RUNLOG"; echo "FAIL ebben a futásban: $(grep -c "^FAIL" "$RUNLOG") | kézi/AI-teendő (TODO): $(grep -c "^TODO" "$RUNLOG")"')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")

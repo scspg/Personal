@@ -168,3 +168,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## AI-ÁGENS #3 87,8 (regresszió: korai bővítés a teljes MEK-re, 1 TB agent) → javítva: upgrade() sosem választ agent-változatot, korai bővítés legfeljebb a keret 10%-a; who-imci auto_bytes 1 319 714; ham-digital 28 670 272; touch-útmutatás valódi útvonallal (printf). 2 TB fókuszos terv: 514 tétel, MEK-szakmai, CD3WD DVD, WP maxi, SO, Khan, OSM, WorldClim bent. Monoton, minden ellenőrzés OK. KÖVETKEZŐ: AI-ágens #4, és a szakértő+felhasználó gyors megerősítése.
 
 ## #4: SZAKÉRTŐ 92,3 (MEK/Debian kiesett: agent-tiltás csak korai bővítésnél) → javítva, 16 TB-on MEK, 32 TB-on Debian vissza; FELHASZNÁLÓ 94,3 (min 94) → MSF kolera felirat + beszédes linkfeliratok (kötet, útmutató, platform, ATP/TC). AI-ágens #4 még fut.
+
+## AI-ÁGENS #4 92,8 (min 90) → javítva: 0. szintű tétel nem esik ki átfedés/bővítés miatt; git fsck; forrás-ellenőrzőösszeg (sha1/sha256/md5) futtatása; INDEX.md + manifest.json a végén, MANIFEST=1 SHA-256; prompt 7. lépés. Próbafuttatás 64 GB shimekkel OK. KÖVETKEZŐ: utolsó megerősítő kör (AI, felhasználó, szakértő).
