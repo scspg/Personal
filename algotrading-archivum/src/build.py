@@ -32,6 +32,7 @@ SOURCES = [
     ("a6_ai_research", "AI-kereskedés kutatása, LLM-ágensek, súlyozás, validálás, irodalom, benchmark-platformok"),
     ("a8_infra_legal", "Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás"),
     ("a9_platform", "Platform-architektúra és AI-fejlesztési eszközök"),
+    ("a10_methods", "Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)"),
 ]
 
 

@@ -227,6 +227,44 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
   - ágens alapú önjáték-szimuláció; „az ördögügyvéd bizalma” mint pozícióméret-szorzó;
   - brókeroldali viselkedés modellezése (spread-tágulás előrejelzése).
 
+### M16. Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (a felhasználó kiemelt kérése, 2026-11-15)
+**Cél:** megtalálni mindenkit, aki igazoltan működő módszerrel nyert ki statisztikai összefüggésekből használható következtetést és pénzt vagy döntési előnyt, bármely területen. A mintázatokat és módszereket minimum lemásolhatóvá, maximum jobbá kell tenni.
+
+**Minden esettanulmányhoz rögzítendő:**
+- ki, mikor;
+- milyen adat;
+- milyen módszer;
+- mi lett az igazolt eredmény, forrással; a legenda külön jelölve;
+- miért működött;
+- mikor és miért halt meg;
+- reprodukálható kód vagy cikk;
+- hogyan csinálnánk jobban (konkrétan);
+- mire használható a platformon.
+
+**Esettanulmányok területei:**
+- **Kvant pénzügy:** Thorp/Princeton-Newport, Renaissance (Baum–Welch/HMM, Berlekamp, Laufer), D. E. Shaw, WorldQuant 101 Alphas, Two Sigma.
+- **Nyertes versenymegoldások:** Kaggle Jane Street, Optiver, G-Research; Numerai.
+- **Sportfogadás és szerencsejáték:** Bill Benter (lóverseny, Hongkong, multinomiális logit), Billy Walters, Starlizard/Tony Bloom, Smartodds/Matthew Benham, Voulgaris, Moneyball/sabermetrika.
+- **Kaszinó és lottó:** MIT blackjack-csapat; Thorp–Shannon rulett; lottó-kiskapuk (Cash WinFall/Selbee, Srivastava kaparós sorsjegyei).
+- **Előrejelzés és nowcasting:**
+  - Tetlock szuperelőrejelzői, Silver/538, Iowa Electronic Markets;
+  - NY Fed Staff Nowcast (dinamikus faktormodell), Billion Prices Project;
+  - M4/M5 előrejelzési versenyek tanulságai.
+- **Alternatív adat:** műholdas parkolóhely- és olajtartály-árnyék számlálás, kártyás költés → negyedéves eredmény, Google Trends (Preis 2013), Twitter-hangulat (Bollen 2011, és a megismétlési vita).
+- **Klasszikus statisztikai áttörések:** Wald túlélési torzítása, Turing Banburismus (szekvenciális elemzés), bayesi keresés (USS Scorpion, AF447), Benford-törvény csalásfelderítésre, John Snow kolera (kauzalitás).
+- **Ellenpéldák:** Google Flu Trends kudarca, LTCM (korrelációs összeomlás).
+- **Játékelmélet és MI:** Libratus/Pluribus, AlphaGo/AlphaZero, FICO-hitelpontozás, aktuáriusi módszerek.
+
+**Módszertár** (mindegyiknél: mikor jó, mikor csal, Python-könyvtár):
+- **Kauzalitás:** Granger, transfer entropy, kauzális felfedezés (PC/FCI, PCMCI/Tigramite), DoWhy/EconML, szintetikus kontroll, különbségek különbsége, instrumentális változó.
+- **Függőség és hasonlóság:** kölcsönös információ, kopulák, DTW, kointegráció.
+- **Állapottér- és rezsimmodellek:** Kalman/állapottér, HMM, változáspont-detektálás.
+- **Automatikus jelbányászat:** szimbolikus regresszió (PySR), genetikus programozás alfa-bányászathoz, AutoML.
+- **Magyarázat és ensemble:** SHAP/permutációs fontosság, ensemble (Netflix Prize tanulságai).
+- **Védelem hamis összefüggések ellen:** többszörös tesztelés (FDR, Bonferroni, Harvey–Liu–Zhu), Tyler Vigen-féle hamis korrelációk, adat-szaglászás.
+
+**Kimenet:** `research/a10_methods.jsonl` (legalább 120 esettanulmány + módszer, a sémán felül ezekkel a mezőkkel: who, data_hu, method_hu, result_hu, result_verified, why_worked_hu, died_hu, improve_hu, platform_use_hu, code_urls) és `research/a10_summary.md`.
+
 ---
 
 ## 2. Tételszintű séma (katalogus.jsonl)
@@ -305,3 +343,4 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
 | 7 | Stratégiák + kockázati matek + hipotézisgyár | M8, M10, M15 | `research/a7_strategies.jsonl` + `research/a7_ideas.jsonl` |
 | 8 | Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás | M11, M10 jogi rész | `research/a8_infra_legal.jsonl` |
 | 9 | Platform-architektúra, AI-fejlesztési folyamat, „mozgatókar”, paritásmátrix | M12, M14, M9 | `research/a9_platform.jsonl` + `research/a9_spec.md` |
+| 10 | Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok + módszertár) | M16 | `research/a10_methods.jsonl` + `research/a10_summary.md` |
