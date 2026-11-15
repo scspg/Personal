@@ -401,13 +401,15 @@ def main():
 
 
 GH_RELEASE_SH = [
-    'gh_release(){ # owner/repo tag célkönyvtár – GitHub-kiadás telepítői (Windows/Linux/macOS/Android), méretkorláttal',
-    '  local a list="" u r=0',
+    'gh_release(){ # owner/repo tag célkönyvtár [tételkeret MB] – GitHub-kiadás telepítői (alap: Linux x86-64, Windows x64, Android APK), a terv szerinti méretkerettel',
+    '  local a list="" u r=0 cap="${4:-4000}"',
+    '  have python3 || return 1',
+    '  [ -n "${GITHUB_TOKEN:-}" ] || [ -n "${_GHWARN:-}" ] || { _GHWARN=1; echo "FIGYELEM: GITHUB_TOKEN nélkül a GitHub API óránként 60 kérést enged; a többi telepítő TODO lesz (export GITHUB_TOKEN=...)" >&2; }',
     '  for a in ${2:+"tags/$2"} ${2:+"tags/v${2#v}"} latest; do   # a katalógus-verzió tagje (v-vel / nélküle), különben a legutóbbi kiadás',
-    '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "https://api.github.com/repos/$1/releases/$a" 2>/dev/null | python3 -c \'import sys, json, re, os',
-    'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6; tot = float(os.environ.get("GH_RELEASE_MAX_MB", "4000")) * 1e6',
-    'ok = re.compile(os.environ.get("GH_ASSET_RE", r"(x86_64|amd64|x64|win64|windows|linux|\\.exe$|\\.msi$|\\.appimage$|\\.apk$|\\.dmg$|macos|darwin|arm64|aarch64|universal)"), re.I)',
-    'bad = re.compile(r"(debug|symbols|dbgsym|\\.sig$|\\.asc$|\\.sha\\d*(sum)?$|\\.blockmap$|\\.ya?ml$|\\.json$)", re.I)',
+    '  list=$(curl -fsSL ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} "https://api.github.com/repos/$1/releases/$a" 2>/dev/null | GH_ITEM_MB="$cap" python3 -c \'import sys, json, re, os',
+    'd = json.load(sys.stdin); mx = float(os.environ.get("GH_ASSET_MAX_MB", "1500")) * 1e6; tot = min(float(os.environ.get("GH_RELEASE_MAX_MB", "4000")), float(os.environ.get("GH_ITEM_MB", "4000"))) * 1e6',
+    'ok = re.compile(os.environ.get("GH_ASSET_RE", r"((linux|appimage).*(x86_64|amd64|x64)|(x86_64|amd64|x64).*(linux|appimage|\\.deb$|\\.tar\\.(gz|xz|zst)$)|(win|windows).*(64)|(x64|x86_64|amd64|64).*\\.(exe|msi|zip)$|\\.msi$|win64|\\.apk$)"), re.I)',
+    'bad = re.compile(r"(debug|symbols|dbgsym|sha\\d+|checksum|\\.sig$|\\.asc$|\\.txt$|\\.md5$|\\.blockmap$|\\.ya?ml$|\\.json$|\\.zsync$)", re.I)',
     'for a in sorted(d.get("assets", []), key=lambda a: a.get("size", 0)):   # kiadásonként összesen max. GH_RELEASE_MAX_MB',
     '    if ok.search(a["name"]) and not bad.search(a["name"]) and a.get("size", 0) <= min(mx, tot): tot -= a.get("size", 0); print(a["browser_download_url"])\' 2>/dev/null) && [ -n "$list" ] && break',
     '  done; [ -n "$list" ] || return 1',
@@ -420,8 +422,9 @@ def write_sh(plan, path, dest):
     c = lambda x: str(x or "").replace("\r", " ").replace("\n", " ")       # kommentbe biztonságos
     safe = lambda x: re.sub(r"[^A-Za-z0-9._+-]", "_", str(x))            # "..."-be ágyazott útvonalelemekhez
     methods = {v["download"]["method"] for v in plan}
+    plan_ids = {v["id"] for v in plan}
     need_tools = sorted({"curl"} | {t for m, ts in {"kiwix": ["curl"], "http": ["aria2c|wget"], "wget-mirror": ["wget"], "rsync": ["rsync"],
-                         "git": ["git"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
+                         "git": ["git", "python3"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
          "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", '_d=$(printf "%s" "$DEST" | tr -s / | sed -e "s#/\\./#/#g" -e "s#/\\.\\$##" -e "s#\\(.\\)/\\$#\\1#")   # //etc, /etc/, /./ → /etc, /',
@@ -511,8 +514,12 @@ def write_sh(plan, path, dest):
                 rtag = d.get("tag") or v.get("latest_version") or ""
                 rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
                 todo = f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"'
-                if gh:      # GitHub: a kiadás telepítői automatikusan (GH_ASSET_MAX_MB, GH_ASSET_RE állítható); ha nem sikerül: AI-feladat
-                    L.append(f'gh_release {q(gh.group(1))} {q(rtag)} "{sub}/release" || {todo}')
+                bi = v.get("binaries_item")
+                cap_mb = max(50, int(((v.get("bytes") or v.get("bytes_est") or 0) * 1.2) / 1e6))   # a tétel tervbe számolt méretén belül
+                if bi and bi in plan_ids:
+                    L.append(f'# telepítők: a(z) {c(bi)} tétel már letölti – itt nem ismételjük')
+                elif gh:    # GitHub: a kiadás telepítői automatikusan (GH_ASSET_RE / GH_ASSET_MAX_MB állítható); ha nem sikerül: AI-feladat
+                    L.append(f'gh_release {q(gh.group(1))} {q(rtag)} "{sub}/release" {cap_mb} || {todo}')
                 else:
                     L.append(f'# Telepítők/binárisok (AI-feladat): a {c(d["release_url"])} oldalról a célplatformokhoz illő kiadások ide: "{sub}/release/"')
                     L.append(todo)

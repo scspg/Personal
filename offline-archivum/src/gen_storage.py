@@ -37,10 +37,18 @@ def lab(k):
 
 
 def hunum(t):
+    import re as _r
+    t = _r.sub(r"(?<=\d)\s?x\s?(?=\d|AFR|0,)", " × ", str(t))
     """angol tizedespont → vessző, csak mértékegység / százalék előtt (típusszámokat nem bánt)."""
     import re
     t = re.sub(r"(?<![\w.])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|W\b|GB/s|GbE|EUR|€|USD|DWPD|PBW|-szer|x\b|°C|év))", r"\1,\2\3", t)
     return re.sub(r"(?<![\w.])(\d+)\.(\d+)(?=\s?(?:[-–/]\s?\d+(?:[.,]\d+)?\s?(?:TB|GB|GbE)))", r"\1,\2", t)   # „30.72 / 61,44TB”, „1-2.5 GbE” bal oldala
+
+
+def sent(x):
+    """mondatzáró pont, ha hiányzik."""
+    x = str(x).rstrip()
+    return x if x[-1:] in ".!?…" else x + "."
 
 
 def _e(s):
@@ -174,7 +182,7 @@ def section(plans):
     md += ["- **SSD-gyakorlat:**"] + [f"  - {_e(x)}" for x in AM.get("gyakorlat") or []] + ["",
            f"### Terméktábla – {len(real)} termék, kategóriánként", ""]
     if note:
-        md += [f"> **{_e(note.get('nev'))}** – " + " ".join(_e(x) for x in (note.get("hatranyok") or []) + (note.get("elonyok") or [])), ""]
+        md += [f"> **{_e(note.get('nev'))}** – " + " ".join(_e(sent(x)) for x in (note.get("hatranyok") or []) + (note.get("elonyok") or [])), ""]
     md += [
            "Szint: olcsó / közép / profi / extrém. Sebesség MB/s (SSD-nél olvasás/írás). A „Forrás” oszlop jelzi, hogy az ár mért vagy becsült.", ""]
     by = {}

@@ -10,7 +10,7 @@ from llm_parse import load_blocks
 from llm_to_items import slug, unc_estimate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-from build import cut, hf_cmd, build_date
+from build import cut, hf_cmd, impersonal, build_date
 OPUS, FABLE = 59.1, 64.6
 
 
@@ -47,11 +47,11 @@ def models(vs):
         extra = {}
         if h["u"] and meta:
             a, base, r, why, e = unc_estimate(slug(meta["name"]))
-            extra = {"base": meta.get("base"), "base_aa": base, "ratio": r, "why": why, "repo": (meta.get("hf_repo") or "").split("huggingface.co/")[-1]}
+            extra = {"base": meta.get("base"), "base_aa": base, "ratio": r, "why": impersonal(str(why or "")), "repo": (meta.get("hf_repo") or "").split("huggingface.co/")[-1]}
         elif meta:
             extra = {"org": meta.get("org"), "params": str(meta.get("params_total") or "")[:60], "active": str(meta.get("params_active") or "")[:40],
                      "ctx": meta.get("context"), "repo": (meta.get("hf_repo") or "").split("huggingface.co/")[-1],
-                     "strength": str(meta.get("strengths_hu") or "")[:300]}
+                     "strength": impersonal(str(meta.get("strengths_hu") or ""))[:300]}
         out.append({"g": g, "m": h["m"], "u": h["u"], "aa": aa, "est": any(x["est"] for x in L), "n": len(L),
                     "minb": L[0]["b"], "maxb": L[-1]["b"], "plats": sorted({x["plat"] for x in L}),
                     "hw": sorted({t for x in L for t in x["hw"]}, key=lambda t: t), "rel": h["rel"], "lic": h["lic"],
@@ -171,7 +171,7 @@ th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--f-body);whit
 #models,#soft,#stor{max-height:80vh;overflow:auto}
 .bund{width:100%}.bund td{vertical-align:top}.bund td:last-child{max-width:240px}.bund ul{margin:0;padding-left:16px}.bund td:nth-child(2){min-width:260px}
 .stortab td:nth-child(2){min-width:0}.stortab td:nth-child(4){max-width:none}.stortab td:first-child{min-width:240px;max-width:320px;white-space:normal;overflow-wrap:anywhere}.stortab td:nth-child(3){min-width:0;max-width:220px}.stortab td:last-child{min-width:240px;max-width:340px}
-.soft:not(.stortab) td:nth-child(2){min-width:320px}.soft:not(.stortab) td:nth-child(4){white-space:normal;overflow-wrap:normal;word-break:keep-all;min-width:90px;max-width:170px}
+.soft:not(.stortab) td:nth-child(2){min-width:300px}.soft:not(.stortab) td:last-child{max-width:300px}.soft:not(.stortab) td:nth-child(5){max-width:120px}.soft:not(.stortab) td{overflow-wrap:anywhere}.soft:not(.stortab) td a{overflow-wrap:anywhere;word-break:break-word}.soft:not(.stortab) td:nth-child(4){white-space:normal;overflow-wrap:normal;word-break:keep-all;min-width:90px;max-width:170px}
 .stortab td:nth-child(2){min-width:0;width:48px}.stortab td:nth-child(3){min-width:200px;max-width:260px}.stortab td:nth-child(4){max-width:150px;white-space:normal}
 #ssd td:first-child{white-space:nowrap}
 .tablebox{background-image:linear-gradient(to right,var(--surface),var(--surface)),linear-gradient(to left,var(--surface),var(--surface)),linear-gradient(to right,color-mix(in srgb,var(--ink) 14%,transparent),transparent),linear-gradient(to left,color-mix(in srgb,var(--ink) 14%,transparent),transparent);background-position:left center,right center,left center,right center;background-repeat:no-repeat;background-size:20px 100%,20px 100%,10px 100%,10px 100%;background-attachment:local,local,scroll,scroll}
@@ -363,7 +363,7 @@ function softTable(){const q=norm(F('sq').value), c=F('scat').value;
   const L=S.filter(x=>(!c||x.c===c)&&(!q||norm(x.n+' '+x.need+' '+x.d+' '+x.alt+' '+x.c).includes(q)));
   const link=(u,l)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`:'';
   const tr=L.map(x=>`<tr><td>${esc(x.need)}<br><small class="muted">${esc(x.c)}</small></td><td><b>${esc(x.n)}</b><div class="sd">${esc(x.d)}</div><small>${[link(x.w,'web'),link(x.r,'repó'),link(x.rel,'letöltés')].filter(Boolean).join(' · ')}</small></td>
-    <td class="num" data-l="Szint">${x.t}</td><td data-l="Verzió">${esc(x.v)||'–'}</td><td data-l="Licenc">${esc(x.lic)}</td><td class="num" data-l="Méret">${x.b?gb(x.b):'–'}</td><td class="sd" data-l="Alternatívák">${esc(x.alt)||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
+    <td class="num" data-l="Szint">${x.t}</td><td data-l="Verzió">${esc(x.v)||'–'}</td><td data-l="Licenc">${esc(x.lic)}</td><td class="num" data-l="Méret">${x.b?gb(x.b):'–'}</td><td class="sd" data-l="Alternatívák">${esc(x.alt).replace(/(https?:\/\/[^\s<;,)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
   F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Szint</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
   F('scount').textContent=L.length+' tétel';}
 (()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
@@ -584,8 +584,8 @@ def storage_data():
         out.append({"n": G.hunum(str(p.get("nev") or "")), "k": G.KAT.get(p.get("kategoria"), p.get("kategoria")), "tb": p.get("kapacitas_tb"), "bay": p.get("kategoria") in ("enclosure", "nas", "das", "faraday", "other"), "d": G.dur(p.get("tartossag")).replace("\\|", "|"),
                     "s": G.speed(p.get("sebesseg_mb_s")), "ar": p.get("ar_huf"), "pt": G._e(p.get("ar_per_tb") or ""),
                     "ptb": round(p["ar_huf"] / float(p["kapacitas_tb"])) if p.get("ar_huf") and p.get("kapacitas_tb") and p.get("kategoria") not in ("enclosure", "nas", "das", "faraday", "other") else None, "src": G.src_tag(p), "lv": p.get("ajanlas_szint") or "",
-                    "l": [[x.get("bolt"), x.get("url")] for x in (p.get("linkek") or [])[:3] if x.get("url")],
-                    "pro": "; ".join((p.get("elonyok") or [])[:2]), "con": "; ".join((p.get("hatranyok") or [])[:2])})
+                    "l": [[G.hunum(str(x.get("bolt"))), x.get("url")] for x in (p.get("linkek") or [])[:3] if x.get("url")],
+                    "pro": G.hunum("; ".join((p.get("elonyok") or [])[:2])), "con": G.hunum("; ".join((p.get("hatranyok") or [])[:2]))})
     return out
 
 
@@ -626,7 +626,7 @@ def storage_bundles_html():
         if isinstance(v, list):
             one.append(f"<tr><td><b>{E(G.lab(k + '_e' if k == '32_TB' else k))}</b></td><td data-l='Lehetőségek'><ul>" + "".join(f"<li>{E(x)}</li>" for x in v) + "</ul></td></tr>")
     note = next((p for p in prods if p.get("kategoria") == "other" and not p.get("ar_huf")), None)
-    nt = (f'<p class="hint"><b>{E(note.get("nev"))}</b> – ' + E(" ".join((note.get("hatranyok") or []) + (note.get("elonyok") or []))) + "</p>") if note else ""
+    nt = (f'<p class="hint"><b>{E(note.get("nev"))}</b> – ' + E(" ".join(G.sent(x) for x in (note.get("hatranyok") or []) + (note.get("elonyok") or []))) + "</p>") if note else ""
     return ('<h3>Ajánlott összeállítások árszintenként</h3><div class="tablebox"><table class="bund"><thead><tr><th>Keret</th><th>Összeállítás</th><th>Kapacitás</th><th>Ár</th><th>Mit bír ki</th></tr></thead><tbody>'
             + "".join(rows) + '</tbody></table></div>'
             '<h3>A legkompaktabb kételemes megoldás („minden egyben”; 1 lemezhibát túlél, a B példány vizet, ütést, EMP-t is)</h3><div class="tablebox"><table class="bund"><thead><tr><th>Változat</th><th>1. eszköz (használatban)</th><th>2. eszköz (offline, máshol)</th><th>Védelem, megjegyzés</th><th>Összesen</th></tr></thead><tbody>'

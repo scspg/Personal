@@ -286,6 +286,33 @@ try:
 except OSError:
     _SSHU = {}
 
+NOTES_FIX3 = {
+    "hu-radioamator-vizsga-anyagok": "jegyzet.pdf 5 394 642 B; az NMHH-rendelet HTML-ben 293 099 B. Hivatalos NMHH-kérdésbankot nem találtunk az interneten; további oktatási anyag: mrasz.hu.",
+    "reticulum-nomadnet-sideband": "git ls-remote rendben: Reticulum 1.6.0, NomadNet 1.5.0, Sideband 2.3.0, RNode_Firmware v1.17. A Sideband APK kitalált fájlneve 404-et adott, ezért a valódi nevet a kiadási oldalon nézd meg. A pip-csomagokat így mentsd: pip download rns lxmf nomadnet sbapp.",
+    "meshtastic-firmware-and-docs": "Kiadási ZIP-ek (bájt): esp32 40 071 234; esp32s3 227 052 406; nrf52840 58 645 536; rp2040 3 107 185; esp32c3 5 468 481; esp32c6 9 413 978 (minta: firmware-<plat>-2.8.2.d5f1619.zip). git ls-remote rendben: legutóbbi firmware-tag v2.8.2.d5f1619 (van v2.8.2.4c89b69 is), a dokumentáció repója github.com/meshtastic/meshtastic (HEAD 4097527c). Tükrözd a Meshtastic Android APK-t (F-Droid) és a webes flashelőt is.",
+}
+for _k, _v in NOTES_FIX3.items():
+    PATCH.setdefault(_k, {})["notes"] = _v
+
+NOTES_FIX4 = {
+    "ham-digital-modes-fldigi-js8call-direwolf": "Mért (bájt): fldigi setup.exe 7 504 745; fldigi-4.2.13.tar.gz 5 244 946; fldigi_help.pdf 14 638 082; JS8Call win64 https://github.com/js8call/js8call/releases/download/v2.3.1/js8call-2.3.1-win64.exe 21 165 527 (összesen 48,6 MB). Dire Wolf: git https://github.com/wb2osz/direwolf, tag 1.8.1 (az archív tarball 403-at adott, git clone kell; ~10 MB, becsült). fldigi git: git.code.sf.net/p/fldigi/fldigi v4.2.13. Érdemes a Pat Winlinket is (github.com/la5nta/pat v1.0.1; a kiadási fájl neve nem volt megtalálható).",
+    "omme-meheszet-egeszsegugy-hu": "OMME 2026-os szám 6 214 815 B + https://www.biokontroll.hu/wp-content/uploads/2013/04/mehbetegsegek_kezelese_megelozese.pdf 4 416 139 B. Régebbi OMME-szám: mehegeszsegugyi-ismeretek-20.pdf 6 454 498 B. Alapokhoz lásd még: Agrodok 32 és Peace Corps ICE.",
+    "arxiv-bulk-s3": "Requester-pays: az AWS-adatforgalmat te fizeted. Ingyenes alternatíva: a Kaggle arXiv-metaadat (csak metaadat). Főleg kutatási szintű, közvetlen túlélési értéke kicsi.",
+    "prusa-original-i3": "git clone --depth 1 https://github.com/prusa3d/Original-Prusa-i3 . Firmware hozzá: https://github.com/MarlinFirmware/Marlin (42 MB .git / 153 MB) vagy https://github.com/Klipper3d/klipper (12 MB / 230 MB, GPL-3.0). Az összeszerelési útmutatók online vannak (help.prusa3d.com), ezeket külön mentsd PDF-be.",
+    "voron-2-4-and-trident": "git clone --depth 1 https://github.com/VoronDesign/Voron-2 ; git clone --depth 1 https://github.com/VoronDesign/Voron-Trident . Kereskedelmi alkatrészek kellenek (lineáris sínek, léptetőmotorok, vezérlőlapok), ezért csak a korai időszakban reális, amíg van készlet.",
+    "npm-go-registries-note": "Az összeomlás előtt állíts be gyorsítótárazó proxyt: Verdaccio (npm) vagy Athens (Go), illetve projektenként „go mod vendor”.",
+}
+for _k, _v in NOTES_FIX4.items():
+    PATCH.setdefault(_k, {})["notes"] = _v
+PATCH.setdefault("bowditch-american-practical-navigator-2024", {}).update({"bytes": 206_875_030, "size_status": "measured:2026-11-14:content-length (2 kötet)"})
+# GitHub-kiadás helyett meglévő bináris tétel (ne töltődjön le kétszer)
+BINARY_ITEM = {"oss-freecad": "freecad-and-parts-library", "oss-calibre": "calibre", "oss-ventoy": "ventoy", "oss-kicad": "kicad-eda-and-libraries",
+               "oss-arduino-ide": "arduino-ide-offline", "oss-meshtastic": "meshtastic-firmware-and-docs", "oss-cpython": "python-source-and-docs",
+               "oss-alpine": "alpine-3244-extended-iso", "oss-7zip": "oss-7zip"}
+for _k, _v in BINARY_ITEM.items():
+    if _k != _v:
+        PATCH.setdefault(_k, {})["binaries_item"] = _v
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {

@@ -1166,7 +1166,7 @@
     "Kompaktabban: 6x Exos M 32TB RAID6 = 128 TB hasznos, 6 lemezes dobozban (6x784 390 = 4 706 340 Ft + doboz).",
     "A tűzálló ioSafe 1525+ (5 lemezes) a keresési találatok szerint létezik, de a gyártói konfigurációk ~70-80 TB-ig mennek, és az EU-ban nehezen kapható (becsült)."
    ],
-   "kovetkeztetes": "Egyetlen eszköz 128 TB-ig megoldható, de minden 'egy doboz' közös ponton hibázik: tápegység/túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs (rm -rf, rossz zpool), vezérlőhiba. A RAID nem mentés."
+   "kovetkeztetes": "Egyetlen eszköz 128 TB-ig megoldható, de minden „egy doboz” közös ponton hibázik: tápegység/túlfeszültség, tűz, víz, lopás, zsarolóvírus, rossz parancs (rm -rf, rossz zpool), vezérlőhiba. A RAID nem mentés."
   },
   "kockazat_elemzes": {
    "backblaze_q2_2026": {
@@ -1278,7 +1278,7 @@
    "~1 millió Ft – 24 TB, két példány, M-DISC mag": {
     "elemek": [
      "1. (online): Seagate IronWolf Pro 24TB – pcx 448 790 Ft, ICY BOX dokkolóban (21 040 Ft), ZFS",
-     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-HBA vagy SAS-dokkoló kell, becsült 40–100 ezer Ft) – más gyártó; egy második IronWolf Pro 24TB olcsóbb, de azonos gyártó, ezért nem ajánlott. NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
+     "2. (offline, másik helyen): WD Ultrastar HC590 24TB SAS – ipon 527 889 Ft (SAS-HBA vagy SAS-dokkoló kell, becsült 40–100 ezer Ft) – más gyártó; egy második IronWolf Pro 24TB olcsóbb, de azonos gyártó, ezért nem ajánlott; védelem: NEST-Z (27 797 Ft) + lőszerláda (~11 570 Ft)",
      "3. (más médium, mag): Verbatim BD-író (65 689 Ft) + 5× M-DISC BDXL (24 111 Ft)"
     ],
     "osszesen": "~1 167 000–1 227 000 Ft (1 126 886 Ft + SAS-HBA/dokkoló)",
@@ -2314,9 +2314,9 @@
    ],
    "elonyok": [],
    "hatranyok": [
-    "2023 tavaszán az Extreme / Extreme PRO V2 (főleg 4TB és 2TB) és a My Passport SSD hirtelen adatvesztéssel, csatolhatatlansággal hibázott",
+    "2023 tavaszán az Extreme / Extreme PRO V2 (főleg 4TB és 2TB) és a My Passport SSD hirtelen adatvesztéssel, csatolhatatlansággal hibázott.",
     "A WD 2023 májusában firmware-frissítést adott ki. Az Attingo adatmentő cég hardverhibát (forrasztás, alkatrész) állított, a WD ezt tagadja. Később erősebb epoxis rögzítés is jött.",
-    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. A 2026-11-14-i keresés alapján NEM találtam megerősített ítéletet vagy egyezséget, így jogilag nincs lezárva.",
+    "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. A 2026-11-14-i keresés alapján nincs megerősített ítélet vagy egyezséget, így jogilag nincs lezárva.",
     "Gyakorlati következtetés: a mostani gyártás valószínűleg rendben van, de vásárlás után azonnal frissítsd a firmware-t (SanDisk Dashboard), és SanDisk soha ne legyen az egyetlen példány. A második másolat legyen más gyártótól."
    ],
    "ajanlas_szint": "kozep"
