@@ -179,3 +179,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 
 ## AI-ÁGENS #5: 85,2 (git fsck -q érvénytelen kapcsoló → minden git FAIL) → javítva, valódi git 2.43-mal tesztelve OK; forrás-ellenőrzőösszeg hordozható (sumc/hashf: CRLF, nagybetűs hash, macOS shasum/md5 -r), MANIFEST macOS-en shasum. Eltérés-észlelés tesztelve.
 FIGYELEM (saját hiba): egy hibás tesztkivonat üres DEST-tel futott → a konténer gyökerében 9 letöltési könyvtár maradt (/appropriate_tech /civil_defense /engineering /food /medicine /survival /tools /veterinary /water_sanitation, ~3,2 GB); a törlést a biztonsági ellenőrzés nem engedte, a felhasználóra bízva (ideiglenes konténer, a repót nem érinti).
+
+## ÁRAMSZÜNET-KIADÁS LEZÁRVA (záró kör): AI-ágens 95,3 (min 94) · Felhasználó 94,5 (min 94) · Szakértő 92,7 (min 90, forráskorlátos) → össz-átlag 94,2; minden terület ≥90. A 95-ös össz-átlag hiánya kizárólag a szakértői forráskorlát (csak fizetős/nyomtatott művek). KÖVETKEZŐ: Jövő-kiadás (JOVO_KONCEPCIO.md), majd további profilok.

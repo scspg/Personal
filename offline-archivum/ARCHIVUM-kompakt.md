@@ -103,7 +103,7 @@ MUNKAMENET:
    - a forráson a 0–1. szintű mappákra (listájuk: `jq -r '.items[]|select(.tier<=1)|"\(.cat)/\(.id)"' plan.json`): `(cd <mappa> && par2 create -R -r10 mag.par2 *)` (10% javító paritás);
    - a forráson: `(cd <cél> && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256)`;
    - másolás: `rsync -a --checksum <cél>/ <második>/` (más gyártó lemezére; utána leválasztva, Faraday-tasakba);
-   - ellenőrzés a másolaton: `(cd <második> && sha256sum -c --quiet MANIFEST.sha256)` – a másolaton a manifestet NE generáld újra.
+   - ellenőrzés a másolaton: `(cd <második> && sha256sum -c --quiet MANIFEST.sha256)` (macOS: `shasum -a 256 -c --quiet MANIFEST.sha256`) – a másolaton a manifestet NE generáld újra.
 10. Zárójelentés:
    - mi jött le (OK), mi bukott (FAIL), mennyi hely maradt;
    - a KÉZI TEENDŐK listája linkkel és árral (fizetős, regisztrációs, fizikai könyv);
