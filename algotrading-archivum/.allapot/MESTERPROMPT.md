@@ -319,6 +319,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
   - `regions`: global, us, eu, uk, hu, asia, other
   - `granularity`: tick | l2 | l3 | 1s | 1m | 1h | 1d | event | text
   - `latency`: realtime | delayed | eod | batch
+  - `api`: rest | ws | fix | grpc | sdk | soap | bulk | none
 - **Csoport és származtatott mezők:**
   - `group`: azonos forrás változatai.
   - A build tölti ki, kézzel nem írandó: `src` (kutatási fájl), `prof` (profilpontok 0–100), `also_in` (duplikátumként összefésült források).

@@ -188,7 +188,7 @@ def collect():
             o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
             o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
             if not o.get("notes_hu"):
-                o["notes_hu"] = " ".join(x for x in (o.get("method_hu"), o.get("result_hu")) if x)[:400] or None
+                o["notes_hu"] = " ".join(x for x in (o.get("method_hu"), o.get("result_hu"), o.get("platform_use_hu"), o.get("improve_hu")) if x)[:400] or None
             analysis = name in ANALYSIS_SRC
             nk = re.sub(r"[^a-z0-9]", "", re.sub(r"\(.*?\)|–.*$| - .*$", "", str(o.get("name", "")).lower()))
             name_dup = len(nk) >= 4 and nk in seen_name and not analysis and seen_name[nk]["_src"] != name
