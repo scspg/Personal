@@ -114,7 +114,7 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 <label>Hozzáférés<select id="fa"><option value="">mind</option><option value="free">ingyenes</option><option value="registration">regisztrációs</option><option value="freemium">freemium</option><option value="paid">fizetős</option><option value="institutional">intézményi</option></select></label>
 <label>Max €/hó<input id="fe" type="number" min="0" placeholder="nincs"></label>
 <label>Max szint<select id="ft"><option value="3">3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option></select></label>
-<label>Rendezés profil szerint<select id="fp"><option value="g">Gyors pénz MT5-ön</option><option value="k">Aladdin-szerű kockázat</option><option value="r">Kutatás</option><option value="d">Predikció és sport</option></select></label>
+<label>Rendezés profil szerint<select id="fp"><option value="g">Gyors pénz – aktív automatizált</option><option value="k">Aladdin-szerű kockázat</option><option value="r">Kutatás</option><option value="d">Predikció és sport</option></select></label>
 <label>Terület<select id="fs"><option value="">mind</option></select></label>
 </div><p class="mut" id="cnt"></p></div>
 <div class="card tw"><table id="tk"><thead><tr><th>Sz.</th><th>Név</th><th>Terület</th><th>Hozzáférés</th><th>Ár</th><th>Pont</th><th>Mire jó</th><th>Buktató</th></tr></thead><tbody></tbody></table>
@@ -143,7 +143,7 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 <section id="str" hidden><div class="card"><input id="sq" placeholder="Keresés a stratégiák között"></div><div class="card tw"><table id="ts"><thead><tr><th>Stratégia</th><th>MT5</th><th>Lényeg / képlet</th><th>Mikor működik</th><th>Mikor hal meg</th></tr></thead><tbody></tbody></table></div></section>
 <section id="otl" hidden><div class="card"><input id="iq" placeholder="Keresés az ötletek között"></div><div class="card tw"><table id="ti"><thead><tr><th>Ötlet</th><th>Új</th><th>MT5</th><th>Mechanizmus</th><th>Cáfoló teszt</th><th>Kockázat</th></tr></thead><tbody></tbody></table></div></section>
 <section id="inf" hidden><div class="card">__TABLES__</div></section>
-<section id="mod" hidden><div class="card"><h2>Pontozás</h2><p>Tételpontok 0–10: R relevancia, E edge-potenciál, Q minőség, C költséghatékonyság, L késleltetés/frissesség, F karbantartottság, Z jogi/ÁSZF-biztonság. Profilpont 0–100 = súlyozott átlag × 10. Súlyok (R/E/Q/C/L/F/Z): gyors MT5 .15/.30/.10/.10/.20/.05/.10 · kockázat .25/.05/.30/.10/.05/.15/.10 · kutatás .25/.20/.25/.10/0/.15/.05 · predikció .15/.30/.15/.10/.10/0/.20.</p>
+<section id="mod" hidden><div class="card"><h2>Pontozás</h2><p>Tételpontok 0–10: R relevancia, E edge-potenciál, Q minőség, C költséghatékonyság, L késleltetés/frissesség, F karbantartottság, Z jogi/ÁSZF-biztonság. Profilpont 0–100 = súlyozott átlag × 10. Súlyok (R/E/Q/C/L/F/Z): gyors pénz .15/.30/.10/.10/.20/.05/.10 · kockázat .25/.05/.30/.10/.05/.15/.10 · kutatás .25/.20/.25/.10/0/.15/.05 · predikció .15/.30/.15/.10/.10/0/.20.</p>
 <p>Ellenőrzés: „mért” = a forrás oldalán látott adat a kutatás napján; „becsült” = számított vagy közvetett; „nem ellenőrzött” = a link vagy szám nem volt megerősíthető. Nem befektetési tanácsadás.</p></div></section>
 </main>
 <script>

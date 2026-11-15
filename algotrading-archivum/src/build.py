@@ -20,7 +20,7 @@ PROFILES = {   # súlyok összege 1
     "predikcio":  {"E": .30, "Z": .20, "R": .15, "Q": .15, "L": .10, "C": .10, "F": .00},
     "kiegyensulyozott": {"R": .20, "E": .20, "Q": .20, "C": .10, "L": .10, "F": .10, "Z": .10},
 }
-PROFILE_HU = {"gyors_mt5": "Gyors pénz MT5-ön (Vantage 1:500)", "kockazat": "Aladdin-szerű kockázat", "kutatas": "Kutatás",
+PROFILE_HU = {"gyors_mt5": "Gyors pénz – aktív automatizált kereskedés", "kockazat": "Aladdin-szerű kockázat", "kutatas": "Kutatás",
               "predikcio": "Predikciós piacok és sport", "kiegyensulyozott": "Kiegyensúlyozott"}
 # kutatási fájl → fejezet (sorrend = fejezetsorrend)
 SOURCES = [
@@ -32,6 +32,7 @@ SOURCES = [
     ("a6_ai_research", "AI-kereskedés kutatása, LLM-ágensek, súlyozás, validálás, irodalom, benchmark-platformok"),
     ("a8_infra_legal", "Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás"),
     ("a9_platform", "Platform-architektúra és AI-fejlesztési eszközök"),
+    ("a11_platforms", "Platform- és bróker-összehasonlítás: van-e jobb, mint a jelenlegi (MT5/Vantage)"),
     ("a10_methods", "Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)"),
 ]
 
@@ -201,7 +202,7 @@ def budget_section(items):
              ("Kis költségvetés (≤ 100 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 0 < o["price_eur_month"] <= 100),
              ("Profi (100–1000 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 100 < o["price_eur_month"] <= 1000),
              ("Intézményi (> 1000 €/hó vagy egyedi ár)", lambda o: o["access"] == "institutional" or (isinstance(o.get("price_eur_month"), (int, float)) and o["price_eur_month"] > 1000))]
-    md = ["## 3. Költségvetés szerinti válogatás – a „gyors pénz MT5-ön” profil sorrendjében", "",
+    md = ["## 3. Költségvetés szerinti válogatás – a „gyors pénz – aktív automatizált kereskedés” profil sorrendjében", "",
           "Tételenkénti ár; a csomag ára a kiválasztott tételek összege. Az árak a kutatás napján érvényesek (mért = az oldalon látott, becsült = számított vagy közvetett).", ""]
     for title, f in tiers:
         sel = sorted([o for o in items if f(o)], key=lambda o: -o["prof"]["gyors_mt5"])[:40]
@@ -276,6 +277,9 @@ def main():
         body += ["", "---", "", f"## {n}. Szerverhelyek, VPS, hardver, költözés, adó", "", re.sub(r"(?m)^# ", "### ", re.sub(r"(?m)^## ", "### ", tab)), ""]
         n += 1
     spec = read("a9_spec.md")
+    pf = os.path.join(HERE, "sections", "platformfuggetlenseg.md")
+    if spec and os.path.exists(pf):     # kötelező tervezési elv: a specifikáció végére, minden mást felülír
+        spec += "\n\n" + open(pf, encoding="utf-8").read().strip()
     if spec:
         toc.append(f"- [{n}. Fejlesztői specifikáció (összefoglaló; teljes: FEJLESZTOI-SPEC.md)](#{n}-fejlesztoi-specifikacio)")
         body += ["", "---", "", f"## {n}. Fejlesztői specifikáció", "", "A teljes szöveg külön fájlban: `FEJLESZTOI-SPEC.md`.", "",

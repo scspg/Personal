@@ -1,6 +1,6 @@
 # ALGOTRADING – olvass el először
 
-Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform építéséhez. A középpontban a MetaTrader 5 (Vantage, 1:500) automatizált kereskedés áll; mellette kripto, predikciós piacok, sportfogadás, makró, hírek és kockázati motor. Kutatás: 2026-11-15. Nem befektetési, adó- vagy jogi tanácsadás.
+Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform építéséhez. A középpontban az aktív, automatizált kereskedés áll, platform- és brókerfüggetlen alapokon (a jelenlegi eszköz MetaTrader 5 és Vantage 1:500, de cserélhető); mellette kripto, predikciós piacok, sportfogadás, makró, hírek és kockázati motor. Kutatás: 2026-11-15. Nem befektetési, adó- vagy jogi tanácsadás.
 
 ## Mit hol találsz
 
@@ -17,7 +17,7 @@ Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform épít�
 
 ## Gyors indulás
 
-1. Nyisd meg az `ALGOTRADING.html`-t, válaszd a „Gyors pénz MT5-ön” profilt, és szűrj költségre.
+1. Nyisd meg az `ALGOTRADING.html`-t, válaszd a „Gyors pénz – aktív automatizált” profilt, és szűrj költségre.
 2. A kockázati számokat a „Kalkulátorok” fülön a saját számlád adataival számold újra.
 3. Ingyenes források letöltése (Linux/macOS, Windowson WSL-ben):
 

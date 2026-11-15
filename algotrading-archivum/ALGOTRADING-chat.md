@@ -1416,22 +1416,38 @@ mt5-broker-apis | MetaTrader 5 brókeroldali API-k (Manager, Gateway, Server, Re
 mt5manager-pypi | MT5Manager Python csomag (MetaQuotes) | institutional | brókerhozzáférés szükséges | 46/56/47/43 | https://pypi.org/project/MT5Manager/
 
 ## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
+m-kalman-state-space | Kalman-szűrő és állapottér-modellek | free | 0 | 78/91/85/80 | https://github.com/rlabbe/filterpy
 cs-gjp-superforecasters | Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–201 | free | 0 | 74/90/88/80 | https://doi.org/10.1177/0956797614524255
 cs-benter-horse-racing | Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multino | paid | ? | 78/87/86/80 | https://doi.org/10.1142/9789812819192_0019
+m-stacking-ensembling | Ensemble és stacking (Netflix Prize, M4-tanulságok) | free | 0 | 74/92/88/78 | https://github.com/rasbt/mlxtend
 cs-thorp-blackjack-kelly | Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés | free | 0 | 74/89/86/78 | https://doi.org/10.1073/pnas.47.1.110
+cs-kalman-apollo | Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig | free | 0 | 76/90/83/77 | https://doi.org/10.1115/1.3662552
+cs-turing-banburismus | Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park) | free | 0 | 72/90/83/75 | https://doi.org/10.1093/biomet/66.2.393
 cs-fx-technical-rules-amh | FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009) | free | 0 | 66/89/82/72 | https://doi.org/10.1017/S0022109009090103
+m-pcmci-tigramite | PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite) | free | 0 | 70/84/80/76 | https://github.com/jakobrunge/tigramite
 cs-m4-competition | M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2019.04.014
 cs-m5-competition | M5 előrejelzési verseny (2020) – LightGBM dominancia | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2021.11.013
 cs-kaggle-g-research-crypto | Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, Li | free | 0 | 72/79/75/74 | https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/
 cs-smartodds-benham | Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtj | free | 0 | 70/79/78/73 | https://en.wikipedia.org/wiki/Matthew_Benham
+cs-wald-survivorship | Abraham Wald – túlélési torzítás a bombázók páncélozásánál (SRG, II. v | free | 0 | 61/90/82/68 | https://doi.org/10.2307/2288257
+cs-quant-quake-2007 | 2007 augusztusi 'quant quake' – Khandani & Lo (J. Financial Markets 20 | free | 0 | 63/86/78/68 | https://doi.org/10.1016/j.finmar.2010.07.005
 cs-m6-competition | M6 pénzügyi előrejelzési verseny (2022–23) | free | 0 | 62/84/78/69 | https://arxiv.org/abs/2310.13357
+cs-ltcm | Long-Term Capital Management (1994–1998) – korrelációs összeomlás és t | free | 0 | 58/89/80/64 | https://en.wikipedia.org/wiki/Long-Term_Capital_Management
+m-shap | SHAP – Shapley-alapú modellmagyarázat | free | 0 | 64/82/74/68 | https://github.com/shap/shap
 cs-netflix-prize | Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble | free | 0 | 60/82/76/68 | https://en.wikipedia.org/wiki/Netflix_Prize
+cs-bollen-twitter-mood | Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a m | free | 0 | 60/82/73/64 | https://doi.org/10.1016/j.jocs.2010.12.007
+cs-google-flu-trends | Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu' (L | free | 0 | 56/85/76/63 | https://doi.org/10.1126/science.1248506
+cs-gaussian-copula-2008 | A Gauss-kopula és a 2008-as CDO-válság (Li 2000; Salmon, Wired 2009) | free | 0 | 55/82/73/62 | https://doi.org/10.3905/jfi.2000.319253
+cs-zillow-offers | Zillow Offers (2018–2021) – algoritmikus lakásvásárlás kudarca | free | 0 | 55/82/73/62 | https://en.wikipedia.org/wiki/Zillow
 cs-cont-order-flow-imbalance | Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometri | free | 0 | 78/84/78/78 | https://doi.org/10.1093/jjfinec/nbt003
 cs-market-intraday-momentum | Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018) | free | 0 | 72/80/76/76 | https://doi.org/10.1016/j.jfineco.2018.05.009
 cs-renaissance-baum-hmm | Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén (Monemetrics | free | 0 | 70/80/76/74 | https://doi.org/10.1214/aoms/1177697196
 cs-fx-currency-momentum | Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012) | free | 0 | 66/83/80/74 | https://doi.org/10.1016/j.jfineco.2012.06.009
+m-mutual-information | Kölcsönös információ (KSG-becslő) | free | 0 | 67/84/78/71 | https://pypi.org/project/scikit-learn/
 cs-billion-prices-project | Billion Prices Project – online árak az infláció mérésére (Cavallo & R | free | 0 | 71/78/76/71 | https://doi.org/10.1257/jep.30.2.151
 cs-expected-goals-xg | Expected goals (xG) – lövés-minőség logisztikus modellje | free | 0 | 68/80/76/72 | https://en.wikipedia.org/wiki/Expected_goals
+cs-qlib-alpha158 | Microsoft Qlib – AI-orientált kvant platform és Alpha158/360 feature-k | free | 0 | 66/82/76/71 | https://arxiv.org/abs/2009.11189
+m-bocpd | Bayes-i online változáspont-detektálás (BOCPD, Adams & MacKay 2007) | free | 0 | 71/79/72/74 | https://arxiv.org/abs/0710.3742
 cs-renaissance-berlekamp-1990 | Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése | free | 0 | 73/74/72/74 | https://en.wikipedia.org/wiki/Elwyn_Berlekamp
 cs-ecmwf-quiet-revolution | A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe,  | free | 0 | 62/84/77/68 | https://doi.org/10.1038/nature14956
 cs-chen-zimmermann-open-source-ap | Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review | free | 0 | 60/84/77/68 | https://doi.org/10.1561/104.00000112
@@ -1439,36 +1455,79 @@ cs-cohen-frazzini-economic-links | Gazdasági kapcsolatok – Cohen & Frazzini (
 cs-lazy-prices | Lazy Prices – Cohen, Malloy, Nguyen (JF 2020) | free | 0 | 66/78/74/72 | https://doi.org/10.1111/jofi.12885
 cs-kaggle-optiver-realized-vol | Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Neares | free | 0 | 72/74/69/74 | https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970
 cs-nate-silver-538 | Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szim | free | 0 | 67/77/74/72 | https://en.wikipedia.org/wiki/Nate_Silver
+cs-alphagen-rl-alpha-mining | AlphaGen – szinergikus formulaikus alfák RL-lel (Yu et al., KDD 2023) | free | 0 | 68/76/73/72 | https://arxiv.org/abs/2306.12964
+m-econml-dml | EconML / DoubleML – double/debiased ML és causal forest | free | 0 | 62/81/76/69 | https://github.com/py-why/EconML
+m-copulas | Kopulák (t, Clayton, Gumbel, vine) | free | 0 | 64/80/75/70 | https://github.com/vinecopulib/pyvinecopulib
+m-genetic-programming-gplearn | Genetikus programozás alfa-bányászathoz (gplearn) | free | 0 | 68/76/73/72 | https://github.com/trevorstephens/gplearn
 cs-numerai | Numerai – titkosított adatokon tömegesen beküldött modellek + stake-el | free | 0 | 66/76/74/68 | https://numer.ai/
+cs-bing-ab-test | Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés (Kohavi & Thomke | free | 0 | 61/82/74/67 | https://hbr.org/2017/09/the-surprising-power-of-online-experiments
+m-automl | AutoML (AutoGluon, FLAML) | free | 0 | 63/79/74/68 | https://github.com/autogluon/autogluon
 cs-iowa-electronic-markets | Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Ri | free | 0 | 64/77/72/67 | https://doi.org/10.1016/j.ijforecast.2008.03.007
+cs-german-tank-problem | A német tank-probléma – sorozatszámokból termelésbecslés (II. világháb | free | 0 | 60/80/75/66 | https://doi.org/10.1080/01621459.1947.10501915
+m-dowhy | DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás | free | 0 | 60/80/74/66 | https://github.com/py-why/dowhy
 cs-moneyball-oakland | Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta) | free | 0 | 60/77/72/68 | https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game
+cs-benford-fraud | Benford-törvény a csalásfelderítésben (Nigrini; EU-s makróadatok – Rau | free | 0 | 62/78/70/66 | https://doi.org/10.1111/j.1468-0475.2011.00542.x
+m-pc-fci-causal-learn | PC és FCI kauzális felfedezés (causal-learn) | free | 0 | 60/77/72/68 | https://github.com/py-why/causal-learn
+m-symbolic-regression-pysr | Szimbolikus regresszió (PySR) | free | 0 | 62/76/72/67 | https://github.com/MilesCranmer/PySR
 cs-thorp-princeton-newport | Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, m | free | 0 | 64/70/70/68 | https://en.wikipedia.org/wiki/Princeton_Newport_Partners
+cs-fisher-rothamsted | R. A. Fisher – randomizált kísérletek (Rothamsted, 'lady tasting tea', | free | 0 | 54/82/74/62 | https://en.wikipedia.org/wiki/Lady_tasting_tea
+cs-doll-hill-smoking | Doll & Hill – dohányzás és tüdőrák (BMJ 1950) és a Bradford Hill-krité | free | 0 | 54/82/74/62 | https://doi.org/10.1136/bmj.2.4682.739
+cs-reinhart-rogoff-excel | Reinhart–Rogoff táblázathiba (Herndon, Ash, Pollin, CJE 2014) | free | 0 | 53/84/74/60 | https://doi.org/10.1093/cje/bet075
+cs-replication-crisis-psych | A pszichológia replikációs válsága (Open Science Collaboration, Scienc | free | 0 | 53/84/74/60 | https://doi.org/10.1126/science.aac4716
+m-diff-in-diff | Különbségek különbsége (DiD), szakaszos bevezetéssel | free | 0 | 58/78/72/64 | https://github.com/py-econometrics/pyfixest
 cs-yield-curve-recession | Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (19 | free | 0 | 58/75/71/66 | https://doi.org/10.1162/003465398557320
+cs-leinweber-butter-bangladesh | 'Stupid Data Miner Tricks' – Leinweber (bangladesi vaj és az S&P 500) | free | 0 | 52/80/72/59 | https://doi.org/10.3905/joi.2007.681820
+m-synthetic-control | Szintetikus kontroll (Abadie) | free | 0 | 57/75/69/64 | https://github.com/sdfordham/pysyncon
 cs-kaggle-jane-street-2021 | Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised a | free | 0 | 62/69/64/66 | https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348
 cs-cash-winfall | Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspá | free | 0 | 62/66/64/67 | https://en.wikipedia.org/wiki/Massachusetts_Lottery
 cs-starlizard-tony-bloom | Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hov | free | 0 | 60/60/60/60 | https://en.wikipedia.org/wiki/Tony_Bloom
+cs-preis-google-trends | Google Trends 'debt' stratégia – Preis, Moat, Stanley (Sci. Rep. 2013) | free | 0 | 56/65/60/60 | https://doi.org/10.1038/srep01684
+cs-pluribus | Pluribus – emberfeletti hatfős póker (Brown & Sandholm, Science 2019) | free | 0 | 60/82/74/67 | https://doi.org/10.1126/science.aay2400
 cs-graphcast | GraphCast – ML középtávú időjárás-előrejelzés (Lam et al., Science 202 | free | 0 | 62/78/72/66 | https://doi.org/10.1126/science.adi2336
+cs-bayesian-search-af447 | Bayes-i keresés – Air France 447 roncsa (Stone et al., Statistical Sci | free | 0 | 58/82/74/66 | https://doi.org/10.1214/13-STS420
+cs-libratus | Libratus – emberfeletti heads-up no-limit póker (Brown & Sandholm, Sci | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aao1733
+cs-alphago-alphazero | AlphaGo (Nature 2016) és AlphaZero (Science 2018) – önjáték + MCTS + m | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aar6404
 cs-budish-hft-arms-race | HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015) | free | 0 | 64/78/68/60 | https://doi.org/10.1093/qje/qjv027
 cs-pead-bernard-thomas | Post-earnings announcement drift – Bernard & Thomas (1989) | free | 0 | 60/76/70/67 | https://doi.org/10.2307/2491062
+cs-baker-bloom-davis-epu | Gazdaságpolitikai bizonytalansági index (EPU) – Baker, Bloom, Davis (Q | free | 0 | 60/75/68/65 | https://doi.org/10.1093/qje/qjw024
+m-transfer-entropy | Transfer entropy (információáramlás) | free | 0 | 62/72/67/68 | https://github.com/pwollstadt/IDTxl
+cs-bayesian-search-scorpion | Bayes-i keresés – USS Scorpion (1968), Palomares H-bomba (1966) | free | 0 | 56/76/70/63 | https://en.wikipedia.org/wiki/Bayesian_search_theory
+cs-gosset-guinness | W. S. Gosset ('Student') – t-próba a Guinness sörfőzdében (1908) | free | 0 | 53/79/72/60 | https://doi.org/10.1093/biomet/6.1.1
+cs-halley-actuarial | Halley halandósági táblája (1693) és a hiteltelességelmélet – aktuáriu | free | 0 | 53/79/72/60 | https://doi.org/10.1098/rstl.1693.0007
+cs-fico-credit-scoring | FICO-hitelpontozás (1956 Fair Isaac; 1989 FICO score) | free | 0 | 53/79/72/60 | https://en.wikipedia.org/wiki/FICO
+m-lingam | LiNGAM – lineáris nem-Gauss kauzális modell | free | 0 | 60/72/68/66 | https://github.com/cdt15/lingam
+cs-satellite-parking-lots | Műholdas parkolóhely-számlálás a kiskereskedők negyedéves eredményeire | paid | ? | 62/68/66/65 | https://doi.org/10.1017/s0022109023001448
+m-mic-distance-correlation | MIC és távolság-korreláció (dCor) – általános függőségi mértékek | free | 0 | 58/73/66/64 | https://github.com/vnmabus/dcor
+m-dtw | Dynamic Time Warping (DTW) és alakzat-hasonlóság | free | 0 | 59/72/66/64 | https://github.com/wannesm/dtaidistance
 cs-aqr-quality-minus-junk | AQR – Quality Minus Junk (Asness–Frazzini–Pedersen 2018/2019) | free | 0 | 56/72/68/64 | https://doi.org/10.1007/s11142-018-9470-2
 cs-kaggle-optiver-close | Kaggle Optiver – Trading at the Close (2023–24) – 1. hely | free | 0 | 65/65/60/66 | https://www.kaggle.com/competitions/optiver-trading-at-the-close/discussion/487446
 cs-kaggle-rossmann-entity-embeddings | Kaggle Rossmann Store Sales (2015) – entitás-beágyazások (Guo & Berkha | free | 0 | 57/72/65/64 | https://arxiv.org/abs/1604.06737
+cs-john-snow-cholera | John Snow – Broad Street-i kolera (1854): térképes oksági következteté | free | 0 | 52/76/69/59 | https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak
+m-causalimpact-bsts | CausalImpact – Bayes-i strukturális idősor beavatkozás-hatásra | free | 0 | 56/72/66/63 | https://github.com/WillianFuks/tfcausalimpact
 cs-renaissance-research-team | Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown (beszé | free | 0 | 58/68/65/63 | https://en.wikipedia.org/wiki/Henry_Laufer
 cs-de-shaw | D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–) | institutional | ? | 60/65/61/64 | https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.
 cs-kaggle-web-traffic | Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq ( | free | 0 | 56/68/62/62 | https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795
+cs-henderson-night-lights | Éjszakai fények a GDP mérésére – Henderson, Storeygard, Weil (AER 2012 | free | 0 | 54/70/64/60 | https://doi.org/10.1257/aer.102.2.994
 cs-sahm-rule | Sahm-szabály – munkanélküliségi recesszió-indikátor (2019) | free | 0 | 52/69/64/60 | https://en.wikipedia.org/wiki/Sahm_rule
+cs-moat-wikipedia-views | Wikipedia-oldalnézetek a tőzsdei mozgások előtt – Moat et al. (Sci. Re | free | 0 | 58/66/60/61 | https://doi.org/10.1038/srep01801
 cs-prediction-company | Prediction Company – Farmer és Packard (káoszelmélet → statisztikai ta | free | 0 | 57/63/60/62 | https://en.wikipedia.org/wiki/Prediction_Company
 cs-sabermetrics-bill-james | Sabermetrika – Bill James Baseball Abstracts (1977–) | free | 0 | 52/68/63/59 | https://en.wikipedia.org/wiki/Sabermetrics
 cs-voulgaris-nba | Haralabos Voulgaris – NBA-fogadás, majd Dallas Mavericks kvant-igazgat | free | 0 | 60/57/56/60 | https://en.wikipedia.org/wiki/Haralabos_Voulgaris
 cs-morey-rockets-analytics | Daryl Morey – analitika-alapú NBA (hárompontos és ziccer-preferencia) | free | 0 | 52/64/59/58 | https://en.wikipedia.org/wiki/Daryl_Morey
 cs-srivastava-scratch-ticket | Mohan Srivastava – a tic-tac-toe kaparós sorsjegy 'singleton' mintázat | free | 0 | 56/61/58/58 | https://www.wired.com/2011/01/ff-lottery/
+cs-oil-tank-shadows | Olajtartályok árnyék-alapú töltöttség-mérése (Orbital Insight GCI) | paid | ? | 54/58/56/57 | https://en.wikipedia.org/wiki/Orbital_Insight
 cs-two-sigma | Two Sigma – adattudomány-alapú befektetés és nyilvános Kaggle-versenye | institutional | ? | 50/60/55/57 | https://en.wikipedia.org/wiki/Two_Sigma
 cs-kaggle-two-sigma-news | Kaggle Two Sigma: Using News to Predict Stock Movements (2018–19) | free | 0 | 52/58/54/58 | https://www.kaggle.com/competitions/two-sigma-financial-news
 cs-kaggle-two-sigma-fin-modeling | Kaggle Two Sigma Financial Modeling Challenge (2016–17) | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/two-sigma-financial-modeling
 cs-kaggle-ubiquant | Kaggle Ubiquant Market Prediction (2022) – 1. hely: 'Our Betting Strat | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/ubiquant-market-prediction/discussion/338220
 cs-billy-walters-computer-group | Billy Walters és a Computer Group – számítógépes sportfogadás | free | 0 | 54/55/54/54 | https://en.wikipedia.org/wiki/Billy_Walters_(gambler)
 cs-mit-blackjack-team | MIT Blackjack Team (1979–2000-es évek eleje) | free | 0 | 51/57/56/52 | https://en.wikipedia.org/wiki/MIT_Blackjack_Team
+cs-card-spend-earnings | Kártyás költési panelek → negyedéves eredmény-meglepetés (Froot, Kang, | paid | ? | 54/55/53/54 | https://doi.org/10.1016/j.jfineco.2017.04.008
+cs-deepstack | DeepStack – mélytanulás + folytonos újramegoldás pókerben (Moravčík et | free | 0 | 54/74/66/61 | https://doi.org/10.1126/science.aam6960
+cs-cepheus | Cepheus – a heads-up limit hold'em 'megoldása' (Bowling et al., Scienc | free | 0 | 51/72/64/58 | https://doi.org/10.1126/science.1259433
 cs-edmans-sports-sentiment | Sporthangulat és tőzsde – Edmans, García, Norli (JF 2007) | free | 0 | 54/66/60/61 | https://doi.org/10.1111/j.1540-6261.2007.01262.x
+cs-td-gammon | TD-Gammon – temporális differencia tanulás (Tesauro, CACM 1995) | free | 0 | 50/70/62/58 | https://doi.org/10.1145/203330.203343
+m-convergent-cross-mapping | Konvergens keresztleképezés (CCM, empirikus dinamikus modellezés) | free | 0 | 53/67/62/60 | https://github.com/SugiharaLab/pyEDM
 cs-thorp-shannon-roulette | Thorp–Shannon hordható rulett-számítógép (1960–61) és az Eudaemonok | free | 0 | 50/49/46/44 | https://doi.org/10.1109/ISWC.1998.729523
 
 ## Stratégiák

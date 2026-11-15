@@ -8,6 +8,13 @@
 
 **Szerep:** principal szintű kvantitatív kutató + piaci infrastruktúra-mérnök + adatbeszerző + kockázatkezelő + AI-rendszertervező, egy személyben. Nyelv: magyar; angol csak bevett szakszavaknál, kódnál, API-neveknél.
 
+**Alapelv – platform- és brókerfüggetlenség (megrendelői kérés, 2026-11-15):** a MetaTrader 5 és a Vantage csak a **jelenlegi** eszköz, bármikor cserélhető jobbra. A platform univerzális alapokra épül:
+- kanonikus instrumentum-, megbízás- és számlamodell;
+- a brókerspecifikus adatok (kontraktusméret, margin, swap, stop-out, kereskedési idő, díjak) **konfigurációs adatok**, nem kód;
+- minden végrehajtási hely egy `ExecutionAdapter`-szerződés mögött van (MT4/MT5, cTrader, FIX, IBKR, LMAX, Dukascopy, kripto CCXT, Polymarket, Kalshi, Betfair stb.);
+- a stratégiák és a döntési réteg nem tudhatják, melyik brókeren futnak.
+Minden tételnél és fejezetnél, ahol a Vantage vagy az MT5 szerepel, jelölni kell az általánosítható részt és a jobb alternatívát. A bróker- és platformválasztás maga is kutatási kérdés (lásd: összehasonlító mátrix, A11).
+
 **Megrendelő helyzete (kiinduló állapot):**
 - Már fut egy grid alapú algoritmikus kereskedés egy bérelt szerveren (MetaTrader).
 - Elsődleges számla: **Vantage, MetaTrader (MT4/MT5), 1:500 tőkeáttétel**. A legnagyobb fókusz a **gyorsabb pénzkeresés** ezen a számlán, automatizált programmal.
@@ -291,7 +298,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
 - Z: jogi és ÁSZF-biztonság (Magyarországról használható-e).
 
 **Összpont profilonként:**
-- „gyors pénz MT5-ön”: E és L hangsúllyal;
+- „gyors pénz – aktív automatizált kereskedés” (platformfüggetlen; jelenleg MT5/Vantage): E és L hangsúllyal;
 - „Aladdin-kockázat”: Q és R;
 - „kutatás”: R és Q;
 - „predikciós/sport”: E és Z.
@@ -343,4 +350,5 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
 | 7 | Stratégiák + kockázati matek + hipotézisgyár | M8, M10, M15 | `research/a7_strategies.jsonl` + `research/a7_ideas.jsonl` |
 | 8 | Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás | M11, M10 jogi rész | `research/a8_infra_legal.jsonl` |
 | 9 | Platform-architektúra, AI-fejlesztési folyamat, „mozgatókar”, paritásmátrix | M12, M14, M9 | `research/a9_platform.jsonl` + `research/a9_spec.md` |
+| 11 | Platform- és bróker-összehasonlítás (van-e jobb, mint az MT5/Vantage) | M6, M11 | `research/a11_platforms.jsonl` + `research/a11_matrix.md` |
 | 10 | Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok + módszertár) | M16 | `research/a10_methods.jsonl` + `research/a10_summary.md` |

@@ -1,4 +1,4 @@
-# ALGOTRADING – kompakt (1451 tételből a 0–1. szint)
+# ALGOTRADING – kompakt (1510 tételből a 0–1. szint)
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 
@@ -375,7 +375,7 @@
 - [TruffleHog](https://github.com/trufflesecurity/trufflehog) – ingyenes, ingyenes (nyílt forrás); Titokkereső élő ellenőrzéssel (verifikálja, hogy a kulcs érvényes-e).
 - [RD-Agent (Microsoft)](https://github.com/microsoft/RD-Agent) – ingyenes, ingyenes (nyílt forrás); LLM-ágens, amely Qlib-en faktorokat és modelleket javasol, implementál, tesztel, iterál. Cikk: arXiv 2505.15155. A 'hipotézisgyár' automatizálásának legérettebb nyílt eszköze.
 - [Open Source Risk Engine (ORE)](https://github.com/OpenSourceRisk/Engine) – ingyenes, ingyenes (nyílt forrás); QuantLib-alapú intézményi kockázati motor: XVA, VaR/ES (SIMM, SA-CCR), portfólió-értékelés, stressztesztek – az Aladdin-szerű kockázati réteg nyílt alapja (következtetett).
-- [ruptures](https://github.com/deepcharles/ruptures) – ingyenes, ingyenes (nyílt forrás); Változáspont-detektálás (PELT, Binseg, kernel) – rezsimváltás-felismeréshez.
+- [ruptures](https://github.com/deepcharles/ruptures) – ingyenes, ingyenes (nyílt forrás); Truong, Oudre, Vayatis (Signal Processing 2020); PELT: Killick et al. JASA 2012 https://doi.org/10.1080/01621459.2012.737745
 - [Evidently](https://github.com/evidentlyai/evidently) – ingyenes, ingyenes (nyílt forrás); Adat- és modell-drift monitorozás, riportok – a döntési réteg modelljeinek felügyeletére.
 - [Great Expectations](https://github.com/great-expectations/great_expectations) – ingyenes, ingyenes (nyílt forrás); Adatminőségi elvárások és validáció (hiányzó tickek, kiugrók, duplikátumok) a pipeline-ban.
 - [awesome-ai-in-finance](https://github.com/georgezouq/awesome-ai-in-finance) – ingyenes, ingyenes (nyílt forrás); AI/LLM a pénzügyekben: kutatások, eszközök, ágensek (CC0).
@@ -690,11 +690,16 @@
 
 ## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
 
+- [Kalman-szűrő és állapottér-modellek](https://github.com/rlabbe/filterpy) – ingyenes, 0; Kalman (1960).
 - [Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–2015)](https://doi.org/10.1177/0956797614524255) – ingyenes, 0; goodjudgment.com (403 a mérésnél, de létező szolgáltatás).
 - [Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multinomiális logit + piaci odds)](https://doi.org/10.1142/9789812819192_0019) – fizetős, ?; A Bolton–Chapman 1986 (Management Science) cikk a módszertani alap. A 'piaci ár mint prior' a M16 legátvihetőbb mintája.
+- [Ensemble és stacking (Netflix Prize, M4-tanulságok)](https://github.com/rasbt/mlxtend) – ingyenes, 0; Wolpert (1992); Breiman stacked regressions (1996) https://doi.org/10.1007/BF00117832.
 - [Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés](https://doi.org/10.1073/pnas.47.1.110) – ingyenes, 0; Az állapotfüggő előny + Kelly-méretezés a teljes archívum egyik alapmintája. Thorp Kelly-összefoglalója: World Scientific 2011 (DOI 10.1142/9789814293501_0054).
+- [Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig](https://doi.org/10.1115/1.3662552) – ingyenes, 0; filterpy 3896★.
 - [Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometrics 2014)](https://doi.org/10.1093/jjfinec/nbt003) – ingyenes, 0; 
+- [Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park)](https://doi.org/10.1093/biomet/66.2.393) – ingyenes, 0; 
 - [FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009)](https://doi.org/10.1017/S0022109009090103) – ingyenes, 0; A Lo (2004) Adaptive Markets Hypothesis közvetlen empirikus példája.
+- [PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite)](https://github.com/jakobrunge/tigramite) – ingyenes, 0; Runge et al. (Science Advances 2019). 1737★.
 - [Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018)](https://doi.org/10.1016/j.jfineco.2018.05.009) – ingyenes, 0; 
 - [M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje](https://doi.org/10.1016/j.ijforecast.2019.04.014) – ingyenes, 0; Repó: Mcompetitions/M4-methods (816★).
 - [M5 előrejelzési verseny (2020) – LightGBM dominancia](https://doi.org/10.1016/j.ijforecast.2021.11.013) – ingyenes, 0; 1. helyezett írás címe mért (discussion/163684).
@@ -702,23 +707,53 @@
 - [Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012)](https://doi.org/10.1016/j.jfineco.2012.06.009) – ingyenes, 0; 
 - [Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, LightGBM](https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/) – ingyenes, 0; A 2. helyezett írás: Kaggle discussion/323098 (cím mért).
 - [Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtjylland](https://en.wikipedia.org/wiki/Matthew_Benham) – ingyenes, 0; 
+- [Abraham Wald – túlélési torzítás a bombázók páncélozásánál (SRG, II. világháború)](https://doi.org/10.2307/2288257) – ingyenes, 0; 
+- [Kölcsönös információ (KSG-becslő)](https://pypi.org/project/scikit-learn/) – ingyenes, 0; Kraskov–Stögbauer–Grassberger (PRE 2004); Shannon 1948: https://doi.org/10.1002/j.1538-7305.1948.tb01338.x
 - [Billion Prices Project – online árak az infláció mérésére (Cavallo & Rigobon 2016)](https://doi.org/10.1257/jep.30.2.151) – ingyenes, 0; 
 - [Expected goals (xG) – lövés-minőség logisztikus modellje](https://en.wikipedia.org/wiki/Expected_goals) – ingyenes, 0; 
+- [2007 augusztusi 'quant quake' – Khandani & Lo (J. Financial Markets 2011)](https://doi.org/10.1016/j.finmar.2010.07.005) – ingyenes, 0; 
+- [Microsoft Qlib – AI-orientált kvant platform és Alpha158/360 feature-készletek](https://arxiv.org/abs/2009.11189) – ingyenes, 0; 
+- [Bayes-i online változáspont-detektálás (BOCPD, Adams & MacKay 2007)](https://arxiv.org/abs/0710.3742) – ingyenes, 0; Adams & MacKay (arXiv 2007).
 - [Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése](https://en.wikipedia.org/wiki/Elwyn_Berlekamp) – ingyenes, 0; Kapcsolódó: Kelly (Berlekamp a Bell Labsnál Kelly beosztottja volt – Wikipedia).
 - [M6 pénzügyi előrejelzési verseny (2022–23)](https://arxiv.org/abs/2310.13357) – ingyenes, 0; 
 - [A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe, Brunet, Nature 2015)](https://doi.org/10.1038/nature14956) – ingyenes, 0; 
+- [Long-Term Capital Management (1994–1998) – korrelációs összeomlás és tőkeáttétel](https://en.wikipedia.org/wiki/Long-Term_Capital_Management) – ingyenes, 0; 
 - [Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review 2022)](https://doi.org/10.1561/104.00000112) – ingyenes, 0; Repó: 1081★.
 - [Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító momentum](https://doi.org/10.1111/j.1540-6261.2008.01379.x) – ingyenes, 0; 
 - [Lazy Prices – Cohen, Malloy, Nguyen (JF 2020)](https://doi.org/10.1111/jofi.12885) – ingyenes, 0; 
 - [Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Nearest Neighbors](https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970) – ingyenes, 0; Tanulság: a győztes trükkök gyakran az adat szerkezetének (szivárgásnak) kihasználásai – élőben ellenőrizni kell.
 - [Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szimuláció](https://en.wikipedia.org/wiki/Nate_Silver) – ingyenes, 0; fivethirtyeight/data 17 501★ (archív).
+- [AlphaGen – szinergikus formulaikus alfák RL-lel (Yu et al., KDD 2023)](https://arxiv.org/abs/2306.12964) – ingyenes, 0; Rokon: AutoAlpha (arXiv 2002.08245).
+- [EconML / DoubleML – double/debiased ML és causal forest](https://github.com/py-why/EconML) – ingyenes, 0; Causal forest: https://doi.org/10.1080/01621459.2017.1319839. EconML 4852★, DoubleML 798★.
+- [Kopulák (t, Clayton, Gumbel, vine)](https://github.com/vinecopulib/pyvinecopulib) – ingyenes, 0; Patton (IER 2006) aszimmetrikus devizafüggés; Sklar (1959).
+- [Genetikus programozás alfa-bányászathoz (gplearn)](https://github.com/trevorstephens/gplearn) – ingyenes, 0; Alfa-specifikus: AutoAlpha (arXiv 2002.08245), AlphaGen RL (arXiv 2306.12964). gplearn 1899★.
+- [SHAP – Shapley-alapú modellmagyarázat](https://github.com/shap/shap) – ingyenes, 0; Lundberg & Lee (NeurIPS 2017). 25 861★.
 - [Numerai – titkosított adatokon tömegesen beküldött modellek + stake-elés](https://numer.ai/) – ingyenes, 0; example-scripts 1203★.
 - [Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble](https://en.wikipedia.org/wiki/Netflix_Prize) – ingyenes, 0; Koren–Bell–Volinsky: IEEE Computer 2009.
+- [Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés (Kohavi & Thomke, HBR 2017)](https://hbr.org/2017/09/the-surprising-power-of-online-experiments) – ingyenes, 0; 
+- [AutoML (AutoGluon, FLAML)](https://github.com/autogluon/autogluon) – ingyenes, 0; AutoGluon-Tabular (Erickson et al. 2020). 10 834★.
 - [Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Rietz 2008)](https://doi.org/10.1016/j.ijforecast.2008.03.007) – ingyenes, 0; 
+- [Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a megismétlés (Lachanski & Pav 2017)](https://doi.org/10.1016/j.jocs.2010.12.007) – ingyenes, 0; Az egyik legjobb dokumentált 'hamis felfedezés' a pénzügyi alt-adatban.
+- [A német tank-probléma – sorozatszámokból termelésbecslés (II. világháború)](https://doi.org/10.1080/01621459.1947.10501915) – ingyenes, 0; 
+- [Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu' (Lazer et al. 2014)](https://doi.org/10.1126/science.1248506) – ingyenes, 0; 
+- [DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás](https://github.com/py-why/dowhy) – ingyenes, 0; Sharma & Kiciman (2020); 8402★. A Pearl-féle do-kalkulus gyakorlati keretrendszere (Pearl, Biometrika 1995).
 - [Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta)](https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game) – ingyenes, 0; 
+- [Benford-törvény a csalásfelderítésben (Nigrini; EU-s makróadatok – Rauch et al. 2011)](https://doi.org/10.1111/j.1468-0475.2011.00542.x) – ingyenes, 0; benford_py: 155★.
+- [PC és FCI kauzális felfedezés (causal-learn)](https://github.com/py-why/causal-learn) – ingyenes, 0; Spirtes–Glymour–Scheines PC/FCI; causal-learn (Zheng et al. 2023) 1716★. Társ: lingam (lingam (PyPI 1.13.0, ellenőrizve 2026-11-15)), gcastle, cdt.
+- [Szimbolikus regresszió (PySR)](https://github.com/MilesCranmer/PySR) – ingyenes, 0; Cranmer (2023). 4274★.
 - [Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, majd stat-arb)](https://en.wikipedia.org/wiki/Princeton_Newport_Partners) – ingyenes, 0; Az első piacsemleges fedezeti alap Thorp szerint. A tanulság: árazási modell + fedezés + kockázat szigorú elválasztása.
+- [R. A. Fisher – randomizált kísérletek (Rothamsted, 'lady tasting tea', 1935)](https://en.wikipedia.org/wiki/Lady_tasting_tea) – ingyenes, 0; 
+- [Doll & Hill – dohányzás és tüdőrák (BMJ 1950) és a Bradford Hill-kritériumok](https://doi.org/10.1136/bmj.2.4682.739) – ingyenes, 0; 
+- [A Gauss-kopula és a 2008-as CDO-válság (Li 2000; Salmon, Wired 2009)](https://doi.org/10.3905/jfi.2000.319253) – ingyenes, 0; 
+- [Reinhart–Rogoff táblázathiba (Herndon, Ash, Pollin, CJE 2014)](https://doi.org/10.1093/cje/bet075) – ingyenes, 0; 
+- [A pszichológia replikációs válsága (Open Science Collaboration, Science 2015) és Ioannidis (2005)](https://doi.org/10.1126/science.aac4716) – ingyenes, 0; 
+- [Zillow Offers (2018–2021) – algoritmikus lakásvásárlás kudarca](https://en.wikipedia.org/wiki/Zillow) – ingyenes, 0; 
+- [Különbségek különbsége (DiD), szakaszos bevezetéssel](https://github.com/py-econometrics/pyfixest) – ingyenes, 0; Goodman-Bacon: https://doi.org/10.1016/j.jeconom.2021.03.014; Card–Krueger klasszikus: https://doi.org/10.3386/w4509
 - [Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (1998)](https://doi.org/10.1162/003465398557320) – ingyenes, 0; 
+- ['Stupid Data Miner Tricks' – Leinweber (bangladesi vaj és az S&P 500)](https://doi.org/10.3905/joi.2007.681820) – ingyenes, 0; 
+- [Szintetikus kontroll (Abadie)](https://github.com/sdfordham/pysyncon) – ingyenes, 0; Abadie, Diamond, Hainmueller (JASA 2010; AJPS 2015 https://doi.org/10.1111/ajps.12116). 85★ – kis projekt.
 - [Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised autoencoder + MLP](https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348) – ingyenes, 0; Kaggle-diszkusszió tartalma JS-sel töltődik, csak a cím ellenőrizhető.
 - [Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspár és MIT-csoport](https://en.wikipedia.org/wiki/Massachusetts_Lottery) – ingyenes, 0; A Wikipedia-oldal a 'Cash WinFall' átirányításon keresztül a Massachusetts Lottery-oldal.
 - [Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hove Albion)](https://en.wikipedia.org/wiki/Tony_Bloom) – ingyenes, 0; 
+- [Google Trends 'debt' stratégia – Preis, Moat, Stanley (Sci. Rep. 2013) és a kritika (Challet & Bel Hadj Ayed 2013)](https://doi.org/10.1038/srep01684) – ingyenes, 0; 
 
