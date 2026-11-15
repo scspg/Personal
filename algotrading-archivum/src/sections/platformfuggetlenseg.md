@@ -430,7 +430,7 @@ rollover_server_time: "00:00"
 commissions:
   # díj = rate × qty × p(1−p); a rate kategóriánként 0,04–0,07, geopolitika 0 – az Instrument.fee_rate az irányadó,
   # az amount csak plafon (FEE_CEILING jelöléssel), ha a fee_rate hiányzik; a maker nem fizet
-  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD, rounding: none}
+  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD, rounding: half_up, rounding_step: "0.00001"}   # a díj 5 tizedesre kerekítve, a legkisebb díj 0.00001 (a kerekítés iránya ellenőrizendő)
 swaps:
   - {applies_to: ["PRED:POLY:*"], kind: none, long: "0", short: "0"}
 rate_limits:
@@ -469,7 +469,7 @@ sources:
   - {field: account_currency, source: "pUSD collateral (docs.polymarket.com); a Polygon-tokencím ide írandó – ellenőrizendő", checked: "2026-11-15"}
   - {field: rate_limits, source: "A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000); a scope (Cloudflare-IP, illetve aláíró) az exec átnéző szerint – becsült, ellenőrizendő; heartbeat-vödör nincs, mert nincs forrás", checked: "2026-11-15"}
   - {field: capabilities.dead_man_timeout_s, source: "A3 polymarket-order-heartbeat", checked: "2026-11-15"}
-  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő)", checked: "2026-11-15"}
+  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő); kerekítés: a Polymarket díjoldala (trading/fees) szerint 5 tizedesjegy, minimum 0.00001, iránya nem dokumentált", checked: "2026-11-15"}
 ```
 
 ```yaml

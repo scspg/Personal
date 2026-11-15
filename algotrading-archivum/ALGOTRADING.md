@@ -333,7 +333,7 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
  "tier": 0, "group": null, "related_ids": [], "notes_hu": "…", "pitfalls_hu": null, "verified": "mért|becsült|nem ellenőrzött", "checked": "2026-11-15"}
 ```
 
-**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura. A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
+**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura. A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). Ha egy adatforrás-fájlban lévő tétel nem adat (cikk, SDK, ÁSZF, díjoldal), `pit_applicable: false` kizárja a PIT-mezők alól. A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
 
 **Pontozás (0–10):**
 - R: relevancia a platformhoz;
@@ -1084,7 +1084,7 @@ Infrastruktúra (mért): LMAX 3 ms matching, no last look; Darwinex Equinix LD4,
 - Nem ellenőrzött CySEC-licencszám (az ESMA-registerben aktívak, mért): Exness Cy, XM, Eightcap EU, Stratos. Nem ellenőrzött pro tőkeáttétel: IC Markets EU, IG, Saxo, IBKR, Darwinex, LMAX, Dukascopy.
 - 403 miatt nem olvastam: Exness, XM, FXCM, Vantage. A MultiCharts árlapja 404.
 - Nem ellenőrzött, hogy az OANDA EU ad-e v20 API-t, és hogy magyar lakos nyithat-e számlát az Alpacánál, a TradeStationnél vagy a NinjaTrader Clearingnél.
-- Az MNB- és ESMA-figyelmeztetéseket név szerint nem tudtam lekérdezni (az MNB figyelmeztetés-URL-jei 404-et adnak). Az A1 szerinti AFM- és FCA-lépések a Vantage ellen mértek.
+- Az MNB- és ESMA-figyelmeztetéseket név szerint nem tudtam lekérdezni (az MNB figyelmeztetés-URL-jei 404-et adnak). Az A1 szerinti FCA-lépés (figyelmeztető lista, 2026-04-02) mért; az AFM-lépés (2024-10-24) másodlagos forrásból (Finance Magnates, 2024-11-13) származik.
 - Független végrehajtási minőségi adat (TCA) egyik retail brókerről sincs. A „végrehajtás” pontok gyártói állításokon és infrastruktúra-tényeken alapulnak (becsült).
 
 ### 6.1. platform (26)
@@ -7259,7 +7259,10 @@ A blokkok `bash -euo pipefail` alatt futnak: a blokk exit 0-val ér véget, ha m
 ```bash
 # F0.1
 source tools/versions.env
-python3 -m pip install --user "uv==${UV_VERSION}"     # vagy: uv self update "${UV_VERSION}" (önálló telepítésnél)
+if ! uv --version 2>/dev/null | grep -q "${UV_VERSION}"; then   # PEP 668: Ubuntu 23.04+/Debian 12+ rendszer-pip tiltott → hivatalos telepítő
+  if command -v pipx >/dev/null; then pipx install --force "uv==${UV_VERSION}"; else curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh; fi
+  export PATH="$HOME/.local/bin:$PATH"
+fi
 uv --version | grep -q "^uv ${UV_VERSION}"
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c "import sys; assert sys.version.split()[0] == '${PYTHON_VERSION}'"
@@ -8044,7 +8047,7 @@ rollover_server_time: "00:00"
 commissions:
   # díj = rate × qty × p(1−p); a rate kategóriánként 0,04–0,07, geopolitika 0 – az Instrument.fee_rate az irányadó,
   # az amount csak plafon (FEE_CEILING jelöléssel), ha a fee_rate hiányzik; a maker nem fizet
-  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD, rounding: none}
+  - {applies_to: ["PRED:POLY:*"], kind: prob_quadratic, amount: "0.07", currency: PUSD, rounding: half_up, rounding_step: "0.00001"}   # a díj 5 tizedesre kerekítve, a legkisebb díj 0.00001 (a kerekítés iránya ellenőrizendő)
 swaps:
   - {applies_to: ["PRED:POLY:*"], kind: none, long: "0", short: "0"}
 rate_limits:
@@ -8083,7 +8086,7 @@ sources:
   - {field: account_currency, source: "pUSD collateral (docs.polymarket.com); a Polygon-tokencím ide írandó – ellenőrizendő", checked: "2026-11-15"}
   - {field: rate_limits, source: "A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000); a scope (Cloudflare-IP, illetve aláíró) az exec átnéző szerint – becsült, ellenőrizendő; heartbeat-vödör nincs, mert nincs forrás", checked: "2026-11-15"}
   - {field: capabilities.dead_man_timeout_s, source: "A3 polymarket-order-heartbeat", checked: "2026-11-15"}
-  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő)", checked: "2026-11-15"}
+  - {field: commissions, source: "A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő); kerekítés: a Polymarket díjoldala (trading/fees) szerint 5 tizedesjegy, minimum 0.00001, iránya nem dokumentált", checked: "2026-11-15"}
 ```
 
 ```yaml

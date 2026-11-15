@@ -1813,7 +1813,10 @@ def adapter_name(request: pytest.FixtureRequest) -&gt; str:
 <div class="tw"><table><thead><tr><th>#</th><th>Bemenet</th><th>Elvárt kimenet</th></tr></thead><tbody><tr><td>F0.1</td><td>új, üres klón</td><td>a rögzített uv (0.13.6) és Python (3.12.16, <code>.python-version</code>) települ; a függőségek a lockfájlból települnek; a pytest lefut (üres repón exit 5 is elfogadott)</td></tr><tr><td>F0.7</td><td><code>tools/versions.env</code></td><td>a CLI-eszközök a rögzített verzión futnak (opa, gitleaks, osv-scanner, sops, age)</td></tr><tr><td>F0.2</td><td>teljes git-történet</td><td>nincs titok</td></tr><tr><td>F0.3</td><td><code>uv.lock</code></td><td>nincs ismert high/critical sérülékenység</td></tr><tr><td>F0.4</td><td><code>secrets/dev.enc.yaml</code></td><td>SOPS-szal visszafejthető, plaintext titok nincs a repóban</td></tr><tr><td>F0.5</td><td>PR a <code>atp/risk/</code> mappába</td><td>review nélkül nem merge-elhető</td></tr><tr><td>F0.6</td><td><code>atp/contracts.py</code>, <code>pyproject.toml</code></td><td>a szerződések importálhatók; a <code>schemas/generated/</code> megegyezik a frissen generálttal; a <code>schemas/published/</code> séma és a Pydantic a példákon egyezik; az import-linter zöld</td></tr></tbody></table></div>
 <pre><code># F0.1
 source tools/versions.env
-python3 -m pip install --user &quot;uv==${UV_VERSION}&quot;     # vagy: uv self update &quot;${UV_VERSION}&quot; (önálló telepítésnél)
+if ! uv --version 2&gt;/dev/null | grep -q &quot;${UV_VERSION}&quot;; then   # PEP 668: Ubuntu 23.04+/Debian 12+ rendszer-pip tiltott → hivatalos telepítő
+  if command -v pipx &gt;/dev/null; then pipx install --force &quot;uv==${UV_VERSION}&quot;; else curl -LsSf &quot;https://astral.sh/uv/${UV_VERSION}/install.sh&quot; | sh; fi
+  export PATH=&quot;$HOME/.local/bin:$PATH&quot;
+fi
 uv --version | grep -q &quot;^uv ${UV_VERSION}&quot;
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c &quot;import sys; assert sys.version.split()[0] == &#x27;${PYTHON_VERSION}&#x27;&quot;
@@ -2369,7 +2372,7 @@ rollover_server_time: &quot;00:00&quot;
 commissions:
   # díj = rate × qty × p(1−p); a rate kategóriánként 0,04–0,07, geopolitika 0 – az Instrument.fee_rate az irányadó,
   # az amount csak plafon (FEE_CEILING jelöléssel), ha a fee_rate hiányzik; a maker nem fizet
-  - {applies_to: [&quot;PRED:POLY:*&quot;], kind: prob_quadratic, amount: &quot;0.07&quot;, currency: PUSD, rounding: none}
+  - {applies_to: [&quot;PRED:POLY:*&quot;], kind: prob_quadratic, amount: &quot;0.07&quot;, currency: PUSD, rounding: half_up, rounding_step: &quot;0.00001&quot;}   # a díj 5 tizedesre kerekítve, a legkisebb díj 0.00001 (a kerekítés iránya ellenőrizendő)
 swaps:
   - {applies_to: [&quot;PRED:POLY:*&quot;], kind: none, long: &quot;0&quot;, short: &quot;0&quot;}
 rate_limits:
@@ -2408,7 +2411,7 @@ sources:
   - {field: account_currency, source: &quot;pUSD collateral (docs.polymarket.com); a Polygon-tokencím ide írandó – ellenőrizendő&quot;, checked: &quot;2026-11-15&quot;}
   - {field: rate_limits, source: &quot;A3 polymarket-clob-api (per 10 s: általános 9000, POST /order burst 5000, 10 perc 120000); a scope (Cloudflare-IP, illetve aláíró) az exec átnéző szerint – becsült, ellenőrizendő; heartbeat-vödör nincs, mert nincs forrás&quot;, checked: &quot;2026-11-15&quot;}
   - {field: capabilities.dead_man_timeout_s, source: &quot;A3 polymarket-order-heartbeat&quot;, checked: &quot;2026-11-15&quot;}
-  - {field: commissions, source: &quot;A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő)&quot;, checked: &quot;2026-11-15&quot;}</code></pre>
+  - {field: commissions, source: &quot;A3 polymarket-fees: díj ∝ p(1−p), kategóriánként (0,04–0,07; geopolitika 0 – exec átnéző); instrumentumonként a CLOB market-info végpontból (ellenőrizendő); kerekítés: a Polymarket díjoldala (trading/fees) szerint 5 tizedesjegy, minimum 0.00001, iránya nem dokumentált&quot;, checked: &quot;2026-11-15&quot;}</code></pre>
 <pre><code># venues/polymarket_clob/instruments.yaml – az azonosító illusztráció; a min. méret és a tick piaconként ellenőrizendő
 - canonical_id: &quot;PRED:POLY:123456789012345678901234567890&quot;
   venue_id: polymarket_clob

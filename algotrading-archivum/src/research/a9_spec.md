@@ -2096,7 +2096,10 @@ A blokkok `bash -euo pipefail` alatt futnak: a blokk exit 0-val ér véget, ha m
 ```bash
 # F0.1
 source tools/versions.env
-python3 -m pip install --user "uv==${UV_VERSION}"     # vagy: uv self update "${UV_VERSION}" (önálló telepítésnél)
+if ! uv --version 2>/dev/null | grep -q "${UV_VERSION}"; then   # PEP 668: Ubuntu 23.04+/Debian 12+ rendszer-pip tiltott → hivatalos telepítő
+  if command -v pipx >/dev/null; then pipx install --force "uv==${UV_VERSION}"; else curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh; fi
+  export PATH="$HOME/.local/bin:$PATH"
+fi
 uv --version | grep -q "^uv ${UV_VERSION}"
 uv python install                                    # a .python-version (3.12.16) szerint
 uv run python -c "import sys; assert sys.version.split()[0] == '${PYTHON_VERSION}'"

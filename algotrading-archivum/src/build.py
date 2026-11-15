@@ -222,7 +222,7 @@ def collect():
             g = o.get("github")
             if isinstance(g, dict) and (g.get("stars") is None or g.get("last_commit") is None) and not g.get("note"):
                 g["note"] = "nem mérhető (archivált/törölt repó, vagy a mérőszolgáltatás nem adott adatot, 2026-11-15)"
-            if name in DATA_SRC and o.get("cat") not in NON_DATA_CAT:   # adattétel gépi definíciója (mesterprompt 2.1)
+            if name in DATA_SRC and o.get("cat") not in NON_DATA_CAT and o.get("pit_applicable") is not False:   # adattétel gépi definíciója (mesterprompt 2.1)
                 for k in ("pit", "survivorship_free", "vintages", "revision_policy", "timestamp_semantics"):
                     if k not in o:
                         o[k] = None

@@ -122,5 +122,5 @@ Infrastruktúra (mért): LMAX 3 ms matching, no last look; Darwinex Equinix LD4,
 - Nem ellenőrzött CySEC-licencszám (az ESMA-registerben aktívak, mért): Exness Cy, XM, Eightcap EU, Stratos. Nem ellenőrzött pro tőkeáttétel: IC Markets EU, IG, Saxo, IBKR, Darwinex, LMAX, Dukascopy.
 - 403 miatt nem olvastam: Exness, XM, FXCM, Vantage. A MultiCharts árlapja 404.
 - Nem ellenőrzött, hogy az OANDA EU ad-e v20 API-t, és hogy magyar lakos nyithat-e számlát az Alpacánál, a TradeStationnél vagy a NinjaTrader Clearingnél.
-- Az MNB- és ESMA-figyelmeztetéseket név szerint nem tudtam lekérdezni (az MNB figyelmeztetés-URL-jei 404-et adnak). Az A1 szerinti AFM- és FCA-lépések a Vantage ellen mértek.
+- Az MNB- és ESMA-figyelmeztetéseket név szerint nem tudtam lekérdezni (az MNB figyelmeztetés-URL-jei 404-et adnak). Az A1 szerinti FCA-lépés (figyelmeztető lista, 2026-04-02) mért; az AFM-lépés (2024-10-24) másodlagos forrásból (Finance Magnates, 2024-11-13) származik.
 - Független végrehajtási minőségi adat (TCA) egyik retail brókerről sincs. A „végrehajtás” pontok gyártói állításokon és infrastruktúra-tényeken alapulnak (becsült).
