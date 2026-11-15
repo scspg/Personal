@@ -20,3 +20,4 @@ Független kiadás (nem az ARCHIVUM része). Forrás-spec: `.allapot/MESTERPROMP
 ## Build-lánc KÉSZ (src/): build.py (research/*.jsonl → md/kompakt/chat/katalogus.jsonl/letolto.sh/FEJLESZTOI-SPEC.md, dedup id+url, profilpont 5 profil), gen_html.py (szűrhető katalógus, stratégiák, ötletek, a8 táblák, kalkulátorok: margin/stop-out, grid-csőd MC, Kelly – böngészőben tesztelve, 400px OK, 0 JS-hiba), make_zip.py (reprodukálható).
 Futtatás: cd src && python3 -I build.py && python3 -I gen_html.py && python3 -I make_zip.py ; böngészőteszt: node $S/algo_check.js <html> <png>
 9 ágens fut (a1..a9) → research/. Utána: build, átnézők (6), javítás.
+- A9 KÉSZ: 118 tétel, a9_spec.md 873 sor (72 soros paritásmátrix, L0–L4 mozgatókar, F0–F6 ütemterv). Megj.: GitHub API nem érhető el (ecosyste.ms tükör), NautilusTrader/LEAN/ArcticDB duplikátum A5-tel (group mező).
