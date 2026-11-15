@@ -659,27 +659,58 @@ def storage_bundles_html():
 
 def core_links_html():
     """kezdőknek: a 0. szintű (életmentő) tételek közvetlen letöltési linkjei – terminál nélkül, kattintással."""
-    import html
+    import html, json as _j, re as _re
     from gen_sections import all_items
     from build import human, CAT_HU
-    rows = []
-    for i in sorted(all_items(), key=lambda x: (x["cat"], x["name"])):
-        if i["tier"] != 0 or i["cat"].startswith("ai_models") or i.get("access") not in ("free", "free-registration", "donation"):
-            continue
+    items = [i for i in all_items() if i["tier"] == 0 and not i["cat"].startswith("ai_models") and i.get("access") in ("free", "free-registration", "donation")]
+    plan1 = set()
+    try:
+        plan1 = {x["id"] for x in _j.load(open(os.path.join(HERE, "ssd_plans.json"), encoding="utf-8"))[0][1]}
+    except Exception:
+        pass
+    LANG = {"en": "EN", "fr": "FR", "es": "ES", "ar": "AR", "hu": "HU", "de": "DE", "pt": "PT", "ru": "RU"}
+    def label(u, k, n):
+        m = _re.search(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", u)
+        if m:
+            return LANG[m.group(1)] + (" (elég ez)" if m.group(1) == "en" else "")
+        m = _re.search(r"_(fm|bm|\d{2})\.pdf$", u)
+        if m:
+            g = m.group(1)
+            return {"fm": "előszó", "bm": "függelék"}[g] if g in ("fm", "bm") else f"{int(g)}. fejezet"
+        name = _re.sub(r"[?#].*$", "", u.rstrip("/").split("/")[-1])
+        return html.escape(cut(name, 28)) if n > 1 else "letöltés"
+    rows, total, n = [], 0, 0
+    first = []
+    for i in sorted(items, key=lambda x: (x["cat"] != "hungarian", x["cat"], x["name"])):
         d = i.get("download") or {}
         urls = (d.get("urls") or ([d["url"]] if d.get("url") and d.get("method") in ("http", "kiwix") else []))
         if d.get("method") == "archive.org" and d.get("ids"):
             urls = [f"https://archive.org/details/{x}" for x in d["ids"]]
+        how = ""
+        if not urls and d.get("method") == "agent" and i.get("info_url"):
+            urls = [i["info_url"]]
+            how = " – nyisd meg, majd Ctrl+S vagy Nyomtatás → Mentés PDF-ként"
         if not urls:
             continue
-        sz = human(i.get("bytes") or i.get("bytes_est")) if (i.get("bytes") or i.get("bytes_est")) else "?"
-        links = " · ".join(f'<a href="{html.escape(u)}" target="_blank" rel="noopener">{k + 1 if len(urls) > 1 else "letöltés"}</a>' for k, u in enumerate(urls[:8]))
-        rows.append(f"<li><b>{html.escape(cut(i['name'], 80))}</b> <span class='hint'>({html.escape(CAT_HU.get(i['cat'], i['cat']))}, {sz})</span> – {links}</li>")
-    return (f'<details><summary>Kezdőknek: az életmentő mag ({len(rows)} tétel) letöltése kattintással, terminál nélkül</summary><div class="body">'
+        b = i.get("bytes") or i.get("bytes_est") or 0
+        sz = human(b) if b else "?"
+        alt = ""
+        bigger = [x for x in items if x["id"] != i["id"] and ((i.get("group") and x.get("group") == i.get("group")) or x["id"] in (i.get("subsumed_by") or []))
+                  and (x.get("bytes") or x.get("bytes_est") or 0) > b]
+        if bigger:
+            alt = " <span class='hint'>(kisebb/képek nélküli változat – a nagyobb mellett nem kell)</span>"
+        else:
+            total += b
+        n += 1
+        links = " · ".join(f'<a href="{html.escape(u)}" target="_blank" rel="noopener">{label(u, k, len(urls))}</a>' for k, u in enumerate(urls[:30]))
+        row = f"<li><b>{html.escape(cut(i['name'], 80))}</b> <span class='hint'>({html.escape(CAT_HU.get(i['cat'], i['cat']))}, {sz})</span>{alt} – {links}{how}</li>"
+        rows.append(row)
+    in_plan = len([i for i in items if i["id"] in plan1])
+    return (f'<details><summary>Kezdőknek: az életmentő mag ({n} tétel, összesen ~{human(total)}) letöltése kattintással, terminál nélkül</summary><div class="body">'
             '<p class="hint">Ha nem használsz parancssort vagy AI-ágenst: ezeket a fájlokat egyenként töltsd le a böngészővel egy külön meghajtóra. '
-            'A Kiwix-fájlok (.zim) a Kiwix olvasóval nyithatók meg (Kiwix Desktop / Android). Archive.org-nál a megnyíló oldalon a „PDF” letöltést válaszd. A többi anyaghoz a teljes letöltés (ARCHIVUM.md, 1. fejezet) kell.</p>'
+            'A Kiwix-fájlok (.zim) a Kiwix olvasóval nyithatók meg (Kiwix Desktop / Android). Archive.org-nál a megnyíló oldalon a „PDF” letöltést válaszd. '
+            f'A teljes letöltési terv (1 TB) ebből {in_plan}-et tart meg, mert a CD3WD-t és az orvosi Wikipédiát nagyobb, teljes változatra cseréli. A többi anyaghoz a teljes letöltés (ARCHIVUM.md, 1. fejezet) kell.</p>'
             f'<ul>{"".join(rows)}</ul></div></details>')
-
 
 def ssd_html():
     import html as H
