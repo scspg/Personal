@@ -131,6 +131,7 @@ def main():
     ap.add_argument("--focus", default="", help="kategória-szorzók, pl. medicine=2,agriculture=1.5")
     ap.add_argument("--max-tier", type=int, default=5, help="legfeljebb ennyi tier (0–5) kerüljön be, alap 5")
     ap.add_argument("--include", default="", help="kötelezően beveendő id-k (vesszővel)")
+    ap.add_argument("--floor", default="", help="csoporttagok alsó határa (vesszővel): a csoport bekerül legalább ekkora változattal, csak nagyobbra cserélhető")
     ap.add_argument("--exclude", default="", help="kizárt id-k vagy kategóriák (cat:NAME)")
     ap.add_argument("--list", action="store_true", help="katalógus listázása pontszám szerint")
     ap.add_argument("--out", default="plan.json", help="a terv JSON-fájlja (alap plan.json)")
@@ -185,14 +186,15 @@ def main():
     access = set(a.access.split(","))
     excl = set(x for x in a.exclude.split(",") if x)
     incl = set(x for x in a.include.split(",") if x)
+    floor = set(x for x in a.floor.split(",") if x)
 
     manual, skipped_unknown, eligible = [], [], []
     for it in items:
         if it["id"] in excl or f"cat:{it['cat']}" in excl:
             continue
-        if it["tier"] > a.max_tier and it["id"] not in incl:
+        if it["tier"] > a.max_tier and it["id"] not in incl | floor:
             continue
-        if not lang_ok(it.get("lang"), langs) and it["id"] not in incl:
+        if not lang_ok(it.get("lang"), langs) and it["id"] not in incl | floor:
             continue
         if it.get("access") not in access:
             continue
@@ -267,7 +269,7 @@ def main():
         return max((v.get("variant_rank") or 0) for v in g)
 
     order = sorted(groups.items(), key=lambda kv: (min(v["tier"] for v in kv[1]) if kv[0] not in
-                                                   {v.get("group") or v["id"] for v in eligible if v["id"] in incl} else -1,
+                                                   {v.get("group") or v["id"] for v in eligible if v["id"] in incl | floor} else -1,
                                                    -max(v["_score"] for v in kv[1])))
     tiers = sorted({min(v["tier"] for v in g) for _, g in order} | {-1})
 
@@ -277,7 +279,7 @@ def main():
         for k, g in sel:                       # 1) legkisebb változat
             if k in chosen:
                 continue
-            forced = [x for x in g if x["id"] in incl]
+            forced = [x for x in g if x["id"] in incl] or [x for x in g if x["id"] in floor]
             v = forced[0] if forced else min(g, key=size_of)
             if fits(v):
                 choose(k, v)
@@ -291,7 +293,7 @@ def main():
                     break
 
     def tier_of(k, g):
-        return -1 if any(v["id"] in incl for v in g) else min(v["tier"] for v in g)
+        return -1 if any(v["id"] in incl | floor for v in g) else min(v["tier"] for v in g)
 
     def is_llm(g):
         return g[0]["cat"].startswith("ai_models")
@@ -342,6 +344,7 @@ def main():
                         used += size_of(v) - size_of(chosen[k]); chosen[k] = v
                         break
 
+    floor_g = {v.get("group") or v["id"] for v in eligible if v["id"] in floor}   # alsó határos csoport nem eshet ki átfedés miatt
     llm_done = False
     for t in tiers:
         if t >= 1 and not llm_done:
@@ -354,7 +357,7 @@ def main():
     # 4) átfedések kiszűrése (pl. Wikipedia-orvosi részhalmaz, ha a teljes WP bent van), majd újratöltés
     for _ in range(10):
         ids = {v["id"] for v in chosen.values() if v["download"]["method"] != "agent"}   # AI-feladat nem helyettesít automatikus letöltést
-        drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl and v["tier"] > 0]   # 0. szint mindig marad (korán töltődik)
+        drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl and v["tier"] > 0 and k not in floor_g]   # 0. szint mindig marad (korán töltődik)
         if not drop:
             break
         for k in drop:
@@ -395,6 +398,9 @@ def main():
     if ag:
         print(f"Ebből AI-feladat (nem automatikus, a dl.sh TODO-ként jelzi): {human(ag)} – "
               f"{sum(1 for v in plan if v['download']['method'] == 'agent')} tétel (API/OAI-PMH-lista, S3, több fájlos készletek)")
+    lost = sorted(k for k in floor_g if k not in chosen)
+    if lost:
+        print("FIGYELEM: alsó határos csoport nem fért be: " + ", ".join(lost), file=sys.stderr)
     miss = sorted(x for x in incl if x not in {v["id"] for v in plan})
     if miss:
         known = {it["id"] for it in items}

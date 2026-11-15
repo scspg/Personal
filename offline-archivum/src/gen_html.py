@@ -723,10 +723,16 @@ def core_links_html():
         row = f"<li><b>{html.escape(cut(i['name'], 80))}</b> <span class='hint'>({html.escape(CAT_HU.get(i['cat'], i['cat']))}, {sz})</span>{alt} – {links}{how}</li>"
         rows.append(row)
     in_plan = len([i for i in items if i["id"] in plan1])
+    out1 = [i for i in items if i["id"] not in plan1]
+    byid = {x["id"]: x for x in items}
+    def why(i):
+        rep = [x for x in plan1 if x != i["id"] and x in byid and ((i.get("group") and byid[x].get("group") == i.get("group")) or x in (i.get("subsumed_by") or []))]
+        return f'a(z) {html.escape(cut(i["name"], 60))} kimarad, mert a(z) {html.escape(cut(byid[rep[0]]["name"], 60))} bent van' if rep else f'a(z) {html.escape(cut(i["name"], 60))} kimarad'
+    reason = (": " + "; ".join(why(i) for i in out1) + ".") if out1 else " (mindet)."
     return (f'<details><summary>Kezdőknek: az életmentő mag ({n} tétel, összesen ~{human(total)}) letöltése kattintással, terminál nélkül</summary><div class="body">'
             '<p class="hint">Ha nem használsz parancssort vagy AI-ágenst: ezeket a fájlokat egyenként töltsd le a böngészővel egy külön meghajtóra. '
             'A Kiwix-fájlok (.zim) a Kiwix olvasóval nyithatók meg (Kiwix Desktop / Android). Archive.org-nál a megnyíló oldalon a „PDF” letöltést válaszd. '
-            f'A teljes letöltési terv (1 TB) ebből {in_plan}-et tart meg, mert a CD3WD-t és az orvosi Wikipédiát nagyobb, teljes változatra cseréli. A többi anyaghoz a teljes letöltés (ARCHIVUM.md, 1. fejezet) kell.</p>'
+            f'A teljes letöltési terv (1 TB) ebből {in_plan}-et tart meg{reason} A többi anyaghoz a teljes letöltés (ARCHIVUM.md, 1. fejezet) kell.</p>'
             f'<ul>{"".join(rows)}</ul></div></details>')
 
 def ssd_html():

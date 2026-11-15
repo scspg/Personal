@@ -136,7 +136,7 @@ for _c in ("speech", "translation", "ocr", "vision", "medical_ai", "imagegen", "
 
 def ssd_plans(cat_path, tmp):
     """SSD-méretenként: select_items terv (T2-es gép, ~300 GB LLM-memória, alap + cenzúrázatlan LLM, max 4 modell)."""
-    out, prev = [], []
+    out, prev, prevg = [], [], []
     for b in SSD_SIZES:
         outp = os.path.join(tmp, f"ssd{b}.json")
         # a nagyobb meghajtó a kisebb teljes (nem LLM) tartalmát megtartja, csak bővül vagy jobb változatra cserél
@@ -147,12 +147,21 @@ def ssd_plans(cat_path, tmp):
         if int(b[:-2]) <= 1:      # 1 TB: az LLM legfeljebb a keret 25%-a
             llm += ["--llm-max", "0.25"]
         subprocess.run([sys.executable, "-I", os.path.join(HERE, "select_items.py"), cat_path, "--budget", b, *llm,
-                        "--platform", "server", "--include", ",".join(prev), "--out", outp], check=True, capture_output=True)
+                        "--platform", "server", "--include", ",".join(prev), "--floor", ",".join(prevg), "--out", outp], check=True, capture_output=True)
         p = json.load(open(outp, encoding="utf-8"))
         out.append((b, p))
-        # csoporttagot nem kötünk ki: így nagyobb meghajtón a jobb (nagyobb) változatra cserélhető
+        # csoporttag alsó határ (--floor): nagyobb meghajtón ugyanaz vagy nagyobb (jobb) változat, soha nem kisebb
         grp_of = {i["id"]: i.get("group") for i in p["items"]}
         prev = [i["id"] for i in p["items"] if not i["id"].startswith("llm-") and not grp_of.get(i["id"])]
+        prevg = [i["id"] for i in p["items"] if not i["id"].startswith("llm-") and grp_of.get(i["id"])]
+    # önellenőrzés: nagyobb méretnél egyetlen (nem LLM) csoport sem eshet ki és nem kaphat kisebb változatot
+    sz = lambda i: i.get("bytes") or i.get("bytes_est") or 0
+    for (b0, p0), (b1, p1) in zip(out, out[1:]):
+        c0 = {(i.get("group") or i["id"]): i for i in p0["items"] if not i["id"].startswith("llm-")}
+        c1 = {(i.get("group") or i["id"]): i for i in p1["items"] if not i["id"].startswith("llm-")}
+        bad = [g for g in c0 if g not in c1 or sz(c1[g]) < sz(c0[g])]
+        if bad:
+            sys.exit(f"HIBA: {b0} → {b1}: visszalépő vagy kieső csoport: {', '.join(bad[:10])}")
     return out
 
 
