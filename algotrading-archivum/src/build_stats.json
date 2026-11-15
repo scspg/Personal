@@ -1,5 +1,5 @@
 {
- "items": 1625,
+ "items": 1627,
  "strategies": 119,
  "ideas": 165,
  "stats": {
@@ -16,9 +16,9 @@
    "no_url": 0
   },
   "a3_predict_sports": {
-   "raw": 112,
+   "raw": 113,
    "bad_json": 0,
-   "dup": 5,
+   "dup": 4,
    "no_url": 0
   },
   "a4_macro_news_alt": {

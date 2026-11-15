@@ -85,11 +85,11 @@ Az eredmények címkéje: `result_verified` = mért 82, becsült 16, nem ellenő
 ## 5. Hiányok és korlátok
 
 - **Kaggle-győztesek.** A Kaggle-diszkussziók tartalma JS-sel töltődik, így csak a címek ellenőrizhetők. Ezek: Jane Street 2021 (Yirun, supervised AE+MLP), Optiver RV („Nearest Neighbors”), Optiver Close, M5, Web Traffic, Rossmann, Ubiquant. A módszerrészletek „nem ellenőrzött” címkét kaptak. A Jane Street 2024–25 és a Two Sigma (2016–17, 2018–19) győztesei nem ellenőrzöttek.
-- **Teljesítményszámok.** A Renaissance, PNP, Benter, Walters, Starlizard és Numerai számai sajtó- vagy Wikipedia-forrásból jönnek, auditált adat nincs (becsült / nem ellenőrzött).
+- **Teljesítményszámok.** A Renaissance, PNP, Benter, Walters, Starlizard és Numerai számai sajtó- vagy Wikipedia-forrásból jönnek, auditált adat nincs. Egységes szabály (2026-11-15): minden Wikipédia-forrású eredmény `becsült`; a `mért` címke csak a lektorált vagy elsődleges forrásból vett részállításra marad (35 tétel átsorolva).
 - **Le nem töltött források.**
-  - Az Avellaneda–Lee Sharpe-számai és a Froot és társai számszerű eredményei: az absztrakt nem volt elérhető.
+  - Froot és társai számszerű eredményei: az absztrakt nem volt elérhető. (Az Avellaneda–Lee számait azóta a szerzők preprint-absztraktjából ellenőriztük: PCA-Sharpe 1,44 (1997–2007), 0,9 (2003–2007); ETF 1,1; volumennel 1,51 (2003–2007) – egyezik az a7_strategies.jsonl tételével.)
   - A Cash WinFall főfelügyelői jelentése: 403.
   - A Ken French Data Library: időtúllépés.
   - Az RS Metrics oldala: 403.
 - **Csomagok.** A GitHub API helyett ungh.cc-t használtunk. Elavult vagy lassan karbantartott csomagok: hmmlearn (2024 óta nincs kiadás), fracdiff, hurst, PyInform, bayesian-changepoint-detection és benford-py. Az mlfinlab nincs a PyPI-n (fizetős), a pypbo és az IDTxl csak GitHubon érhető el. A tigramite GPL-3.0 licencű, ez kereskedelmi beágyazásnál számít.
-- **Mérési hiány.** FX- vagy kripto-specifikus publikálás utáni lecsengést nem mértek McLean–Pontiff-szerűen. A tételekben ez következtetett állítás.
+- **Mérési hiány (javítva).** FX-re van mért, publikálás utáni lecsengés: Neely, Weller és Ulrich (2009, JFQA, `cs-fx-technical-rules-amh`) valódi out-of-sample teszttel kimutatta, hogy a korábban publikált szűrő- és mozgóátlag-szabályok többlethozama a '90-es évek elejére eltűnt, a kevésbé vizsgált szabályoké csökkent. McLean–Pontiff-szerű, sok jelre kiterjedő keresztmetszeti mérés FX-carryre, FX-momentumra és kriptóra továbbra sincs; ott a lecsengés következtetett állítás.
