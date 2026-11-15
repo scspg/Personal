@@ -1,0 +1,2130 @@
+# Saved file: /tmp/claude-0/-home-user-Personal/5fbce50e-ce84-531e-8258-3354b3da35f3/scratchpad/oss_partB.yaml (valid YAML, 101 items, unique ids, safe_load OK)
+# PART B: curated OSS list, 101 items, checked 2026-11-14. I ran git ls-remote on every url_download.
+# Every latest_version except one is an exact tag from the ls-remote output. The exception is oss-r: R's git mirror has no tags, only branches, so the version comes from CRAN.
+# Notes:
+# - Left out or listed only as an alternative: GeoGebra (its app binaries are not under an OSI licence), KNIME (repo URL not reachable), Reticulum (own non-OSI licence),
+#   gnuplot (free but not OSI-approved), Fritzing (code is GPL, official binaries are paid), Meilisearch's Enterprise Edition parts (BUSL), Kolibri (assumed to be in Part A), Kiwix and LLM runtimes (excluded as requested).
+# - Inactive or old projects, used only as alternatives: grbl (last commit 2021), FlatCAM (2022), translateLocally (2025-03), Bergamot (2024).
+# - Added needs that were not on the list: radio/mesh comms (Meshtastic, fldigi, Dire Wolf), OpenWrt, PLC (OpenPLC), water network (EPANET), system simulation (OpenModelica), chemistry (Cantera), microscopy (Fiji),
+#   food stock (Grocy), community health (CHT), lab system (OpenELIS), drug data (openFDA), field data collection (ODK), crisis mapping (Ushahidi), offline package mirrors (aptly), archive integrity (par2), backup (restic). Comms and OpenWrt sit in oss_embedded because there is no comms category.
+# - Measured sizes come from Content-Length on the official servers. Android APK sizes come from the F-Droid index-v2.json. GitHub releases, download.freecad.org, download.stellarium.org and Geofabrik could not be reached, so those sizes are estimates and marked as such.
+- id: oss-freecad
+  name: "FreeCAD"
+  category: oss_engineering
+  need_hu: "Parametrikus 3D gépészeti tervezés, műhelyrajz, FEM és CAM egy programban"
+  description_hu: "A legteljesebb nyílt parametrikus CAD: Sketcher, Part Design, TechDraw műhelyrajz, beépített FEM (CalculiX) és CAM munkapad – egy alkatrész a tervtől a G-kódig itt elkészíthető."
+  url_info: "https://www.freecad.org"
+  url_download: "https://github.com/FreeCAD/FreeCAD.git"
+  release_url: "https://www.freecad.org/downloads.php"
+  latest_version: "1.1.4"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "LGPL-2.1-or-later"
+  size: "~0.6-1 GB (Windows installer / Linux AppImage)"
+  size_status: "estimated(GitHub releases nem elérhető a sandboxból; korábbi 1.x kiadások alapján)"
+  format: "AppImage / .exe / .dmg; forrás git"
+  language: multi
+  alternatives: "SolveSpace (https://github.com/solvespace/solvespace) v3.3 – nagyon könnyű, régi gépen is fut; OpenSCAD (https://github.com/openscad/openscad) – szkript-alapú CSG, utolsó stabil openscad-2021.01 (AppImage 38.8 MB mérve), 2026.11-RC0 snapshot elérhető"
+  notes: "Mentsd az AppImage-et ÉS a Windows-telepítőt; az Addon Manager internetet igényel, a fontos kiegészítőket (pl. Fasteners, Assembly) előre klónozd. Kód-alapú B-rep CAD-hez CadQuery (https://github.com/CadQuery/cadquery, v2.8.0) és build123d (https://github.com/gumyr/build123d, v0.13.0) is ellenőrizve."
+  scores: {survival: 3, rebuild: 9, actionable: 8, uniqueness: 8, reliability: 8, offline_ease: 9}
+
+- id: oss-librecad
+  name: "LibreCAD"
+  category: oss_engineering
+  need_hu: "2D műszaki rajz, DXF szerkesztés (épület, alaprajz, lemezszabás)"
+  description_hu: "Könnyű, gyors 2D CAD natív DXF támogatással; gyenge gépen is fut, lézervágó/plazma sablonokhoz és alaprajzokhoz ideális."
+  url_info: "https://librecad.org"
+  url_download: "https://github.com/LibreCAD/LibreCAD.git"
+  release_url: "https://github.com/LibreCAD/LibreCAD/releases"
+  latest_version: "v2.2.1.6"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "~30-70 MB (installer / AppImage)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "AppImage / .exe / .dmg; forrás git"
+  language: multi
+  alternatives: "QCAD Community (https://github.com/qcad/qcad) – GPL-3.0, gazdagabb 2D; QElectroTech (https://github.com/qelectrotech/qelectrotech-source-mirror) – GPL-2.0, ipari villamos kapcsolási rajzok"
+  notes: "Egyetlen fájlként hordozható; a DXF a legtartósabb csereformátum CNC/lézer felé."
+  scores: {survival: 2, rebuild: 7, actionable: 8, uniqueness: 5, reliability: 8, offline_ease: 10}
+
+- id: oss-kicad
+  name: "KiCad EDA"
+  category: oss_engineering
+  need_hu: "Elektronikai kapcsolási rajz és nyomtatott áramkör (NYÁK) tervezés"
+  description_hu: "Az ipari szintű nyílt EDA: kapcsolási rajz, többrétegű NYÁK, 3D nézet, gerber/drill export, beépített ngspice szimuláció – CERN támogatással, hatalmas alkatrészkönyvtárral."
+  url_info: "https://www.kicad.org"
+  url_download: "https://gitlab.com/kicad/code/kicad.git"
+  release_url: "https://www.kicad.org/download/"
+  latest_version: "10.0.8"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later (könyvtárak: CC-BY-SA 4.0 kivétellel)"
+  size: "924 MB (kicad-10.0.8-x86_64.exe, könyvtárakkal)"
+  size_status: "measured(content-length)"
+  format: ".exe / .deb / Flatpak / .dmg; forrás git"
+  language: multi
+  alternatives: "LibrePCB (https://github.com/LibrePCB/LibrePCB) v2.1.1 – GPL-3.0, egyszerűbb; Fritzing (https://github.com/fritzing/fritzing-app) – kód GPL-3.0, alkatrészek CC-BY-SA, DE a hivatalos bináris letöltés fizetős/adományhoz kötött, forrásból kell fordítani (utolsó verziótag 0.9.6)"
+  notes: "A Windows-telepítő tartalmazza a szimbólum/footprint könyvtárakat; a 3D modellkönyvtár külön, több GB (becslés). Otthoni NYÁK-gyártáshoz lásd pcb2gcode."
+  scores: {survival: 3, rebuild: 9, actionable: 8, uniqueness: 8, reliability: 9, offline_ease: 9}
+
+- id: oss-code-aster
+  name: "code_aster (Salome-Meca)"
+  category: oss_engineering
+  need_hu: "Szilárdsági végeselem-analízis (szerkezetek, gépelemek, hő, dinamika)"
+  description_hu: "Az EDF által atomerőművekhez fejlesztett, validált FEM-megoldó; statika, dinamika, nemlinearitás, hő, fáradás – a nyílt világ legkomolyabb szerkezeti szimulátora."
+  url_info: "https://www.code-aster.org"
+  url_download: "https://gitlab.com/codeaster/src.git"
+  release_url: null
+  latest_version: "18.1.11"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-8 GB (Salome-Meca konténer/telepítő)"
+  size_status: "estimated(Salome-Meca korábbi konténerképek alapján)"
+  format: "Singularity/Apptainer konténer, forrás git"
+  language: multi
+  alternatives: "CalculiX (https://github.com/Dhondtguido/CalculiX; hivatalos forrás http://www.dhondt.de, ccx_2.23.src.tar.bz2 = 1.4 MB mérve) – GPL-2.0, Abaqus-szerű, PrePoMax GUI-val (https://gitlab.com/MatejB/PrePoMax); Elmer FEM (https://github.com/ElmerCSC/elmerfem) release-26.2.1 – GPL-2.0, multifizika, Windows-telepítő 244 MB mérve"
+  notes: "A legutóbbi tag 18.1.11; a 17.x ágak is tagelve. A Salome platform git szervere (git.salome-platform.org) TLS-hibát adott – nem ellenőrzött. Hálózásra Gmsh (https://gitlab.onelab.info/gmsh/gmsh, gmsh_4_15_2)."
+  scores: {survival: 2, rebuild: 8, actionable: 5, uniqueness: 7, reliability: 8, offline_ease: 7}
+
+- id: oss-openfoam
+  name: "OpenFOAM (ESI, openfoam.com)"
+  category: oss_engineering
+  need_hu: "Áramlástani szimuláció (CFD): víz, levegő, hő, égés, turbina, szellőzés"
+  description_hu: "Az ipari szabványnak számító nyílt CFD-csomag; vízturbinák, szivattyúk, kemencék, szellőzés tervezéséhez nincs nála jobb ingyenes eszköz."
+  url_info: "https://www.openfoam.com"
+  url_download: "https://gitlab.com/openfoam/core/openfoam.git"
+  release_url: "https://dl.openfoam.com/source/"
+  latest_version: "OpenFOAM-v2606"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later"
+  size: "66 MB (OpenFOAM-v2606.tgz forrás) + ThirdParty-v2606.tar.gz"
+  size_status: "measured(content-length)"
+  format: "forrás tarball, .deb csomagok, Docker"
+  language: en
+  alternatives: "OpenFOAM Foundation (https://github.com/OpenFOAM/OpenFOAM-13) – tag version-13; ParaView utófeldolgozó (https://gitlab.kitware.com/paraview/paraview) v6.2.1, Windows MSI 554 MB mérve"
+  notes: "A develop.openfoam.com git hitelesítést kér – használd a gitlab.com tükröt. Fordításhoz GCC + OpenMPI kell; a ThirdParty csomagot is mentsd."
+  scores: {survival: 1, rebuild: 7, actionable: 4, uniqueness: 7, reliability: 8, offline_ease: 7}
+
+- id: oss-openmodelica
+  name: "OpenModelica"
+  category: oss_engineering
+  need_hu: "Rendszerszimuláció: hő-, hidraulikus, villamos és mechanikai hálózatok"
+  description_hu: "Modelica-alapú, egyenlet-orientált szimulátor kész komponenskönyvtárakkal – kazánrendszer, hőszivattyú, generátor, akkumulátor-bank méretezéséhez."
+  url_info: "https://openmodelica.org"
+  url_download: "https://github.com/OpenModelica/OpenModelica.git"
+  release_url: "https://openmodelica.org/download/"
+  latest_version: "v1.27.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0 vagy OSMC-PL (kettős)"
+  size: "~1-1.5 GB (Windows installer könyvtárakkal)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / .deb; forrás git (submodulokkal)"
+  language: en
+  alternatives: "pandapower (https://github.com/e2nIEE/pandapower) v3.5.6 – BSD-3, villamos elosztóhálózat-számítás (load flow, zárlat) Pythonban"
+  notes: "A Modelica Standard Library a csomag része; a git forrás sok submodult húz – `git clone --recurse-submodules`."
+  scores: {survival: 1, rebuild: 7, actionable: 5, uniqueness: 7, reliability: 8, offline_ease: 8}
+
+- id: oss-epanet
+  name: "EPANET"
+  category: oss_engineering
+  need_hu: "Ivóvízhálózat (csövek, szivattyúk, tározók, nyomás, klórozás) méretezése"
+  description_hu: "Az US EPA által kifejlesztett, világszabvány vízelosztó-hálózat szimulátor; nyomás, áramlás és vízminőség (klór) számítás falu- vagy városméretben."
+  url_info: "https://www.epa.gov/water-research/epanet"
+  url_download: "https://github.com/OpenWaterAnalytics/EPANET.git"
+  release_url: "https://github.com/OpenWaterAnalytics/EPANET/releases"
+  latest_version: "v2.3.5"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~1-5 MB (könyvtár + CLI)"
+  size_status: "estimated(forráskód mérete alapján)"
+  format: "C könyvtár + parancssor; forrás git"
+  language: en
+  alternatives: "SWMM (https://github.com/USEPA/Stormwater-Management-Model) v5.2.4 – csapadék- és szennyvízcsatorna szimuláció"
+  notes: "A repo a számítómotor; grafikus felülethez az EPA Windows-os EPANET GUI vagy QGIS bővítmény használható. Az EPANET kézikönyvet (PDF) mentsd mellé."
+  scores: {survival: 6, rebuild: 8, actionable: 6, uniqueness: 9, reliability: 8, offline_ease: 10}
+
+- id: oss-linuxcnc
+  name: "LinuxCNC"
+  category: oss_engineering
+  need_hu: "Ipari CNC gépvezérlés (maró, eszterga, plazma, robotkar) PC-ről"
+  description_hu: "Valós idejű, ipari minőségű CNC-vezérlő: 9 tengely, kinematika, eszterga/maró/plazma GUI-k, HAL-alapú hardverillesztés – régi gépek újraélesztésének eszköze."
+  url_info: "https://linuxcnc.org"
+  url_download: "https://github.com/LinuxCNC/linuxcnc.git"
+  release_url: "https://www.linuxcnc.org/iso/"
+  latest_version: "v2.9.10"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "4.0 GB (linuxcnc_2.9.10-amd64.hybrid.iso, Debian + RT kernel)"
+  size_status: "measured(content-length)"
+  format: "bootolható hybrid ISO; .deb; forrás git"
+  language: multi
+  alternatives: "grblHAL (https://github.com/grblHAL/core) – olcsó mikrovezérlős kisgépekre"
+  notes: "Az ISO komplett, telepíthető rendszer valós idejű kernellel; párhuzamos port vagy Mesa FPGA kártya kell. A 2.10 előzetes ISO is elérhető."
+  scores: {survival: 2, rebuild: 9, actionable: 7, uniqueness: 8, reliability: 9, offline_ease: 9}
+
+- id: oss-grblhal
+  name: "grblHAL"
+  category: oss_engineering
+  need_hu: "CNC/lézer firmware olcsó 32 bites mikrovezérlőkre (STM32, RP2040, ESP32)"
+  description_hu: "A klasszikus grbl modern, aktívan fejlesztett utódja: több tengely, hálózat, SD-kártyás futtatás, sokféle vezérlőlapra – kis marók, lézerek, plazmák szíve."
+  url_info: "https://github.com/grblHAL"
+  url_download: "https://github.com/grblHAL/core.git"
+  release_url: null
+  latest_version: "20250518"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-20 MB (core + egy driver repo)"
+  size_status: "estimated(repo méret)"
+  format: "C forrás, PlatformIO/STM32Cube projektek"
+  language: en
+  alternatives: "grbl (https://github.com/gnea/grbl) v1.1h.20190825 – Arduino Uno-ra, 2021 óta nem fejlesztik"
+  notes: "A tagek ritkák (dátum-alapú buildek), a core aktív (utolsó commit 2026-11-14). A webes buildert offline nem lehet használni: klónozd a core-t ÉS a lapodhoz tartozó driver repót (pl. STM32F4xx, RP2040, ESP32), fordítsd PlatformIO-val."
+  scores: {survival: 2, rebuild: 8, actionable: 7, uniqueness: 6, reliability: 7, offline_ease: 9}
+
+- id: oss-ugs
+  name: "Universal G-code Sender"
+  category: oss_engineering
+  need_hu: "G-kód küldése és gép kezelése grbl/grblHAL/Marlin alapú CNC-hez"
+  description_hu: "Platformfüggetlen, beépített Java-futtatókörnyezettel szállított G-kód küldő: jog, nullpontfelvétel, szondázás, vizualizáció – a hobbi-CNC világ legelterjedtebb vezérlőfelülete."
+  url_info: "https://winder.github.io/ugs_website/"
+  url_download: "https://github.com/winder/Universal-G-Code-Sender.git"
+  release_url: "https://github.com/winder/Universal-G-Code-Sender/releases"
+  latest_version: "v2.1.30"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~100-150 MB (platformcsomag beépített JRE-vel)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".zip / .tar.gz platformcsomag"
+  language: multi
+  alternatives: "CNCjs (https://github.com/cncjs/cncjs) v1.12.0 – MIT, webes, Raspberry Pi-n; bCNC (https://github.com/vlachoudis/bCNC) 1.0.0 – GPL-2.0, Python, autoleveling"
+  notes: "Lézergravírozáshoz LaserGRBL (https://github.com/arkypita/LaserGRBL, v7.14.1, GPL-3.0, Windows)."
+  scores: {survival: 2, rebuild: 7, actionable: 8, uniqueness: 5, reliability: 8, offline_ease: 10}
+
+- id: oss-pcb2gcode
+  name: "pcb2gcode"
+  category: oss_engineering
+  need_hu: "Nyomtatott áramkör házi gyártása marással (gerber -> G-kód)"
+  description_hu: "Gerber/Excellon fájlokból izolációs marási, fúrási és körbevágási G-kódot készít – maratószer nélkül, CNC-vel gyártható NYÁK; aktívan karbantartott."
+  url_info: "https://github.com/pcb2gcode/pcb2gcode"
+  url_download: "https://github.com/pcb2gcode/pcb2gcode.git"
+  release_url: "https://github.com/pcb2gcode/pcb2gcode/releases"
+  latest_version: "v3.1.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-10 MB"
+  size_status: "estimated(repo méret)"
+  format: "parancssori program; forrás git"
+  language: en
+  alternatives: "FlatCAM (https://bitbucket.org/jpcgt/flatcam) – MIT, grafikus, de a Beta ág utolsó commitja 2022-02 (nem aktív); Kiri:Moto (https://github.com/GridSpace/grid-apps) 4.7.3 – MIT, böngészős CAM/lézer/szeletelő"
+  notes: "KiCad gerber exportjával együtt használd; a boost és gerbv függőségeket offline csomagként mentsd."
+  scores: {survival: 2, rebuild: 7, actionable: 7, uniqueness: 7, reliability: 7, offline_ease: 10}
+
+- id: oss-prusaslicer
+  name: "PrusaSlicer"
+  category: oss_3dprint
+  need_hu: "3D modellek szeletelése nyomtatható G-kóddá (FDM és SLA)"
+  description_hu: "A legkiforrottabb nyílt szeletelő: rengeteg nyomtatóprofil, festhető támasz, változó rétegmagasság, SLA mód – stabil és jól dokumentált."
+  url_info: "https://www.prusa3d.com/prusaslicer/"
+  url_download: "https://github.com/prusa3d/PrusaSlicer.git"
+  release_url: "https://github.com/prusa3d/PrusaSlicer/releases"
+  latest_version: "v3.1.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~100-200 MB (installer / AppImage)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "AppImage / .exe / .dmg; forrás git"
+  language: multi
+  alternatives: "OrcaSlicer (https://github.com/OrcaSlicer/OrcaSlicer) v2.5.1 – AGPL-3.0, Bambu/Voron/Klipper profilok, kalibrációs varázslók; UltiMaker Cura (https://github.com/Ultimaker/Cura) 5.14.0 – LGPL-3.0"
+  notes: "Az első indításkor a profilfrissítés netet kér – offline is működik a beépített profilokkal; a saját nyomtatóprofilokat exportáld (Config bundle)."
+  scores: {survival: 2, rebuild: 8, actionable: 9, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-klipper
+  name: "Klipper"
+  category: oss_3dprint
+  need_hu: "Nagy sebességű 3D nyomtató firmware (host + mikrovezérlő)"
+  description_hu: "A számítást Raspberry Pi-re/PC-re teszi, így szinte bármilyen olcsó vezérlőlappal precíz, gyors nyomtatás érhető el (input shaping, pressure advance)."
+  url_info: "https://www.klipper3d.org"
+  url_download: "https://github.com/Klipper3d/klipper.git"
+  release_url: null
+  latest_version: "v0.13.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~30-50 MB (repo)"
+  size_status: "estimated(repo méret)"
+  format: "Python host + C firmware forrás"
+  language: en
+  alternatives: "Marlin (https://github.com/MarlinFirmware/Marlin) 2.1.2.10 – GPL-3.0, önálló firmware host nélkül, áramszegény környezetben egyszerűbb"
+  notes: "Az API-réteg a Moonraker (https://github.com/Arksine/moonraker, v0.11.0); a Python függőségeket (pip wheel) és az arm-none-eabi-gcc/avr-gcc fordítót offline mentsd."
+  scores: {survival: 2, rebuild: 8, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 9}
+
+- id: oss-mainsail
+  name: "Mainsail"
+  category: oss_3dprint
+  need_hu: "Webes kezelőfelület Klipper nyomtatókhoz"
+  description_hu: "Letisztult, gyors böngészős felület Klipper+Moonraker-hez: nyomtatás indítás, makrók, webkamera, konfiguráció-szerkesztés bármely eszközről a helyi hálón."
+  url_info: "https://docs.mainsail.xyz"
+  url_download: "https://github.com/mainsail-crew/mainsail.git"
+  release_url: "https://github.com/mainsail-crew/mainsail/releases"
+  latest_version: "v2.19.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-10 MB (statikus web zip)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus HTML/JS zip"
+  language: multi
+  alternatives: "Fluidd (https://github.com/fluidd-core/fluidd) v1.38.0 – GPL-3.0"
+  notes: "A kiadási zip közvetlenül nginx-szel kiszolgálható; teljesen offline működik."
+  scores: {survival: 1, rebuild: 6, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+- id: oss-octoprint
+  name: "OctoPrint"
+  category: oss_3dprint
+  need_hu: "Webes nyomtatószerver Marlin/egyéb firmware-es 3D nyomtatókhoz"
+  description_hu: "A legelterjedtebb nyomtató-távvezérlő: G-kód feltöltés, webkamera, időzített felvétel és hatalmas pluginkínálat bármely soros portos nyomtatóhoz."
+  url_info: "https://octoprint.org"
+  url_download: "https://github.com/OctoPrint/OctoPrint.git"
+  release_url: "https://octoprint.org/download/"
+  latest_version: "1.11.8"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~1 GB (OctoPi Raspberry Pi image) / ~10 MB (Python csomag)"
+  size_status: "estimated(korábbi OctoPi image-ek alapján)"
+  format: "Python csomag; Raspberry Pi image"
+  language: multi
+  alternatives: "Mainsail + Moonraker (https://github.com/mainsail-crew/mainsail) – Klipperhez"
+  notes: "Pluginokat és pip függőségeket előre töltsd le (pip download -d wheelhouse octoprint)."
+  scores: {survival: 1, rebuild: 6, actionable: 8, uniqueness: 4, reliability: 8, offline_ease: 9}
+
+- id: oss-arduino-ide
+  name: "Arduino IDE 2 + ArduinoCore-avr"
+  category: oss_embedded
+  need_hu: "Mikrovezérlők (Arduino, ESP32, RP2040) egyszerű programozása"
+  description_hu: "A legnagyobb közösségű, legkönnyebben tanulható beágyazott fejlesztőkörnyezet; ezernyi könyvtár és példa szenzorokhoz, relékhez, motorokhoz."
+  url_info: "https://www.arduino.cc/en/software"
+  url_download: "https://github.com/arduino/arduino-ide.git"
+  release_url: "https://www.arduino.cc/en/software"
+  latest_version: "2.3.11"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0 (IDE); LGPL-2.1 (ArduinoCore-avr)"
+  size: "153 MB (Windows .exe) / 196 MB (Linux AppImage)"
+  size_status: "measured(content-length)"
+  format: ".exe / AppImage / .zip"
+  language: multi
+  alternatives: "arduino-cli (https://github.com/arduino/arduino-cli) v1.6.0 – GPL-3.0, szkriptelhető; ArduinoCore-avr (https://github.com/arduino/ArduinoCore-avr) 1.8.8 – az AVR mag"
+  notes: "A Boards/Library Manager netet igényel: telepítsd előre a magokat (AVR, ESP32, RP2040) és mentsd a ~/.arduino15 (Windows: %LOCALAPPDATA%\\Arduino15) mappát és a libraries mappát."
+  scores: {survival: 3, rebuild: 9, actionable: 9, uniqueness: 6, reliability: 9, offline_ease: 9}
+
+- id: oss-platformio
+  name: "PlatformIO Core"
+  category: oss_embedded
+  need_hu: "Professzionális, többplatformos beágyazott build-rendszer"
+  description_hu: "Egységes parancssori build/feltöltés/debug több mint 1000 lapra (AVR, STM32, ESP, RP2040, nRF); a firmware-projektek (Marlin, grblHAL, Tasmota) jó része erre épül."
+  url_info: "https://platformio.org"
+  url_download: "https://github.com/platformio/platformio-core.git"
+  release_url: "https://pypi.org/project/platformio/"
+  latest_version: "v6.2.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~10 MB (core) + platformonként 0.2-1.5 GB toolchain"
+  size_status: "estimated(core méret + toolchain-csomagok)"
+  format: "Python csomag"
+  language: en
+  alternatives: "OpenOCD (https://github.com/openocd-org/openocd) v0.12.0 – GPL-2.0, JTAG/SWD flash és debug; avrdude (https://github.com/avrdudes/avrdude) v8.3 – GPL-2.0, AVR programozó"
+  notes: "Offline használathoz a ~/.platformio/packages és platforms mappát mentsd a ténylegesen használt platformokkal; a registry elérhetetlen lesz."
+  scores: {survival: 2, rebuild: 8, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 7}
+
+- id: oss-esp-idf
+  name: "ESP-IDF"
+  category: oss_embedded
+  need_hu: "Hivatalos fejlesztőkeret ESP32 Wi-Fi/BLE mikrovezérlőkhöz"
+  description_hu: "Az Espressif hivatalos SDK-ja; az olcsó ESP32 a szenzorhálózatok, LoRa-csomópontok és vezérlők alapköve – FreeRTOS, Wi-Fi, BLE, OTA."
+  url_info: "https://docs.espressif.com/projects/esp-idf/"
+  url_download: "https://github.com/espressif/esp-idf.git"
+  release_url: "https://dl.espressif.com/dl/esp-idf/"
+  latest_version: "v6.1.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~2-3 GB (repo submodulokkal + eszközlánc)"
+  size_status: "estimated(korábbi offline telepítők alapján)"
+  format: "git forrás + toolchain; Windows offline installer"
+  language: en
+  alternatives: "Raspberry Pi Pico SDK (https://github.com/raspberrypi/pico-sdk) 2.3.1 – BSD-3, RP2040/RP2350"
+  notes: "`git clone --recursive`, majd install.sh/export.sh – az eszközláncot (~/.espressif) is mentsd. Az idf_versions.txt szerint aktuális ágak: v6.1, v6.0.3."
+  scores: {survival: 2, rebuild: 8, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 7}
+
+- id: oss-micropython
+  name: "MicroPython"
+  category: oss_embedded
+  need_hu: "Python nyelv mikrovezérlőkön – gyors prototípus, oktatás"
+  description_hu: "Python 3 mikrovezérlőkre (ESP32, RP2040, STM32): fordítás nélkül, interaktív konzolon programozható – a leggyorsabb út egy működő szenzorig."
+  url_info: "https://micropython.org"
+  url_download: "https://github.com/micropython/micropython.git"
+  release_url: "https://micropython.org/download/"
+  latest_version: "v1.29.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~1-2 MB firmware lapkánként; repo ~150 MB"
+  size_status: "estimated(korábbi firmware-fájlok alapján)"
+  format: ".bin / .uf2 / .hex firmware; forrás git"
+  language: en
+  alternatives: "CircuitPython (https://github.com/adafruit/circuitpython) 10.3.2 – MIT, kezdőbarát, USB-meghajtóként jelenik meg"
+  notes: "Töltsd le a használt lapok (ESP32, RP2040) .bin/.uf2 fájljait és az esptool-t (pip wheel)."
+  scores: {survival: 2, rebuild: 7, actionable: 9, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-zephyr
+  name: "Zephyr RTOS"
+  category: oss_embedded
+  need_hu: "Ipari valós idejű operációs rendszer beágyazott eszközökhöz"
+  description_hu: "Linux Foundation által gondozott, biztonságkritikus RTOS több száz lapkára; hálózati stack, Bluetooth, fájlrendszer – hosszú távú ipari projektekhez."
+  url_info: "https://www.zephyrproject.org"
+  url_download: "https://github.com/zephyrproject-rtos/zephyr.git"
+  release_url: "https://docs.zephyrproject.org/latest/develop/getting_started/"
+  latest_version: "v4.5.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~3-6 GB (west workspace modulokkal + SDK)"
+  size_status: "estimated(west workspace tipikus mérete)"
+  format: "git forrás (west) + Zephyr SDK"
+  language: en
+  alternatives: "FreeRTOS-Kernel (https://github.com/FreeRTOS/FreeRTOS-Kernel) V11.3.3 – MIT, kicsi, egyszerű"
+  notes: "`west init` + `west update` után az egész workspace-t archiváld; az SDK-t külön töltsd le."
+  scores: {survival: 1, rebuild: 7, actionable: 4, uniqueness: 6, reliability: 9, offline_ease: 6}
+
+- id: oss-esphome
+  name: "ESPHome"
+  category: oss_embedded
+  need_hu: "ESP32/ESP8266 szenzorok, relék programozása YAML-ból, kód írása nélkül"
+  description_hu: "YAML-leírásból fordít firmware-t: hőmérő, áramfigyelő, szivattyúvezérlő percek alatt, natív Home Assistant integrációval és helyi működéssel."
+  url_info: "https://esphome.io"
+  url_download: "https://github.com/esphome/esphome.git"
+  release_url: "https://pypi.org/project/esphome/"
+  latest_version: "2026.10.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT (Python) + GPL-3.0 (C++ futtatókörnyezet)"
+  size: "~50 MB (csomag) + ~1 GB PlatformIO toolchain"
+  size_status: "estimated(csomag + toolchain)"
+  format: "Python csomag / Docker"
+  language: en
+  alternatives: "Tasmota (https://github.com/arendst/Tasmota) v16.0.0 – GPL-3.0, előre fordított firmware, webes beállítás"
+  notes: "Az első fordítás letölti a PlatformIO platformokat – egyszer fordíts le minden használt lapra, és mentsd a ~/.platformio és .esphome mappákat."
+  scores: {survival: 3, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 7}
+
+- id: oss-pulseview
+  name: "sigrok / PulseView"
+  category: oss_embedded
+  need_hu: "Logikai analizátor és mérőműszer-szoftver (protokoll dekódolás)"
+  description_hu: "Olcsó USB logikai analizátorokból és sok multiméterből/szkópból használható mérőeszközt csinál; 100+ protokoll dekóder (I2C, SPI, UART, CAN)."
+  url_info: "https://sigrok.org"
+  url_download: "https://github.com/sigrokproject/pulseview.git"
+  release_url: "https://sigrok.org/wiki/Downloads"
+  latest_version: "pulseview-0.4.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~30-60 MB (AppImage / installer)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "AppImage / .exe; forrás git"
+  language: en
+  alternatives: "sigrok-cli (https://github.com/sigrokproject/sigrok-cli) sigrok-cli-0.7.2 – parancssori változat"
+  notes: "A sigrok.org git szerver nem volt elérhető – a GitHub tükör működik. Utolsó kiadás régi, de a kód karbantartott (utolsó commit 2025-11); a libsigrok és libsigrokdecode repókat is mentsd."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 7, reliability: 6, offline_ease: 10}
+
+- id: oss-ngspice
+  name: "ngspice"
+  category: oss_embedded
+  need_hu: "Analóg/vegyes áramkör-szimuláció (SPICE)"
+  description_hu: "A nyílt SPICE-szabvány: tápegységek, erősítők, inverterek, szűrők szimulálása építés előtt; KiCad-be beépítve is használható."
+  url_info: "https://ngspice.sourceforge.io"
+  url_download: "https://git.code.sf.net/p/ngspice/ngspice"
+  release_url: "https://ngspice.sourceforge.io/download.html"
+  latest_version: "ngspice-47"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause (módosított BSD; néhány modul más szabad licenc)"
+  size: "~10-30 MB"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "forrás tarball, Windows 7z"
+  language: en
+  alternatives: "Qucs-S (https://github.com/ra3xdh/qucs_s) 26.1.1 – GPL-2.0, grafikus felület ngspice-hoz"
+  notes: "A KiCad Windows-telepítő tartalmazza; a kézikönyvet (PDF) mentsd mellé."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: oss-meshtastic
+  name: "Meshtastic firmware"
+  category: oss_embedded
+  need_hu: "Infrastruktúra nélküli szöveges kommunikáció LoRa mesh-hálón"
+  description_hu: "Olcsó LoRa rádiókon (ESP32/nRF52) több km-es, önszerveződő, titkosított szöveges és GPS-pozíció hálózat – mobilhálózat és internet nélkül, akkuról/napelemről."
+  url_info: "https://meshtastic.org"
+  url_download: "https://github.com/meshtastic/firmware.git"
+  release_url: "https://flasher.meshtastic.org"
+  latest_version: "v2.8.2.d5f1619"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~1-3 MB firmware eszközönként; Android app 43.1 MB (F-Droid 2.8.3)"
+  size_status: "measured(F-Droid index fájlméret, app); estimated(firmware)"
+  format: ".bin / .uf2 firmware; Android APK"
+  language: multi
+  alternatives: "Reticulum (https://github.com/markqvist/Reticulum) 1.6.0 – teljes hálózati stack bármilyen médiumon, DE saját 'Reticulum License' (MIT-alapú, használati korlátozással – nem OSI)"
+  notes: "Két v2.8.2 tag létezik (v2.8.2.d5f1619 és v2.8.2.4c89b69). A webes flasher offline nem megy: mentsd a firmware-zipeket és az esptool-t / adafruit-nrfutil-t; az Android APK-t F-Droidról."
+  scores: {survival: 8, rebuild: 6, actionable: 9, uniqueness: 8, reliability: 8, offline_ease: 9}
+
+- id: oss-fldigi
+  name: "fldigi"
+  category: oss_embedded
+  need_hu: "Rövidhullámú digitális rádióüzemmódok (PSK, RTTY, Olivia, MFSK) – távolsági üzenet"
+  description_hu: "Egy hangkártya és egy rövidhullámú adóvevő segítségével kontinensnyi távolságra küld szöveget és fájlt; pontos időszinkron nélkül is működik, ezért ideális áramszünetben."
+  url_info: "http://www.w1hkj.org"
+  url_download: "https://git.code.sf.net/p/fldigi/fldigi"
+  release_url: "https://sourceforge.net/projects/fldigi/files/"
+  latest_version: "v4.2.13"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~10-20 MB"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / forrás tarball / disztribúciós csomag"
+  language: multi
+  alternatives: "WSJT-X (https://git.code.sf.net/p/wsjt/wsjtx) wsjtx-2.7.0 – GPL-3.0, FT8/WSPR gyenge jelekhez, ±1 s időszinkron kell; JS8Call (https://github.com/js8call/js8call) v2.3.1 – GPL-3.0, FT8-alapú üzenetküldés"
+  notes: "Társprogramok: flmsg (űrlapok), flrig (rig-vezérlés) – a w1hkj oldaláról mentsd. SDR vételhez GNU Radio (https://github.com/gnuradio/gnuradio, v3.10.12.0) és SDR++ (https://github.com/AlexandreRouma/SDRPlusPlus, 1.0.4) is ellenőrizve. Adáshoz rádióamatőr engedély kell."
+  scores: {survival: 7, rebuild: 6, actionable: 7, uniqueness: 8, reliability: 8, offline_ease: 10}
+
+- id: oss-direwolf
+  name: "Dire Wolf"
+  category: oss_embedded
+  need_hu: "Szoftveres APRS/AX.25 packet rádió TNC (pozíció, üzenet, digipeater, iGate)"
+  description_hu: "Hangkártyás szoftver-TNC: egy URH rádióból APRS pozíció- és üzenetállomást, digipeatert vagy packet-hálózati csomópontot csinál – Raspberry Pi-n is."
+  url_info: "https://github.com/wb2osz/direwolf"
+  url_download: "https://github.com/wb2osz/direwolf.git"
+  release_url: "https://github.com/wb2osz/direwolf/releases"
+  latest_version: "1.8.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "~5-15 MB"
+  size_status: "estimated(repo méret)"
+  format: "C forrás, Windows zip"
+  language: en
+  alternatives: "Pat (https://github.com/la5nta/pat) v1.0.1 – MIT, Winlink-kompatibilis rádiós e-mail kliens (Dire Wolf-fal együtt is)"
+  notes: "Rádiók programozásához CHIRP (https://github.com/kk7ds/chirp) – aktív (utolsó commit 2026-11-14), dátum-alapú buildek, friss verziótag nincs."
+  scores: {survival: 6, rebuild: 6, actionable: 7, uniqueness: 7, reliability: 8, offline_ease: 10}
+
+- id: oss-openwrt
+  name: "OpenWrt"
+  category: oss_embedded
+  need_hu: "Router/AP firmware helyi hálózatokhoz, mesh Wi-Fi-hez"
+  description_hu: "Több ezer routeren és x86 gépen futó Linux-alapú hálózati OS: tűzfal, VLAN, VPN, batman-adv mesh – a közösségi helyi hálózat gerince."
+  url_info: "https://openwrt.org"
+  url_download: "https://git.openwrt.org/openwrt/openwrt.git"
+  release_url: "https://downloads.openwrt.org/releases/"
+  latest_version: "v25.12.6"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "13.1 MB (x86-64 ext4 combined-efi img.gz); router-image 5-15 MB/db"
+  size_status: "measured(content-length)"
+  format: "firmware image (.bin/.img.gz); ImageBuilder; forrás git"
+  language: multi
+  alternatives: "nincs azonos szintű ellenőrzött alternatíva"
+  notes: "A célarchitektúrák (pl. ramips, ath79, mediatek, x86) image-eit ÉS csomagfeedjeit tükrözd (downloads.openwrt.org/releases/25.12.6/), offline az opkg/apk csomagtelepítés csak így működik."
+  scores: {survival: 4, rebuild: 8, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 8}
+
+- id: oss-home-assistant
+  name: "Home Assistant"
+  category: oss_automation
+  need_hu: "Helyi otthon- és tanyaautomatizálás, szenzorok, energia-dashboard"
+  description_hu: "A legnagyobb nyílt automatizálási platform 3000+ integrációval; teljesen helyben fut, energia-dashboarddal, szivattyú/fűtés/világítás vezérléssel."
+  url_info: "https://www.home-assistant.io"
+  url_download: "https://github.com/home-assistant/core.git"
+  release_url: "https://www.home-assistant.io/installation/"
+  latest_version: "2026.11.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~0.4-0.6 GB (HAOS image tömörítve) / ~1.5-2 GB konténer"
+  size_status: "estimated(korábbi HAOS image-ek alapján)"
+  format: "HAOS image (RPi/x86), Docker konténer"
+  language: multi
+  alternatives: "openHAB (https://github.com/openhab/openhab-core) 5.2.4 – EPL-2.0, Java-alapú"
+  notes: "Offline: a konténert `docker save`-vel mentsd; a HACS és a felhőalapú integrációk internetet kérnek – csak helyi (Zigbee, MQTT, ESPHome, Modbus) integrációkra építs."
+  scores: {survival: 3, rebuild: 6, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 8}
+
+- id: oss-node-red
+  name: "Node-RED"
+  category: oss_automation
+  need_hu: "Vizuális folyamatprogramozás eszközök, protokollok, adatok összekötésére"
+  description_hu: "Böngészős, drag-and-drop logikaszerkesztő: Modbus, MQTT, soros port, HTTP, GPIO összekötése kódolás nélkül – ipari és tanyai vezérlésekhez is."
+  url_info: "https://nodered.org"
+  url_download: "https://github.com/node-red/node-red.git"
+  release_url: "https://www.npmjs.com/package/node-red"
+  latest_version: "5.0.9"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~50-100 MB (npm telepítés függőségekkel)"
+  size_status: "estimated(npm függőségfa)"
+  format: "npm csomag / Docker"
+  language: multi
+  alternatives: "FUXA (https://github.com/frangoteam/FUXA) v1.3.5 – MIT, webes SCADA/HMI"
+  notes: "A használt node-okat (node-red-contrib-modbus stb.) telepítsd előre, és mentsd a ~/.node-red mappát a node_modules-szal; npm pack-kel archiválható."
+  scores: {survival: 2, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 9}
+
+- id: oss-openems
+  name: "OpenEMS"
+  category: oss_automation
+  need_hu: "Energiamenedzsment: napelem, akkumulátor, hőszivattyú, töltő összehangolása"
+  description_hu: "Moduláris, ipari minőségű EMS: inverterek, akkumulátorok, mérők Modbus/SunSpec vezérlése, csúcsterhelés-levágás, önfogyasztás-optimalizálás."
+  url_info: "https://openems.io"
+  url_download: "https://github.com/OpenEMS/openems.git"
+  release_url: "https://github.com/OpenEMS/openems/releases"
+  latest_version: "2026.11.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "EPL-2.0 (Edge/Backend) + AGPL-3.0 (UI)"
+  size: "~100-200 MB (Edge jar + UI)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "Java (OSGi) jar + Angular UI"
+  language: multi
+  alternatives: "EVCC (https://github.com/evcc-io/evcc) 0.319.0 – MIT, napelemes többlet-alapú EV-töltés (egyes funkciók szponzor-tokenhez kötöttek); emoncms (https://github.com/emoncms/emoncms) 12.2.1 – AGPL-3.0, energiamonitorozás"
+  notes: "Java 21 JRE-t mentsd mellé; az eszközmodulok (pl. SMA, Fronius, Victron, GoodWe) a repóban vannak."
+  scores: {survival: 4, rebuild: 7, actionable: 6, uniqueness: 7, reliability: 8, offline_ease: 8}
+
+- id: oss-mpp-solar
+  name: "mpp-solar (SolarAssistant-alternatíva)"
+  category: oss_automation
+  need_hu: "Off-grid hibrid inverterek és BMS-ek kiolvasása, monitorozása (MQTT/HA)"
+  description_hu: "Python eszköz a legelterjedtebb olcsó off-grid inverterek (Voltronic/MPP Solar/PIP/Axpert, JK BMS stb.) soros/USB kiolvasására és MQTT/Home Assistant felé küldésére – a zárt SolarAssistant nyílt kiváltója."
+  url_info: "https://github.com/jblance/mpp-solar"
+  url_download: "https://github.com/jblance/mpp-solar.git"
+  release_url: "https://pypi.org/project/mppsolar/"
+  latest_version: "0.16.56"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~1-5 MB"
+  size_status: "estimated(repo méret)"
+  format: "Python csomag"
+  language: en
+  alternatives: "OpenDTU (https://github.com/tbnobody/OpenDTU) 2026.07.23 – GPL-2.0-or-later, ESP32 firmware Hoymiles mikroinverterekhez; Victron Venus OS (https://github.com/victronenergy/venus) v3.85 – nyílt build-rendszer, de egyes komponensei zártak"
+  notes: "Utolsó commit 2026-04. Venus OS-hez DIY BMS integráció: dbus-serialbattery (https://github.com/mr-manuel/venus-os_dbus-serialbattery, v2.0.20250729, MIT)."
+  scores: {survival: 5, rebuild: 6, actionable: 8, uniqueness: 8, reliability: 7, offline_ease: 10}
+
+- id: oss-grafana
+  name: "Grafana OSS"
+  category: oss_automation
+  need_hu: "Idősoros adatok (energia, időjárás, szenzorok) dashboardjai, riasztások"
+  description_hu: "A de facto szabvány megfigyelési dashboard: bármely adatbázisból (VictoriaMetrics, InfluxDB, PostgreSQL) grafikonok és riasztások helyi hálón."
+  url_info: "https://grafana.com/oss/grafana/"
+  url_download: "https://github.com/grafana/grafana.git"
+  release_url: "https://grafana.com/grafana/download"
+  latest_version: "v13.3.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "463 MB (grafana-13.3.1.linux-amd64.tar.gz)"
+  size_status: "measured(content-length)"
+  format: "tar.gz / .deb / Docker"
+  language: multi
+  alternatives: "Prometheus (https://github.com/prometheus/prometheus) v3.16.0 – Apache-2.0, metrikagyűjtő egyszerű beépített grafikonnal"
+  notes: "A pluginokat előre telepítsd (grafana-cli plugins install), mert a katalógus online."
+  scores: {survival: 1, rebuild: 5, actionable: 7, uniqueness: 4, reliability: 9, offline_ease: 9}
+
+- id: oss-victoriametrics
+  name: "VictoriaMetrics"
+  category: oss_automation
+  need_hu: "Idősoros adatbázis szenzor- és energiaadatok hosszú távú tárolására"
+  description_hu: "Egyetlen bináris, nagyon kevés RAM és lemez mellett éveknyi mérési adatot tárol; Prometheus- és InfluxDB-protokollt is fogad – Raspberry Pi-n is."
+  url_info: "https://victoriametrics.com"
+  url_download: "https://github.com/VictoriaMetrics/VictoriaMetrics.git"
+  release_url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases"
+  latest_version: "v1.156.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~20-40 MB (egyetlen bináris)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus bináris / Docker"
+  language: en
+  alternatives: "InfluxDB 3 Core (https://github.com/influxdata/influxdb) v3.12.2 – MIT/Apache-2.0"
+  notes: "Csak az egylemezes (single-node) változat Apache-licencű; az enterprise funkciók nem kellenek."
+  scores: {survival: 1, rebuild: 5, actionable: 6, uniqueness: 4, reliability: 9, offline_ease: 10}
+
+- id: oss-mosquitto
+  name: "Eclipse Mosquitto"
+  category: oss_automation
+  need_hu: "MQTT üzenetbróker szenzorok és vezérlők összekötésére"
+  description_hu: "Pici, rendkívül stabil MQTT bróker – az IoT-hálózatok (ESPHome, Tasmota, Zigbee2MQTT, Node-RED) közös idegrendszere, akár routeren is fut."
+  url_info: "https://mosquitto.org"
+  url_download: "https://github.com/eclipse-mosquitto/mosquitto.git"
+  release_url: "https://mosquitto.org/download/"
+  latest_version: "v2.1.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "EPL-2.0 / EDL-1.0"
+  size: "2.7 MB (mosquitto-2.1.2.tar.gz forrás)"
+  size_status: "measured(content-length)"
+  format: "forrás tarball, .deb, .exe, Docker"
+  language: en
+  alternatives: "NanoMQ (https://github.com/nanomq/nanomq) 0.25.7 – MIT, beágyazott/edge MQTT bróker"
+  notes: "Szinte minden Linux-disztribúció és az OpenWrt csomagtárában is megvan."
+  scores: {survival: 2, rebuild: 7, actionable: 7, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: oss-zigbee2mqtt
+  name: "Zigbee2MQTT"
+  category: oss_automation
+  need_hu: "Olcsó Zigbee szenzorok/kapcsolók felhőmentes használata"
+  description_hu: "4000+ Zigbee eszközt támogat gyártói hub és felhő nélkül, egy USB-s koordinátorral; MQTT-n át bármihez köthető."
+  url_info: "https://www.zigbee2mqtt.io"
+  url_download: "https://github.com/Koenkk/zigbee2mqtt.git"
+  release_url: "https://www.zigbee2mqtt.io/guide/installation/"
+  latest_version: "2.14.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~150-250 MB (node_modules-szal) / Docker"
+  size_status: "estimated(npm függőségfa)"
+  format: "Node.js alkalmazás / Docker"
+  language: multi
+  alternatives: "Z-Wave JS UI (https://github.com/zwave-js/zwave-js-ui) v11.26.2 – MIT, Z-Wave eszközökhöz"
+  notes: "Node.js kell; a koordinátor firmware-jét (Z-Stack / EmberZNet) külön mentsd."
+  scores: {survival: 2, rebuild: 5, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 9}
+
+- id: oss-frigate
+  name: "Frigate NVR"
+  category: oss_automation
+  need_hu: "Helyi videómegfigyelés AI-alapú személy/jármű/állat-felismeréssel"
+  description_hu: "IP-kamerák helyi rögzítése valós idejű objektumfelismeréssel (Coral, OpenVINO, GPU) – vagyon- és állatvédelem felhő nélkül."
+  url_info: "https://frigate.video"
+  url_download: "https://github.com/blakeblackshear/frigate.git"
+  release_url: "https://docs.frigate.video/frigate/installation"
+  latest_version: "v0.18.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~1-2 GB (Docker image)"
+  size_status: "estimated(korábbi Docker image-ek alapján)"
+  format: "Docker konténer"
+  language: multi
+  alternatives: "ZoneMinder (https://github.com/ZoneMinder/zoneminder) 1.39.11 – GPL-2.0, klasszikus NVR AI nélkül"
+  notes: "`docker save` a megfelelő variánsról (amd64/arm64, tensorrt/rocm); a detektor modelleket is mentsd a konténerrel."
+  scores: {survival: 4, rebuild: 3, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 7}
+
+- id: oss-openplc
+  name: "OpenPLC Runtime v3"
+  category: oss_automation
+  need_hu: "Ipari PLC-vezérlés (IEC 61131-3: létra, FBD, ST) olcsó hardveren"
+  description_hu: "Szabványos PLC-programozás és futtatás Raspberry Pi-n, Arduinón, ESP32-n vagy PC-n, Modbus/DNP3 támogatással – szivattyútelep, malom, víztorony vezérléséhez."
+  url_info: "https://autonomylogic.com"
+  url_download: "https://github.com/thiagoralves/OpenPLC_v3.git"
+  release_url: null
+  latest_version: null
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~50-100 MB (repo)"
+  size_status: "estimated(repo méret)"
+  format: "forrás + telepítő szkript"
+  language: en
+  alternatives: "Beremiz (https://github.com/beremiz/beremiz) v1.6.2 – GPL-2.0/LGPL, teljes IEC 61131-3 IDE"
+  notes: "Nincsenek verziótagek; utolsó commit 2026-04-04. A telepítő szkript netről húz függőségeket – telepített rendszerről készíts image-et. HMI-hez FUXA."
+  scores: {survival: 2, rebuild: 8, actionable: 6, uniqueness: 8, reliability: 7, offline_ease: 8}
+
+- id: oss-farmos
+  name: "farmOS"
+  category: oss_agri
+  need_hu: "Gazdaságnapló: táblák, vetés, állatállomány, betakarítás, munkák nyilvántartása"
+  description_hu: "Webes, közösségi fejlesztésű gazdaságirányítási rendszer térképes táblakezeléssel, vetési/állat/inputnaplókkal – a termelési tudás rögzítésére."
+  url_info: "https://farmos.org"
+  url_download: "https://github.com/farmOS/farmOS.git"
+  release_url: "https://github.com/farmOS/farmOS/releases"
+  latest_version: "4.0.9"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0-or-later"
+  size: "~100-200 MB (Drupal-alapú csomag) / Docker"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "PHP/Drupal tarball, Docker"
+  language: multi
+  alternatives: "LiteFarm (https://github.com/LiteFarmOrg/LiteFarm) v3.13.5 – GPL-3.0, kisgazdaságokra; Growstuff (https://github.com/Growstuff/growstuff) – AGPL-3.0, közösségi növény/vetési adatbázis"
+  notes: "Docker image-et ments; a térképrétegekhez helyi csempeszerver (lásd Martin) kell offline."
+  scores: {survival: 6, rebuild: 5, actionable: 7, uniqueness: 7, reliability: 8, offline_ease: 7}
+
+- id: oss-farmbot
+  name: "FarmBot (OS + Web App)"
+  category: oss_agri
+  need_hu: "Nyílt hardveres kerti robot: vetés, öntözés, gyomlálás automatizálása"
+  description_hu: "Teljesen nyílt (szoftver + CAD + alkatrészlista) CNC-szerű ágyásrobot; precíziós vetést és öntözést végez – a nyílt hardver mintapéldája."
+  url_info: "https://farm.bot"
+  url_download: "https://github.com/FarmBot/farmbot_os.git"
+  release_url: "https://github.com/FarmBot/farmbot_os/releases"
+  latest_version: "v15.5.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~100-200 MB (FBOS image) + Web App repo"
+  size_status: "estimated(korábbi image-ek alapján)"
+  format: "Raspberry Pi firmware image; Ruby/JS web app"
+  language: en
+  alternatives: "nincs hasonló teljes nyílt ágyásrobot"
+  notes: "Alapból a felhős my.farm.bot-hoz csatlakozik: offline-hoz a Web App-ot (https://github.com/FarmBot/Farmbot-Web-App, v15.30.6, MIT) helyben kell futtatni. A hardver CAD/BOM dokumentációt is archiváld."
+  scores: {survival: 5, rebuild: 5, actionable: 6, uniqueness: 8, reliability: 7, offline_ease: 6}
+
+- id: oss-weewx
+  name: "WeeWX"
+  category: oss_agri
+  need_hu: "Időjárás-állomás adatgyűjtés, archiválás, helyi weboldal"
+  description_hu: "Python-alapú, évtizedes múltú időjárás-állomás szoftver 70+ állomástípushoz; Raspberry Pi-n futva helyi előrejelzési és agrometeorológiai alapadatot ad."
+  url_info: "https://weewx.com"
+  url_download: "https://github.com/weewx/weewx.git"
+  release_url: "https://weewx.com/downloads/"
+  latest_version: "v5.5.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-10 MB"
+  size_status: "estimated(Python csomag méret)"
+  format: "pip csomag / .deb / .rpm"
+  language: multi
+  alternatives: "nincs egyenértékű ellenőrzött alternatíva"
+  notes: "Az állomás-meghajtó bővítményeket (pl. Interceptor, SDR) előre töltsd le."
+  scores: {survival: 5, rebuild: 4, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-opensprinkler
+  name: "OpenSprinkler firmware"
+  category: oss_agri
+  need_hu: "Öntözésvezérlés zónákkal, időzítéssel, szenzorokkal"
+  description_hu: "Nyílt hardveres öntözésvezérlő firmware-je: zónák, programok, eső/talajnedvesség-szenzor, helyi webes kezelés – ESP8266/AVR/Raspberry Pi alapon."
+  url_info: "https://opensprinkler.com"
+  url_download: "https://github.com/OpenSprinkler/OpenSprinkler-Firmware.git"
+  release_url: "https://github.com/OpenSprinkler/OpenSprinkler-Firmware/releases"
+  latest_version: "221(7)"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5-10 MB"
+  size_status: "estimated(repo méret)"
+  format: "C++ forrás, firmware bin"
+  language: en
+  alternatives: "Mycodo (https://github.com/kizniche/Mycodo) v8.17.0 – GPL-3.0, üvegház/gombatermesztés környezetszabályozás (PID, szenzorok)"
+  notes: "A webes UI (OpenSprinkler-App) külön repó – mentsd azt is; Raspberry Pi-n OSPi módban is fut."
+  scores: {survival: 6, rebuild: 4, actionable: 7, uniqueness: 7, reliability: 8, offline_ease: 10}
+
+- id: oss-grocy
+  name: "Grocy"
+  category: oss_agri
+  need_hu: "Élelmiszer- és háztartási készletnyilvántartás (lejárat, receptek, beszerzés)"
+  description_hu: "Önálló webes kamraleltár: lejárati idők, minimumkészlet, receptek, házimunkák – a tartós élelmiszer-tartalék tudatos forgatásához."
+  url_info: "https://grocy.info"
+  url_download: "https://github.com/grocy/grocy.git"
+  release_url: "https://github.com/grocy/grocy/releases"
+  latest_version: "v4.7.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~20-40 MB (PHP zip)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "PHP zip / Docker"
+  language: multi
+  alternatives: "Open Food Facts server (https://github.com/openfoodfacts/openfoodfacts-server) v2.121.0 – AGPL-3.0, élelmiszer-összetétel adatbázis (adatok ODbL, a dump több GB)"
+  notes: "SQLite-alapú, PHP-vel bármilyen kis gépen fut; vonalkód-olvasó támogatással."
+  scores: {survival: 6, rebuild: 2, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: oss-openmrs
+  name: "OpenMRS 3 (O3)"
+  category: oss_health
+  need_hu: "Elektronikus betegnyilvántartás klinikákra, kórházakra (alacsony erőforrás)"
+  description_hu: "Fejlődő országokban 40+ országban bevált EMR: betegfelvétel, vizitek, diagnózisok, gyógyszerelés, labor – kifejezetten szegényes infrastruktúrára tervezve."
+  url_info: "https://openmrs.org"
+  url_download: "https://github.com/openmrs/openmrs-distro-referenceapplication.git"
+  release_url: "https://openmrs.org/download/"
+  latest_version: "3.8.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MPL-2.0 (Healthcare Disclaimer kiegészítéssel)"
+  size: "~2-3 GB (Docker image-ek: backend, frontend, gateway, db)"
+  size_status: "estimated(Docker image-ek tipikus mérete)"
+  format: "Docker Compose disztribúció; Java WAR + modulok"
+  language: multi
+  alternatives: "Bahmni (https://github.com/Bahmni/bahmni-docker) 2.0.0-lite – OpenMRS-re épülő kórházi rendszer (Bahmni: AGPL-3.0, a docker repo MIT)"
+  notes: "A core (https://github.com/openmrs/openmrs-core) legutóbbi tagje 2.8.10. A Docker image-eket `docker save`-vel archiváld; a CIEL fogalomszótárat is töltsd le."
+  scores: {survival: 6, rebuild: 6, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 7}
+
+- id: oss-openemr
+  name: "OpenEMR"
+  category: oss_health
+  need_hu: "Rendelői EMR + ügyviteli rendszer (időpont, receptírás, számlázás)"
+  description_hu: "A legelterjedtebb nyílt rendelői rendszer: betegkarton, e-recept, időpontfoglalás, számlázás; PHP+MySQL, egyetlen kis szerveren is fut."
+  url_info: "https://www.open-emr.org"
+  url_download: "https://github.com/openemr/openemr.git"
+  release_url: "https://www.open-emr.org/wiki/index.php/OpenEMR_Downloads"
+  latest_version: "v8_5_0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~150-300 MB (tarball / Docker)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "PHP tarball, Docker"
+  language: multi
+  alternatives: "GNU Health (https://codeberg.org/gnuhealth/his) – lásd külön tétel"
+  notes: "USA-centrikus (kódrendszerek, számlázás); közösségi orvosláshoz az OpenMRS/GNU Health jobb, rendelői adminisztrációhoz ez."
+  scores: {survival: 6, rebuild: 5, actionable: 7, uniqueness: 5, reliability: 9, offline_ease: 7}
+
+- id: oss-gnu-health
+  name: "GNU Health"
+  category: oss_health
+  need_hu: "Kórházi információs rendszer + népegészségügy + labor + genetika"
+  description_hu: "Az ENSZ-díjas GNU Health a kórházi rendszert népegészségügyi, epidemiológiai és társadalmi egészségmodulokkal egyesíti; Tryton-alapú, GNU projekt."
+  url_info: "https://www.gnuhealth.org"
+  url_download: "https://codeberg.org/gnuhealth/his.git"
+  release_url: "https://ftp.gnu.org/gnu/health/"
+  latest_version: "5.0.7"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~50-100 MB (modulok) + Tryton + PostgreSQL"
+  size_status: "estimated(modulcsomagok alapján)"
+  format: "Python (pip) csomagok, telepítő szkript"
+  language: multi
+  alternatives: "OpenMRS 3 (https://github.com/openmrs/openmrs-distro-referenceapplication)"
+  notes: "A fejlesztés Codebergre költözött (a Savannah hg 503-at adott). A pip-függőségeket wheelhouse-ba mentsd; MyGNUHealth személyes app is van."
+  scores: {survival: 6, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 8, offline_ease: 7}
+
+- id: oss-orthanc
+  name: "Orthanc DICOM szerver"
+  category: oss_health
+  need_hu: "Röntgen/CT/UH képek (DICOM) tárolása és megosztása"
+  description_hu: "Könnyű, REST API-s DICOM szerver: a modalitásokról érkező képeket tárolja, OHIF/Weasis megjelenítőkkel egy laptopon is működő PACS-ot ad."
+  url_info: "https://www.orthanc-server.com"
+  url_download: "https://github.com/jodogne/OrthancMirror.git"
+  release_url: "https://www.orthanc-server.com/download.php"
+  latest_version: null
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0 (core); egyes pluginok AGPL-3.0"
+  size: "~30-80 MB (installer pluginokkal)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / .deb / Docker"
+  language: en
+  alternatives: "nincs egyenértékű ellenőrzött könnyű alternatíva"
+  notes: "A hivatalos forrás Mercurial (orthanc.uclouvain.be/hg) – innen nem volt elérhető; a git-tükör aktív (utolsó commit 2026-11-12), de nem tartalmaz verziótageket."
+  scores: {survival: 3, rebuild: 3, actionable: 7, uniqueness: 8, reliability: 8, offline_ease: 9}
+
+- id: oss-ohif-viewer
+  name: "OHIF Viewer"
+  category: oss_health
+  need_hu: "Böngészős orvosi képmegjelenítő (DICOM) mérésekkel"
+  description_hu: "Nulla-telepítésű webes DICOM-megjelenítő (MPR, mérések, szegmentálás), Orthanc-kal együtt a helyi hálón bármely gépről elérhető."
+  url_info: "https://ohif.org"
+  url_download: "https://github.com/OHIF/Viewers.git"
+  release_url: "https://github.com/OHIF/Viewers/releases"
+  latest_version: "v3.13.14"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~20-50 MB (statikus build)"
+  size_status: "estimated(build méret)"
+  format: "statikus web build / Orthanc plugin"
+  language: multi
+  alternatives: "Weasis (https://github.com/nroduit/Weasis) v4.8.0 – EPL-2.0/Apache-2.0, asztali DICOM-megjelenítő, offline egyszerűbb"
+  notes: "Buildelt változatot ments (Node.js build offline nehéz); az Orthanc OHIF pluginja kész integrációt ad."
+  scores: {survival: 3, rebuild: 3, actionable: 7, uniqueness: 6, reliability: 9, offline_ease: 8}
+
+- id: oss-dhis2
+  name: "DHIS2"
+  category: oss_health
+  need_hu: "Népegészségügyi adatgyűjtés, járványfigyelés, jelentések, dashboardok"
+  description_hu: "80+ ország nemzeti egészségügyi információs rendszere: offline képes Android-gyűjtés, aggregált statisztika, járványkövetés (Tracker)."
+  url_info: "https://dhis2.org"
+  url_download: "https://github.com/dhis2/dhis2-core.git"
+  release_url: "https://releases.dhis2.org/"
+  latest_version: "2.43.2.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause"
+  size: "345 MB (dhis2-stable-2.43.2.1.war)"
+  size_status: "measured(content-length)"
+  format: "Java WAR + PostgreSQL/PostGIS"
+  language: multi
+  alternatives: "SORMAS (https://github.com/SORMAS-Foundation/SORMAS-Project) v1.104.0 – GPL-3.0, járványkezelés és kontaktkutatás; OpenLMIS (https://github.com/OpenLMIS/openlmis-ref-distro) v3.20.2 – AGPL-3.0, gyógyszer-ellátási lánc"
+  notes: "Az Android Capture app teljesen offline gyűjt és később szinkronizál."
+  scores: {survival: 5, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 7}
+
+- id: oss-openelis
+  name: "OpenELIS Global"
+  category: oss_health
+  need_hu: "Laboratóriumi információs rendszer (mintakövetés, eredmények, QC)"
+  description_hu: "Közegészségügyi és klinikai laborokra tervezett LIS: mintaregisztráció, munkalisták, eredményközlés, minőségbiztosítás; OpenMRS-sel integrálható."
+  url_info: "https://openelis-global.org"
+  url_download: "https://github.com/DIGI-UW/OpenELIS-Global-2.git"
+  release_url: "https://github.com/DIGI-UW/OpenELIS-Global-2/releases"
+  latest_version: "3.3.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MPL-2.0"
+  size: "~1-2 GB (Docker image-ek)"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker Compose; Java"
+  language: multi
+  alternatives: "nincs egyenértékű ellenőrzött nyílt LIS"
+  notes: "A régi I-TECH-UW repo URL ugyanide mutat."
+  scores: {survival: 5, rebuild: 4, actionable: 6, uniqueness: 8, reliability: 8, offline_ease: 7}
+
+- id: oss-cht-core
+  name: "Community Health Toolkit (CHT)"
+  category: oss_health
+  need_hu: "Közösségi egészségügyi dolgozók offline mobilalkalmazása (anya-gyermek, triázs)"
+  description_hu: "Offline-first Android/web platform falusi egészségügyi segítőknek: protokoll-alapú vizsgálati űrlapok, feladatlisták, terhesgondozás – milliók ellátására bevetve."
+  url_info: "https://communityhealthtoolkit.org"
+  url_download: "https://github.com/medic/cht-core.git"
+  release_url: "https://docs.communityhealthtoolkit.org"
+  latest_version: "5.3.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~1-2 GB (Docker image-ek) + Android APK"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker (CouchDB) + Android app"
+  language: multi
+  alternatives: "ODK (lásd oss-odk-central) – általános offline űrlapgyűjtés"
+  notes: "CouchDB-replikáció miatt napokig/hetekig offline működik; a referencia-konfigurációt (cht-config) is mentsd."
+  scores: {survival: 7, rebuild: 4, actionable: 8, uniqueness: 8, reliability: 9, offline_ease: 7}
+
+- id: oss-openfda
+  name: "openFDA (gyógyszeradat)"
+  category: oss_health
+  need_hu: "Offline gyógyszer-információ: betegtájékoztatók, interakciós szakaszok, mellékhatások"
+  description_hu: "Az FDA közkincs (CC0) kódja és letölthető adatkészletei: több százezer gyógyszer címkeszövege (interakciók, adagolás, ellenjavallat) és mellékhatás-jelentések – helyben kereshető."
+  url_info: "https://open.fda.gov"
+  url_download: "https://github.com/FDA/openfda.git"
+  release_url: "https://open.fda.gov/data/downloads/"
+  latest_version: null
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "CC0-1.0 (kód és adat közkincs)"
+  size: "drug/label adatkészlet: több GB (zip JSON)"
+  size_status: "estimated(nem mérve)"
+  format: "zip JSON adatdump + Python/Elasticsearch kód"
+  language: en
+  alternatives: "nincs jó, OSI-licencű offline gyógyszer-interakció ellenőrző eszköz (a DrugBank nem szabad)"
+  notes: "Nincs verziótag, utolsó commit 2026-06. Kiegészítésként érdemes a NLM RxNorm és DailyMed letöltéseit (közkincs) is archiválni. Gyógyszerinterakciót mindig szakember értékeljen."
+  scores: {survival: 6, rebuild: 2, actionable: 6, uniqueness: 8, reliability: 6, offline_ease: 5}
+
+- id: oss-miniforge
+  name: "Miniforge (conda-forge) + SciPy stack"
+  category: oss_science
+  need_hu: "Python tudományos környezet (NumPy, SciPy, pandas, matplotlib) Anaconda nélkül"
+  description_hu: "A conda-forge közösségi csatornára épülő minimális telepítő – licencdíjmentes Anaconda-kiváltó; ezzel teljes tudományos Python környezet építhető."
+  url_info: "https://conda-forge.org/download/"
+  url_download: "https://github.com/conda-forge/miniforge.git"
+  release_url: "https://github.com/conda-forge/miniforge/releases"
+  latest_version: "26.9.4-2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause"
+  size: "~80-120 MB (installer); teljes SciPy környezet ~2-4 GB"
+  size_status: "estimated(korábbi installerek + tipikus környezet)"
+  format: ".sh / .exe installer"
+  language: en
+  alternatives: "Julia (https://github.com/JuliaLang/julia) v1.13.4 – MIT, nagy teljesítményű numerika, linux-x86_64 tar.gz 287 MB (mérve)"
+  notes: "Ellenőrzött tagek: NumPy v2.5.4, SciPy v1.18.1. Offline: `conda pack` vagy `conda create --download-only`, illetve saját csatorna-tükör; a környezetet több platformra is készítsd el."
+  scores: {survival: 2, rebuild: 8, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 8}
+
+- id: oss-jupyterlab
+  name: "JupyterLab"
+  category: oss_science
+  need_hu: "Interaktív számítási jegyzetfüzetek (kód + magyarázat + grafikon)"
+  description_hu: "A tudományos munka és oktatás szabványos felülete: Python, R, Julia kernelekkel futtatható, újraszámolható dokumentumok – tudásátadásra is kiváló."
+  url_info: "https://jupyter.org"
+  url_download: "https://github.com/jupyterlab/jupyterlab.git"
+  release_url: "https://pypi.org/project/jupyterlab/"
+  latest_version: "v4.6.6"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause"
+  size: "~50-100 MB (pip/conda függőségekkel)"
+  size_status: "estimated(függőségfa)"
+  format: "pip / conda csomag"
+  language: multi
+  alternatives: "nincs egyenértékű; R-hez RStudio (lásd oss-r)"
+  notes: "Conda-környezet része legyen (lásd Miniforge); helyi szerverként a hálón több felhasználó is elérheti (JupyterHub)."
+  scores: {survival: 1, rebuild: 6, actionable: 6, uniqueness: 4, reliability: 9, offline_ease: 9}
+
+- id: oss-octave
+  name: "GNU Octave"
+  category: oss_science
+  need_hu: "Numerikus számítás MATLAB-kompatibilis nyelven (mérnöki számítások)"
+  description_hu: "Nagyrészt MATLAB-kompatibilis numerikus környezet: mátrixok, jelfeldolgozás, szabályozástechnika – a meglévő mérnöki MATLAB-kódok és tankönyvek futtatásához."
+  url_info: "https://octave.org"
+  url_download: "https://github.com/gnu-octave/octave.git"
+  release_url: "https://ftp.gnu.org/gnu/octave/windows/"
+  latest_version: "release-11-3-0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later"
+  size: "541 MB (octave-11.3.0-w64-installer.exe)"
+  size_status: "measured(content-length)"
+  format: ".exe / .7z / Flatpak / forrás"
+  language: multi
+  alternatives: "gnuplot (https://git.code.sf.net/p/gnuplot/gnuplot-main) 6.0.6 – grafikonrajzoló, saját gnuplot-licenc (szabad, de nem OSI-jóváhagyott); LabPlot (https://invent.kde.org/education/labplot) 2.12.1 – GPL-2.0, grafikus adatelemzés"
+  notes: "Az Octave Forge csomagokat (control, signal, statistics) előre töltsd le .tar.gz-ként – `pkg install` offline fájlból működik."
+  scores: {survival: 1, rebuild: 7, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-r
+  name: "R + RStudio Desktop"
+  category: oss_science
+  need_hu: "Statisztika, kísérlettervezés, mezőgazdasági/orvosi adatelemzés"
+  description_hu: "A statisztika lingua francája: terméskísérletek, járványadatok, minőségellenőrzés elemzése; RStudio IDE-vel kényelmes, hatalmas csomagkínálattal."
+  url_info: "https://www.r-project.org"
+  url_download: "https://github.com/wch/r-source.git"
+  release_url: "https://cran.r-project.org"
+  latest_version: "R-4-6-branch (CRAN: R 4.6.2)"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0 / GPL-3.0"
+  size: "87 MB (R-4.6.2-win.exe)"
+  size_status: "measured(content-length)"
+  format: ".exe / .pkg / forrás; CRAN csomagok"
+  language: multi
+  alternatives: "RStudio (https://github.com/rstudio/rstudio) v2026.11.0+203 – AGPL-3.0, az R IDE-je; Orange (https://github.com/biolab/orange3) 3.41.0 – GPL-3.0, kódolás nélküli vizuális adatbányászat"
+  notes: "A git-repó az R SVN read-only tükre (verziók ágakként); a forrás hivatalosan svn.r-project.org. A szükséges CRAN-csomagokat miniCRAN-nal/helyi tükörrel mentsd."
+  scores: {survival: 2, rebuild: 6, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 9}
+
+- id: oss-maxima
+  name: "Maxima (+ wxMaxima)"
+  category: oss_science
+  need_hu: "Szimbolikus matematika: egyenletmegoldás, deriválás, integrálás"
+  description_hu: "Az egyik legrégebbi (Macsyma-örökség) számítógépes algebrai rendszer; kicsi, gyors, régi gépen is fut – mérnöki levezetésekhez és oktatáshoz."
+  url_info: "https://maxima.sourceforge.io"
+  url_download: "https://git.code.sf.net/p/maxima/code"
+  release_url: "https://sourceforge.net/projects/maxima/files/"
+  latest_version: "5.49.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "~80-150 MB (Windows installer wxMaximával)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / forrás tarball / disztribúciós csomag"
+  language: multi
+  alternatives: "SageMath (https://github.com/sagemath/sage) 10.10 – GPL-3.0, sok rendszert egyesítő nagy matematikai környezet (több GB)"
+  notes: "Grafikus felülethez a wxMaxima-t is mentsd (külön projekt)."
+  scores: {survival: 1, rebuild: 6, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-qgis
+  name: "QGIS"
+  category: oss_science
+  need_hu: "Térinformatika: térképkészítés, földmérés, vízgyűjtő- és táblaelemzés"
+  description_hu: "A legjobb nyílt GIS: vektor/raszter elemzés, domborzatmodell, georeferálás, nyomtatható térképek – mezőgazdaság, vízügy, infrastruktúra-tervezés alapja."
+  url_info: "https://qgis.org"
+  url_download: "https://github.com/qgis/QGIS.git"
+  release_url: "https://qgis.org/download/"
+  latest_version: "final-4_2_3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0-or-later"
+  size: "587 MB (QGIS-OSGeo4W-4.2.3-1.msi)"
+  size_status: "measured(content-length)"
+  format: ".msi / .deb / Flatpak / .dmg"
+  language: multi
+  alternatives: "GRASS GIS (https://github.com/OSGeo/grass) 8.5.0 – GPL-2.0-or-later, nagy teljesítményű raszter/hidrológiai elemzés"
+  notes: "Hosszú távú támogatású (LTR) ág: final-3_44_15. A plugin-tár online – a szükséges pluginokat zipként mentsd."
+  scores: {survival: 3, rebuild: 8, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 9}
+
+- id: oss-stellarium
+  name: "Stellarium"
+  category: oss_science
+  need_hu: "Égbolt-szimuláció: csillagászati navigáció, idő- és naptárszámítás"
+  description_hu: "Valósághű planetárium-szoftver bármely helyre és időpontra: csillagászati navigáció, napkelte/napnyugta, évszakok, vetési naptár, oktatás – GPS nélkül is."
+  url_info: "https://stellarium.org"
+  url_download: "https://github.com/Stellarium/stellarium.git"
+  release_url: "https://stellarium.org/"
+  latest_version: "v26.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0-or-later"
+  size: "~300-400 MB (installer)"
+  size_status: "estimated(download.stellarium.org nem volt elérhető; korábbi kiadások alapján)"
+  format: ".exe / AppImage / .dmg"
+  language: multi
+  alternatives: "nincs egyenértékű ellenőrzött alternatíva"
+  notes: "Kiegészítő csillagkatalógusok (több száz MB) külön tölthetők – a programból töltsd le előre."
+  scores: {survival: 3, rebuild: 4, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-cantera
+  name: "Cantera"
+  category: oss_science
+  need_hu: "Kémiai kinetika, termodinamika, égés és reaktor-számítás"
+  description_hu: "Ipari és kutatási szabványkönyvtár égéshez, gázosításhoz, reaktorokhoz, elektrokémiához – vegyipari folyamatok (pl. faelgázosítás, ammónia) tervezésére."
+  url_info: "https://cantera.org"
+  url_download: "https://github.com/Cantera/cantera.git"
+  release_url: "https://cantera.org"
+  latest_version: "v3.2.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause"
+  size: "~30-80 MB (conda/pip csomag)"
+  size_status: "estimated(csomag méret)"
+  format: "Python/C++/MATLAB könyvtár (conda, pip)"
+  language: en
+  alternatives: "Avogadro 2 (https://github.com/OpenChemistry/avogadrolibs) 2.1.0 – BSD-3, molekulaszerkesztő; Open Babel (https://github.com/openbabel/openbabel) openbabel-3-2-1 – GPL-2.0, kémiai fájlformátum-konverzió"
+  notes: "A mechanizmus-fájlokat (pl. GRI-Mech) a csomag tartalmazza; conda-környezetbe telepítsd."
+  scores: {survival: 1, rebuild: 7, actionable: 4, uniqueness: 7, reliability: 8, offline_ease: 9}
+
+- id: oss-fiji
+  name: "Fiji (ImageJ)"
+  category: oss_science
+  need_hu: "Tudományos képelemzés: mikroszkópia, sejtszámlálás, mérések képről"
+  description_hu: "Az élettudományok szabványos képelemzője: mikroszkópos képek (vérkenet, talajminta, kártevő) számlálása, mérése, makrózható automatizálás."
+  url_info: "https://fiji.sc"
+  url_download: "https://github.com/fiji/fiji.git"
+  release_url: "https://imagej.net/software/fiji/downloads"
+  latest_version: "fiji-2.18.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0 (Fiji); ImageJ1 közkincs, ImageJ2 BSD-2"
+  size: "~500-700 MB (platformcsomag beépített Javával)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".zip platformcsomag"
+  language: en
+  alternatives: "ImageJ (https://github.com/imagej/ImageJ) v1.54r – kicsi, önálló ImageJ1"
+  notes: "Az update site-ok online – a szükséges pluginokkal frissített példányt zipeld be."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-git
+  name: "Git"
+  category: oss_dev
+  need_hu: "Verziókezelés – minden forráskód és dokumentum történetének megőrzése"
+  description_hu: "Az elosztott verziókezelés szabványa; minden klón teljes biztonsági másolat – az egész archívum frissítésének és megőrzésének alapeszköze."
+  url_info: "https://git-scm.com"
+  url_download: "https://github.com/git/git.git"
+  release_url: "https://mirrors.edge.kernel.org/pub/software/scm/git/"
+  latest_version: "v2.56.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "8.1 MB (git-2.56.1.tar.xz forrás)"
+  size_status: "measured(content-length)"
+  format: "forrás tarball, disztribúciós csomag, Windows installer"
+  language: multi
+  alternatives: "nincs szükséges alternatíva"
+  notes: "`git bundle` paranccsal egy repó egyetlen fájlba menthető; `git clone --mirror` a teljes archiváláshoz. A Windows-os Git for Windows telepítőt külön mentsd."
+  scores: {survival: 1, rebuild: 9, actionable: 8, uniqueness: 6, reliability: 10, offline_ease: 10}
+
+- id: oss-forgejo
+  name: "Forgejo"
+  category: oss_dev
+  need_hu: "Helyi git-szerver webes felülettel (kódtároló, issue, wiki, CI)"
+  description_hu: "Közösségi irányítású, egyetlen bináris git-forge (Codeberg motorja): repók, issue-k, wiki, csomagtár, Actions CI – egy Raspberry Pi-n is futtatható „helyi GitHub”."
+  url_info: "https://forgejo.org"
+  url_download: "https://codeberg.org/forgejo/forgejo.git"
+  release_url: "https://codeberg.org/forgejo/forgejo/releases"
+  latest_version: "v17.0.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later"
+  size: "~100-150 MB (egyetlen bináris)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus bináris / Docker"
+  language: multi
+  alternatives: "Gitea (https://github.com/go-gitea/gitea) v28.3.0 – MIT, az ős-projekt"
+  notes: "A repó-tükrözés (pull mirror) funkcióval az archívum összes git-repója egy helyen frissíthető, amíg van net."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-vscodium
+  name: "VSCodium"
+  category: oss_dev
+  need_hu: "Modern grafikus kódszerkesztő/IDE telemetria nélkül"
+  description_hu: "A VS Code teljesen nyílt, telemetriamentes buildje; szinte minden nyelvhez, Open VSX bővítményekkel – kezdőknek is a legkönnyebb belépő."
+  url_info: "https://vscodium.com"
+  url_download: "https://github.com/VSCodium/vscodium.git"
+  release_url: "https://github.com/VSCodium/vscodium/releases"
+  latest_version: "1.143.17232"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~100-150 MB (installer)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / .deb / AppImage / .tar.gz"
+  language: multi
+  alternatives: "Neovim (https://github.com/neovim/neovim) v0.12.6 – Apache-2.0/Vim, terminálos, gyenge gépre; Helix (https://github.com/helix-editor/helix) 25.07.1 – MPL-2.0"
+  notes: "A bővítményeket .vsix fájlként töltsd le az open-vsx.org-ról (Python, C/C++ (clangd), Rust-analyzer stb.)."
+  scores: {survival: 1, rebuild: 7, actionable: 8, uniqueness: 3, reliability: 9, offline_ease: 9}
+
+- id: oss-gcc
+  name: "GCC (GNU Compiler Collection)"
+  category: oss_dev
+  need_hu: "C/C++/Fortran fordító – minden más szoftver újraépítésének alapja"
+  description_hu: "A szabad szoftver-ökoszisztéma alapfordítója; nélküle Linux, firmware-ek és tudományos kódok (Fortran) nem építhetők újra forrásból."
+  url_info: "https://gcc.gnu.org"
+  url_download: "https://gcc.gnu.org/git/gcc.git"
+  release_url: "https://ftp.gnu.org/gnu/gcc/"
+  latest_version: "releases/gcc-16.2.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later (runtime-kivétellel)"
+  size: "102 MB (gcc-16.2.0.tar.xz forrás)"
+  size_status: "measured(content-length)"
+  format: "forrás tarball; disztribúciós csomagok"
+  language: en
+  alternatives: "LLVM/Clang (https://github.com/llvm/llvm-project) llvmorg-23.1.5 – Apache-2.0 LLVM-kivétellel"
+  notes: "Forrásból fordításhoz a GMP, MPFR, MPC tarballokat is mentsd (contrib/download_prerequisites); keresztfordítókhoz (arm-none-eabi) a disztribúciós csomagokat."
+  scores: {survival: 1, rebuild: 10, actionable: 5, uniqueness: 7, reliability: 10, offline_ease: 9}
+
+- id: oss-rust
+  name: "Rust toolchain"
+  category: oss_dev
+  need_hu: "Biztonságos rendszerprogramozási nyelv offline telepítővel"
+  description_hu: "Memóriabiztos, gyors nyelv; sok modern eszköz (Martin, Meilisearch, Helix) erre épül – a hivatalos offline tarball rustc+cargo+std-t egyben ad."
+  url_info: "https://www.rust-lang.org"
+  url_download: "https://github.com/rust-lang/rust.git"
+  release_url: "https://forge.rust-lang.org/infra/other-installation-methods.html"
+  latest_version: "1.100.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT / Apache-2.0"
+  size: "201 MB (rust-1.100.0-x86_64-unknown-linux-gnu.tar.xz offline telepítő)"
+  size_status: "measured(content-length)"
+  format: "offline tarball / .msi / .pkg"
+  language: en
+  alternatives: "nincs szükséges alternatíva"
+  notes: "A stabil csatorna szerint már az 1.101.0 is megjelent (2026-11-12), de a git-tükörben még nincs tagje. Crate-függőségekhez `cargo vendor` projektenként."
+  scores: {survival: 1, rebuild: 7, actionable: 5, uniqueness: 5, reliability: 9, offline_ease: 8}
+
+- id: oss-go
+  name: "Go"
+  category: oss_dev
+  need_hu: "Egyszerű, statikus binárisokat adó programnyelv szervizekhez"
+  description_hu: "Egyetlen tarballból telepíthető, függőségmentes statikus binárisokat fordító nyelv; sok archivált szerver (Forgejo, Syncthing, restic) Go-ban íródott."
+  url_info: "https://go.dev"
+  url_download: "https://go.googlesource.com/go"
+  release_url: "https://go.dev/dl/"
+  latest_version: "go1.27.4"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-3-Clause"
+  size: "67 MB (go1.27.4.linux-amd64.tar.gz)"
+  size_status: "measured(content-length)"
+  format: "tar.gz / .msi / .pkg"
+  language: en
+  alternatives: "nincs szükséges alternatíva"
+  notes: "Függőségekhez `go mod vendor` projektenként; a standard könyvtár dokumentációja a `go doc` paranccsal offline is elérhető."
+  scores: {survival: 1, rebuild: 6, actionable: 5, uniqueness: 4, reliability: 9, offline_ease: 10}
+
+- id: oss-nodejs
+  name: "Node.js (LTS)"
+  category: oss_dev
+  need_hu: "JavaScript futtatókörnyezet webes eszközökhöz és szerverekhez"
+  description_hu: "Sok archivált alkalmazás (Node-RED, Zigbee2MQTT, CNCjs) futtatókörnyezete; az LTS ág hosszú távon stabil."
+  url_info: "https://nodejs.org"
+  url_download: "https://github.com/nodejs/node.git"
+  release_url: "https://nodejs.org/dist/"
+  latest_version: "v26.13.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "34.8 MB (node-v26.13.1-x64.msi) / 32.5 MB (linux-x64.tar.xz)"
+  size_status: "measured(content-length)"
+  format: ".msi / .tar.xz / .pkg"
+  language: en
+  alternatives: "nincs szükséges alternatíva"
+  notes: "A v26.13.1 az aktuális LTS ('Lithium') a nodejs.org index szerint. npm-csomagokhoz helyi tükör: Verdaccio (lásd oss-aptly)."
+  scores: {survival: 1, rebuild: 6, actionable: 5, uniqueness: 3, reliability: 9, offline_ease: 9}
+
+- id: oss-cpython
+  name: "CPython (Python)"
+  category: oss_dev
+  need_hu: "Python programnyelv – szkriptelés, automatizálás, oktatás, tudomány"
+  description_hu: "A legszélesebb körben használt általános nyelv; az archívum sok eszköze (WeeWX, Klipper, ESPHome, mpp-solar) Pythonon fut – a hivatalos dokumentáció offline zipben is elérhető."
+  url_info: "https://www.python.org"
+  url_download: "https://github.com/python/cpython.git"
+  release_url: "https://www.python.org/downloads/"
+  latest_version: "v3.15.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "PSF-2.0"
+  size: "36 MB (python-3.15.2-amd64.exe); 26.6 MB forrás tar.xz; 15.3 MB HTML-dokumentáció zip"
+  size_status: "measured(content-length)"
+  format: ".exe / forrás tar.xz / docs zip"
+  language: multi
+  alternatives: "nincs szükséges alternatíva (tudományos stackhez lásd Miniforge)"
+  notes: "`pip download -d wheelhouse <csomagok>` és `pip install --no-index --find-links wheelhouse` az offline munkamenet; PyPI részleges tükörhöz bandersnatch."
+  scores: {survival: 1, rebuild: 8, actionable: 7, uniqueness: 4, reliability: 10, offline_ease: 10}
+
+- id: oss-zeal
+  name: "Zeal (offline dokumentáció)"
+  category: oss_dev
+  need_hu: "Programozási dokumentációk offline böngészése (200+ docset)"
+  description_hu: "Dash-kompatibilis offline dokumentációböngésző: Python, C++, Rust, Go, Linux man, HTML/CSS stb. kereshetően, internet nélkül."
+  url_info: "https://zealdocs.org"
+  url_download: "https://github.com/zealdocs/zeal.git"
+  release_url: "https://zealdocs.org/download.html"
+  latest_version: "v0.9.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~20-40 MB program + docsetenként 10-300 MB"
+  size_status: "estimated(korábbi kiadások és docset-méretek alapján)"
+  format: ".exe / AppImage; docset tarballok"
+  language: en
+  alternatives: "DevDocs (https://github.com/freeCodeCamp/devdocs) – MPL-2.0, önhosztolható webes doku-gyűjtemény (verziótag nincs)"
+  notes: "A docseteket előre töltsd le a programból (Tools > Docsets), és mentsd a docset-mappát."
+  scores: {survival: 1, rebuild: 7, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: oss-sqlite
+  name: "SQLite"
+  category: oss_dev
+  need_hu: "Beágyazott, egyfájlos adatbázis – nyilvántartások, alkalmazások tárolója"
+  description_hu: "A világ legelterjedtebb adatbázismotorja: egyetlen fájl, nulla adminisztráció, évtizedes formátum-stabilitás (a Library of Congress ajánlott archív formátuma)."
+  url_info: "https://sqlite.org"
+  url_download: "https://github.com/sqlite/sqlite.git"
+  release_url: "https://sqlite.org/download.html"
+  latest_version: "version-3.54.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Public Domain (nem OSI-licenc, de közkincs)"
+  size: "2.9 MB (sqlite-amalgamation-3540100.zip); 4.1 MB (linux-x64 tools)"
+  size_status: "measured(sqlite.org download.html közölt méret)"
+  format: "C amalgamáció, parancssori eszközök"
+  language: en
+  alternatives: "DuckDB (https://github.com/duckdb/duckdb) v2.0.0 – MIT, analitikus beágyazott adatbázis (CSV/Parquet)"
+  notes: "A hivatalos forrás Fossil-ban van; a GitHub repo a hivatalos tükör."
+  scores: {survival: 1, rebuild: 8, actionable: 7, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: oss-postgresql
+  name: "PostgreSQL"
+  category: oss_dev
+  need_hu: "Megbízható többfelhasználós relációs adatbázis-szerver"
+  description_hu: "A legfejlettebb nyílt adatbázis-szerver; az archívum sok szerveralkalmazása (DHIS2, Nominatim, Odoo, GNU Health) erre épül, PostGIS-szel térinformatikára is."
+  url_info: "https://www.postgresql.org"
+  url_download: "https://git.postgresql.org/git/postgresql.git"
+  release_url: "https://www.postgresql.org/download/"
+  latest_version: "REL_18_7"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "PostgreSQL License"
+  size: "29 MB (postgresql-18.7.tar.gz forrás)"
+  size_status: "measured(content-length)"
+  format: "forrás tarball, disztribúciós csomagok, Windows installer"
+  language: multi
+  alternatives: "MariaDB (https://github.com/MariaDB/server) – GPL-2.0; Valkey (https://github.com/valkey-io/valkey) 9.1.3 – BSD-3, Redis-kompatibilis kulcs-érték tár/cache"
+  notes: "A PostGIS kiterjesztést is mentsd (Nominatim, DHIS2 igényli)."
+  scores: {survival: 1, rebuild: 7, actionable: 6, uniqueness: 4, reliability: 10, offline_ease: 9}
+
+- id: oss-aptly
+  name: "aptly"
+  category: oss_dev
+  need_hu: "Debian/Ubuntu csomagtár offline tükrözése és snapshotolása"
+  description_hu: "Debian-tárolók részleges vagy teljes tükrözése, pillanatképek és saját helyi apt-tár publikálása – így internet nélkül is telepíthetők és frissíthetők a Linux-gépek."
+  url_info: "https://www.aptly.info"
+  url_download: "https://github.com/aptly-dev/aptly.git"
+  release_url: "https://www.aptly.info/download/"
+  latest_version: "v1.6.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~20-30 MB (bináris); egy Debian main amd64 tükör több száz GB"
+  size_status: "estimated(bináris + tipikus tükörméret)"
+  format: "Go bináris / .deb"
+  language: en
+  alternatives: "bandersnatch (https://github.com/pypa/bandersnatch) 8.2.0 – AFL-3.0, PyPI tükör; Verdaccio (https://github.com/verdaccio/verdaccio) v7.1.0 – MIT, npm proxy/tükör"
+  notes: "Szűrővel (filter) csak a szükséges csomagokat és függőségeiket tükrözd; DVD/USB-re exportálható."
+  scores: {survival: 1, rebuild: 8, actionable: 6, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: oss-par2cmdline
+  name: "par2cmdline"
+  category: oss_dev
+  need_hu: "Archívum-integritás: hibajavító paritásfájlok a bitrothadás ellen"
+  description_hu: "Reed-Solomon paritásadatot készít a fájlokhoz, amivel a sérült vagy hiányzó részek visszaállíthatók – a hosszú távú offline archívum védelmének kulcsa."
+  url_info: "https://github.com/Parchive/par2cmdline"
+  url_download: "https://github.com/Parchive/par2cmdline.git"
+  release_url: "https://github.com/Parchive/par2cmdline/releases"
+  latest_version: "v1.4.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0"
+  size: "~1 MB"
+  size_status: "estimated(repo méret)"
+  format: "C++ forrás, bináris"
+  language: en
+  alternatives: "nincs szükséges alternatíva"
+  notes: "Ajánlott 5-10% redundancia a kritikus mappákra; a par2 binárist és forrást minden adathordozóra tedd fel."
+  scores: {survival: 2, rebuild: 7, actionable: 8, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: oss-restic
+  name: "restic"
+  category: oss_dev
+  need_hu: "Titkosított, deduplikált biztonsági mentés"
+  description_hu: "Egyetlen bináris, gyors, titkosított és deduplikált mentés helyi lemezre vagy szerverre; ellenőrizhető integritással – az archívum másolatainak kezelésére."
+  url_info: "https://restic.net"
+  url_download: "https://github.com/restic/restic.git"
+  release_url: "https://github.com/restic/restic/releases"
+  latest_version: "v0.19.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "BSD-2-Clause"
+  size: "~10-30 MB (bináris)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus bináris"
+  language: en
+  alternatives: "BorgBackup (https://github.com/borgbackup/borg) 1.4.5 – BSD-3; Syncthing (https://github.com/syncthing/syncthing) v2.1.7 – MPL-2.0, folyamatos peer-to-peer szinkron helyi hálón"
+  notes: "A jelszó elvesztése = adatvesztés: a kulcsot papíron is őrizd. Rendszeres `restic check --read-data`."
+  scores: {survival: 1, rebuild: 7, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-gnucash
+  name: "GnuCash"
+  category: oss_business
+  need_hu: "Kettős könyvvitel háztartásnak, kisvállalkozásnak, szövetkezetnek"
+  description_hu: "Érett, asztali kettős könyvviteli program: számlák, vevők/szállítók, bérek, jelentések – kis közösségi gazdaság pénzügyeinek átlátható vezetésére."
+  url_info: "https://www.gnucash.org"
+  url_download: "https://github.com/Gnucash/gnucash.git"
+  release_url: "https://www.gnucash.org/download.phtml"
+  latest_version: "5.17"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-2.0-or-later"
+  size: "~150-250 MB (Windows installer)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: ".exe / Flatpak / .dmg"
+  language: multi
+  alternatives: "hledger (https://github.com/simonmichael/hledger) – GPL-3.0, egyszerű szöveges (plain-text) könyvelés"
+  notes: "Az adatfájlt SQLite formátumban mentsd a tartósság miatt."
+  scores: {survival: 2, rebuild: 6, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-erpnext
+  name: "ERPNext (Frappe)"
+  category: oss_business
+  need_hu: "Vállalatirányítás: készlet, gyártás, beszerzés, értékesítés, HR, könyvelés"
+  description_hu: "Teljesen nyílt (nincs fizetős 'enterprise' mag) ERP gyártási anyagjegyzékkel, munkalapokkal, raktárral – egy újrainduló műhely vagy szövetkezet teljes működéséhez."
+  url_info: "https://erpnext.com"
+  url_download: "https://github.com/frappe/erpnext.git"
+  release_url: "https://github.com/frappe/erpnext/releases"
+  latest_version: "v16.55.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~1-2 GB (Docker image-ek: frappe + erpnext + MariaDB)"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker (frappe_docker) / bench telepítés"
+  language: multi
+  alternatives: "Odoo Community (https://github.com/odoo/odoo) – LGPL-3.0, 19.0/20.0 ágak (nincs tag), odoo_19.0 .deb 221 MB (mérve); Dolibarr (https://github.com/Dolibarr/dolibarr) 24.0.3 – GPL-3.0, könnyebb PHP ERP"
+  notes: "A frappe framework repót (https://github.com/frappe/frappe) is klónozni kell; az Odoo-nál csak a Community kiadás nyílt."
+  scores: {survival: 2, rebuild: 7, actionable: 6, uniqueness: 5, reliability: 8, offline_ease: 7}
+
+- id: oss-inventree
+  name: "InvenTree"
+  category: oss_business
+  need_hu: "Alkatrész- és készletnyilvántartás (raktár, BOM, beszerzés)"
+  description_hu: "Műhelyekre és elektronikai gyártásra szabott készletkezelő: alkatrészek, helyek, anyagjegyzékek, gyártási rendelések, vonalkód – az alkatrészhiányos világ kincsestára."
+  url_info: "https://inventree.org"
+  url_download: "https://github.com/inventree/InvenTree.git"
+  release_url: "https://docs.inventree.org"
+  latest_version: "1.7.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT"
+  size: "~0.5-1 GB (Docker image-ek)"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker / Python (Django)"
+  language: multi
+  alternatives: "Snipe-IT (https://github.com/snipe/snipe-it) v8.8.3 – AGPL-3.0, eszköz/tárgyi eszköz nyilvántartás (szerszámok, gépek kölcsönzése)"
+  notes: "Docker image-ek `docker save`-vel; Android app is van a raktári vonalkódozáshoz."
+  scores: {survival: 3, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 8}
+
+- id: oss-koha
+  name: "Koha ILS"
+  category: oss_business
+  need_hu: "Könyvtári integrált rendszer (katalógus, kölcsönzés, OPAC)"
+  description_hu: "Az első nyílt integrált könyvtári rendszer, több ezer könyvtárban: MARC21 katalogizálás, kölcsönzés, webes katalógus – a fizikai tudásgyűjtemény kezelésére."
+  url_info: "https://koha-community.org"
+  url_download: "https://git.koha-community.org/Koha-community/Koha.git"
+  release_url: "https://koha-community.org/download-koha/"
+  latest_version: "v26.05.05-1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~1-2 GB (repo); .deb csomagok + függőségek"
+  size_status: "estimated(repo és csomagok alapján)"
+  format: "Debian csomagok, forrás git"
+  language: multi
+  alternatives: "GitHub tükör: https://github.com/Koha-Community/Koha"
+  notes: "Debianra a hivatalos apt-tárból telepíthető – tükrözd aptly-val a függőségekkel együtt."
+  scores: {survival: 1, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 8}
+
+- id: oss-gibbon
+  name: "Gibbon"
+  category: oss_business
+  need_hu: "Iskolaadminisztráció: tanulók, órarend, jelenlét, értékelés"
+  description_hu: "Iskolákra szabott, könnyű PHP-alapú rendszer: tanulói adatok, órarend, napló, értékelés, szülői kommunikáció – egy közösségi iskola működtetéséhez."
+  url_info: "https://gibbonedu.org"
+  url_download: "https://github.com/GibbonEdu/core.git"
+  release_url: "https://github.com/GibbonEdu/core/releases"
+  latest_version: "v30.0.02"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~50-100 MB"
+  size_status: "estimated(repo méret)"
+  format: "PHP/MySQL alkalmazás"
+  language: multi
+  alternatives: "openSIS Classic (https://github.com/OS4ED/openSIS-Classic) – közösségi kiadás, licenc ellenőrizendő"
+  notes: "LAMP környezeten fut; tananyaghoz lásd Moodle (oss-moodle)."
+  scores: {survival: 1, rebuild: 4, actionable: 7, uniqueness: 5, reliability: 8, offline_ease: 9}
+
+- id: oss-decidim
+  name: "Decidim"
+  category: oss_business
+  need_hu: "Közösségi döntéshozatal: javaslatok, szavazás, részvételi költségvetés"
+  description_hu: "Barcelonában született részvételi demokrácia platform: gyűlések, javaslatok, szavazások, részvételi költségvetés átlátható, auditálható módon."
+  url_info: "https://decidim.org"
+  url_download: "https://github.com/decidim/decidim.git"
+  release_url: "https://docs.decidim.org"
+  latest_version: "v0.32.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~1-2 GB (Docker / Ruby függőségekkel)"
+  size_status: "estimated(Ruby on Rails alkalmazás függőségekkel)"
+  format: "Ruby gem / Docker"
+  language: multi
+  alternatives: "Loomio (https://github.com/loomio/loomio) – AGPL-3.0, kisebb csoportok konszenzusos döntéshozatala (aktív, de nincs friss verziótag)"
+  notes: "Telepítés után készíts teljes konténer-image-et; a gem-ek offline letöltése nehézkes."
+  scores: {survival: 2, rebuild: 4, actionable: 6, uniqueness: 6, reliability: 8, offline_ease: 6}
+
+- id: oss-ushahidi
+  name: "Ushahidi Platform"
+  category: oss_business
+  need_hu: "Válságtérképezés: bejelentések (SMS, web) gyűjtése és térképes koordináció"
+  description_hu: "Katasztrófák és válságok idején kifejlesztett platform: SMS-ből, webes űrlapból érkező bejelentéseket térképen gyűjti és osztja ki – mentéskoordinációhoz."
+  url_info: "https://www.ushahidi.com"
+  url_download: "https://github.com/ushahidi/platform.git"
+  release_url: "https://github.com/ushahidi/platform/releases"
+  latest_version: "v2026.43.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~0.5-1 GB (Docker, backend + kliens)"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "PHP backend + JS kliens / Docker"
+  language: multi
+  alternatives: "uMap (https://github.com/umap-project/umap) 3.8.1 – AGPL-3.0, gyors közös térképkészítés OSM alapon; Sahana Eden (https://github.com/sahana/eden) – katasztrófavédelmi menedzsment (tag 6.3)"
+  notes: "A háttértérképhez helyi csempeszerver kell (lásd oss-martin); SMS-gatewayhez Android telefon is használható."
+  scores: {survival: 5, rebuild: 4, actionable: 7, uniqueness: 7, reliability: 7, offline_ease: 6}
+
+- id: oss-odk-central
+  name: "ODK (Central + Collect)"
+  category: oss_business
+  need_hu: "Offline terepi adatgyűjtés mobilon (felmérés, összeírás, egészségügyi űrlap)"
+  description_hu: "A humanitárius szervezetek szabványa: Android-on teljesen offline kitölthető űrlapok GPS-szel, fotóval, később szinkronizálva a helyi Central szerverre."
+  url_info: "https://getodk.org"
+  url_download: "https://github.com/getodk/central.git"
+  release_url: "https://docs.getodk.org/central-install/"
+  latest_version: "v2026.3.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~1-2 GB (Docker image-ek) + Collect APK"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker Compose; Android APK"
+  language: multi
+  alternatives: "LimeSurvey (https://github.com/LimeSurvey/LimeSurvey) 7.9.1+261102 – GPL-2.0-or-later, webes kérdőívek"
+  notes: "ODK Collect (https://github.com/getodk/collect, v2026.3.5) az Android kliens; az XLSForm-sablonokat Excel/LibreOffice-ban lehet írni."
+  scores: {survival: 5, rebuild: 5, actionable: 8, uniqueness: 7, reliability: 9, offline_ease: 8}
+
+- id: oss-zammad
+  name: "Zammad"
+  category: oss_business
+  need_hu: "Hibajegy- és ügyfélszolgálati rendszer (kérések, feladatok követése)"
+  description_hu: "Modern ticketing: e-mail, webes űrlap, chat egy felületen, SLA-k, tudásbázis – közösségi szolgáltatások (javítás, ellátás) kéréseinek követésére."
+  url_info: "https://zammad.org"
+  url_download: "https://github.com/zammad/zammad.git"
+  release_url: "https://docs.zammad.org"
+  latest_version: "7.2.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~1-2 GB (Docker image-ek Elasticsearch-csel)"
+  size_status: "estimated(Docker image-ek alapján)"
+  format: "Docker / .deb"
+  language: multi
+  alternatives: "osTicket (https://github.com/osTicket/osTicket) v1.18.4 – GPL-2.0, könnyű PHP; GLPI (https://github.com/glpi-project/glpi) 12.0.2 – GPL-3.0, IT-eszköz + helpdesk"
+  notes: "Gyenge hardverre az osTicket jobb választás (nincs Elasticsearch-igény)."
+  scores: {survival: 1, rebuild: 4, actionable: 6, uniqueness: 3, reliability: 8, offline_ease: 7}
+
+- id: oss-libretranslate
+  name: "LibreTranslate"
+  category: oss_language
+  need_hu: "Offline gépi fordítás (szöveg, dokumentum) helyi szerveren"
+  description_hu: "Önhosztolható fordító API és webfelület az Argos Translate motorral; teljesen offline működik, dokumentumokat (docx, pdf) is fordít."
+  url_info: "https://libretranslate.com"
+  url_download: "https://github.com/LibreTranslate/LibreTranslate.git"
+  release_url: "https://github.com/LibreTranslate/LibreTranslate/releases"
+  latest_version: "v1.9.6"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~1-3 GB (Docker image) + nyelvpáronként ~50-150 MB modell"
+  size_status: "estimated(Docker image + Argos modellek)"
+  format: "Python / Docker"
+  language: multi
+  alternatives: "Argos Translate (https://github.com/argosopentech/argos-translate) v1.11.0 – MIT, a motor maga, asztali/CLI; translateLocally (https://github.com/XapaJIaMnu/translateLocally) – MIT, asztali Bergamot-fordító (utolsó commit 2025-03)"
+  notes: "A modelleket (.argosmodel) előre töltsd le – ellenőrizd a magyar (hu) párok elérhetőségét; szabály-alapú alternatíva: Apertium (https://github.com/apertium/apertium, v3.9.12)."
+  scores: {survival: 3, rebuild: 5, actionable: 7, uniqueness: 7, reliability: 8, offline_ease: 8}
+
+- id: oss-tesseract
+  name: "Tesseract OCR"
+  category: oss_language
+  need_hu: "Szkennelt/lefotózott nyomtatott szöveg felismerése (100+ nyelv, magyar is)"
+  description_hu: "A legelterjedtebb nyílt OCR-motor LSTM-modellekkel, magyar nyelvi adattal; papíralapú dokumentumok, könyvek digitalizálásának alapja."
+  url_info: "https://tesseract-ocr.github.io"
+  url_download: "https://github.com/tesseract-ocr/tesseract.git"
+  release_url: "https://tesseract-ocr.github.io/tessdoc/Installation.html"
+  latest_version: "5.5.4"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~50-100 MB (program) + nyelvenként 1-15 MB traineddata"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "bináris / disztribúciós csomag; .traineddata modellek"
+  language: multi
+  alternatives: "PaddleOCR (https://github.com/PaddlePaddle/PaddleOCR) v3.7.0 – Apache-2.0, deep learning OCR, táblázat- és elrendezés-felismerés"
+  notes: "Mentsd a tessdata_best repóból a hun.traineddata, eng és a szükséges további nyelvi fájlokat."
+  scores: {survival: 2, rebuild: 6, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-ocrmypdf
+  name: "OCRmyPDF"
+  category: oss_language
+  need_hu: "Szkennelt PDF-ek kereshetővé tétele (szövegréteg hozzáadása)"
+  description_hu: "Tesseract-alapú, kötegelt PDF-OCR: kereshető, archív PDF/A-t készít a szkennelt anyagokból, megtartva az eredeti képet."
+  url_info: "https://ocrmypdf.readthedocs.io"
+  url_download: "https://github.com/ocrmypdf/OCRmyPDF.git"
+  release_url: "https://pypi.org/project/ocrmypdf/"
+  latest_version: "v17.14.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MPL-2.0"
+  size: "~5-10 MB (Python csomag) + Tesseract + Ghostscript"
+  size_status: "estimated(csomag méret)"
+  format: "Python csomag / Docker"
+  language: multi
+  alternatives: "nincs szükséges alternatíva"
+  notes: "Függőségek: Tesseract, Ghostscript, (opcionális) unpaper, pngquant – mindet offline csomagként mentsd."
+  scores: {survival: 2, rebuild: 5, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-whisper-cpp
+  name: "whisper.cpp"
+  category: oss_language
+  need_hu: "Offline beszédfelismerés/leirat (magyar is) CPU-n"
+  description_hu: "OpenAI Whisper modellek gyors C/C++ futtatója: rádióadások, interjúk, felvételek offline leírása és fordítása, akár Raspberry Pi-n is."
+  url_info: "https://github.com/ggml-org/whisper.cpp"
+  url_download: "https://github.com/ggml-org/whisper.cpp.git"
+  release_url: "https://huggingface.co/ggerganov/whisper.cpp"
+  latest_version: "v1.9.5"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT (kód és modellek)"
+  size: "ggml-small.bin 465 MB; ggml-large-v3-turbo-q5_0.bin 547 MB"
+  size_status: "measured(content-length)"
+  format: "C/C++ forrás + ggml modellfájlok"
+  language: multi
+  alternatives: "Vosk (https://github.com/alphacep/vosk-api) v0.3.50 – Apache-2.0, nagyon könnyű, streaming (small-en modell 39 MB mérve; a hivatalos modellistán magyar modellt nem találtam)"
+  notes: "Magyarra legalább a small, inkább a large-v3-turbo kvantált modell ajánlott."
+  scores: {survival: 3, rebuild: 4, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 9}
+
+- id: oss-piper
+  name: "Piper TTS"
+  category: oss_language
+  need_hu: "Offline, természetes hangú szövegfelolvasás (magyar hangokkal)"
+  description_hu: "Gyors neurális szövegfelolvasó, Raspberry Pi-n is valós időben fut; magyar hangok (anna, imre) – vakoknak, riasztásoknak, rádiós közleményekhez."
+  url_info: "https://github.com/OHF-Voice/piper1-gpl"
+  url_download: "https://github.com/OHF-Voice/piper1-gpl.git"
+  release_url: "https://huggingface.co/rhasspy/piper-voices"
+  latest_version: "v1.8.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "hu_HU-anna-medium.onnx 60.2 MB; hu_HU-imre-medium.onnx 60.2 MB"
+  size_status: "measured(content-length)"
+  format: "Python csomag + .onnx hangmodellek (+ .json)"
+  language: multi
+  alternatives: "eSpeak NG (https://github.com/espeak-ng/espeak-ng) 1.52.0 – GPL-3.0, apró formáns-szintetizátor, magyarral"
+  notes: "Az eredeti rhasspy/piper repó (MIT) archivált; a fejlesztés az OHF-Voice/piper1-gpl-ben folyik. A .onnx mellé a .onnx.json fájlt is töltsd le."
+  scores: {survival: 3, rebuild: 3, actionable: 7, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: oss-meilisearch
+  name: "Meilisearch"
+  category: oss_language
+  need_hu: "Gyors teljes szöveges kereső saját dokumentumgyűjteményhez"
+  description_hu: "Egyetlen binárisú, elgépelés-tűrő keresőmotor: az archívum dokumentumai, katalógusai azonnal kereshetők helyi webes felületen."
+  url_info: "https://www.meilisearch.com"
+  url_download: "https://github.com/meilisearch/meilisearch.git"
+  release_url: "https://github.com/meilisearch/meilisearch/releases"
+  latest_version: "v1.56.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT (Community Edition); az Enterprise Edition részek BUSL-1.1"
+  size: "~100-150 MB (egyetlen bináris)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus bináris / Docker"
+  language: multi
+  alternatives: "Typesense (https://github.com/typesense/typesense) v30.2 – GPL-3.0; Recoll (https://framagit.org/medoc92/recoll) recoll-v1.44.1 – GPL-2.0-or-later, asztali fájl/dokumentum-kereső (PDF, docx, e-mail)"
+  notes: "Csak a Community Edition funkcióit használd (az EE részek nem OSI-licencűek)."
+  scores: {survival: 1, rebuild: 4, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+- id: oss-searxng
+  name: "SearXNG"
+  category: oss_language
+  need_hu: "Metakereső – több keresőforrás egy felületen, adatvédelemmel"
+  description_hu: "Önhosztolható, nyomkövetés nélküli metakereső; offline helyzetben csak helyi motorokkal (pl. Meilisearch, Recoll, helyi wikik) hasznos, hálózat-helyreálláskor közösségi keresőkapu."
+  url_info: "https://docs.searxng.org"
+  url_download: "https://github.com/searxng/searxng.git"
+  release_url: "https://docs.searxng.org/admin/installation.html"
+  latest_version: null
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0"
+  size: "~50-100 MB (Docker image)"
+  size_status: "estimated(Docker image alapján)"
+  format: "Python / Docker"
+  language: multi
+  alternatives: "YaCy (https://github.com/yacy/yacy_search_server) Release_1.941 – GPL-2.0-or-later, saját indexelő P2P kereső (helyi intranet indexelésére is)"
+  notes: "Gördülő kiadás, verziótagek nincsenek (utolsó commit 2026-11-14). Offline archívumban a YaCy hasznosabb, mert saját indexet épít."
+  scores: {survival: 1, rebuild: 3, actionable: 5, uniqueness: 3, reliability: 7, offline_ease: 4}
+
+- id: oss-organic-maps
+  name: "Organic Maps"
+  category: oss_maps
+  need_hu: "Offline térkép és navigáció telefonon (gyalog, kerékpár, autó)"
+  description_hu: "Gyors, reklám- és követésmentes OSM-alapú offline térkép útvonaltervezéssel, szintvonalakkal, túraösvényekkel – régebbi telefonon is jól fut."
+  url_info: "https://organicmaps.app"
+  url_download: "https://github.com/organicmaps/organicmaps.git"
+  release_url: "https://f-droid.org/packages/app.organicmaps/"
+  latest_version: "2026.11.11-39-android"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "60.8 MB (F-Droid APK 2026.09.29) + országtérképek (Magyarország ~0.3-0.5 GB, becslés)"
+  size_status: "measured(F-Droid index fájlméret)"
+  format: "Android APK / iOS; .mwm térképfájlok"
+  language: multi
+  alternatives: "CoMaps (https://codeberg.org/comaps/comaps) v2026.11.07-16 – Apache-2.0, közösségi fork, F-Droid APK 67.2 MB (mérve)"
+  notes: "A térképeket (.mwm) a telefonon töltsd le, majd a mappát másold ki; APK-t több példányban ments."
+  scores: {survival: 7, rebuild: 5, actionable: 9, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: oss-osmand
+  name: "OsmAnd"
+  category: oss_maps
+  need_hu: "Részletes offline térkép, navigáció, GPX-rögzítés, szintvonal és domborzat"
+  description_hu: "A legrészletesebb offline OSM-navigátor: szintvonalak, domborzatárnyékolás, tengeri térkép, GPX-nyomkövetés, POI-keresés – terepi munkára is."
+  url_info: "https://osmand.net"
+  url_download: "https://github.com/osmandapp/OsmAnd.git"
+  release_url: "https://f-droid.org/packages/net.osmand.plus/"
+  latest_version: null
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0 (kód); grafikák egy része CC-BY-NC-ND 4.0 / zárt"
+  size: "154.4 MB (F-Droid APK 5.4.11) + .obf térképfájlok"
+  size_status: "measured(F-Droid index fájlméret)"
+  format: "Android APK; .obf térképfájlok"
+  language: multi
+  alternatives: "Organic Maps (lásd oss-organic-maps)"
+  notes: "Nincsenek kiadási tagek – a kiadások r5.x ágakon (legutóbb r5.4). Az F-Droid kiadásban (OsmAnd~) korlátlan a térképletöltés."
+  scores: {survival: 7, rebuild: 5, actionable: 9, uniqueness: 5, reliability: 8, offline_ease: 10}
+
+- id: oss-osmium-tool
+  name: "osmium-tool"
+  category: oss_maps
+  need_hu: "OSM adatfájlok kivágása, szűrése, konvertálása (planet -> ország/megye)"
+  description_hu: "Nagyon gyors parancssori OSM-feldolgozó: a planet-fájlból tetszőleges terület kivágható, szűrhető (pl. csak utak, kutak, kórházak) és konvertálható."
+  url_info: "https://osmcode.org/osmium-tool/"
+  url_download: "https://github.com/osmcode/osmium-tool.git"
+  release_url: "https://osmcode.org/osmium-tool/"
+  latest_version: "v1.19.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~5 MB (bináris); planet-latest.osm.pbf 95.8 GB (89.3 GiB)"
+  size_status: "measured(content-length, planet.openstreetmap.org)"
+  format: "C++ forrás / disztribúciós csomag"
+  language: en
+  alternatives: "JOSM (https://github.com/JOSM/josm) 19689 – GPL-2.0-or-later, asztali OSM-szerkesztő (térkép helyi frissítéséhez; a git-repó SVN-tükör)"
+  notes: "Országkivágat a Geofabrikról (download.geofabrik.de) – innen nem volt elérhető, méretét nem mértem."
+  scores: {survival: 2, rebuild: 6, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: oss-planetiler
+  name: "Planetiler"
+  category: oss_maps
+  need_hu: "Saját vektortérkép-csempék előállítása OSM adatból (PMTiles/MBTiles)"
+  description_hu: "Egyetlen Java-programmal órák alatt a teljes bolygóból (percek alatt egy országból) vektorcsempe-készletet állít elő – a saját offline webtérkép alapja."
+  url_info: "https://github.com/onthegomap/planetiler"
+  url_download: "https://github.com/onthegomap/planetiler.git"
+  release_url: "https://github.com/onthegomap/planetiler/releases"
+  latest_version: "v0.10.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~80-120 MB (jar)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "Java jar / Docker"
+  language: en
+  alternatives: "tilemaker (https://github.com/systemed/tilemaker) v3.2.0 – C++, kevés RAM (saját FTWPL licenc); PMTiles (https://github.com/protomaps/go-pmtiles) v1.31.2 – BSD-3, egyfájlos csempeformátum és CLI"
+  notes: "A futáshoz szükséges Natural Earth, vízpart (water polygons) letöltéseket előre töltsd le – offline futtatásnál a --download kapcsoló nem működik."
+  scores: {survival: 2, rebuild: 6, actionable: 6, uniqueness: 6, reliability: 8, offline_ease: 9}
+
+- id: oss-martin
+  name: "Martin csempeszerver"
+  category: oss_maps
+  need_hu: "Térképcsempék kiszolgálása helyi hálón (PMTiles, MBTiles, PostGIS)"
+  description_hu: "Rust-alapú, villámgyors vektorcsempe-szerver (MapLibre projekt): PMTiles/MBTiles fájlokból vagy PostGIS-ből szolgál ki térképet webes alkalmazásoknak."
+  url_info: "https://maplibre.org/martin/"
+  url_download: "https://github.com/maplibre/martin.git"
+  release_url: "https://github.com/maplibre/martin/releases"
+  latest_version: "martin-v1.16.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "MIT / Apache-2.0"
+  size: "~20-40 MB (bináris)"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "statikus bináris / Docker"
+  language: en
+  alternatives: "tileserver-gl (https://github.com/maptiler/tileserver-gl) v5.7.0 – BSD-2, raszteres renderelés is; MapLibre GL JS (https://github.com/maplibre/maplibre-gl-js) v6.18.0 – BSD-3, böngészős térképmegjelenítő"
+  notes: "A stílus (style.json), betűk (glyphs) és ikonok (sprites) offline másolatát is mentsd."
+  scores: {survival: 2, rebuild: 5, actionable: 6, uniqueness: 5, reliability: 8, offline_ease: 10}
+
+- id: oss-graphhopper
+  name: "GraphHopper"
+  category: oss_maps
+  need_hu: "Offline útvonaltervező szerver (autó, kerékpár, gyalog, teherautó)"
+  description_hu: "Java-alapú, közepes hardveren is futó útvonaltervező OSM adatból, több közlekedési profillal és izokrónnal – logisztika és mentésirányítás eszköze."
+  url_info: "https://www.graphhopper.com/open-source/"
+  url_download: "https://github.com/graphhopper/graphhopper.git"
+  release_url: "https://github.com/graphhopper/graphhopper/releases"
+  latest_version: "11.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "Apache-2.0"
+  size: "~40-60 MB (web jar) + OSM pbf + gráf-cache"
+  size_status: "estimated(korábbi kiadások alapján)"
+  format: "Java jar / Docker"
+  language: multi
+  alternatives: "OSRM (https://github.com/Project-OSRM/osrm-backend) v26.11.0 – BSD-2, leggyorsabb lekérdezés; Valhalla (https://github.com/valhalla/valhalla) 3.9.2 – MIT, többmódú, kevés RAM, offline csempés"
+  notes: "Az előfeldolgozott gráf-mappát (graph-cache) is mentsd, így újraépítés nélkül indul."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 9}
+
+- id: oss-nominatim
+  name: "Nominatim"
+  category: oss_maps
+  need_hu: "Címkeresés és fordított geokódolás offline (cím <-> koordináta)"
+  description_hu: "Az OpenStreetMap hivatalos geokódolója: címek, helynevek keresése és koordináták címmé alakítása helyi szerveren."
+  url_info: "https://nominatim.org"
+  url_download: "https://github.com/osm-search/Nominatim.git"
+  release_url: "https://nominatim.org/release-docs/latest/"
+  latest_version: "v5.3.3"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0"
+  size: "~10 MB (program); országos adatbázis több GB"
+  size_status: "estimated(program + importált adatbázis)"
+  format: "Python + PostgreSQL/PostGIS"
+  language: multi
+  alternatives: "Photon (https://github.com/komoot/photon) 1.3.0 – Apache-2.0, elgépelés-tűrő, gépelés közbeni keresés"
+  notes: "Az importált PostgreSQL adatbázist (pg_dump) mentsd – az import órákig tart."
+  scores: {survival: 2, rebuild: 4, actionable: 6, uniqueness: 5, reliability: 9, offline_ease: 8}
+
+- id: oss-anki
+  name: "Anki"
+  category: oss_education
+  need_hu: "Ismétléses tanulás (szókártyák) – gyors tudásátadás, nyelv, elsősegély, növényhatározás"
+  description_hu: "Tudományosan megalapozott, időközönkénti ismétlésen alapuló kártyás tanulóprogram; képes/hangos kártyák, megosztható paklik, teljesen offline."
+  url_info: "https://apps.ankiweb.net"
+  url_download: "https://github.com/ankitects/anki.git"
+  release_url: "https://apps.ankiweb.net"
+  latest_version: "26.09.4"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0-or-later (részben BSD-3)"
+  size: "~100-150 MB (asztali installer); AnkiDroid APK 41.9 MB (F-Droid 2.25.3)"
+  size_status: "estimated(asztali); measured(F-Droid index, AnkiDroid)"
+  format: ".exe / .dmg / Linux tar; Android APK; .apkg paklik"
+  language: multi
+  alternatives: "Mnemosyne (https://github.com/mnemosyne-proj/mnemosyne) 2.11 – több licenc (részben LGPL-3.0), egyszerűbb"
+  notes: "A hasznos megosztott paklikat (.apkg) előre töltsd le; a szinkron saját szerverrel is megoldható offline."
+  scores: {survival: 3, rebuild: 4, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-gcompris
+  name: "GCompris"
+  category: oss_education
+  need_hu: "Oktatócsomag 2-10 éveseknek (olvasás, számolás, logika, tudomány)"
+  description_hu: "190+ játékos tevékenység óvodásoktól kisiskolásokig, magyar nyelven is; régi gépeken és Raspberry Pi-n is fut – iskola nélküli időszakra kiváló."
+  url_info: "https://gcompris.net"
+  url_download: "https://invent.kde.org/education/gcompris.git"
+  release_url: "https://download.kde.org/stable/gcompris/qt/"
+  latest_version: "V26.2"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0 (kód); tartalmak részben más szabad licencek"
+  size: "77.9 MB (gcompris-qt-26.2-win64-gcc.exe)"
+  size_status: "measured(content-length)"
+  format: ".exe / .msi / Flatpak / Raspberry Pi build / Android"
+  language: multi
+  alternatives: "Tux Paint (https://git.code.sf.net/p/tuxpaint/tuxpaint) tuxpaint-0_9_35-2025-05-26 – GPL-2.0, rajzprogram gyerekeknek; KTouch (https://invent.kde.org/education/ktouch) v26.08.3 – GPL-2.0, gépírásoktató"
+  notes: "A hangcsomagok (voices) külön letöltendők – a programból előre töltsd le őket."
+  scores: {survival: 1, rebuild: 4, actionable: 8, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: oss-scratch
+  name: "Scratch 3 (scratch-gui)"
+  category: oss_education
+  need_hu: "Blokkalapú programozásoktatás gyerekeknek"
+  description_hu: "A programozásoktatás világszabványa: blokkokból épített játékok, animációk; a scratch-gui buildje böngészőben, szerver nélkül, offline futtatható."
+  url_info: "https://scratch.mit.edu"
+  url_download: "https://github.com/scratchfoundation/scratch-gui.git"
+  release_url: "https://scratch.mit.edu/download"
+  latest_version: "v5.3.0"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "AGPL-3.0 (a repó LICENSE fájlja szerint)"
+  size: "~50-150 MB (statikus build eszközökkel)"
+  size_status: "estimated(build méret)"
+  format: "statikus web build (Node.js-szel építve)"
+  language: multi
+  alternatives: "Snap! (https://github.com/jmoenig/Snap) v12.4.0 – AGPL-3.0, haladóbb, egyetlen statikus mappából fut"
+  notes: "Építs egy buildet netkapcsolattal (npm install + build), és a kész mappát archiváld; a hivatalos Scratch Desktop alkalmazást a scratch.mit.edu/download-ról külön is mentsd."
+  scores: {survival: 1, rebuild: 4, actionable: 7, uniqueness: 4, reliability: 8, offline_ease: 9}
+
+- id: oss-moodle
+  name: "Moodle"
+  category: oss_education
+  need_hu: "Tanulásmenedzsment-rendszer (kurzusok, feladatok, tesztek) helyi hálón"
+  description_hu: "A legelterjedtebb nyílt LMS: kurzusok, kvízek, feladatbeadás, fórum, értékelés – egy helyi szerveren egész közösség képzése szervezhető."
+  url_info: "https://moodle.org"
+  url_download: "https://github.com/moodle/moodle.git"
+  release_url: "https://download.moodle.org"
+  latest_version: "v5.3.1"
+  url_status: "git ls-remote OK 2026-11-14"
+  method: git
+  access: free
+  license: "GPL-3.0-or-later"
+  size: "150.5 MB (moodle-5.3.1.zip)"
+  size_status: "measured(content-length)"
+  format: "PHP zip"
+  language: multi
+  alternatives: "nincs egyenértékű ellenőrzött alternatíva (iskolaadminisztrációhoz lásd Gibbon)"
+  notes: "A magyar nyelvi csomagot (hu.zip) és a szükséges pluginokat előre töltsd le; LAMP/LEMP környezeten fut."
+  scores: {survival: 1, rebuild: 5, actionable: 7, uniqueness: 4, reliability: 9, offline_ease: 9}

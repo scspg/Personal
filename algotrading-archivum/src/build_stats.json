@@ -1,0 +1,67 @@
+{
+ "items": 1633,
+ "strategies": 119,
+ "ideas": 165,
+ "stats": {
+  "a1_market_exec": {
+   "raw": 160,
+   "bad_json": 0,
+   "dup": 1,
+   "no_url": 0
+  },
+  "a2_crypto": {
+   "raw": 133,
+   "bad_json": 0,
+   "dup": 0,
+   "no_url": 0
+  },
+  "a3_predict_sports": {
+   "raw": 113,
+   "bad_json": 0,
+   "dup": 4,
+   "no_url": 0
+  },
+  "a4_macro_news_alt": {
+   "raw": 303,
+   "bad_json": 0,
+   "dup": 13,
+   "no_url": 0
+  },
+  "a5_oss": {
+   "raw": 277,
+   "bad_json": 0,
+   "dup": 27,
+   "no_url": 0
+  },
+  "a6_ai_research": {
+   "raw": 270,
+   "bad_json": 0,
+   "dup": 16,
+   "no_url": 0
+  },
+  "a8_infra_legal": {
+   "raw": 117,
+   "bad_json": 0,
+   "dup": 28,
+   "no_url": 0
+  },
+  "a9_platform": {
+   "raw": 118,
+   "bad_json": 0,
+   "dup": 28,
+   "no_url": 0
+  },
+  "a11_platforms": {
+   "raw": 73,
+   "bad_json": 0,
+   "dup": 0,
+   "no_url": 0
+  },
+  "a10_methods": {
+   "raw": 186,
+   "bad_json": 0,
+   "dup": 0,
+   "no_url": 0
+  }
+ }
+}

@@ -1,0 +1,818 @@
+# storage_ssd.yaml - SSD-kutatás, offline "civilizáció-újraépítő" archívumhoz
+# Dátum: 2026-11-14. Árfolyam: 1 EUR = 365.60 HUF (ECB referencia, 2026-11-13).
+# Forrás-jelölés: "mért" = ma lekért oldalon látott ár; "becsült" = keresőtalálat-kivonat, gyári
+#   listaár vagy számított érték (nem ellenőrzött, lehet elavult).
+# Elérhetőség ma (2026-11-14):
+#   - ipon.hu: elérhető, minden ipon-ár mért (bruttó; az ipon nem tart saját raktárt, a
+#     "szállítás N nap" az oldal deliveryDays adata).
+#   - aqua.hu és senetic.hu: termékoldalak elérhetők (mért).
+#   - alternate.de: elérhető, mért EUR-árak NÉMET 19% áfával. Magyarországra ajánlatkéréssel
+#     (Angebotsanfrage) szállít, UPS 15.90-18.90 EUR, a magyar 27% áfával az ár kb. x1.067.
+#   - BLOKKOLT (Cloudflare/403/511): arukereso.hu, alza.hu, emag.hu, edigital.hu, mediamarkt.hu,
+#     geizhals.eu/.de/.at, idealo, galaxus, amazon.de (captcha). Ezeknél csak keresőtalálatból
+#     származó URL szerepel, az ár "becsült / nem ellenőrzött".
+#   - bestbyte.hu: elérhető, de az árat JavaScript tölti be, így nem olvasható ki.
+# Piaci háttér: 2025-2026-ban NAND-hiány van, az SSD-árak a 2025-ös szint 2-4-szeresén vannak
+#   (Tom's Hardware: a Phison vezérigazgatója szerint a NAND ára több mint duplázódott;
+#   TrendForce: 2026 Q4-ben az enterprise SSD szerződéses ára +23-28% negyedévente).
+
+- id: samsung-9100pro-8tb
+  kategoria: ssd_nvme_gen5
+  nev: "Samsung 9100 PRO 8TB (MZ-VAP8T0CW hűtőbordás / MZ-VAP8T0BW hűtőborda nélkül)"
+  kapacitas_tb: 8
+  tipus: "M.2 2280, PCIe 5.0 x4, NVMe 2.0, TLC V-NAND, van DRAM (LPDDR4X)"
+  tartossag: {ip: null, eses: null, tbw: 4800, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14800, iras: 13400}
+  ar_huf: 868089
+  ar_eur: 2374
+  ar_per_tb: "108 511 Ft/TB (hűtőbordás, ipon)"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: hűtőbordás 868 089 Ft (szállítás kb. 9 nap), hűtőborda nélküli 892 190 Ft (kb. 7 nap)"
+    - "alternate.de, 2026-11-14, mért: hűtőbordás 1 811 EUR, hűtőborda nélküli 2 222 EUR (19% áfával). Magyar áfával kb. 1 933 EUR, azaz kb. 706 600 Ft + UPS (becsült)"
+    - "alza.hu (keresőtalálat), becsült: 859 990 Ft, 'nincs készleten' (nem ellenőrzött)"
+  linkek:
+    - {bolt: ipon.hu (hűtőbordás), url: "https://ipon.hu/shop/termek/samsung-8tb-9100-pro-with-heatsink-m2-pcie-m2-2280-mz-vap8t0cw/2355002"}
+    - {bolt: ipon.hu (hűtőborda nélkül), url: "https://ipon.hu/shop/termek/samsung-8tb-9100-pro-m2-pcie-m2-2280-mz-vap8t0bw/2354997"}
+    - {bolt: alternate.de (hűtőbordás), url: "https://www.alternate.de/Samsung/9100-PRO-Heatsink-8-TB-SSD/html/product/100146403"}
+    - {bolt: alza.hu, url: "https://www.alza.hu/samsung-9100-pro-8tb-d13079323.htm"}
+  elonyok: ["Ma ez a legolcsóbb ellenőrzött 8TB Gen5 meghajtó Magyarországon", "Az egyik leggyorsabb fogyasztói SSD", "5 év garancia, 4 800 TBW", "Az alternate.de-n ajánlatkéréssel kb. 160 000 Ft-tal olcsóbb lehet"]
+  hatranyok: ["Nincs áramkimaradás elleni védelem (PLP)", "Ára 2026-ban kb. a 2025-ös duplája", "A hűtőbordás változat nem biztos, hogy befér az alaplap saját M.2 hűtőlemeze alá; ilyenkor az alaplapi hűtőt kell használni, vagy a borda nélküli változatot venni"]
+  ajanlas_szint: profi
+
+- id: samsung-9100pro-4tb
+  kategoria: ssd_nvme_gen5
+  nev: "Samsung 9100 PRO 4TB (MZ-VAP4T0CW hűtőbordás / MZ-VAP4T0BW)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0 x4, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14800, iras: 13000}
+  ar_huf: 319990
+  ar_eur: 875
+  ar_per_tb: "79 998 Ft/TB"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: hűtőbordás 319 990 Ft (kb. 1 nap), hűtőborda nélküli 346 490 Ft"
+    - "alternate.de, 2026-11-14, mért: hűtőborda nélküli 1 112 EUR"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/samsung-4tb-9100-pro-with-heatsink-m2-pcie-m2-2280-mz-vap4t0cw/2355001"}
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/samsung-4tb-9100-pro-m2-pcie-m2-2280-mz-vap4t0bw/2354995"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/Samsung/9100-PRO-4-TB-SSD/html/product/100118135"}
+  elonyok: ["Raktárról, gyorsan szállítják", "Gyártói és vezérlő-diverzitást ad a meglévő Kingston mellé"]
+  hatranyok: ["A 4TB kevés lehet több 700GB-os modellhez", "A TBW fele a 8TB-osénak"]
+  ajanlas_szint: kozep
+
+- id: sandisk-optimus-gx-pro-8100-8tb
+  kategoria: ssd_nvme_gen5
+  nev: "SanDisk Optimus GX PRO 8100 8TB (az új nevű WD_BLACK SN8100 8TB; SDSP82800TAN-000E0 / TAH hűtőbordás)"
+  kapacitas_tb: 8
+  tipus: "M.2 2280, PCIe 5.0 x4, TLC (BiCS8), van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 4800, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14900, iras: 13200}
+  ar_huf: 1061490
+  ar_eur: 2903
+  ar_per_tb: "132 686 Ft/TB"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: 1 061 490 Ft (kb. 4 nap), hűtőbordás 1 130 690 Ft"
+    - "alternate.de, 2026-11-14, mért: 2 513 EUR"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/sandisk-8tb-optimus-gx-pro-8100-pcie-m2-2280-sdsp82800tan-000e0/2568580"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/SanDisk/Optimus-GX-PRO-8100-8-TB-SSD/html/product/100216945"}
+  elonyok: ["A tesztek szerint a 8TB-os Gen5 kategória egyik leggyorsabbja (Tom's Hardware)", "Kis fogyasztás (kb. 7 W)"]
+  hatranyok: ["Kb. 22%-kal drágább a 9100 PRO 8TB-nál"]
+  ajanlas_szint: extrem
+
+- id: wd-black-sn8100-4tb
+  kategoria: ssd_nvme_gen5
+  nev: "WD_BLACK SN8100 4TB (WDS400T1X0M-00CMT0)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0 x4, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14900, iras: 14000}
+  ar_huf: 356690
+  ar_eur: 976
+  ar_per_tb: "89 173 Ft/TB"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: 356 690 Ft (kb. 9 nap), hűtőbordás 483 890 Ft"
+    - "alternate.de, 2026-11-14, mért: 829 EUR (WD Black SN8100 4TB)"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/wd-sandisk-4tb-black-sn8100optimus-gx-pro-8100-m2-pcie-m2-2280-wds400t1x0m-00cmt0/2367832"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/WD/Black-SN8100-4TB-SSD/html/product/100135924"}
+  elonyok: ["Nagyon gyors és hatékony"]
+  hatranyok: ["Drágább a Crucial T705 4TB-nál és a 9100 PRO 4TB-nál"]
+  ajanlas_szint: kozep
+
+- id: kingston-renegade-g5-8tb
+  kategoria: ssd_nvme_gen5
+  nev: "Kingston FURY Renegade G5 8TB (SFYR2D/8T1)"
+  kapacitas_tb: 8
+  tipus: "M.2 2280 (kétoldalas, 3.65 mm), PCIe 5.0 x4, SM2508 vezérlő, TLC, van DRAM (LPDDR4)"
+  tartossag: {ip: null, eses: null, tbw: 8000, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14800, iras: 14000}
+  ar_huf: 679330
+  ar_eur: 1858
+  ar_per_tb: "84 916 Ft/TB (aqua listaár, de ma NEM elérhető)"
+  ar_forras:
+    - "aqua.hu, 2026-11-14, mért: 679 330 Ft, 'Nem elérhető'"
+    - "alternate.de, 2026-11-14, mért: 2 303 EUR"
+    - "alza.hu (keresőtalálat címe), becsült: 721 490 Ft (nem ellenőrzött)"
+  linkek:
+    - {bolt: aqua.hu, url: "https://aqua.hu/alkatreszek/8tb-kingston-fury-renegade-g5-pcie-50-m2-nvme-ssd-meghajto-sfyr2d8t1-t1772749"}
+    - {bolt: alza.hu, url: "https://www.alza.hu/kingston-fury-renegade-g5-8tb-d13156972.htm"}
+    - {bolt: emag.hu, url: "https://www.emag.hu/szilardtest-meghajto-ssd-8-tb-kingston-fury-renegade-g5-pcie-5-0-m-2-nvme-ssd-sfyr2d-8t-kin-ssd-sfyr2d-8192g/pd/D3VPG13BM/"}
+    - {bolt: arukereso.hu (árösszehasonlító, blokkolt), url: "https://belso-ssd-meghajto.arukereso.hu/kingston/fury-renegade-g5-8tb-sfyr2d-8t1-p1255831516/"}
+  elonyok: ["A legmagasabb TBW (8 PB) a 8TB-os fogyasztói Gen5 meghajtók között", "Ha kapható, ez lehet a legolcsóbb 8TB Gen5 (680-720 ezer Ft)"]
+  hatranyok: ["Ma nem ellenőrizhető a készlet", "Ugyanaz a gyártó és vezérlő, mint a meglévő 4TB-os, ezért kisebb a diverzitás"]
+  ajanlas_szint: profi
+
+- id: kingston-renegade-g5-4tb
+  kategoria: ssd_nvme_gen5
+  nev: "Kingston FURY Renegade G5 4TB (SFYR2S/4T0)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0 x4, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 4000, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14700, iras: 14000}
+  ar_huf: 304991
+  ar_eur: 834
+  ar_per_tb: "76 248 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 304 991 Ft (kb. 1 nap)"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/kingston-fury-4tb-renegade-g5-m2-pcie-m2-2280-sfyr2s4t0/2363124"}
+  elonyok: ["Ez már a gépben van; egy második példány RAID1 tükörhöz jó"]
+  hatranyok: ["Ugyanaz a típus, mint a meglévő, ezért közös a firmware-kockázat"]
+  ajanlas_szint: kozep
+
+- id: crucial-t705-4tb
+  kategoria: ssd_nvme_gen5
+  nev: "Crucial T705 4TB (CT4000T705SSD3)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0 x4, Phison E26, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14500, iras: 12700}
+  ar_huf: 301890
+  ar_eur: 826
+  ar_per_tb: "75 473 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 301 890 Ft (kb. 1 nap)"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/crucial-4tb-t705-m2-pcie-m2-2280-ct4000t705ssd3/2246558"}
+  elonyok: ["Ma ennek a legolcsóbb a Gen5 TB-ára", "Raktárról szállítják"]
+  hatranyok: ["Melegszik, hűtés kell (az alaplapi M.2 hűtő elég)", "8TB-os változata nincs"]
+  ajanlas_szint: kozep
+
+- id: crucial-t710-4tb
+  kategoria: ssd_nvme_gen5
+  nev: "Crucial T710 4TB (2025-ös újdonság; 8TB-os változata nincs)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0 x4, SM2508, Micron G9 TLC, van DRAM (LPDDR4)"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14500, iras: 13800}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Nem találtam ellenőrzött 4TB-os árat HU/EU boltban. Az ipon csak az 1TB-ost listázza (100 590 Ft, mért). Becsült: 549.99 USD gyári listaár (StorageReview)"]
+  linkek:
+    - {bolt: ipon.hu (1TB), url: "https://ipon.hu/shop/termek/crucial-1tb-t710-m2-pcie-m2-2280-ct1000t710ssd8/2419172"}
+    - {bolt: gyártó (4TB), url: "https://www.crucial.com/ssd/t710/ct4000t710ssd5"}
+  elonyok: ["Alacsony fogyasztás, gyors"]
+  hatranyok: ["Itthon nem kapható 4TB-ban", "Legfeljebb 4TB"]
+  ajanlas_szint: kozep
+
+- id: sabrent-rocket5
+  kategoria: ssd_nvme_gen5
+  nev: "Sabrent Rocket 5 (1/2/4TB; 8TB-os nem létezik)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 5.0, Phison E26, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 14000, iras: 12000}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Sem ipon.hu-n, sem alternate.de-n nem kapható (mért: nincs találat, 2026-11-14)"]
+  linkek: []
+  elonyok: []
+  hatranyok: ["Magyarországon gyakorlatilag nem kapható, 8TB-os nincs belőle. Nem ajánlott."]
+  ajanlas_szint: kozep
+
+- id: samsung-990pro-4tb
+  kategoria: ssd_nvme_gen4
+  nev: "Samsung 990 PRO 4TB (MZ-V9P4T0GW hűtőbordás / MZ-V9P4T0BW)"
+  kapacitas_tb: 4
+  tipus: "M.2 2280, PCIe 4.0 x4, TLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 7450, iras: 6900}
+  ar_huf: 275090
+  ar_eur: 752
+  ar_per_tb: "68 773 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért (keresési lista): hűtőbordás 275 090 Ft, borda nélküli 290 090 Ft", "alternate.de, 2026-11-14, mért: 874 EUR / hűtőbordás 630 EUR"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/samsung-4tb-990-pro-with-heatsink-m2-pcie-m2-2280-mz-v9p4t0gw/2224604"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/Samsung/990-PRO-Heatsink-4-TB-SSD/html/product/100011356"}
+  elonyok: ["Kiforrott típus, olcsóbb TB-ár, kevésbé melegszik", "A laptopokba (ZBook) is jó"]
+  hatranyok: ["Feleakkora sebesség (egy 700GB-os modell kb. 100 s alatt töltődik be, Gen5-tel kb. 50 s alatt)"]
+  ajanlas_szint: olcso
+
+- id: lexar-nm790-8tb
+  kategoria: ssd_nvme_gen4
+  nev: "Lexar NM790 8TB (LNM790X008T-RNNNG)"
+  kapacitas_tb: 8
+  tipus: "M.2 2280, PCIe 4.0 x4, DRAM nélküli (HMB)"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: false}
+  sebesseg_mb_s: {olvasas: null, iras: null}
+  ar_huf: 836690
+  ar_eur: 2289
+  ar_per_tb: "104 586 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért (keresési lista): 836 690 Ft"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/lexar-8tb-nm790-m2-pcie-m2-2280-lnm790x008t-rnnng/2329494"}
+  elonyok: ["Egyoldalas 8TB, laptopba is jó"]
+  hatranyok: ["Majdnem annyiba kerül, mint a 9100 PRO 8TB, de lassabb és nincs DRAM-ja, így nem éri meg. A TBW és a garancia ma nem volt ellenőrizve."]
+  ajanlas_szint: olcso
+
+- id: solidigm-d5-p5336
+  kategoria: ssd_enterprise
+  nev: "Solidigm D5-P5336 (U.2 15mm / E1.L / E3.S; 7.68-122.88TB) - 30.72TB: SSDPF2NV307TZN1"
+  kapacitas_tb: 30.72
+  tipus: "U.2 2.5\" 15mm, PCIe 4.0 x4 NVMe, QLC, enterprise"
+  tartossag: {ip: null, eses: null, tbw: "61.44TB: 65.2 PBW (0.58 DWPD), 122.88TB: 134.3 PBW (0.6 DWPD), 5 év", garancia_ev: 5, plp: "igen (enterprise standard, a gyári adatlapon ellenőrizendő)", kikapcsolt_megorzes: "3 hónap 40 °C-on (JEDEC enterprise, élettartam végén)"}
+  sebesseg_mb_s: {olvasas: 7000, iras: 3300}
+  fogyasztas_w: {max: 25, alapjarat: 5}
+  ar_huf: 1921854
+  ar_eur: 5257
+  ar_per_tb: "62 560 Ft/TB (senetic listaár, NINCS raktáron, valószínűleg elavult)"
+  ar_forras:
+    - "senetic.hu, 2026-11-14, mért: 30.72TB nettó 1 513 271 Ft / bruttó 1 921 854 Ft, 'Nincs raktáron'"
+    - "61.44TB: e-nitiative.eu, becsült (keresőtalálat): 7 090.99 EUR áfával"
+    - "122.88TB, becsült (keresőtalálat): Saitech 23 903 USD, CDW 54 632.99 USD; a TechRadar szerint 9 hónap alatt megháromszorozódott az ára"
+  linkek:
+    - {bolt: senetic.hu (30.72TB), url: "https://www.senetic.hu/product/SSDPF2NV307TZN1"}
+    - {bolt: e-nitiative.eu (61.44TB E1.L), url: "https://responsive5.e-nitiative.eu/product/details/solidigm/storage-drives-&-media/sbfpfwbv614t001/Y8732005"}
+    - {bolt: galaxus.de (15.36TB, blokkolt), url: "https://www.galaxus.de/en/s1/product/intel-solidigm-ssd-d5-p5336-1536-tb-30720-gb-e1l-ssd-37310647"}
+  elonyok: ["A legnagyobb kapacitás egy darab 2.5\"-os eszközön (akár 122.88TB)", "Van PLP", "Olvasásra optimalizált, ideális archívumnak"]
+  hatranyok: ["QLC: rosszabb a kikapcsolt állapotú adatmegőrzése", "Nagyon drága és nehezen beszerezhető (2026-os hiány)", "25 W-ot fogyaszt, ventilátoros hűtés kell", "Magánszemélyként csak ajánlatkéréssel vehető (senetic: 'Add hozzá az ajánlatkéréshez')"]
+  ajanlas_szint: extrem
+
+- id: kioxia-cd8p-15tb
+  kategoria: ssd_enterprise
+  nev: "Kioxia CD8-P 15.36TB U.2 (KCD8XPUG15T3)"
+  kapacitas_tb: 15.36
+  tipus: "U.2 2.5\" 15mm, PCIe 5.0 x4 NVMe, TLC (BiCS), enterprise"
+  tartossag: {ip: null, eses: null, tbw: "kb. 1 DWPD (gyári adat, ma nem ellenőrizve)", garancia_ev: 5, plp: "igen (enterprise standard)", kikapcsolt_megorzes: "3 hónap 40 °C-on (JEDEC enterprise, élettartam végén)"}
+  sebesseg_mb_s: {olvasas: null, iras: null}
+  ar_huf: 4137890
+  ar_eur: 11318
+  ar_per_tb: "269 394 Ft/TB"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: 4 137 890 Ft (kb. 4 nap). Ugyanott: Solidigm D7-P5520 15.36TB 4 129 490 Ft, Kioxia PM7-R 30.7TB (SAS!) 10 415 890 Ft"
+    - "senetic.hu, 2026-11-14, mért: Kioxia CD8P-R 30.72TB (KCD8XPUG30T7) bruttó 7 700 231 Ft (250 659 Ft/TB), nincs raktáron"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/kioxia-cd8-p-series-1536tb-ssd-kcd8xpug15t3/2565017"}
+    - {bolt: senetic.hu (30.72TB), url: "https://www.senetic.hu/product/KCD8XPUG30T7"}
+    - {bolt: ipon.hu (Solidigm D7-P5520 15.36TB), url: "https://ipon.hu/shop/termek/solidigm-d7-p5520-1536tb-ssd-ssdpf2kx153t11z/2301382"}
+  elonyok: ["Itthon ténylegesen rendelhető enterprise TLC meghajtó PLP-vel", "TLC, ezért jobb az adatmegőrzése, mint a QLC-nek"]
+  hatranyok: ["Kb. 2.5-ször annyiba kerül TB-onként, mint egy fogyasztói Gen5 SSD", "20-25 W, ventilátoros hűtés kell"]
+  ajanlas_szint: extrem
+
+- id: samsung-pm1743-15tb
+  kategoria: ssd_enterprise
+  nev: "Samsung PM1743 15.36TB U.2 (MZWLO15THBLA-00A07)"
+  kapacitas_tb: 15.36
+  tipus: "U.2 2.5\" 15mm, PCIe 5.0 x4 NVMe, TLC, enterprise"
+  tartossag: {ip: null, eses: null, tbw: "1 DWPD (ma nem ellenőrizve)", garancia_ev: 5, plp: "igen (enterprise standard)"}
+  sebesseg_mb_s: {olvasas: null, iras: null}
+  ar_huf: 1823612
+  ar_eur: 4988
+  ar_per_tb: "118 725 Ft/TB (listaár, NINCS raktáron, valószínűleg elavult)"
+  ar_forras: ["senetic.hu, 2026-11-14, mért: nettó 1 435 915 Ft / bruttó 1 823 612 Ft, 'Nincs raktáron'"]
+  linkek:
+    - {bolt: senetic.hu, url: "https://www.senetic.hu/product/MZWLO15THBLA-00A07"}
+  elonyok: ["Gen5 TLC, PLP"]
+  hatranyok: ["Nincs raktáron; a listaár valószínűleg nem tükrözi a 2026-os piacot"]
+  ajanlas_szint: extrem
+
+- id: kingston-dc3000me-15tb
+  kategoria: ssd_enterprise
+  nev: "Kingston DC3000ME 15.36TB U.2 Gen5"
+  kapacitas_tb: 15.36
+  tipus: "U.2, PCIe 5.0 x4 NVMe, enterprise"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: 5, plp: "igen (enterprise)"}
+  sebesseg_mb_s: {olvasas: null, iras: null}
+  ar_huf: 3288206
+  ar_eur: 8994
+  ar_per_tb: "214 076 Ft/TB"
+  ar_forras: ["alternate.de, 2026-11-14, mért: 8 994 EUR (19% áfával)"]
+  linkek:
+    - {bolt: alternate.de, url: "https://www.alternate.de/Kingston/DC3000ME-15360-GB-SSD/html/product/100121928"}
+  elonyok: ["EU-s webshopból magánszemélyként is rendelhető"]
+  hatranyok: ["Drága"]
+  ajanlas_szint: extrem
+
+- id: micron-6550-ion
+  kategoria: ssd_enterprise
+  nev: "Micron 6550 ION 30.72 / 61.44TB (E3.S-1T, U.2, E1.L)"
+  kapacitas_tb: 61.44
+  tipus: "PCIe 5.0 x4 NVMe, Micron G8 TLC (232 réteg)"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: 5, plp: "igen (enterprise)"}
+  sebesseg_mb_s: {olvasas: 12000, iras: 5000}
+  fogyasztas_w: {max: 20, alapjarat: 4}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Nem találtam ellenőrzött HU/EU kiskereskedelmi árat (2026-11-14)"]
+  linkek:
+    - {bolt: gyártói adatlap (Mouser PDF), url: "https://www.mouser.com/datasheet/3/1579/1/6550_ion_nvme_ssd_product_brief.pdf"}
+  elonyok: ["61TB TLC (nem QLC!): ennél a kapacitásnál ennek a legjobb az adatmegőrzése", "Gen5, 20 W"]
+  hatranyok: ["Magánszemélyként gyakorlatilag nem beszerezhető", "Az E3.S változathoz külön adapter kell"]
+  ajanlas_szint: extrem
+
+- id: kioxia-lc9
+  kategoria: ssd_enterprise
+  nev: "Kioxia LC9 (30.72-245.76TB, 2.5\" / E3.S / E3.L)"
+  kapacitas_tb: 122.88
+  tipus: "PCIe 5.0 NVMe, BiCS8 QLC (2 Tb die)"
+  tartossag: {ip: null, eses: null, tbw: "legfeljebb 0.3 DWPD", garancia_ev: null, plp: "igen (enterprise)"}
+  sebesseg_mb_s: {olvasas: 12000, iras: 3000}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Nincs nyilvános kiskereskedelmi ár (2026-11-14)"]
+  linkek:
+    - {bolt: Kioxia termékáttekintő, url: "https://americas.kioxia.com/content/dam/kioxia/en-us/business/ssd/enterprise-ssd/asset/KIOXIA_LC9_Product_Overview.pdf"}
+  elonyok: ["Rekord sűrűség (245.76TB egy darabon)"]
+  hatranyok: ["Csak nagykereskedelmi/OEM forgalomban kapható", "QLC, alacsony DWPD"]
+  ajanlas_szint: extrem
+
+- id: icydock-mb307u-1vb
+  kategoria: enclosure
+  nev: "ICY DOCK EZ-Adapter Ex MB307U-1VB - USB4 (40 Gbps) / TB3/4 -> 1x U.2/U.3 (SFF-8639), max. 15mm"
+  kapacitas_tb: null
+  tipus: "Külső USB4 ház enterprise U.2/U.3 SSD-hez; 12V/2.5A (30 W) tápegység; passzív alumínium hűtőlap, nincs ventilátor"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: "a meghajtótól függ"}
+  sebesseg_mb_s: {olvasas: "kb. 3 800 (40 Gbps gazdagépen)", iras: null}
+  ar_huf: 70890
+  ar_eur: 193.90
+  ar_per_tb: null
+  ar_forras:
+    - "alternate.de, 2026-11-14, mért: 193.90 EUR"
+    - "ldlc.com 199.95 EUR, galador.ee 205.10 EUR (keresőtalálat, becsült)"
+  linkek:
+    - {bolt: alternate.de, url: "https://www.alternate.de/Icy-Dock/MB307U-1VB-Adapter/html/product/100194424"}
+    - {bolt: ldlc.com, url: "https://www.ldlc.com/en/product/PB00707449.html"}
+    - {bolt: gyártó, url: "https://global.icydock.com/product_395.html"}
+  elonyok: ["IGEN, létezik USB4-es U.2 ház: ezzel egy 30-122TB-os enterprise SSD hordozható 'egy eszközzé' válik", "U.3-at és 15mm-es meghajtót is fogad"]
+  hatranyok: ["Hálózati tápot igényel", "Egy 20-25 W-os enterprise SSD tartós írásnál passzív hűtéssel túlmelegedhet, ezért kis USB-ventilátort érdemes mellé tenni", "Nem vízálló"]
+  ajanlas_szint: profi
+
+- id: icydock-mb931u-1vb-r1
+  kategoria: enclosure
+  nev: "ICY DOCK EZ-Adapter Ex MB931U-1VB R1 - USB 3.2 Gen2 (10 Gbps) -> U.2"
+  kapacitas_tb: null
+  tipus: "Külső U.2 adapter, olcsóbb, 10 Gbps"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "kb. 1 000", iras: null}
+  ar_huf: 41642
+  ar_eur: 113.90
+  ar_per_tb: null
+  ar_forras: ["alternate.de, 2026-11-14, mért: 113.90 EUR"]
+  linkek:
+    - {bolt: alternate.de, url: "https://www.alternate.de/Icy-Dock/EZ-Adapter-Ex-MB931U-1VB-R1/html/product/100070496"}
+  elonyok: ["Olcsóbb; archív olvasásra (scrub) elég"]
+  hatranyok: ["10 Gbps: 30TB végigolvasása kb. 8-9 óra"]
+  ajanlas_szint: kozep
+
+- id: u2-desktop-adapters
+  kategoria: other
+  nev: "U.2 asztali bekötés: Delock M.2 Key M -> U.2 SFF-8639 adapter 20 cm kábellel / Delock PCIe x16 -> 1x U.2 kártya"
+  kapacitas_tb: null
+  tipus: "Belső adapter. Az M.2 változat a Crosshair X870E egyik M.2 slotjába kerül; a kártya PCIe slotba. Az SSD 12 V tápot a SATA-tápcsatlakozóról kap."
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "a meghajtó sebessége (Gen4/Gen5 x4)", iras: null}
+  ar_huf: 27383
+  ar_eur: 74.90
+  ar_per_tb: null
+  ar_forras:
+    - "alternate.de, 2026-11-14, mért: M.2->U.2 adapter 74.90 EUR; PCIe x16 -> 1x U.2 kártya 64.90 EUR; Delock PCIe 4.0 x16 -> 4x SFF-8639 vezérlő 599 EUR; HighPoint Rocket 1628A (PCIe Gen5 x16, 4x MCIOx8) 1 679 EUR"
+  linkek:
+    - {bolt: alternate.de (M.2->U.2), url: "https://www.alternate.de/DeLOCK/M-2-Key-M-zu-U-2-SFF-8639-NVMe-Adapter-gewinkelt-mit-20-cm-Kabel-Schnittstellenkarte/html/product/1781473"}
+    - {bolt: alternate.de (PCIe->U.2), url: "https://www.alternate.de/DeLOCK/PCI-Express-x16-Karte-zu-1-x-intern-U-2-NVMe-SFF-8639-Schnittstellenkarte/html/product/1784136"}
+    - {bolt: alternate.de (4x U.2 vezérlő), url: "https://www.alternate.de/DeLOCK/PCI-Express-4-0-x16-Karte-zu-4-x-SFF-8639-NVMe-Controller/html/product/1817937"}
+  elonyok: ["Olcsó; teljes sebességet ad"]
+  hatranyok: ["Az enterprise SSD szerverházas légáramlásra készült, ezért elé 80-120 mm-es ventilátor kell", "Az alaplapon egyes M.2/PCIe slotok osztoznak a sávszélességen (a GPU-slot x8-ra eshet vissza), ezt a kézikönyvben ellenőrizni kell"] 
+  ajanlas_szint: profi
+
+- id: sandisk-extreme-portable-8tb
+  kategoria: ssd_rugged
+  nev: "SanDisk Extreme Portable SSD 8TB (SDSSDE61-8T00-G25)"
+  kapacitas_tb: 8
+  tipus: "USB 3.2 Gen2 (10 Gbps) USB-C, hordozható"
+  tartossag: {ip: "IP65 (újabb gyártás) / egyes boltok IP55-öt írnak", eses: "3 m", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 1050, iras: 1000}
+  ar_huf: 565589
+  ar_eur: 1547
+  ar_per_tb: "70 699 Ft/TB"
+  ar_forras:
+    - "ipon.hu, 2026-11-14, mért: 565 589 Ft (kb. 1 nap)"
+    - "alternate.de, 2026-11-14, mért: 1 199 EUR (azaz kb. 438 354 Ft; magyar áfával kb. 468 000 Ft + UPS, becsült)"
+    - "arukereso (keresőtalálat), becsült: 'legalacsonyabb ár 438 789 Ft', nem ellenőrzött"
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/sandisk-8tb-extreme-portable-usb-31-usb-31-type-c-fekete-sdssde61-8t00-g25/2329898"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/SanDisk/Extreme-Portable-SSD-V2-8-TB-Externe-SSD/html/product/100119256"}
+    - {bolt: arukereso.hu (blokkolt), url: "https://kulso-ssd-meghajto.arukereso.hu/sandisk/extreme-portable-8tb-sdssde61-8t00-g25-p1173413248/"}
+  elonyok: ["A legolcsóbb ellenőrzött 8TB-os strapabíró SSD TB-onként", "Zsebméretű, 10 Gbps: mindkét telefonnal és laptoppal működik"]
+  hatranyok: ["2023-as hibasorozat (lásd a sandisk-2023 tételt); csak frissített firmware-rel használd, és sose legyen ez az egyetlen példány", "1 GB/s: 8TB végigolvasása kb. 2.3 óra"]
+  ajanlas_szint: kozep
+
+- id: sandisk-extreme-pro-v2-4tb
+  kategoria: ssd_rugged
+  nev: "SanDisk Extreme PRO Portable SSD V2 4TB (SDSSDE81-4T00-G25)"
+  kapacitas_tb: 4
+  tipus: "USB 3.2 Gen2x2 (20 Gbps) USB-C, alumínium ház"
+  tartossag: {ip: "IP65 (újabb gyártás; korábbi IP55)", eses: "3 m", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 2000, iras: 2000}
+  ar_huf: 426890
+  ar_eur: 1168
+  ar_per_tb: "106 723 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 426 890 Ft (kb. 2 nap)", "alternate.de, 2026-11-14, mért: 860 EUR", "ipon: Extreme Portable V2 4TB (SDSSDE61) 283 091 Ft (70 773 Ft/TB), mért"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/sandisk-4tb-extreme-pro-portable-v2-usb-31-usb-31-type-c-fekete-sdssde81-4t00-g25/1913324"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/SanDisk/Extreme-PRO-Portable-SSD-V2-4-TB-Externe-SSD/html/product/1756502"}
+    - {bolt: ipon.hu (Extreme 4TB), url: "https://ipon.hu/shop/termek/sandisk-4tb-extreme-portable-v2-usb-31-usb-31-type-c-fekete-sdssde61-4t00-g25/1953540"}
+  elonyok: ["2 GB/s Gen2x2 porton"]
+  hatranyok: ["A 2023-as hiba főleg ezt a családot (4TB/2TB) érintette", "Az X870E és a USB4 portok gyakran nem támogatják a Gen2x2-t, ott kb. 1 GB/s-ra esik vissza"]
+  ajanlas_szint: kozep
+
+- id: sandisk-2023-controversy
+  kategoria: other
+  nev: "MEGJEGYZÉS: SanDisk Extreme / Extreme PRO 2023-as hibasorozat - állapot 2026-11-14-én"
+  kapacitas_tb: null
+  tipus: "Kockázati megjegyzés"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: null
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Tom's Hardware, TechRadar, The Register (2023), keresőtalálatok 2026-11-14"]
+  linkek:
+    - {bolt: Tom's Hardware (per), url: "https://www.tomshardware.com/news/wd-faces-class-action-lawsuit-over-sandisk-extreme-pro-ssd-failures"}
+    - {bolt: Tom's Hardware (WD tagadja a hardverhibát), url: "https://www.tomshardware.com/news/western-diigital-denies-sandisk-extreme-pro-ssd-hardware-issues"}
+    - {bolt: The Register, url: "https://www.theregister.com/2023/08/17/western_digital_sandisk_ssd_lawsuit/"}
+  elonyok: []
+  hatranyok:
+    - "2023 tavaszán az Extreme / Extreme PRO V2 (főleg 4TB és 2TB) és a My Passport SSD hirtelen adatvesztéssel, csatolhatatlansággal hibázott"
+    - "A WD 2023 májusában firmware-frissítést adott ki. Az Attingo adatmentő cég hardverhibát (forrasztás, alkatrész) állított, a WD ezt tagadja. Később erősebb epoxis rögzítés is jött."
+    - "Csoportos perek indultak 2023 augusztusában: Krum v. Western Digital, N.D. Cal. 5:23-cv-04152, és Pousa v. WD. Mai keresésem alapján NEM találtam megerősített ítéletet vagy egyezséget, így jogilag nincs lezárva."
+    - "Gyakorlati következtetés: a mostani gyártás valószínűleg rendben van, de vásárlás után azonnal frissítsd a firmware-t (SanDisk Dashboard), és SanDisk soha ne legyen az egyetlen példány. A második másolat legyen más gyártótól."
+  ajanlas_szint: kozep
+
+- id: crucial-x10-8tb
+  kategoria: ssd_rugged
+  nev: "Crucial X10 8TB (CT8000X10SSD9) - 2025-ös, a legkisebb 8TB-os hordozható SSD"
+  kapacitas_tb: 8
+  tipus: "USB 3.2 Gen2x2 (20 Gbps) USB-C"
+  tartossag: {ip: "IP65", eses: "kb. 3 m", tbw: null, garancia_ev: "3 vagy 5 (a források ellentmondanak)", plp: false}
+  sebesseg_mb_s: {olvasas: 2100, iras: 2000}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["HU/EU boltban nem találtam ellenőrzött árat (az ipon és az alternate.de nem listázza, az arukereso blokkolt). Becsült: 699.99 USD akciós ár (newsshooter, 2026-06-22)"]
+  linkek:
+    - {bolt: arukereso.hu Crucial külső SSD lista (blokkolt), url: "https://kulso-ssd-meghajto.arukereso.hu/crucial/"}
+    - {bolt: emag.hu Crucial külső SSD, url: "https://www.emag.hu/kulso-ssd-meghajtok/brand/crucial/c"}
+    - {bolt: alza.hu Crucial X10 Pro 2TB, url: "https://www.alza.hu/crucial-x10-pro-2tb-d7871075.htm"}
+  elonyok: ["IP65 + 3 m esés, 8TB, 2 GB/s, nagyon kicsi", "Más gyártó, mint a SanDisk, ezért jó diverzitás"]
+  hatranyok: ["Itthon nehezen beszerezhető", "Az iPhone 15 Pro-n 10 Gbps-ra (kb. 1 GB/s), az S24 Ultra-n 5 Gbps-ra korlátozódik"]
+  ajanlas_szint: profi
+
+- id: crucial-x10-pro
+  kategoria: ssd_rugged
+  nev: "Crucial X10 Pro 1/2/4TB"
+  kapacitas_tb: 4
+  tipus: "USB 3.2 Gen2x2"
+  tartossag: {ip: "IP55", eses: "2 m (szőnyegen)", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 2100, iras: 2000}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Ellenőrzött ár nincs (az alza/emag blokkolt)"]
+  linkek:
+    - {bolt: alza.hu (2TB), url: "https://www.alza.hu/crucial-x10-pro-2tb-d7871075.htm"}
+    - {bolt: emag.hu (1TB), url: "https://www.emag.hu/hordozhato-ssd-crucial-x10-pro-1-tb-usb-3-2-gen-2-ct1000x10prossd9/pd/DNR0Z7YBM/"}
+  elonyok: ["Gyors, kicsi"]
+  hatranyok: ["Csak IP55, gyengébb esésvédelem, mint az X10-é"]
+  ajanlas_szint: kozep
+
+- id: samsung-t7-shield
+  kategoria: ssd_rugged
+  nev: "Samsung T7 Shield 2TB / 4TB (MU-PE2T0S / MU-PE4T0S)"
+  kapacitas_tb: 4
+  tipus: "USB 3.2 Gen2 (10 Gbps), gumírozott ház"
+  tartossag: {ip: "IP65", eses: "3 m", tbw: null, garancia_ev: "3 (egyes források 5-öt írnak)", plp: false}
+  sebesseg_mb_s: {olvasas: 1050, iras: 1000}
+  ar_huf: 317341
+  ar_eur: 868
+  ar_per_tb: "79 335 Ft/TB (4TB, alternate) / 99 196 Ft/TB (2TB, ipon)"
+  ar_forras: ["alternate.de, 2026-11-14, mért: 4TB 868 EUR", "ipon.hu, 2026-11-14, mért: 2TB fekete 198 391 Ft (kb. 1 nap); 4TB-ot nem listáz"]
+  linkek:
+    - {bolt: alternate.de (4TB), url: "https://www.alternate.de/Samsung/Portable-SSD-T7-Shield-4-TB-Externe-SSD/html/product/1888725"}
+    - {bolt: ipon.hu (2TB), url: "https://ipon.hu/shop/termek/samsung-2tb-t7-shield-usb-31-usb-31-type-c-fekete-mu-pe2t0seu/1995653"}
+  elonyok: ["Bevált, nincs ismert tömeges hibája", "IP65 + 3 m esés"]
+  hatranyok: ["Max. 4TB", "Csak 10 Gbps"]
+  ajanlas_szint: kozep
+
+- id: samsung-t9
+  kategoria: ssd_rugged
+  nev: "Samsung T9 2TB / 4TB (MU-PG2T0B / MU-PG4T0B)"
+  kapacitas_tb: 4
+  tipus: "USB 3.2 Gen2x2 (20 Gbps)"
+  tartossag: {ip: "nincs IP-besorolás", eses: "3 m (az esési kárt a garancia nem fedi)", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 2000, iras: 2000}
+  ar_huf: 338546
+  ar_eur: 926
+  ar_per_tb: "84 636 Ft/TB (4TB, alternate) / 87 995 Ft/TB (2TB, ipon)"
+  ar_forras: ["alternate.de, 2026-11-14, mért: 4TB 926 EUR", "ipon.hu, 2026-11-14, mért: 2TB 175 990 Ft (kb. 1 nap)"]
+  linkek:
+    - {bolt: alternate.de (4TB), url: "https://www.alternate.de/Samsung/Portable-SSD-T9-4-TB-Externe-SSD/html/product/100017122"}
+    - {bolt: ipon.hu (2TB), url: "https://ipon.hu/shop/termek/samsung-2tb-t9-usb-32-usb-32-type-c-fekete-mu-pg2t0beu/2213714"}
+  elonyok: ["Gyors, 5 év garancia"]
+  hatranyok: ["Nem víz- és porálló"]
+  ajanlas_szint: kozep
+
+- id: samsung-t5-evo-8tb
+  kategoria: ssd_rugged
+  nev: "Samsung T5 EVO 8TB (MU-PH8T0S/EU)"
+  kapacitas_tb: 8
+  tipus: "USB 3.2 Gen1 (5 Gbps); NAND típusát a gyártó nem publikálta"
+  tartossag: {ip: "nincs", eses: "2 m (gyártói állítás; a garancia nem fedi)", tbw: null, garancia_ev: 3, plp: false}
+  sebesseg_mb_s: {olvasas: 460, iras: 460}
+  ar_huf: 686962
+  ar_eur: 1879
+  ar_per_tb: "85 870 Ft/TB (alternate)"
+  ar_forras:
+    - "alternate.de, 2026-11-14, mért: 1 879 EUR"
+    - "alza/arukereso/mediamarkt (keresőtalálat), becsült: 253 990-323 490 Ft, az alza szerint 'megszűnt', a MediaMarkt szerint nem elérhető. Valószínűleg régi, kifutó ár."
+  linkek:
+    - {bolt: alternate.de, url: "https://www.alternate.de/Samsung/Portable-SSD-T5-EVO-8-TB-Externe-SSD/html/product/100025071"}
+    - {bolt: alza.hu, url: "https://www.alza.hu/samsung-portable-ssd-t5-evo-8tb-d8010537.htm"}
+    - {bolt: mediamarkt.hu, url: "https://www.mediamarkt.hu/hu/product/_samsung-t5-evo-hordozhat%C3%B3-ssd-usb-3-2-gen1-type-c-8tb-fekete-mu-ph8t0s-eu-1448100.html"}
+    - {bolt: arukereso.hu (blokkolt), url: "https://kulso-ssd-meghajto.arukereso.hu/samsung/t5-evo-8tb-usb-3-0-mu-ph8t0s-eu-p1027572307/"}
+  elonyok: ["8TB egyetlen kis eszközön, Samsung minőség"]
+  hatranyok: ["Lassú (460 MB/s, 8TB végigolvasása kb. 5 óra)", "Nem strapabíró", "Kifutó típus, jelenleg drága"]
+  ajanlas_szint: olcso
+
+- id: lacie-rugged-ssd-pro5
+  kategoria: ssd_rugged
+  nev: "LaCie Rugged SSD Pro5 2TB / 4TB (STNA2000400 / STNA4000400), Thunderbolt 5"
+  kapacitas_tb: 4
+  tipus: "Thunderbolt 5 (80 Gbps), TB4/USB4 visszafelé kompatibilis"
+  tartossag: {ip: "IP68", eses: "a gyártó nem ad meg esési értéket (a StorageReview tesztjében autó gázolta el)", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 6700, iras: 5300}
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["Ellenőrzött HU/EU ár nincs. Becsült: 599.99 USD (4TB) bevezető ár. Az alternate.de 'LaCie Rugged SSD Pro 4TB' 1 179.99 EUR-ós tétele valószínűleg a régi TB3-as Pro, nem a Pro5."]
+  linkek:
+    - {bolt: B&H (US), url: "https://www.bhphotovideo.com/c/product/1871607-REG/lacie_stna4000400_4tb_rugged_ssd_pro.html"}
+    - {bolt: StorageReview teszt, url: "https://www.storagereview.com/review/lacie-rugged-ssd-pro5-lives-up-to-its-name"}
+  elonyok: ["IP68, a leggyorsabb strapabíró SSD"]
+  hatranyok: ["Az 5 GB/s fölötti sebességhez TB5-ös gazdagép kell. A PC USB4 40 Gbps-os, így ott kb. 3-3.8 GB/s-ot tud. Max. 4TB, drága, itthon nem találtam."]
+  ajanlas_szint: extrem
+
+- id: kingston-xs2000
+  kategoria: ssd_rugged
+  nev: "Kingston XS2000 2TB (SXS2000/2000G)"
+  kapacitas_tb: 2
+  tipus: "USB 3.2 Gen2x2"
+  tartossag: {ip: "IP55 (a mellékelt tokkal)", eses: "kb. 2 m", tbw: null, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 2000, iras: 2000}
+  ar_huf: 109090
+  ar_eur: 298
+  ar_per_tb: "54 545 Ft/TB"
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 109 090 Ft (kb. 1 nap); 4TB-ot nem listáz"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/kingston-2tb-xs2000-usb-32-type-c-szurke-sxs20002000g/1945750"}
+  elonyok: ["A legolcsóbb TB-ár a strapabíró kategóriában", "Telefonos 'zsebmásolatnak' ideális"]
+  hatranyok: ["Max. 4TB, ma 2TB kapható"]
+  ajanlas_szint: olcso
+
+- id: adata-se880
+  kategoria: ssd_rugged
+  nev: "ADATA SE880 1TB / 4TB"
+  kapacitas_tb: 4
+  tipus: "USB 3.2 Gen2x2, nagyon kicsi"
+  tartossag: {ip: "nincs megerősítve", eses: null, tbw: null, garancia_ev: null, plp: false}
+  sebesseg_mb_s: {olvasas: 2000, iras: 2000}
+  ar_huf: 260673
+  ar_eur: 713
+  ar_per_tb: "65 168 Ft/TB (4TB, alternate)"
+  ar_forras: ["alternate.de, 2026-11-14, mért: 4TB 713 EUR", "ipon.hu, 2026-11-14, mért: 1TB 73 190 Ft"]
+  linkek:
+    - {bolt: alternate.de (4TB), url: "https://www.alternate.de/ADATA/SE880-4-TB-Externe-SSD/html/product/100024179"}
+    - {bolt: ipon.hu (1TB), url: "https://ipon.hu/shop/termek/adata-1tb-elite-se880-usb-32-usb-32-type-c-kek-aeli-se880-1tcbu/2373987"}
+  elonyok: ["Olcsó, gyors, apró"]
+  hatranyok: ["Nem strapabíró kivitel; az IP-besorolást nem igazoltam"]
+  ajanlas_szint: olcso
+
+- id: samsung-870-qvo-8tb
+  kategoria: ssd_sata
+  nev: "Samsung 870 QVO 8TB (MZ-77Q8T0BW)"
+  kapacitas_tb: 8
+  tipus: "2.5\" SATA III, QLC, van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2880, garancia_ev: 3, plp: false}
+  sebesseg_mb_s: {olvasas: 560, iras: 530}
+  ar_huf: 270290
+  ar_eur: 739
+  ar_per_tb: "33 786 Ft/TB (becsült)"
+  ar_forras:
+    - "alza.hu (keresőtalálat), becsült: 270 290 Ft, raktáron (az oldal blokkolt, nem ellenőrzött)"
+    - "emag.hu (keresőtalálat): 184 510 Ft, valószínűleg elavult; mediamarkt.hu: 239 900 Ft, nincs készleten (becsült)"
+    - "bestbyte.hu, 2026-11-14, mért: 'Raktáron', de az ár JavaScriptből töltődik, nem olvasható ki"
+    - "alternate.de, 2026-11-14, mért: 870 QVO 4TB 346 EUR (8TB-ot nem listáz)"
+  linkek:
+    - {bolt: alza.hu, url: "https://www.alza.hu/samsung-870-qvo-8tb-d6105892.htm"}
+    - {bolt: bestbyte.hu, url: "https://www.bestbyte.hu/8tb/samsung-8000gb-sata3-2-5-870-qvo-mz-77q8t0bw-ssd-p263738.html"}
+    - {bolt: mediamarkt.hu, url: "https://www.mediamarkt.hu/hu/product/_samsung-870-qvo-8tb-ssd-meghajt%C3%B3-sata-2-5-mz-77q8t0bw-1346801.html"}
+  elonyok: ["A legolcsóbb SSD-TB (ha az ár valós)", "A Pavilion 2.5\"-os helyére 8TB-ot ad"]
+  hatranyok: ["QLC: hosszú kikapcsolt tárolásra a leggyengébb", "Írási gyorsítótár után kb. 160 MB/s-ra lassul", "Kifutóban, több bolt már nem tartja"]
+  ajanlas_szint: olcso
+
+- id: samsung-870-evo-4tb
+  kategoria: ssd_sata
+  nev: "Samsung 870 EVO 4TB (MZ-77E4T0B)"
+  kapacitas_tb: 4
+  tipus: "2.5\" SATA III, TLC (3-bit V-NAND), van DRAM"
+  tartossag: {ip: null, eses: null, tbw: 2400, garancia_ev: 5, plp: false}
+  sebesseg_mb_s: {olvasas: 560, iras: 530}
+  ar_huf: 243124
+  ar_eur: 665
+  ar_per_tb: "60 781 Ft/TB"
+  ar_forras: ["alternate.de, 2026-11-14, mért: 665 EUR (HU boltban ma nem ellenőrizve)"]
+  linkek:
+    - {bolt: alternate.de, url: "https://www.alternate.de/Samsung/870-EVO-4-TB-SSD/html/product/1706407"}
+  elonyok: ["TLC, 5 év garancia, tartósabb, mint a QVO"]
+  hatranyok: ["Feleakkora kapacitás, TB-onként kb. 1.8-szor drágább"]
+  ajanlas_szint: kozep
+
+- id: owc-express-1m2
+  kategoria: enclosure
+  nev: "OWC Express 1M2 - USB4 40 Gbps M.2 NVMe ház"
+  kapacitas_tb: null
+  tipus: "USB4 / TB3/4 / USB 3.x, buszról táplált, alumínium, passzív hűtés"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "kb. 3 800 (USB4)", iras: null}
+  ar_huf: 56590
+  ar_eur: 154.8
+  ar_per_tb: null
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 56 590 Ft (kb. 9 nap)", "alternate.de, 2026-11-14, mért: 119.90 EUR"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/owc-express-1m2-m2-pcie-kulso-haz-usb4-c-thunderbolt-aluminium/2439573"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/OWC/Express-1M2-Laufwerksgehäuse/html/product/100031643"}
+  elonyok: ["Bevált, masszív fém ház, Mac és PC", "Bármely 8TB-os M.2 SSD-ből gyors hordozható másolat lesz"]
+  hatranyok: ["Nem vízálló"]
+  ajanlas_szint: profi
+
+- id: icybox-ib-1980m-80g
+  kategoria: enclosure
+  nev: "ICY BOX IB-1980M-80G - USB4 v2 80 Gbps / Thunderbolt 5 M.2 NVMe ház"
+  kapacitas_tb: null
+  tipus: "USB4 v2 (80 Gbps)"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "TB5 gazdagépen 6 000 fölött (gyártói), USB4 40 Gbps-on kb. 3 800", iras: null}
+  ar_huf: 77390
+  ar_eur: 211.7
+  ar_per_tb: null
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 77 390 Ft (kb. 9 nap)", "alternate.de, 2026-11-14, mért: 199.90 EUR"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/icy-box-ib-1980m-80g-m2-nvme-ssd-kulso-haz-usb4-thunderbolt-5-fekete-61206/2530230"}
+    - {bolt: alternate.de, url: "https://www.alternate.de/ICY-BOX/IB-1980M-80G-M-2-NVMe-SSD-Gehäuse-Laufwerksgehäuse/html/product/100200320"}
+  elonyok: ["Jövőálló: TB5 / USB4 v2"]
+  hatranyok: ["A mostani gépeken (X870E USB4 40 Gbps, ZBook USB4) nem gyorsabb egy 40 Gbps-os háznál"]
+  ajanlas_szint: extrem
+
+- id: usb4-budget-enclosures
+  kategoria: enclosure
+  nev: "Olcsó USB4 40 Gbps M.2 házak: LC-Power LC-M2-C-USB4 / Club3D CAC-2510 (hűtéssel) / TerraMaster D1 SSD Plus"
+  kapacitas_tb: null
+  tipus: "USB4 40 Gbps M.2 NVMe ház"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "kb. 3 000-3 800", iras: null}
+  ar_huf: 22189
+  ar_eur: 60.7
+  ar_per_tb: null
+  ar_forras: ["ipon.hu, 2026-11-14, mért: LC-Power 22 189 Ft; Club3D CAC-2510 41 290 Ft; TerraMaster D1 SSD Plus 43 790 Ft (mind kb. 1 nap)"]
+  linkek:
+    - {bolt: ipon.hu (LC-Power), url: "https://ipon.hu/shop/termek/lcpower-lc-m2-c-usb4-usb4-gen-3x2-m2-nvme-ssd-kulso-haz/2311704"}
+    - {bolt: ipon.hu (Club3D), url: "https://ipon.hu/shop/termek/club3d-kulso-m2-nvme-ssd-haz-hutessel-usb4-40gbps-cac-2510/2561883"}
+    - {bolt: ipon.hu (TerraMaster), url: "https://ipon.hu/shop/termek/terramaster-d1-ssd-plus-1-rekeszes-meghajtohaz-m2-nvme-usb4-40gbs/2541183"}
+  elonyok: ["Olcsó"]
+  hatranyok: ["A Gen5 SSD-k melegszenek, a ház alapján hosszú másolásnál lassulhatnak"]
+  ajanlas_szint: olcso
+
+- id: asus-rog-strix-arion
+  kategoria: enclosure
+  nev: "ASUS ROG Strix Arion (USB 3.2 Gen2, 10 Gbps - NEM USB4)"
+  kapacitas_tb: null
+  tipus: "USB 3.2 Gen2 M.2 NVMe ház"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: {olvasas: "kb. 1 000", iras: null}
+  ar_huf: 18590
+  ar_eur: 50.8
+  ar_per_tb: null
+  ar_forras: ["ipon.hu, 2026-11-14, mért: 18 590 Ft (kb. 9 nap)"]
+  linkek:
+    - {bolt: ipon.hu, url: "https://ipon.hu/shop/termek/asus-rog-strix-arion-fekete/1783825"}
+  elonyok: ["Olcsó; telefonokkal (5-10 Gbps) úgysem lenne gyorsabb"]
+  hatranyok: ["Csak 10 Gbps"]
+  ajanlas_szint: olcso
+
+- id: acasis-sabrent-usb4
+  kategoria: enclosure
+  nev: "Acasis USB4 U.2 / M.2 házak, Sabrent USB4 ház"
+  kapacitas_tb: null
+  tipus: "USB4"
+  tartossag: {ip: null, eses: null, tbw: null, garancia_ev: null, plp: null}
+  sebesseg_mb_s: null
+  ar_huf: null
+  ar_eur: null
+  ar_per_tb: null
+  ar_forras: ["HU/EU megbízható boltban nem találtam (az ipon és az alternate.de nem listázza). Az Acasis USB4-U.2 ház csak a gyártói webshopban és piactereken kapható."]
+  linkek:
+    - {bolt: Acasis (gyártói webshop), url: "https://www.acasis.com/products/acasis-usb4-40gbps-type-c-to-2-5-inch-u-2sff-8639-nvme-ssd-enclosure"}
+  elonyok: []
+  hatranyok: ["Kevésbé ellenőrzött beszerzési csatorna; helyette az ICY DOCK MB307U-1VB ajánlott"]
+  ajanlas_szint: kozep
+---
+# 2. YAML-dokumentum: adatmegőrzés, "egy eszköz" opciók, kockázatszámítás, javaslat
+adatmegorzes_tenyek:
+  jedec_jesd218:
+    - "Kliens SSD: 1 év kikapcsolt állapotban 30 °C-on (használat közben 40 °C, napi 8 óra)"
+    - "Enterprise SSD: 3 hónap kikapcsolt állapotban 40 °C-on (használat közben 55 °C, napi 24 óra)"
+    - "Ezek MINIMUM értékek egy élettartama végén járó (a teljes TBW-t elhasznált) meghajtóra. Egy friss, keveset írt meghajtó jellemzően sokkal tovább megőrzi az adatot, de ezt semmi nem garantálja."
+  homerseklet: "A kikapcsolt megőrzési idő a tárolási hőmérséklettel meredeken csökken. A JEDEC-táblázatok (Cox, FMS; AnandTech) szerint +5 °C nagyjából felezi. Tárolás: hűvös helyen (15-20 °C), nem padláson vagy autóban."
+  tlc_vs_qlc: "A QLC 16 feszültségszintet tárol cellánként (a TLC 8-at), kisebb a hibahatár, és kevesebb P/E ciklust bír. Hosszú kikapcsolt archiválásra a TLC a jobb (pl. 9100 PRO, 870 EVO, Micron 6550 ION, Kioxia CD8P); QLC: 870 QVO, Solidigm D5-P5336, Kioxia LC9."
+  gyakorlat:
+    - "3-6 havonta kapcsold be (enterprise QLC-t 3 havonta), és OLVASS VÉGIG MINDENT. A puszta bekapcsolás nem frissíti a cellákat; a teljes olvasáskor a vezérlő felismeri a gyengülő blokkokat és áthelyezi őket."
+    - "ZFS (zpool scrub) vagy Btrfs (btrfs scrub): checksum minden blokkon, tükör/RAIDZ esetén önjavítás"
+    - "exFAT/NTFS-en: sha256sum manifest + par2 (kb. 10% redundancia) a nagy fájlokhoz (ZIM, modellek)"
+    - "Legalább 2 független példány, eltérő gyártótól/vezérlőtől; ebből 1 offline"
+  forrasok:
+    - "https://www.anandtech.com/show/9248/the-truth-abou"
+    - "https://www.dell.com/support/kbdoc/en-ca/000198930/ssd-data-retention-considerations-when-powering-off-systems-for-a-prolonged-duration"
+    - "https://community.solidigm.com/hzhwu46669/attachments/hzhwu46669/Solid_State_Drives/3096/1/App_note_SSD_Data_retention.pdf"
+    - "https://files.futurememorystorage.com/proceedings/2011/20110810_T1B_Cox.pdf"
+
+egy_eszkoz_opciok:   # (a) a legsűrűbb egyetlen-SSD megoldás kapacitásonként
+  - szint: "8TB"
+    opciok:
+      - "SanDisk Extreme 8TB: 565 589 Ft (ipon, mért). Buszról táplált, néhány W, nem kell hűtés. IP65, 3 m esés."
+      - "Crucial X10 8TB: IP65, 2 GB/s. Itthon nem találtam árat."
+      - "Samsung T5 EVO 8TB: 1 879 EUR (alternate, mért). Lassú, nem strapabíró."
+      - "Samsung 9100 PRO 8TB + OWC Express 1M2 = 868 089 + 56 590 = 924 679 Ft (ipon, mért). Kb. 7-9 W aktív, passzív hűtés. Nem vízálló, vízálló tokban kell tárolni."
+    megorzesi_kockazat: "Kliens SSD: JEDEC-minimum 1 év 30 °C-on; TLC (9100 PRO) jobb, a nem publikált/QLC NAND-ú típusok gyengébbek"
+  - szint: "16TB"
+    opciok:
+      - "Fogyasztói 16TB-os SSD-t nem találtam ellenőrzött boltban."
+      - "Kioxia CD8-P 15.36TB U.2 (ipon, 4 137 890 Ft, mért) + ICY DOCK MB307U-1VB (70 890 Ft, mért) = kb. 4 208 780 Ft. 20-25 W aktív, 30 W-os tápegység, ventilátor kell."
+      - "Olcsóbb: 2 db 8TB (lásd fent), de ez már 2 eszköz"
+    megorzesi_kockazat: "Enterprise JEDEC-minimum: 3 hónap 40 °C-on. A TLC miatt a valóságban jobb, de 3 havonta be kell kapcsolni és scrubolni."
+  - szint: "30.72TB"
+    opciok:
+      - "Solidigm D5-P5336 30.72TB: 1 921 854 Ft (senetic, mért, de NINCS raktáron, valószínűleg elavult listaár) + MB307U = kb. 1 992 744 Ft (becsült)"
+      - "Kioxia CD8P-R 30.72TB: 7 700 231 Ft (senetic, mért, nincs raktáron) + MB307U"
+    fogyasztas_hutes: "25 W max, kevesebb mint 5 W alapjáraton. Az MB307U passzív, ezért 40 mm-es vagy USB-s ventilátor ajánlott."
+    megorzesi_kockazat: "QLC + enterprise: a legnagyobb kikapcsolt kockázat; 3 havonta be kell kapcsolni és végig kell olvasni (USB4-en 30TB kb. 2.5-3 óra)"
+  - szint: "61.44TB"
+    opciok: ["Solidigm D5-P5336 61.44TB: 7 090.99 EUR, azaz kb. 2.59 M Ft (e-nitiative, becsült keresőtalálat, valószínűleg elavult) + MB307U", "Micron 6550 ION 61.44TB (TLC!): nincs ár"]
+  - szint: "122.88TB"
+    opciok: ["Solidigm D5-P5336 122.88TB: 23 903-54 633 USD, azaz kb. 7.9-18.1 M Ft (becsült, keresőtalálat) + MB307U"]
+  - usb4_u2_haz_letezik: "IGEN: ICY DOCK MB307U-1VB (USB4 40 Gbps, U.2/U.3, 15mm), alternate.de 193.90 EUR, mért: https://www.alternate.de/Icy-Dock/MB307U-1VB-Adapter/html/product/100194424"
+
+egy_vs_ket_peldany:   # (b) számszerűsített válasz
+  bemenetek:
+    - "Backblaze SSD (boot meghajtók), élettartam-AFR kb. 0.9%/év (2018 Q4 - 2023 Q2): https://www.theregister.com/2023/09/26/ssd_failure_report_backblaze"
+    - "Backblaze HDD, 2024-es negyedéves AFR 1.35-1.89%: https://backblaze.com/blog/backblaze-drive-stats-for-2024"
+    - "JEDEC kikapcsolt megőrzés: kliens 1 év / enterprise 3 hónap (élettartam végén)"
+  egy_ssd: "Csak hardverhiba miatt kb. 4.4% esély az adatvesztésre 5 év alatt (1-(1-0.009)^5). Ehhez jön minden, amit az AFR nem tartalmaz: törlés, ransomware, lopás, tűz, víz, túlfeszültség, sorozathibás firmware (lásd SanDisk 2023), és a kikapcsolt állapotú adatvesztés, ha 1 évnél tovább nincs bekapcsolva. A valós kockázat ezért inkább 5-10% / 5 év."
+  ssd_plusz_offline_masolat: "Független hibákat, negyedéves ellenőrzést és 2 hetes cserét feltételezve: a fő példány évente kb. 0.9% eséllyel hal meg. Annak esélye, hogy a másolat épp akkor rejtetten halott vagy a csere alatt hal meg, kb. 1.6% x (0.125 + 14/365) = kb. 0.26%. Együtt kb. 0.0023%/év, azaz kb. 0.01% 5 év alatt. Ez kb. 400-szor kisebb kockázat, és a másolat offline volta a ransomware, a túlfeszültség és a véletlen törlés ellen is véd."
+  kovetkeztetes: "Az egyetlen eszköz kompromisszumként csak akkor elfogadható, ha mellette van legalább 1 offline, más gyártótól származó másolat (HDD vagy SSD). 'Soha ne vesszen el' = minimum 2 példány, ebből 1 offline + checksum + scrub."
+
+ket_eszkozos_minimal_setup:   # (c) egyszeres hiba + víz/ütés + EMP ellen
+  elv: "A: aktív, strapabíró példány (IP65, ütésálló). B: offline példány MÁS gyártótól, Faraday-zsákban, egy zárt fémdobozban (kettős árnyékolás), szivacsbetéttel ütés ellen, vízzáró tömítéssel. Nincs rajta kábel. Ellenőrzés: egy bent lévő telefonnak nem szabad térerőt kapnia."
+  szint_8tb:
+    A: "SanDisk Extreme 8TB: 565 589 Ft (ipon, mért), IP65, 3 m esés"
+    B: "Samsung 9100 PRO 8TB + OWC Express 1M2: 924 679 Ft (ipon, mért). Más gyártó és vezérlő, és USB4-en gyors a teljes olvasás. Olcsóbb B: egy 8TB-os HDD (lásd a HDD-kutatást; referencia: Seagate Exos 7E10 8TB 433 EUR, alternate.de, mért, belső SATA)."
+    faraday: "Mission Darkness Faraday-zsák: kb. 78-310 EUR (datawaysecurity.com, becsült keresőtalálat), pl. https://www.datawaysecurity.com/faraday-bags-for-large-electronic/93-mission-darkness-padded-utility-faraday-bag.html"
+    osszesen: "kb. 1.49 M Ft + Faraday-zsák és doboz"
+  szint_30tb:
+    A: "Solidigm D5-P5336 30.72TB + ICY DOCK MB307U-1VB: kb. 1.99 M Ft (becsült, nincs raktáron)"
+    B: "Ugyanez, vagy a költség töredékéért HDD-k (lásd a HDD-kutatást). 2 db SSD-vel kb. 4 M Ft listaáron; a valós 2026-os ár ennek a többszöröse lehet."
+    megjegyzes: "A 30-120TB-os all-flash archívum 2026-ban TB-onként 60-270 ezer Ft (ellenőrzött in-stock: kb. 270 ezer Ft/TB). Az SSD + HDD hibrid sokkal racionálisabb."
+
+javaslat:
+  gaming_pc_munkameghajto_llm:
+    profi: "Samsung 9100 PRO 8TB (hűtőbordás MZ-VAP8T0CW), ipon 868 089 Ft (mért); vagy alternate.de ajánlatkéréssel kb. 706 600 Ft + UPS (becsült, magyar áfával). A CPU-ra kötött Gen5 M.2_1 slotba kerüljön. Egy 700GB-os modell kb. 50 s alatt töltődik be. A meglévő Kingston 4TB marad második meghajtónak."
+    kozep: "Crucial T705 4TB, ipon 301 890 Ft (75 473 Ft/TB, mért), vagy Samsung 9100 PRO 4TB hűtőbordás 319 990 Ft. A meglévő Kingston 4TB-tal együtt 8TB Gen5, két különböző gyártótól."
+    megjegyzes: "A modellek olvasás-túlsúlyosak, így a TBW mellékes. A munkameghajtó NEM archívum, mindenről legyen külső másolat."
+  gyors_hordozhato_masolat:
+    profi: "8TB M.2 (pl. 9100 PRO 8TB) + OWC Express 1M2 USB4: kb. 924 700 Ft (ipon, mért), kb. 3.8 GB/s a PC és a ZBook USB4 portján. Strapabíró alternatíva: SanDisk Extreme PRO V2 4TB, 426 890 Ft (IP65, 2 GB/s)."
+    kozep_olcso: "SanDisk Extreme 8TB, ipon 565 589 Ft (70 699 Ft/TB, IP65, 3 m). A telefonokhoz elég (iPhone 15 Pro 10 Gbps, kb. 1 GB/s; S24 Ultra 5 Gbps, kb. 450 MB/s). Vásárlás után azonnal firmware-frissítés. Legolcsóbb kis tétel: Kingston XS2000 2TB, 109 090 Ft."
+  enterprise_30_120tb_all_flash:
+    olcsobb_qlc: "Solidigm D5-P5336 30.72TB U.2 (senetic.hu ajánlatkérés; listaár 1 921 854 Ft/db, nincs raktáron, a valós ár valószínűleg magasabb). 4 db = 122.88TB, kb. 7.7 M Ft listaáron. Bekötés: Delock PCIe x16 -> U.2 kártya (64.90 EUR) / M.2 -> U.2 adapter (74.90 EUR), vagy HighPoint Rocket 1628A (1 679 EUR), ventilátorral. Hordozható: ICY DOCK MB307U-1VB (193.90 EUR)."
+    profi_tlc: "Kioxia CD8-P 15.36TB (ipon, rendelhető, 4 137 890 Ft/db, mért): 2 db = 30.72TB, kb. 8.3 M Ft; 8 db = 122.88TB, kb. 33.1 M Ft. TLC + PLP + Gen5, de ZFS RAIDZ/tükör és ventilátoros ház kell."
+    oszinte_ertekeles: "2026 novemberében az all-flash 30TB fölött TB-onként a fogyasztói Gen5 2.5-szerese, a HDD-nek pedig a sokszorosa. Ajánlás: 8TB Gen5 forró réteg + HDD tömegtár + második offline másolat. All-flash csak akkor, ha a költségvetés ezt indokolja."

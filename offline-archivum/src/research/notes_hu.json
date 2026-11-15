@@ -1,0 +1,1150 @@
+{
+"notes": {
+"debian-13-amd64-bd-jigdo-set": [
+"jigdo-lite downloads packages from a normal mirror and rebuilds the ISOs; there are no direct BD ISO downloads (only edu BD torrent). Alternative: 27-disc DVD jigdo set at jigdo-dvd/. Images >4 GB: use exFAT/ext4, not FAT32. Also grab arm64 set for Raspberry Pi/ARM boards.",
+"A jigdo-lite egy normál tükörről tölti le a csomagokat, és újraépíti az ISO-kat; közvetlen BD ISO-letöltés nincs (csak az edu BD torrent). Alternatíva: a 27 lemezes DVD jigdo-készlet a jigdo-dvd/ alatt. A 4 GB-nál nagyobb képfájlokhoz exFAT/ext4 kell, nem FAT32. Az arm64-készletet is töltsd le Raspberry Pi/ARM lapokhoz."
+],
+"debian-13-amd64-dvd1-iso": [
+"Fits FAT32 (<4 GiB) so works on any USB stick/Ventoy. Netinst (756 MB) is useless offline.",
+"Belefér a FAT32 korlátjába (<4 GiB), így bármilyen USB-meghajtón/Ventoyjal működik. A netinst (756 MB) offline használhatatlan."
+],
+"debian-13-source-bd-jigdo-set": [
+"Pair with the binary set; lets you rebuild any package (dpkg-buildpackage) for a new architecture.",
+"A bináris készlettel együtt tartsd meg; vele bármely csomag újraépíthető (dpkg-buildpackage) új architektúrára."
+],
+"apt-mirror-debmirror": [
+"debmirror can filter by dist/section/arch and include sources. Add an apt-cacher-ng or simple nginx to serve LAN clients.",
+"A debmirror disztribúcióra/szekcióra/architektúrára szűrhet, és a forráscsomagokat is letöltheti. A LAN-kliensek kiszolgálásához tegyél mellé apt-cacher-ng-t vagy egy egyszerű nginx-et."
+],
+"ubuntu-26041-desktop-iso": [
+"Exceeds FAT32 4 GiB limit: use Ventoy with exFAT or dd to USB. Offline extra packages need a separate apt mirror.",
+"Túllépi a FAT32 4 GiB-os korlátját: használj Ventoyt exFAT-tal, vagy írd USB-re dd-vel. Az offline extra csomagokhoz külön apt-tükör kell."
+],
+"alpine-3244-extended-iso": [
+"Extended ISO contains the most common packages for offline install. Full Alpine package mirror via rsync is also possible (size unverified).",
+"Az extended ISO tartalmazza a leggyakoribb csomagokat offline telepítéshez. A teljes Alpine-csomagtükör rsync-kel is letölthető (a méret nem ellenőrzött)."
+],
+"raspberry-pi-os-full-arm64": [
+"Flash with Raspberry Pi Imager or dd; expands to ~8+ GB. Keep the matching arm64 Debian packages for offline extras.",
+"Raspberry Pi Imagerrel vagy dd-vel írd ki; ~8+ GB-ra bővül. Az offline extrákhoz tartsd meg a hozzá illő arm64 Debian-csomagokat."
+],
+"freedos-14": [
+"Useful for legacy industrial machines and very old hardware; includes compilers (OpenWatcom, FreeBASIC) in Bonus CD.",
+"Régi ipari gépekhez és nagyon régi hardverhez hasznos; a Bonus CD fordítóprogramokat is tartalmaz (OpenWatcom, FreeBASIC)."
+],
+"linux-kernel-source": [
+"Unpacked ~1.6 GB. Full git history (git clone) is several GB; tarball is enough for archive. Prefer the LTS for long-term use.",
+"Kicsomagolva ~1,6 GB. A teljes git-előzmény (git clone) több GB; archiváláshoz elég a tarball. Hosszú távú használatra az LTS-t válaszd."
+],
+"gcc-source": [
+"Also archive binutils, glibc, make, gmp/mpfr/mpc (download_prerequisites needs internet). Consider all of ftp.gnu.org/gnu (whole GNU project, size unverified).",
+"A binutils, glibc, make és gmp/mpfr/mpc csomagokat is archiváld (a download_prerequisites internetet igényel). Érdemes lehet a teljes ftp.gnu.org/gnu könyvtárat is menteni (a teljes GNU projekt, a méret nem ellenőrzött)."
+],
+"llvm-project-source": [
+"GitHub release assets and API were blocked (403) from this environment; tag existence verified with git ls-remote. Use 'git clone --depth 1 --branch llvmorg-23.1.5'.",
+"A GitHub release-fájlok és az API ebből a környezetből blokkolva voltak (403); a tag meglétét git ls-remote-tal ellenőriztük. Használd ezt: „git clone --depth 1 --branch llvmorg-23.1.5”."
+],
+"python-source-and-docs": [
+"3.16.0 also exists; 3.15 is the more mature line. Docs zip opens in any browser.",
+"A 3.16.0 is létezik; a 3.15 az érettebb ág. A dokumentációs ZIP bármely böngészőben megnyitható."
+],
+"pypi-full-mirror-bandersnatch": [
+"Use bandersnatch allowlist plugin (e.g. top ~5,000 packages, latest versions only, platform filters) to get to ~100-500 GB (estimated). Alternative: 'pip download -r requirements.txt' for a curated set.",
+"A bandersnatch allowlist pluginjával (pl. a top ~5000 csomag, csak a legújabb verziók, platformszűrők) ~100–500 GB-ra csökkenthető (becsült). Alternatíva válogatott készlethez: „pip download -r requirements.txt”."
+],
+"cran-mirror": [
+"Official recommendation: mirror over SSH tunnel. Can exclude old binaries (bin/windows, bin/macosx) to cut size substantially.",
+"Hivatalos ajánlás: SSH-alagúton keresztül tükrözz. A régi binárisok (bin/windows, bin/macosx) kihagyásával a méret jelentősen csökkenthető."
+],
+"crates-io-mirror": [
+"Panamax mirrors both rustup toolchains and crates. Exact full mirror size not published; plan for several hundred GB.",
+"A Panamax a rustup eszközláncokat és a crate-eket is tükrözi. A teljes tükör pontos mérete nincs közzétéve; több száz GB-tal számolj."
+],
+"software-heritage-graph": [
+"Metadata/graph only: file blobs must be requested separately. For actual code, better to git clone key repos yourself. Low survival value. GitHub Archive Program (Arctic Code Vault, archiveprogram.github.com, 200 verified) is physical film storage and not downloadable.",
+"Csak metaadat/gráf: a fájltartalmakat (blobokat) külön kell lekérni. Tényleges kódhoz jobb, ha a fontos repókat magad klónozod git clone-nal. Csekély túlélési érték. A GitHub Archive Program (Arctic Code Vault, archiveprogram.github.com, 200, ellenőrizve) fizikai filmes tárolás, nem tölthető le."
+],
+"devdocs-offline": [
+"Browser offline mode stores docs in IndexedDB (fragile). For a real archive self-host with 'thor docs:download --all'. Alternative desktop viewer: Zeal (zealdocs.org, git tag v0.9.2 verified) with Dash docsets (sizes unverified).",
+"A böngésző offline módja IndexedDB-ben tárolja a dokumentációt (sérülékeny). Valódi archívumhoz futtasd saját szerveren: „thor docs:download --all”. Alternatív asztali megjelenítő: Zeal (zealdocs.org, a v0.9.2 git tag ellenőrizve) Dash docsetekkel (a méretek nem ellenőrzöttek)."
+],
+"whisper-cpp-models": [
+"Hungarian accuracy is good only with medium/large models. large-v3-turbo-q5_0 is the best size/quality compromise (~2 GB RAM). Alternative: Systran/faster-whisper-large-v3 (3.09 GB, CTranslate2).",
+"Magyar nyelven csak a medium/large modellek pontossága jó. A large-v3-turbo-q5_0 a legjobb méret/minőség kompromisszum (~2 GB RAM). Alternatíva: Systran/faster-whisper-large-v3 (3,09 GB, CTranslate2)."
+],
+"firefox-translations-bergamot": [
+"Repo last commit 2025-12; newer models moved to Mozilla remote-settings. Needs bergamot-translator or translateLocally to run outside Firefox. Requires git-lfs.",
+"A repó utolsó commitja 2025-12-es; az újabb modellek a Mozilla remote-settings szolgáltatásába kerültek. Firefoxon kívüli futtatáshoz bergamot-translator vagy translateLocally kell. git-lfs szükséges."
+],
+"nllb-200": [
+"Repo includes duplicate weight formats; download only one. Non-commercial license.",
+"A repó duplikált súlyformátumokat tartalmaz; csak egyet tölts le. Nem kereskedelmi licenc."
+],
+"tesseract-ocr-tessdata": [
+"Also in Debian (tesseract-ocr-hun). Combine with OCRmyPDF for searchable PDFs.",
+"Debianban is megvan (tesseract-ocr-hun). Kereshető PDF-ekhez kombináld az OCRmyPDF-fel."
+],
+"geofabrik-hungary-pbf": [
+"Host blocked by proxy here; verify on download. Alternatively cut from europe pbf: 'osmium extract -b 16,45.7,22.9,48.6'.",
+"A hosztot itt blokkolta a proxy; letöltéskor ellenőrizd. Alternatívaként vágd ki az európai pbf-ből: „osmium extract -b 16,45.7,22.9,48.6”."
+],
+"osmand-hungary-maps": [
+"Country-level Hungary_europe_2.obf was retired (deleted_map 2026-09-09) in favor of regions. Install OsmAnd APK from F-Droid. Organic Maps is a simpler alternative.",
+"Az országos Hungary_europe_2.obf fájlt visszavonták (deleted_map 2026-09-09) a regionális fájlok javára. Az OsmAnd APK-t F-Droidról telepítsd. Az Organic Maps egyszerűbb alternatíva."
+],
+"protomaps-planet-pmtiles": [
+"Builds rotate (old dates disappear). 'pmtiles extract --bbox' gives a Hungary file of a few hundred MB (estimated). Used by Project NOMAD. MapTiler/OpenMapTiles planet MBTiles (data.maptiler.com/downloads/planet/, 200 verified) needs a commercial license; Protomaps is the free substitute.",
+"A buildek rotálódnak (a régi dátumok eltűnnek). A „pmtiles extract --bbox” néhány száz MB-os magyarországi fájlt ad (becsült). A Project NOMAD is ezt használja. A MapTiler/OpenMapTiles teljes bolygós MBTiles (data.maptiler.com/downloads/planet/, 200, ellenőrizve) kereskedelmi licencet igényel; a Protomaps az ingyenes helyettesítője."
+],
+"copernicus-dem-glo30-glo90": [
+"No registration needed on AWS (unlike ESA PANDA portal). Each tile folder also has AUXFILES (water/edit masks) not counted. GLO-90 is the practical global choice; GLO-30 for home region. Smaller alternative: CGIAR SRTM v4.1 90 m 5x5-degree tiles, e.g. https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/srtm_40_03.zip (32.0 MB measured; non-commercial terms).",
+"Az AWS-en nem kell regisztráció (szemben az ESA PANDA portállal). Minden csempemappában AUXFILES fájlok is vannak (víz-/szerkesztési maszkok), ezek nincsenek beszámítva. A GLO-90 a praktikus globális választás; a GLO-30 a saját régióhoz. Kisebb alternatíva: CGIAR SRTM v4.1 90 m-es, 5x5 fokos csempék, pl. https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/srtm_40_03.zip (32,0 MB, mért; nem kereskedelmi feltételek)."
+],
+"gebco-2026-grid": [
+"Not for navigation safety-critical use (not a nautical chart). Sub-ice and TID grids also available.",
+"Biztonságkritikus navigációra nem alkalmas (nem tengerészeti térkép). Jég alatti (sub-ice) és TID rácsok is elérhetők."
+],
+"hydrosheds": [
+"Rivers include discharge estimates and stream order, useful for micro-hydro siting.",
+"A folyóadatok vízhozam-becslést és vízfolyásrendet is tartalmaznak, ami a törpe vízerőművek helyének kiválasztásához hasznos."
+],
+"soilgrids-1km": [
+"250 m native data (data/ folder) is VRT tiles and much larger (multi-TB, unverified). 1 km is enough for regional planning; local soil testing still needed.",
+"A 250 m-es natív adat (data/ mappa) VRT-csempékből áll, és jóval nagyobb (több TB, nem ellenőrzött). Regionális tervezéshez elég az 1 km-es; helyi talajvizsgálat így is szükséges."
+],
+"worldclim-21": [
+"2.5' resolution is plenty for crop zone decisions. Future CMIP6 projections also available.",
+"A 2,5'-es felbontás bőven elég a termesztési zónákkal kapcsolatos döntésekhez. Jövőbeli CMIP6-előrejelzések is elérhetők."
+],
+"onegeology-portal": [
+"TLS certificate verification failed from this environment. Mostly online services; for offline use, download national data (e.g. Hungarian MBFSZ 1:100k maps) separately or GLiM global lithology.",
+"Ebből a környezetből a TLS-tanúsítvány ellenőrzése sikertelen volt. Főleg online szolgáltatások; offline használathoz töltsd le külön a nemzeti adatokat (pl. a magyar MBFSZ 1:100k térképeket) vagy a GLiM globális kőzettani térképet."
+],
+"stellarium-star-catalogs": [
+"Default install includes stars to mag ~10.5, enough for navigation; extra catalogs only for deep sky. Pair with printed nautical almanac tables.",
+"Az alaptelepítés kb. 10,5 magnitúdóig tartalmazza a csillagokat, ami navigációhoz elég; az extra katalógusok csak mélyég-megfigyeléshez kellenek. Egészítsd ki nyomtatott tengerészeti almanach-táblázatokkal."
+],
+"qgis": [
+"Includes GDAL/OGR command line tools. Archive the PDF user manual too.",
+"Tartalmazza a GDAL/OGR parancssori eszközöket. A PDF felhasználói kézikönyvet is archiváld."
+],
+"enwiki-pages-articles-xml": [
+"Raw wikitext needs a renderer; for reading, Kiwix ZIM is easier (listed elsewhere). Multistream + index allows random access without full decompression (~100 GB uncompressed). Torrents available.",
+"A nyers wikiszöveghez renderelő kell; olvasáshoz a Kiwix ZIM egyszerűbb (máshol szerepel). A multistream + index teljes kicsomagolás nélkül is lehetővé teszi a tetszőleges hozzáférést (kicsomagolva ~100 GB). Torrentek is elérhetők."
+],
+"huwiki-pages-articles-xml": [
+"Small enough to keep alongside ZIM version for full-text processing.",
+"Elég kicsi ahhoz, hogy a ZIM-változat mellett teljes szöveges feldolgozáshoz is megtartsd."
+],
+"wikidata-json-dump": [
+"Needs a database (QLever, Blazegraph, or custom) to be useful; uncompressed >1.5 TB (estimated). Truthy dump is the more practical choice.",
+"Csak adatbázissal (QLever, Blazegraph vagy saját megoldás) használható; kicsomagolva >1,5 TB (becsült). A truthy dump a praktikusabb választás."
+],
+"wikimedia-commons-note": [
+"No bulk media dump exists. Select categories via API or rely on ZIM files with images.",
+"Tömeges médiadump nem létezik. Válassz kategóriákat az API-n keresztül, vagy hagyatkozz a képeket tartalmazó ZIM-fájlokra."
+],
+"pmc-open-access-s3": [
+"Legacy FTP oa_bulk tarballs were removed in Aug 2026; now only per-article S3 objects (organized by PMCID). Filter to text/XML to keep size manageable.",
+"A régi FTP oa_bulk tarballokat 2026 augusztusában eltávolították; most már csak cikkenkénti S3-objektumok vannak (PMCID szerint rendezve). A kezelhető méret érdekében szűrj szövegre/XML-re."
+],
+"openalex-snapshot": [
+"No registration needed. Metadata/abstracts only; links to OA full texts are online. Semantic Scholar datasets (api.semanticscholar.org/datasets/v1/release/latest, 200 verified) need a free API key; OpenAlex covers most metadata without one.",
+"Nem kell regisztráció. Csak metaadatok/absztraktok; az OA teljes szövegekre mutató linkek online érhetők el. A Semantic Scholar adatkészleteihez (api.semanticscholar.org/datasets/v1/release/latest, 200, ellenőrizve) ingyenes API-kulcs kell; az OpenAlex kulcs nélkül is lefedi a metaadatok nagy részét."
+],
+"common-crawl-note": [
+"Only WET text of a filtered language subset (e.g. Hungarian) might be useful for training; skip for archive.",
+"Legfeljebb egy szűrt nyelvi részhalmaz (pl. a magyar) WET-szövege lehet hasznos modelltanításhoz; archívumhoz hagyd ki."
+],
+"internet-archive-note": [
+"Use 'ia download --glob=*.pdf' and per-item torrents. Check rights; controlled-lending books are not downloadable.",
+"Használd az „ia download --glob=*.pdf” parancsot és az elemenkénti torrenteket. Ellenőrizd a jogokat; a kölcsönzéses (controlled lending) könyvek nem tölthetők le."
+],
+"zim-tools": [
+"Use zimcheck -A to verify downloaded ZIMs before trusting them. zimit/warc2zim make ZIMs from websites.",
+"A letöltött ZIM-eket a zimcheck -A paranccsal ellenőrizd, mielőtt megbíznál bennük. A zimit/warc2zim weboldalakból készít ZIM-et."
+],
+"project-nomad": [
+"Requires Debian/Ubuntu + Docker; install script pulls images from internet, so set up beforehand and save images (docker save). AI features want a GPU.",
+"Debian/Ubuntu + Docker kell; a telepítőszkript az internetről húzza le az image-eket, ezért előre állítsd be, és mentsd el az image-eket (docker save). Az MI-funkciókhoz GPU ajánlott."
+],
+"kolibri-khan-academy": [
+"Import channels to a Kolibri server before collapse, then export to USB drive ('Export to drive') for sneakernet. Video-heavy; partial topic import possible.",
+"Az összeomlás előtt importáld a csatornákat egy Kolibri-szerverre, majd exportáld őket USB-meghajtóra („Export to drive”) a hálózat nélküli, kézről kézre (sneakernet) terjesztéshez. Sok benne a videó; részleges, témánkénti import is lehetséges."
+],
+"calibre": [
+"Use calibre-server for LAN access; Calibre-Web is a lighter alternative included in IIAB.",
+"LAN-hozzáféréshez használd a calibre-servert; a Calibre-Web könnyebb alternatíva, az IIAB része."
+],
+"navedtra-trade-manuals-everyspec": [
+"EverySpec has only ~35 NAVEDTRA titles. Builder (14043/14044), Machinery Repairman (12204), Utilitiesman, Engineering Aid and Construction Mechanic are missing there; get them from archive.org (e.g. https://archive.org/details/navedtra-14081-equipment-operator-basic-1994, navedtra-14050-construction-mechanic-advanced-1992; search title:navedtra = 41 hits). tpub.com has HTML versions of almost all of them. Download per PDF page with a polite wget and a browser user agent.",
+"Az EverySpec-en csak ~35 NAVEDTRA-cím van. A Builder (14043/14044), Machinery Repairman (12204), Utilitiesman, Engineering Aid és Construction Mechanic hiányzik onnan; ezeket az archive.org-ról szerezd be (pl. https://archive.org/details/navedtra-14081-equipment-operator-basic-1994, navedtra-14050-construction-mechanic-advanced-1992; a title:navedtra keresés 41 találatot ad). A tpub.com-on szinte mindegyik megvan HTML-ben. PDF-oldalanként tölts le, kíméletes wgettel és böngésző user agenttel."
+],
+"neets-navy-electricity-electronics": [
+"Download only the PDFs: ia download neetsmodules_202003 --glob='*.pdf'. Do not take the jp2.zip files. Alternate item: navy-electricity-and-electronics-training-series-mod-14 (24 PDFs, 59 MB). The modules are also listed individually on EverySpec.",
+"Csak a PDF-eket töltsd le: ia download neetsmodules_202003 --glob='*.pdf'. A jp2.zip fájlokat ne. Alternatív elem: navy-electricity-and-electronics-training-series-mod-14 (24 PDF, 59 MB). A modulok egyenként is szerepelnek az EverySpec-en."
+],
+"machinerys-handbook-1924-pd": [
+"A 1914 first edition was not found on archive.org; the 1924 6th edition is the oldest full PD scan found. Also: machineryshandbo0000vari (1930, 71 MB PDF; may still be in copyright, not checked). Some data (materials, standards) is out of date but fine for low-tech rebuilding.",
+"Az 1914-es első kiadást nem találtuk az archive.org-on; az 1924-es 6. kiadás a legrégebbi teljes közkincs (PD) szkennelés. Továbbá: machineryshandbo0000vari (1930, 71 MB PDF; lehet, hogy még jogvédett, nem ellenőriztük). Egyes adatok (anyagok, szabványok) elavultak, de alacsony technológiájú újjáépítéshez megfelelnek."
+],
+"machinerys-handbook-32nd-paid": [
+"Prices come from retailer listings (Penn Tool, IndiePubs), not the publisher site. The Digital Edition is DRM/online, so prefer print for offline. Older editions (e.g. 1992) are lending-only on archive.org (machineryshandbo0000unse_c3g0).",
+"Az árak kiskereskedői listákból származnak (Penn Tool, IndiePubs), nem a kiadó oldaláról. A Digital Edition DRM-es/online, ezért offline használatra a nyomtatott változatot válaszd. A régebbi kiadások (pl. 1992) az archive.org-on csak kölcsönözhetők (machineryshandbo0000unse_c3g0)."
+],
+"us-army-tc-9-524-machine-tools": [
+"Other scans exist: tc9-524_202010, tc-9-524-fundamentals-of-machine-tools-1996, machinist_202001.",
+"Más szkennelések is vannak: tc9-524_202010, tc-9-524-fundamentals-of-machine-tools-1996, machinist_202001."
+],
+"south-bend-how-to-run-a-lathe-1934": [
+"Use the _text.pdf for low-power devices. Other editions on archive.org: howtorunlathecar00sout (1958), howtorunlathe0000jjob (1941).",
+"Gyenge teljesítményű eszközökön a _text.pdf-et használd. Más kiadások az archive.org-on: howtorunlathecar00sout (1958), howtorunlathe0000jjob (1941)."
+],
+"foundry-work-wendt-1923": [
+"A bigger companion for pattern-making is gri_33125000004859 'Modern moulding and pattern-making' (1907). It is a 4.9 GB item, so take only the PDF.",
+"Nagyobb kísérőkötet a mintakészítéshez: gri_33125000004859, „Modern moulding and pattern-making” (1907). Ez 4,9 GB-os elem, ezért csak a PDF-et töltsd le."
+],
+"practical-blacksmithing-richardson": [
+"The original work has 4 volumes. This item's metadata says '4 v.' but the PDF size suggests it may hold only part of them; check the contents. Another scan: practicalblacks03richgoog. Modern paid alternatives: Weygers 'The Complete Modern Blacksmith', Bealer 'The Art of Blacksmithing'.",
+"Az eredeti mű 4 kötetes. Az elem metaadatai szerint „4 v.”, de a PDF mérete alapján lehet, hogy csak egy részüket tartalmazza; ellenőrizd a tartalmat. Másik szkennelés: practicalblacks03richgoog. Modern, fizetős alternatívák: Weygers: „The Complete Modern Blacksmith”, Bealer: „The Art of Blacksmithing”."
+],
+"gingery-metal-shop-from-scrap": [
+"URGENT: the Gingery Book Store says it is retiring at the end of 2026 and will not reprint. Buy now. Book #1 'The Charcoal Foundry' was not on the listing page (may be out of stock); look for it from Lindsay Books or second hand. gingerybooks.com has a bad TLS certificate.",
+"SÜRGŐS: a Gingery Book Store közlése szerint 2026 végén megszűnik, és nem nyomtat újra. Vedd meg most. Az 1. kötet („The Charcoal Foundry”) nem szerepelt a listaoldalon (lehet, hogy elfogyott); keresd a Lindsay Booksnál vagy használtan. A gingerybooks.com TLS-tanúsítványa hibás."
+],
+"us-army-construction-fms": [
+"Carpentry: https://archive.org/download/FM_5_426_C_1995/FM%205-426%20Carpentry%20%281995%29.pdf ; Rigging: https://archive.org/details/fm-5-125-rigging-techniques-procedures-and-applications-1995 . armypubs.army.mil is reachable but may hold only newer superseding TMs (e.g. TM 3-34.47 Carpentry), not checked.",
+"Ácsmunka: https://archive.org/download/FM_5_426_C_1995/FM%205-426%20Carpentry%20%281995%29.pdf ; Kötélzet és emelés: https://archive.org/details/fm-5-125-rigging-techniques-procedures-and-applications-1995 . Az armypubs.army.mil elérhető, de lehet, hogy csak az ezeket felváltó újabb TM-eket tartalmazza (pl. TM 3-34.47 Carpentry); nem ellenőriztük."
+],
+"us-army-fm-5-34-engineer-field-data": [
+"1962 and 1976 editions are also on archive.org (FM_5_34_E_F_D_1962, FM_5_34_E_F_D_1976). Older editions have more improvised and low-tech material.",
+"Az 1962-es és az 1976-os kiadás is megvan az archive.org-on (FM_5_34_E_F_D_1962, FM_5_34_E_F_D_1976). A régebbi kiadásokban több a rögtönzött és alacsony technológiájú anyag."
+],
+"usda-fpl-wood-handbook-2021": [
+"The old fpl.fs.usda.gov/documnts/... URL returned 502; use the research.fs.usda.gov link. A 1935 edition is on archive.org (CAT10503670).",
+"A régi fpl.fs.usda.gov/documnts/... URL 502-t adott; a research.fs.usda.gov linket használd. Egy 1935-ös kiadás az archive.org-on van (CAT10503670)."
+],
+"usbr-design-of-small-dams": [
+"The 3rd edition (1987) and the Earth Manual are free at usbr.gov/tsc/techreferences/mands/, but usbr.gov timed out from here (blocked, unverified). archive.org also has 'Earth Manual' scans (earthmanual0000unse etc., possibly lending-only).",
+"A 3. kiadás (1987) és az Earth Manual ingyenes a usbr.gov/tsc/techreferences/mands/ címen, de a usbr.gov innen időtúllépéssel válaszolt (blokkolva, nem ellenőrzött). Az archive.org-on is vannak „Earth Manual” szkennelések (earthmanual0000unse stb., lehet, hogy csak kölcsönözhetők)."
+],
+"vita-village-technology-handbook": [
+"A USAID copy is pnaas277 (7.0 MB PDF). Many other VITA technical papers are inside CD3WD and the Village Earth ATL.",
+"Egy USAID-példány: pnaas277 (7,0 MB PDF). Sok más VITA műszaki tanulmány megtalálható a CD3WD-ben és a Village Earth ATL-ben."
+],
+"survivor-library": [
+"Category ZIPs were rebuilt in Aug-Sep 2026; per the site, users had download problems that were 'fixed (maybe)' on 2026-09-28. The Scientific American Series 2 ZIP alone is ~28 GB. The site also sells flash drives (store was being repaired). Many scans are low quality; there are many duplicates and it is poorly curated.",
+"A kategória-ZIP-eket 2026 augusztusában–szeptemberében újraépítették; az oldal szerint a felhasználók letöltési problémáit 2026-09-28-án „kijavították (talán)”. Önmagában a Scientific American Series 2 ZIP ~28 GB. Az oldal pendrive-okat is árul (a webbolt javítás alatt állt). Sok szkennelés gyenge minőségű, sok a duplikátum, és a gyűjtemény rosszul válogatott."
+],
+"village-earth-appropriate-technology-library": [
+"Only the USB is offered (no download). Content overlaps a lot with CD3WD, but the ATL is better curated and includes ITDG/Practical Action and VITA classics.",
+"Csak USB-n kapható (letöltés nincs). A tartalom nagyrészt átfedi a CD3WD-t, de az ATL jobban válogatott, és tartalmazza az ITDG/Practical Action és VITA klasszikusokat."
+],
+"practical-action-knowledge-centre": [
+"The Harvey Micro-Hydro Design Manual and Thake Pelton Turbine Manual are the key paid titles for micro-hydro. Many old ITDG briefs are already in CD3WD and ATL. Publishing site: https://practicalactionpublishing.com/ (200).",
+"A Harvey-féle Micro-Hydro Design Manual és a Thake-féle Pelton Turbine Manual a törpe vízerőművek kulcsfontosságú fizetős kiadványai. Sok régi ITDG-ismertető már benne van a CD3WD-ben és az ATL-ben. Kiadói oldal: https://practicalactionpublishing.com/ (200)."
+],
+"dartnell-the-knowledge": [
+"The archive.org item is access-restricted (lending only). Several unauthorized uploads exist on archive.org (gray), so do not use them. Buy print for the archive.",
+"Az archive.org-elem hozzáférése korlátozott (csak kölcsönzés). Az archive.org-on több jogosulatlan feltöltés is van (szürke zóna), ezeket ne használd. Az archívumba vedd meg nyomtatva."
+],
+"rogers-industrial-chemistry-1912": [
+"This is a Digital Library of India scan; OCR quality varies. A later edition (dli.ernet.19657, 1942) exists but may still be in copyright. A modern paid equivalent is Riegel's Handbook of Industrial Chemistry.",
+"Ez a Digital Library of India szkennelése; az OCR minősége változó. Létezik egy későbbi kiadás (dli.ernet.19657, 1942), de az még jogvédett lehet. Modern, fizetős megfelelője a Riegel's Handbook of Industrial Chemistry."
+],
+"organic-syntheses": [
+"No bulk download was found, and mass scraping may break the terms of use. Download selected procedures or Collective Volumes by hand. For lab technique, pair with Vogel's Textbook of Practical Organic Chemistry (paid, ~100+ USD).",
+"Tömeges letöltést nem találtunk, és a tömeges lementés sértheti a felhasználási feltételeket. A kiválasztott eljárásokat vagy a Collective Volumes köteteket kézzel töltsd le. Laboratóriumi technikához egészítsd ki a Vogel's Textbook of Practical Organic Chemistry kötettel (fizetős, ~100+ USD)."
+],
+"esha-small-hydropower-guide": [
+"Part 2: https://canyonhydro.com/images/Part_2_ESHA_Guide_on_how_to_develop_a_small_hydropower_plant.pdf . The skat.ch page hosts the 1998 Layman's Guidebook (Penche). It is aimed at 100 kW-10 MW; for under 100 kW pair it with Practical Action micro-hydro books.",
+"2. rész: https://canyonhydro.com/images/Part_2_ESHA_Guide_on_how_to_develop_a_small_hydropower_plant.pdf . A skat.ch oldalon található az 1998-as Layman's Guidebook (Penche). 100 kW–10 MW teljesítményre szól; 100 kW alatt egészítsd ki a Practical Action törpe vízerőműves könyveivel."
+],
+"piggott-wind-turbine-recipe-book": [
+"The author's page says a Hungarian PDF exists on request through the contact page, which is directly useful for this archive. The 2001 'PMG construction manual' is a free PDF. No mailing to the EU; use the Stripe option or the EU resellers.",
+"A szerző oldala szerint a kapcsolatfelvételi oldalon kérésre magyar PDF is igényelhető, ami ennek az archívumnak közvetlenül hasznos. A 2001-es „PMG construction manual” ingyenes PDF. Az EU-ba nem postáz; használd a Stripe-os fizetést vagy az uniós viszonteladókat."
+],
+"radio-amateurs-handbook-1926": [
+"Also on archive.org: TM 11-666 Antennas and Radio Propagation (1953, tm11666departmen00depa, 21.9 MB PDF) and FM 24-18 radio techniques. 1930s-40s handbooks exist but their copyright status is unclear.",
+"Szintén az archive.org-on: TM 11-666 Antennas and Radio Propagation (1953, tm11666departmen00depa, 21,9 MB PDF) és az FM 24-18 (rádiós technikák). Léteznek 1930–40-es évekbeli kézikönyvek is, de jogi státuszuk tisztázatlan."
+],
+"arrl-handbook-current": [
+"The current edition's price was not confirmed (search found only older-edition prices). The ARRL Antenna Book (paid) is a good companion.",
+"A jelenlegi kiadás árát nem sikerült megerősíteni (a keresés csak régebbi kiadások árait találta). Jó kiegészítő az ARRL Antenna Book (fizetős)."
+],
+"bowditch-american-practical-navigator-2024": [
+"The official source msi.nga.mil returned 503 from here (blocked). The mirror uses mod_security: wget/curl need a browser User-Agent or they get 406. Vol2: .../Volume_2/Bowditch_Vol_2_2024.pdf ; LoRes: .../Volume_1/Bowditch_Vol_1_LoRes_2024.pdf. The 2002, 2017 and 2019 editions are mirrored there too.",
+"A hivatalos forrás, az msi.nga.mil innen 503-at adott (blokkolva). A tükör mod_securityt használ: a wgetnek/curlnek böngésző User-Agent kell, különben 406-ot kapnak. 2. kötet: .../Volume_2/Bowditch_Vol_2_2024.pdf ; kis felbontású változat: .../Volume_1/Bowditch_Vol_1_LoRes_2024.pdf. A 2002-es, 2017-es és 2019-es kiadás is tükrözve van ott."
+],
+"nautical-almanac-and-sight-reduction-tables": [
+"Use a browser User-Agent (mod_security). Pub 229: https://thenauticalalmanac.com/Pub_No_229/Pub229Vol1.pdf ... Vol6.pdf. Long-term tables: /Tables/TABLE_4-_GHA_and_Declination_of_the_Sun_for_the_Years_2001_to_2036.pdf and /GHA_Aries_Long_Term/GHA_Aries_2022_to_2030.pdf. The official HMNAO/USNO printed Nautical Almanac costs ~40-60 USD per year (estimate). Download future-year almanacs while they are available.",
+"Használj böngésző User-Agentet (mod_security). Pub 229: https://thenauticalalmanac.com/Pub_No_229/Pub229Vol1.pdf ... Vol6.pdf. Hosszú távú táblázatok: /Tables/TABLE_4-_GHA_and_Declination_of_the_Sun_for_the_Years_2001_to_2036.pdf és /GHA_Aries_Long_Term/GHA_Aries_2022_to_2030.pdf. A hivatalos HMNAO/USNO nyomtatott Nautical Almanac évente ~40–60 USD (becslés). A jövőbeli évek almanachjait töltsd le, amíg elérhetők."
+],
+"hyg-star-database": [
+"The /raw/ URL returns a 133-byte Git LFS pointer; use the /media/ URL. The original CDS catalogs (V/50 Yale BSC, I/239 Hipparcos) at cdsarc.cds.unistra.fr were blocked here (connection reset). Full Codeberg repo ~126 MB (API). Needs a spreadsheet or program to read.",
+"A /raw/ URL egy 133 bájtos Git LFS-mutatót ad vissza; a /media/ URL-t használd. Az eredeti CDS-katalógusok (V/50 Yale BSC, I/239 Hipparcos) a cdsarc.cds.unistra.fr oldalon itt blokkolva voltak (connection reset). A teljes Codeberg-repó ~126 MB (az API szerint). Olvasásához táblázatkezelő vagy program kell."
+],
+"nasa-ntrs": [
+"API: https://ntrs.nasa.gov/api/citations/search?q=... (JSON, works). Use https://ntrs.nasa.gov, not www.ntrs.nasa.gov (expired certificate). Suggested subsets: NACA reports, the 'NASA SP' series, photovoltaic and battery handbooks.",
+"API: https://ntrs.nasa.gov/api/citations/search?q=... (JSON, működik). A https://ntrs.nasa.gov címet használd, ne a www.ntrs.nasa.gov-ot (lejárt tanúsítvány). Javasolt részhalmazok: NACA-jelentések, a „NASA SP” sorozat, fotovoltaikus és akkumulátoros kézikönyvek."
+],
+"engineering-toolbox": [
+"Mirroring probably breaks the terms of service, and many calculators are JavaScript. Mirror only selected pages, or 'print to PDF' the key tables. The DOE handbooks and Machinery's Handbook cover much of the same data legally.",
+"A tükrözés valószínűleg sérti a felhasználási feltételeket, és sok kalkulátor JavaScript-alapú. Csak kiválasztott oldalakat tükrözz, vagy a kulcsfontosságú táblázatokat mentsd PDF-be („print to PDF”). A DOE-kézikönyvek és a Machinery's Handbook jogszerűen lefedi ugyanennek az adatnak a nagy részét."
+],
+"ose-wiki-dump-gvcs": [
+"Needs MediaWiki import (or a converter such as mwoffliner to ZIM) to browse; the images archive alone is readable files. The live wiki (15,355 content pages, 18,289 files) is behind Cloudflare, so wget mirroring will fail. Many GVCS machines are incomplete or prototype-level. Extra git repo: https://github.com/OpenSourceEcology/LifeTrac (git clone --depth 1; 118 MB .git, 534 MB checkout). The 'Civilization-Starter-Kit-DVD' repo was not reachable.",
+"Böngészéshez MediaWiki-import kell (vagy konverter, pl. mwoffliner, ZIM-hez); a képarchívum viszont önmagában is olvasható fájlokból áll. Az élő wiki (15 355 tartalmi oldal, 18 289 fájl) Cloudflare mögött van, ezért a wget-es tükrözés nem fog működni. Sok GVCS-gép hiányos vagy prototípus szintű. Extra git-repó: https://github.com/OpenSourceEcology/LifeTrac (git clone --depth 1; 118 MB .git, 534 MB checkout). A „Civilization-Starter-Kit-DVD” repó nem volt elérhető."
+],
+"reprap-wiki-dump": [
+"The live reprap.org returns Cloudflare 520 or a bot challenge, so mirroring is impractical. Use the dump. Older smaller dump: wiki-repraporg-20151016 (0.7 GB).",
+"Az élő reprap.org Cloudflare 520-as hibát vagy botellenőrzést ad, ezért a tükrözés nem kivitelezhető. Használd a dumpot. Régebbi, kisebb dump: wiki-repraporg-20151016 (0,7 GB)."
+],
+"wikihouse-skylark": [
+"git clone --depth 1 https://github.com/wikihouseproject/Skylark . Needs a CNC router and sheet goods. Structural approval is for the UK context.",
+"git clone --depth 1 https://github.com/wikihouseproject/Skylark . CNC-marógép és lapanyagok kellenek hozzá. A statikai jóváhagyás az Egyesült Királyságra vonatkozik."
+],
+"precious-plastic-download-kit-v4": [
+"git clone --depth 1 https://github.com/ONEARMY/precious-plastic-kit . Note: github.com/hakkens/precious-plastic is only the website export, not the kit. Docs/academy: https://github.com/ONEARMY/academy (111 MB .git / 229 MB).",
+"git clone --depth 1 https://github.com/ONEARMY/precious-plastic-kit . Megjegyzés: a github.com/hakkens/precious-plastic csak a weboldal exportja, nem a készlet. Dokumentáció/akadémia: https://github.com/ONEARMY/academy (111 MB .git / 229 MB)."
+],
+"openflexure-microscope": [
+"git clone --depth 1 https://gitlab.com/openflexure/openflexure-microscope.git . The repo holds OpenSCAD sources; STLs are generated by build.py. Also download ready STLs and assembly instructions from the openflexure.org build pages. Needs an objective lens and camera.",
+"git clone --depth 1 https://gitlab.com/openflexure/openflexure-microscope.git . A repó OpenSCAD-forrásokat tartalmaz; az STL-eket a build.py generálja. A kész STL-eket és az összeszerelési útmutatót is töltsd le az openflexure.org build-oldalairól. Objektívlencse és kamera kell hozzá."
+],
+"libre-solar-hardware": [
+"git clone --depth 1 https://github.com/LibreSolar/mppt-2420-hc ; .../bms-c1 ; .../charge-controller-firmware . You need PCB fabrication and SMD parts. The value is mostly as a reference design.",
+"git clone --depth 1 https://github.com/LibreSolar/mppt-2420-hc ; .../bms-c1 ; .../charge-controller-firmware . NYÁK-gyártás és SMD-alkatrészek kellenek hozzá. Az értéke főleg referenciatervként jelentős."
+],
+"openinverter-stm32-sine": [
+"git clone --depth 1 https://github.com/jsphuebner/stm32-sine ; https://github.com/jsphuebner/libopeninv ; VCU: https://github.com/damienmaguire/Stm32-vcu. The wiki's API sits behind a bot challenge, so mirroring may fail. Only for advanced users with high-voltage experience.",
+"git clone --depth 1 https://github.com/jsphuebner/stm32-sine ; https://github.com/jsphuebner/libopeninv ; VCU: https://github.com/damienmaguire/Stm32-vcu. A wiki API-ja botellenőrzés mögött van, ezért a tükrözés meghiúsulhat. Csak nagyfeszültségű tapasztalattal rendelkező haladó felhasználóknak."
+],
+"kicad-eda-and-libraries": [
+"Libraries: git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-symbols.git and .../kicad-footprints.git (the installer already bundles them). The 3D-models library is large and was not measured. Also save docs.kicad.org.",
+"Könyvtárak: git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-symbols.git és .../kicad-footprints.git (a telepítő már tartalmazza őket). A 3D-modell-könyvtár nagy, a méretét nem mértük. A docs.kicad.org oldalt is mentsd el."
+],
+"arduino-ide-offline": [
+"IDE 2.x downloads board cores and libraries online on first use, so for offline pre-fetch them (copy ~/.arduino15) or prefer 1.8.19 (portable mode). Core source: git clone --depth 1 https://github.com/arduino/ArduinoCore-avr.",
+"Az IDE 2.x az első használatkor online tölti le az alaplapmagokat (board core) és a könyvtárakat, ezért offline használathoz előre töltsd le őket (másold a ~/.arduino15 mappát), vagy inkább az 1.8.19-et válaszd (hordozható mód). A core forrása: git clone --depth 1 https://github.com/arduino/ArduinoCore-avr."
+],
+"open-source-beehives-bcn-warre": [
+"git clone --depth 1 https://github.com/opensourcebeehives/Hive_BarcelonaWarre . The project site opensourcebeehives.com returned 403 and seems inactive. The DXF and PDF are the portable files (the Rhino files need Rhino). A Top Bar hive repo was not found under the guessed name.",
+"git clone --depth 1 https://github.com/opensourcebeehives/Hive_BarcelonaWarre . A projekt oldala, az opensourcebeehives.com 403-at adott, és inaktívnak tűnik. A DXF és a PDF a hordozható fájl (a Rhino-fájlokhoz Rhino kell). Top Bar kaptár repóját a feltételezett néven nem találtuk."
+],
+"respiraworks-ventilator": [
+"git clone --depth 1 https://github.com/RespiraWorks/Ventilator . Not a certified medical device. Requires precise sensors, blowers and electronics. A list of other open ventilator projects: https://github.com/PubInv/covid19-vent-list.",
+"git clone --depth 1 https://github.com/RespiraWorks/Ventilator . Nem tanúsított orvostechnikai eszköz. Precíz érzékelők, fúvók és elektronika kellenek hozzá. Más nyílt lélegeztetőgép-projektek listája: https://github.com/PubInv/covid19-vent-list."
+],
+"farm-hack-tools": [
+"No bulk export was found. Use a polite wget mirror limited to /tools/ and attachments. Documentation quality varies a lot between tools.",
+"Tömeges exportot nem találtunk. Használj kíméletes wget-tükrözést, a /tools/ útvonalra és a mellékletekre korlátozva. A dokumentáció minősége eszközönként nagyon eltérő."
+],
+"kearny-nuclear-war-survival-skills": [
+"19,834,771 bytes. Includes KFM fallout meter build plans and expedient shelter designs.",
+"19 834 771 bájt. Tartalmazza a KFM sugárzásmérő (fallout meter) építési terveit és rögtönzött óvóhelyek terveit."
+],
+"fema-planning-guidance-nuclear-detonation": [
+"1,905,356 bytes. A 3rd edition (2022) exists on fema.gov, not verified here (FEMA/ready.gov sites return 403 through this proxy).",
+"1 905 356 bájt. Létezik egy 3. kiadás (2022) a fema.gov-on, ezt itt nem ellenőriztük (a FEMA/ready.gov oldalak ezen a proxyn keresztül 403-at adnak)."
+],
+"cisa-emp-protection-guidelines-2019": [
+"URL found via web search; 403 from this sandbox, retry from a normal connection. Companion: DHS S&T 'EMP Shielding Mitigations Best Practices' (2022).",
+"Az URL-t webes kereséssel találtuk; ebből a sandboxból 403-at ad, normál kapcsolatról próbáld újra. Kísérő dokumentum: DHS S&T „EMP Shielding Mitigations Best Practices” (2022)."
+],
+"us-army-fm-21-10-field-hygiene": [
+"2,913,453 bytes. Successor doc: ATP 4-25.12 Unit Field Sanitation Team (not checked).",
+"2 913 453 bájt. Utóddokumentum: ATP 4-25.12 Unit Field Sanitation Team (nem ellenőriztük)."
+],
+"us-army-fm-3-25-26-land-navigation": [
+"23,583,528 bytes. Older FM 21-26 (1993) also on IA: FM21-26_201211.",
+"23 583 528 bájt. A régebbi FM 21-26 (1993) is megvan az IA-n: FM21-26_201211."
+],
+"kx-armypubs": [
+"kiwix book=armypubs_en_all flavour=null. 8,232,396,997 bytes. Snapshot from 2024-12 (older than most). Overlaps partly with existing FM items but covers far more.",
+"kiwix book=armypubs_en_all flavour=null. 8 232 396 997 bájt. 2024-12-es pillanatkép (a legtöbbnél régebbi). Részben átfedi a meglévő FM-elemeket, de jóval többet lefed."
+],
+"kx-ready-gov": [
+"kiwix book=ready.gov_en_all flavour=null. 2,063,895,408 bytes. ready.gov itself returns 403 here, so the ZIM is the practical route to CERT Basic Training materials (whether the CERT PDFs are inside was not checked).",
+"kiwix book=ready.gov_en_all flavour=null. 2 063 895 408 bájt. Maga a ready.gov itt 403-at ad, ezért a ZIM a praktikus út a CERT Basic Training anyagokhoz (azt nem ellenőriztük, hogy a CERT PDF-ek benne vannak-e)."
+],
+"katasztrofavedelem-lakossagi-kiadvanyok": [
+"url_download is the methodology guide for public-information leaflets (857,985 B). Other verified sample: veszprem.katasztrofavedelem.hu/application/uploads/documents/2025-04/85885.pdf (927,997 B). The kiadványaink page (/24/kiadvanyaink) loads its list with JavaScript, so collect by hand. Also mirror the 'lakossagvedelem' (/46) and 'katasztrofatipusok' pages.",
+"Az url_download a lakossági tájékoztató kiadványok módszertani útmutatója (857 985 B). Másik ellenőrzött minta: veszprem.katasztrofavedelem.hu/application/uploads/documents/2025-04/85885.pdf (927 997 B). A kiadványaink oldal (/24/kiadvanyaink) JavaScripttel tölti be a listát, ezért kézzel gyűjtsd össze. A „lakossagvedelem” (/46) és a „katasztrofatipusok” oldalakat is tükrözd."
+],
+"njt-alaptorveny-alapjogszabalyok": [
+"Measured HTML sizes: Alaptörvény 361,934 B; Ptk 2013-5-00-00 1,454,030 B; Btk 2012-100-00-00 1,189,169 B; Kat.tv 2011-128-00-00 373,507 B. Optionally add Mt. (2012:I) and Közigazgatási rendtartás. Text is the version in force at download time.",
+"Mért HTML-méretek: Alaptörvény 361 934 B; Ptk 2013-5-00-00 1 454 030 B; Btk 2012-100-00-00 1 189 169 B; Kat.tv 2011-128-00-00 373 507 B. Igény szerint add hozzá az Mt.-t (2012:I) és a Közigazgatási rendtartást is. A szöveg a letöltéskor hatályos változat."
+],
+"roberts-rules-of-order-1915": [
+"153,901 bytes. Probably already inside the Gutenberg ZIM/rsync items, but listed so it is easy to find.",
+"153 901 bájt. Valószínűleg már benne van a Gutenberg ZIM/rsync elemekben, de a könnyű megtalálhatóság kedvéért külön is szerepel."
+],
+"kx-wikiciv": [
+"kiwix book=wikiciv_en_all flavour=maxi. 4,632,130 bytes. Content is sparse.",
+"kiwix book=wikiciv_en_all flavour=maxi. 4 632 130 bájt. A tartalom gyér."
+],
+"primary-anaesthesia-king": [
+"27,785,180 bytes. The item also lists an LCP-encrypted EPUB, which suggests the work may still be under copyright. The PDF downloads openly. Check the rights status before sharing.",
+"27 785 180 bájt. Az elemnél LCP-titkosított EPUB is szerepel, ami arra utal, hogy a mű még jogvédett lehet. A PDF szabadon letölthető. Megosztás előtt ellenőrizd a jogi státuszt."
+],
+"who-basic-laboratory-techniques-2003": [
+"7,718,391 bytes (DSpace sizeBytes and Content-Range agree). HEAD returns 500; use GET.",
+"7 718 391 bájt (a DSpace sizeBytes és a Content-Range egyezik). A HEAD 500-at ad; GET-et használj."
+],
+"who-psychological-first-aid-2011": [
+"1,487,833 bytes. No Hungarian version in IRIS (RO, KO, JA, FA and others exist). Facilitator manual: 10665/102380.",
+"1 487 833 bájt. Magyar változat nincs az IRIS-ben (van RO, KO, JA, FA és más). Facilitátori kézikönyv: 10665/102380."
+],
+"who-doing-what-matters-stress": [
+"3,383,689 bytes. Audio exercises exist separately on the WHO site (not checked).",
+"3 383 689 bájt. A hanganyagos gyakorlatok külön elérhetők a WHO oldalán (nem ellenőriztük)."
+],
+"where-there-is-no-psychiatrist-2018": [
+"Sum of 29 chapter PDFs linked on the book page (/core/services/aop-cambridge-core/content/view/.../9781108683302c*_CBO.pdf), all measured. Scrape the href list from the book page.",
+"A könyv oldalán linkelt 29 fejezet-PDF összege (/core/services/aop-cambridge-core/content/view/.../9781108683302c*_CBO.pdf), mindegyik mért. A href-listát a könyv oldaláról gyűjtsd ki."
+],
+"hesperian-community-mental-health-2025": [
+"Files: en_pcmh_2025_{fm,01..09,ob}.pdf; total 18,941,099 B, measured by download (server sends no Content-Length). Catalog notes mention the pattern but there is no item. Exact English book title not confirmed (Hesperian lists it as a community mental health guide).",
+"Fájlok: en_pcmh_2025_{fm,01..09,ob}.pdf; összesen 18 941 099 B, letöltéssel mérve (a szerver nem küld Content-Lengthet). A katalógus megjegyzései említik a mintát, de külön elem nincs. A könyv pontos angol címe nincs megerősítve (a Hesperian közösségi mentálhigiénés útmutatóként említi)."
+],
+"hesperian-helping-health-workers-learn-2026": [
+"Files en_hhwl_2026_{fm,01..27,resc,ob}.pdf, total 36,712,873 B (measured by download).",
+"Fájlok: en_hhwl_2026_{fm,01..27,resc,ob}.pdf, összesen 36 712 873 B (letöltéssel mérve)."
+],
+"who-pcpnc-2015": [
+"2,759,103 bytes. Slovenian translation in same record.",
+"2 759 103 bájt. Ugyanabban a rekordban szlovén fordítás is van."
+],
+"who-imci-distance-learning-2014": [
+"Sum of 15 bitstreams (Intro, Modules 1–9, facilitator guides, Logbook, Chartbook) = 31,052,611 B per DSpace API. url_download is the intro; get the others from /server/api/core/items/08aa4ca2-17ec-41e9-a22b-3521e5f7938b/bundles. The 2008 chart booklet (10665/43993) is mentioned only in a note of an existing item.",
+"15 bitstream (bevezető, 1–9. modul, facilitátori útmutatók, Logbook, Chartbook) összege = 31 052 611 B a DSpace API szerint. Az url_download a bevezető; a többit a /server/api/core/items/08aa4ca2-17ec-41e9-a22b-3521e5f7938b/bundles végpontról töltsd le. A 2008-as chart booklet (10665/43993) csak egy meglévő elem megjegyzésében szerepel."
+],
+"open-rn-nursing-skills-pharmacology": [
+"Pressbooks (wtcs.pressbooks.pub) and NCBI Bookshelf (NBK596735, NBK595000, NBK597872, NBK590025) are blocked here by 403/reCAPTCHA. Download from a normal browser. Possibly also inside the Open Textbook Library item, not confirmed.",
+"A Pressbooks (wtcs.pressbooks.pub) és az NCBI Bookshelf (NBK596735, NBK595000, NBK597872, NBK590025) itt 403/reCAPTCHA miatt blokkolva van. Normál böngészőből töltsd le. Lehet, hogy az Open Textbook Library elemben is benne van, ez nincs megerősítve."
+],
+"agromisa-agrodok-series": [
+"CGSpace (DSpace 7) search 'agrodok' returns 313 items in several languages. Script it via /server/api/discover/search/objects?query=agrodok, then the bundles endpoint. The handle page returned 429 (rate limit), so throttle requests.",
+"A CGSpace (DSpace 7) „agrodok” keresése 313 elemet ad több nyelven. Szkripteld a /server/api/discover/search/objects?query=agrodok végponton, majd a bundles végponton keresztül. A handle-oldal 429-et adott (sebességkorlát), ezért korlátozd a kérések ütemét."
+],
+"fao-practical-html-books": [
+"Verified: fao.org/4/X5328E/X5328E00.htm (charcoal), fao.org/4/v5030e/v5030e00.htm (fruit/veg), fao.org/4/t0756e/t0756e00.htm (meat inspection). No PDF at the guessed paths. A Google Books scan of the meat-inspection manual is at archive.org bub_gb_qVbyYXQwTaMC. Mirror with: wget -r -np -k -p --wait=1.",
+"Ellenőrizve: fao.org/4/X5328E/X5328E00.htm (faszén), fao.org/4/v5030e/v5030e00.htm (gyümölcs/zöldség), fao.org/4/t0756e/t0756e00.htm (húsvizsgálat). A feltételezett útvonalakon nincs PDF. A húsvizsgálati kézikönyv Google Books-szkennelése az archive.org-on van: bub_gb_qVbyYXQwTaMC. Tükrözés: wget -r -np -k -p --wait=1."
+],
+"kx-trueprepper": [
+"kiwix book=trueprepper.com_en_all flavour=null. 1,423,584,895 bytes. Quality and authority are mixed (blog).",
+"kiwix book=trueprepper.com_en_all flavour=null. 1 423 584 895 bájt. A minőség és a hitelesség vegyes (blog)."
+],
+"india-mark-ii-handpump-manual-2008": [
+"6,279,868 bytes. Alt copy (SuSanA): https://susana.org/_resources/documents/default/3-4194-7-1617282174.pdf 3,177,902 B. Specs: IS 8035 (Indian Standard, not free). IRC WASH has older 1980/1993 manuals.",
+"6 279 868 bájt. Másik példány (SuSanA): https://susana.org/_resources/documents/default/3-4194-7-1617282174.pdf 3 177 902 B. Specifikáció: IS 8035 (indiai szabvány, nem ingyenes). Az IRC WASH-nál régebbi, 1980-as/1993-as kézikönyvek is vannak."
+],
+"unicef-practica-manual-drilling-toolkit": [
+"manual-drilling-series-augering 4,018,970; -jetting 3,080,303; -percussion 2,845,872; understanding-groundwater-wells-in-manual-drilling 2,701,878; Manual-Drilling-Techniques 384,671; Selection-of-Well-Construction-Methods 359,531 (all under /content/uploads/2019/08/). French versions are also listed.",
+"manual-drilling-series-augering 4 018 970; -jetting 3 080 303; -percussion 2 845 872; understanding-groundwater-wells-in-manual-drilling 2 701 878; Manual-Drilling-Techniques 384 671; Selection-of-Well-Construction-Methods 359 531 (mind a /content/uploads/2019/08/ alatt). Francia változatok is szerepelnek."
+],
+"gtz-biogas-digest-vol1": [
+"656,288 bytes. Vols II–IV (application, costs, programme) exist but were not checked. Indian construction manuals for fixed-dome plants are on archive.org (dli.ernet.288717).",
+"656 288 bájt. A II–IV. kötet (alkalmazás, költségek, program) létezik, de nem ellenőriztük. Fix kupolás üzemek indiai építési kézikönyvei az archive.org-on vannak (dli.ernet.288717)."
+],
+"mdisc-bdxl-archival-media": [
+"Referenced only in rule 12 of the catalog; no item exists. Verbatim part 98913. Writer must support BDXL and M-DISC. Lifetime claims come from the manufacturer.",
+"Csak a katalógus 12. szabálya hivatkozik rá; elem nem tartozik hozzá. Verbatim cikkszám: 98913. Az írónak támogatnia kell a BDXL-t és az M-DISC-et. Az élettartamra vonatkozó állítások a gyártótól származnak."
+],
+"thomssen-soap-making-manual-1922": [
+"Text PDF 9,961,906 B (image PDF 3,941,114 B). Written for industry, so pair it with Henley's for home-scale recipes.",
+"Szöveges PDF 9 961 906 B (képes PDF 3 941 114 B). Ipari felhasználásra íródott, ezért háztartási méretű receptekhez egészítsd ki a Henley's kötettel."
+],
+"kx-openwrt": [
+"kiwix book=openwrt.org_en_all flavour=null. 519,894,596 bytes. Firmware images are not included; download images for your own routers separately.",
+"kiwix book=openwrt.org_en_all flavour=null. 519 894 596 bájt. A firmware-képfájlokat nem tartalmazza; a saját routereidhez külön töltsd le őket."
+],
+"hub-ds-openstax-text": [
+"Ábrák és táblázatok nélkül, ezért a PDF-eket is archiváld. 2023-as kinyerés.",
+"Ábrák és táblázatok nélkül, ezért a PDF-eket is archiváld. 2023-as kinyerés."
+],
+"hub-instructables": [
+"Nincs hivatalos tömeges letöltő vagy API; a kiválasztott útmutatókat PDF-be vagy HTML-be mentsd (pl. wget --page-requisites vagy SingleFile). A minőség vegyes.",
+"Nincs hivatalos tömeges letöltő vagy API; a kiválasztott útmutatókat PDF-be vagy HTML-be mentsd (pl. wget --page-requisites vagy SingleFile). A minőség vegyes."
+],
+"prepper-disk-premium": [
+"Prices read from the shop's products.json. The page says orders ship in about 2 weeks. Content is mostly free (Kiwix/Wikipedia/OSM), so you pay for curation and the ready-made device. Little Hungarian content. Shipping to the EU, VAT and customs come on top.",
+"Az árak a bolt products.json fájljából származnak. Az oldal szerint a rendeléseket kb. 2 hét alatt szállítják ki. A tartalom nagyrészt ingyenes (Kiwix/Wikipedia/OSM), így a válogatásért és a kész eszközért fizetsz. Kevés a magyar tartalom. Az EU-ba szállítás, az áfa és a vám ezen felül fizetendő."
+],
+"doom-box": [
+"No official vendor page could be verified. The tried domain doomboxcomputer.com returned a proxy 502, so it may not be the official one. All specs come from competitor or press comparisons. Not recommended: the free Kiwix/Project NOMAD route gives the same content.",
+"Hivatalos gyártói oldalt nem sikerült ellenőrizni. A kipróbált doomboxcomputer.com domain proxy 502-t adott, így lehet, hogy nem is a hivatalos. Minden specifikáció versenytársi vagy sajtóbeli összehasonlításokból származik. Nem ajánlott: az ingyenes Kiwix/Project NOMAD út ugyanazt a tartalmat adja."
+],
+"kiwix-hotspot": [
+"Kiwix ZIMs are already covered elsewhere. The OS-only images (CHF 15–40) are the cheap way to get the curated Preppers list on your own Pi. The Imager Service lets you add Hungarian ZIMs (wikipedia_hu). Shipping is DDU, so EU import VAT applies.",
+"A Kiwix ZIM-ek máshol már szerepelnek. A csak operációs rendszert tartalmazó képfájlok (CHF 15–40) az olcsó módja annak, hogy a válogatott Preppers listát a saját Pi-den használd. Az Imager Service-szel magyar ZIM-eket (wikipedia_hu) is hozzáadhatsz. A szállítás DDU, így uniós importáfa fizetendő."
+],
+"rachel-plus": [
+"Best for group or classroom education. The content modules can be downloaded free from rachel.worldpossible.org, so the hardware is optional. No Hungarian modules.",
+"Csoportos vagy osztálytermi oktatáshoz a legjobb. A tartalommodulok ingyen letölthetők a rachel.worldpossible.org oldalról, így a hardver opcionális. Magyar modulok nincsenek."
+],
+"survivor-library-flash-drive": [
+"The site rebuilt its category ZIP files in Aug–Sep 2026 and moved to a new server on 2026-10-01. WebFetch got 503 at times. The librarian notes the Scientific American Series 2 ZIP alone is about 28 GB. Old methods (e.g. arsenic, mercury) are historical, not current safety practice.",
+"Az oldal 2026 augusztusában–szeptemberében újraépítette a kategória-ZIP-fájlokat, és 2026-10-01-jén új szerverre költözött. A WebFetch időnként 503-at kapott. A könyvtáros szerint önmagában a Scientific American Series 2 ZIP kb. 28 GB. A régi módszerek (pl. arzén, higany) történeti jellegűek, nem a mai biztonsági gyakorlatot tükrözik."
+],
+"survivor-library-ia-mirror": [
+"Third-party upload (2026-01-27), not by the librarian. Download only the PDFs with --glob='*.pdf', otherwise you also get about 1.8 TB of ZIP duplicates. An item-level torrent also exists (SurvivorLibrary-com-Collection-2026_archive.torrent). Separate index items exist: survivor_library_catalog_index*.",
+"Harmadik fél feltöltése (2026-01-27), nem a könyvtárosé. Csak a PDF-eket töltsd le a --glob='*.pdf' kapcsolóval, különben kb. 1,8 TB ZIP-duplikátumot is kapsz. Elemszintű torrent is van (SurvivorLibrary-com-Collection-2026_archive.torrent). Külön indexelemek is léteznek: survivor_library_catalog_index*."
+],
+"britannica-offline": [
+"britannica.com returns a Cloudflare 403 challenge to automated clients, but the site is live. The print edition ended in 2012. Old DVD software may not run on modern systems. The 1911 Britannica (public domain) is free on Wikisource and Internet Archive and is better for an archive. Low priority compared with Wikipedia ZIM.",
+"A britannica.com az automatizált klienseknek Cloudflare 403-as ellenőrzést ad, de az oldal működik. A nyomtatott kiadás 2012-ben megszűnt. A régi DVD-s szoftver lehet, hogy nem fut modern rendszereken. Az 1911-es Britannica (közkincs) ingyenes a Wikisource-on és az Internet Archive-on, és archívumhoz jobb. Alacsony prioritás a Wikipedia ZIM-hez képest."
+],
+"sas-survival-handbook": [
+"The publisher site returned 403 to the automated check, so the price comes from several retailers. A Hungarian edition exists under the title 'SAS túlélési kézikönyv' (edition and price unverified). Focuses on the first weeks rather than rebuilding.",
+"A kiadó oldala 403-at adott az automatizált ellenőrzésre, ezért az ár több kiskereskedőtől származik. Magyar kiadás is létezik „SAS túlélési kézikönyv” címmel (a kiadás és az ár nem ellenőrzött). Inkább az első hetekre összpontosít, mint az újjáépítésre."
+],
+"ball-blue-book": [
+"ballmasonjars.com returns a Cloudflare 403 to bots. Recipes assume US jars, pressure canners and imperial units. A free alternative is the USDA Complete Guide to Home Canning (public PDF). Key for preventing botulism.",
+"A ballmasonjars.com a botoknak Cloudflare 403-at ad. A receptek amerikai befőttesüvegeket, nyomás alatti befőzőket (pressure canner) és angolszász mértékegységeket feltételeznek. Ingyenes alternatíva a USDA Complete Guide to Home Canning (nyilvános PDF). Kulcsfontosságú a botulizmus megelőzéséhez."
+],
+"where-there-is-no-doctor": [
+"Other Hesperian items may already be covered by another researcher. Also buy Where There Is No Dentist and A Book for Midwives. Keep the paperback because it needs no power.",
+"Más Hesperian-elemeket lehet, hogy már egy másik kutató lefedett. Vedd meg a Where There Is No Dentist és az A Book for Midwives kötetet is. A puhafedeles kiadást tartsd meg, mert nem kell hozzá áram."
+],
+"internet-archive-ia-cli": [
+"Borrowing (Controlled Digital Lending) requires a free account, cannot be downloaded DRM-free and is useless offline. Only full-access items are archivable. Use the advancedsearch API to measure sizes before downloading. Hosts the LibriVox, CD3WD and Survivor Library mirrors.",
+"A kölcsönzéshez (Controlled Digital Lending) ingyenes fiók kell, DRM nélkül nem tölthető le, és offline használhatatlan. Csak a teljes hozzáférésű elemek archiválhatók. Letöltés előtt az advancedsearch API-val mérd fel a méreteket. Itt található a LibriVox, a CD3WD és a Survivor Library tükre is."
+],
+"hathitrust": [
+"Returns a Cloudflare 403 challenge to automated clients. Per HathiTrust's access chart, non-members can download whole books only for items not digitized by Google (about 5% of the collection). Others allow page-by-page download only. A free guest account does not lift this. No Hungarian institution is known to be a member (unverified). Bulk scraping is against the ToS; for Google-scanned items, use the 'Find in Google Books' copy.",
+"Az automatizált klienseknek Cloudflare 403-as ellenőrzést ad. A HathiTrust hozzáférési táblázata szerint a nem tagok csak a nem a Google által digitalizált elemeket (a gyűjtemény kb. 5%-át) tölthetik le egészben. A többi csak oldalanként tölthető le. Ezen az ingyenes vendégfiók sem változtat. Tudomásunk szerint egyetlen magyar intézmény sem tag (nem ellenőrzött). A tömeges lementés sérti a felhasználási feltételeket (ToS); a Google által szkennelt elemekhez használd a „Find in Google Books” példányt."
+],
+"google-books-pd": [
+"No bulk download, and automated querying is prohibited by the ToS, so use it for targeted manual downloads. Many of the same scans are mirrored on HathiTrust and IA. Full view depends on the downloader's country, and EU users see fewer post-1880 works.",
+"Tömeges letöltés nincs, és a ToS tiltja az automatizált lekérdezést, ezért célzott, kézi letöltésekre használd. Sok ugyanilyen szkennelés a HathiTrust-on és az IA-n is tükrözve van. A teljes nézet a letöltő országától függ, és az uniós felhasználók kevesebb 1880 utáni művet látnak."
+],
+"project-gutenberg-rsync": [
+"Kiwix ZIM is already covered. Use rsync only if you need original files. Use --exclude for zip, audio and mobi files to cut the size drastically; a text+epub subset is far below 1 TB (not measured). Some works are still under copyright in the EU (life+70), but private archiving is low risk.",
+"A Kiwix ZIM már szerepel. Az rsync-et csak akkor használd, ha az eredeti fájlokra van szükséged. A --exclude kapcsolóval hagyd ki a zip-, hang- és mobi-fájlokat, így drasztikusan csökken a méret; egy szöveg+epub részhalmaz jóval 1 TB alatt van (nem mért). Egyes művek az EU-ban még jogvédettek (a szerző halála + 70 év), de a magáncélú archiválás kis kockázatú."
+],
+"standard-ebooks": [
+"Warning: the site has an IP-ban honeypot link ('Following this link will ban your IP for 24 hours'), so do not run a naive wget crawl. Use the OPDS/Atom feeds or GitHub instead. Low survival value, cultural value only.",
+"Figyelem: az oldalon van egy IP-tiltó csapdalink („Following this link will ban your IP for 24 hours”), ezért ne futtass naiv wget-feltérképezést. Inkább az OPDS/Atom feedeket vagy a GitHubot használd. Csekély túlélési érték, csak kulturális érték."
+],
+"openstax": [
+"The CMS API lists 129 books: 84 live, 34 retired, 8 unlisted, 3 deprecated. Download the live ones, plus retired older editions if wanted. Single files, easy wget list. A Kiwix ZIM may also exist (other researcher).",
+"A CMS API 129 könyvet listáz: 84 élő, 34 visszavont, 8 nem listázott, 3 elavult. Az élőket töltsd le, és igény szerint a visszavont régebbi kiadásokat is. Egyedi fájlok, könnyű wget-lista. Kiwix ZIM is létezhet (másik kutató)."
+],
+"open-textbook-library": [
+"This is a catalog: files are hosted by many publishers (Pressbooks, BCcampus etc.), so a crawl needs per-domain handling. Overlaps with OpenStax. Filter by subject for engineering, agriculture and health.",
+"Ez egy katalógus: a fájlokat sok kiadó tárolja (Pressbooks, BCcampus stb.), ezért a feltérképezéshez domainenkénti kezelés kell. Átfedésben van az OpenStaxszel. Szűrj tárgykör szerint a mérnöki, mezőgazdasági és egészségügyi témákra."
+],
+"mit-ocw": [
+"The ZIPs exclude videos, which must be fetched separately (YouTube/IA). The ZIP site does not work on mobile. Pick about 50–150 core courses (18.xx math, 8.xx physics, 5.xx chemistry, 2.xx/6.xx engineering) rather than everything.",
+"A ZIP-ek nem tartalmazzák a videókat, ezeket külön kell letölteni (YouTube/IA). A ZIP-oldal mobilon nem működik. Inkább kb. 50–150 alapkurzust válassz (18.xx matematika, 8.xx fizika, 5.xx kémia, 2.xx/6.xx mérnöki tudományok), ne mindent."
+],
+"ck12": [
+"The CloudFront 403 blocks automated checks. PDF export reportedly needs a free login (unverified). Content is mostly web-interactive, so it is harder to archive offline. Lower priority than OpenStax and Hungarian NAT textbooks.",
+"A CloudFront 403 blokkolja az automatizált ellenőrzést. A PDF-exporthoz állítólag ingyenes bejelentkezés kell (nem ellenőrzött). A tartalom főleg webes és interaktív, ezért nehezebb offline archiválni. Alacsonyabb prioritás, mint az OpenStax és a magyar NAT-tankönyvek."
+],
+"saylor-academy": [
+"Course resources are often external links, so a mirror is incomplete. Moodle needs login for quizzes. The old Saylor-hosted textbook mirrors (saylordotorg.github.io) root returned 404. Medium-low priority.",
+"A kurzusok forrásai gyakran külső linkek, így a tükör hiányos lesz. A Moodle-ban a kvízekhez bejelentkezés kell. A régi, a Saylor által tárolt tankönyvtükrök (saylordotorg.github.io) gyökere 404-et adott. Közepes–alacsony prioritás."
+],
+"librivox": [
+"Download only the *_64kb.mp3 files or a curated subset, otherwise it is 28 TB. Low rebuild value (anchor = 3). For Hungarian audiobooks, MEK has a 'hangoskönyv' section.",
+"Csak a *_64kb.mp3 fájlokat vagy egy válogatott részhalmazt töltsd le, különben 28 TB. Csekély újjáépítési érték (anchor = 3). Magyar hangoskönyvekhez a MEK-nek van „hangoskönyv” rovata."
+],
+"doab": [
+"Use the metadata to select subjects (agriculture, engineering, medicine) and Hungarian-language titles, then fetch the files. Many books are hosted on OAPEN (next item).",
+"A metaadatok alapján válogass tárgykörök (mezőgazdaság, mérnöki tudományok, orvostudomány) és magyar nyelvű címek szerint, majd töltsd le a fájlokat. Sok könyvet az OAPEN tárol (következő elem)."
+],
+"oapen": [
+"library.oapen.org returned HTTP 429 (rate limit) to the check, so throttle any downloads. Use the DOAB selection with OAPEN handles.",
+"A library.oapen.org az ellenőrzésre HTTP 429-et adott (sebességkorlát), ezért minden letöltést lassíts. A DOAB-válogatást az OAPEN handle-ökkel használd."
+],
+"pmc-open-access": [
+"Too big and too specialised as a whole. Take review articles, clinical guidelines and tropical, emergency and field medicine subsets. May overlap with medical-domain researchers.",
+"Egészében túl nagy és túl speciális. Az összefoglaló cikkeket, a klinikai irányelveket, valamint a trópusi, sürgősségi és terepi orvoslási részhalmazokat töltsd le. Átfedés lehet az orvosi területtel foglalkozó kutatók anyagaival."
+],
+"annas-archive": [
+"annas-archive.org was unreachable (proxy 502) and annas-archive.li is a parked 'for sale' page (2026-11-14). The .org domain was suspended in Jan 2026, and in May 2026 a US court (SDNY) entered a USD 19.5M default judgment and a domain-blocking injunction. EU/Hungary: since CJEU C-435/12 (ACI Adam, 2014) the private-copy exception does not cover unlawful sources, so downloading is infringing. Seeding a torrent is 'making available' and creates civil liability, and possibly criminal liability (Btk. 385. §) if it causes financial loss. Its metadata dumps (ISBNdb/WorldCat-derived) carry lower risk than book files. High legal risk; the decision is the user's.",
+"Az annas-archive.org elérhetetlen volt (proxy 502), az annas-archive.li pedig egy parkoltatott, „eladó” oldal (2026-11-14). A .org domaint 2026 januárjában felfüggesztették, 2026 májusában pedig egy amerikai bíróság (SDNY) 19,5 millió USD-s mulasztási ítéletet és domainblokkolási végzést hozott. EU/Magyarország: az EUB C-435/12. sz. ítélete (ACI Adam, 2014) óta a magáncélú másolásra vonatkozó kivétel nem terjed ki a jogellenes forrásokra, így a letöltés jogsértő. A torrent seedelése „lehívásra hozzáférhetővé tételnek” (making available) minősül, és polgári jogi felelősséget, vagyoni hátrány okozása esetén pedig akár büntetőjogi felelősséget is (Btk. 385. §) keletkeztet. A metaadat-dumpjai (ISBNdb/WorldCat eredetűek) kisebb kockázatúak, mint a könyvfájlok. Magas jogi kockázat; a döntés a felhasználóé."
+],
+"library-genesis": [
+"libgen.rs and libgen.is were unreachable. libgen.li answered with a default nginx page (not functional). Several forks with different contents exist. Legal risk is the same as for Anna's Archive (EU and Hungary). A curated selection of textbooks by ISBN is far more practical than the whole set.",
+"A libgen.rs és a libgen.is elérhetetlen volt. A libgen.li egy alapértelmezett nginx-oldallal válaszolt (nem működik). Több, eltérő tartalmú fork létezik. A jogi kockázat ugyanaz, mint az Anna's Archive esetében (EU és Magyarország). A tankönyvek ISBN szerinti válogatása sokkal praktikusabb, mint a teljes készlet."
+],
+"sci-hub": [
+"sci-hub.se was unreachable via the proxy. The operator is subject to court cases (e.g. the Delhi High Court case, US judgments). EU/Hungary risk is the same as above. Survival value is low. Prefer the legal PMC OA, DOAB and arXiv subsets first.",
+"A sci-hub.se a proxyn keresztül elérhetetlen volt. Az üzemeltető ellen bírósági eljárások folynak (pl. a Delhi High Court előtti ügy, amerikai ítéletek). Az EU-s/magyarországi kockázat ugyanaz, mint fent. A túlélési érték csekély. Először a legális PMC OA, DOAB és arXiv részhalmazokat válaszd."
+],
+"z-library": [
+"The US DOJ seized its domains in Nov 2022, and two alleged operators were indicted. It now operates through changing domains and apps; the domain tried was unreachable. Highest legal and privacy risk because an account is needed, which ties downloads to an identity. Not recommended.",
+"Az amerikai igazságügyi minisztérium (DOJ) 2022 novemberében lefoglalta a domainjeit, és két feltételezett üzemeltető ellen vádat emeltek. Jelenleg változó domaineken és alkalmazásokon keresztül működik; a kipróbált domain elérhetetlen volt. A legmagasabb jogi és adatvédelmi kockázat, mert fiók kell hozzá, ami a letöltéseket személyazonossághoz köti. Nem ajánlott."
+],
+"mek-oszk": [
+"No official bulk dump. Harvest the item list via OAI-PMH, then wget the ZIP versions slowly. robots.txt disallows some items, so respect it and consider emailing mek@oszk.hu for a bulk copy. Copyright-protected items have restricted access. Prioritise the Lexikonok, Mezőgazdaság, Műszaki, Orvostudomány and Tankönyvek themes. Partner of Arcanum and PG Hungarian Team.",
+"Hivatalos tömeges dump nincs. Az elemlistát OAI-PMH-n keresztül gyűjtsd be, majd lassan töltsd le wgettel a ZIP-változatokat. A robots.txt egyes elemeket tilt; ezt tartsd tiszteletben, és érdemes lehet e-mailben (mek@oszk.hu) tömeges másolatot kérni. A szerzői jogvédett elemek hozzáférése korlátozott. A Lexikonok, Mezőgazdaság, Műszaki, Orvostudomány és Tankönyvek témakört helyezd előtérbe. Az Arcanum és a PG Hungarian Team partnere."
+],
+"pallas-nagy-lexikona": [
+"Must-have and tiny. Language and facts reflect the 1890s (outdated medicine and ethnography). Mirror the HTML as well, since it is searchable on low-power devices.",
+"Kötelező és apró. A nyelvezet és a tények az 1890-es éveket tükrözik (elavult orvostudomány és néprajz). A HTML-t is tükrözd, mert gyenge teljesítményű eszközökön is kereshető."
+],
+"revai-nagy-lexikona": [
+"The /pdf/ directory index itself is 404, so take the file links from the item page. DjVu is 3x smaller but needs a DjVu reader; keep both. Arcanum has a searchable paid version.",
+"Maga a /pdf/ könyvtárindex 404-et ad, ezért a fájllinkeket az elem oldaláról vedd. A DjVu háromszor kisebb, de DjVu-olvasó kell hozzá; tartsd meg mindkettőt. Az Arcanumnál kereshető, fizetős változat is van."
+],
+"magyar-neprajzi-lexikon": [
+"Small and extremely relevant for Hungarian low-tech practices (szövés, kenderfeldolgozás, sütőkemence, gabonatárolás). Take both HTML and XML.",
+"Kicsi és rendkívül releváns a magyar hagyományos, alacsony technológiájú gyakorlatok szempontjából (szövés, kenderfeldolgozás, sütőkemence, gabonatárolás). A HTML-t és az XML-t is töltsd le."
+],
+"magyar-eletrajzi-lexikon": [
+"Small, cultural-only value. Include it because the cost is negligible.",
+"Kicsi, csak kulturális értékű. Vedd fel, mert a költsége elhanyagolható."
+],
+"dka-oszk": [
+"Copyrighted images are not shown publicly, so only free items can be mirrored. Moderate value; crawl selectively (e.g. Néprajz, Műszaki témák).",
+"A jogvédett képek nyilvánosan nem jelennek meg, így csak a szabad elemek tükrözhetők. Közepes érték; szelektíven gyűjtsd (pl. Néprajz, Műszaki témák)."
+],
+"hungaricana": [
+"Returns an AWS ELB 403 to automated requests (likely bot filtering); the site is live and operated with Arcanum. No bulk download, so get the local county material and historic maps (maps.hungaricana.hu; MAPIRE high-res downloads are paid) manually.",
+"Az automatizált kérésekre AWS ELB 403-at ad (valószínűleg botszűrés); az oldal működik, az Arcanummal közösen üzemeltetik. Tömeges letöltés nincs, ezért a helyi megyei anyagokat és a történeti térképeket (maps.hungaricana.hu; a MAPIRE nagy felbontású letöltései fizetősek) kézzel töltsd le."
+],
+"arcanum-adt": [
+"403 to automated clients (AWS ELB). The licence forbids mass download, so not suitable for bulk offline archiving. Use it to identify key Hungarian technical books, then look for them on MEK or buy them second-hand (antikvarium.hu). University and library (EISZ) access is the practical route.",
+"Az automatizált klienseknek 403-at ad (AWS ELB). A licenc tiltja a tömeges letöltést, ezért tömeges offline archiválásra nem alkalmas. Arra használd, hogy azonosítsd a kulcsfontosságú magyar szakkönyveket, majd keresd meg őket a MEK-en, vagy vedd meg használtan (antikvarium.hu). A gyakorlati út az egyetemi és könyvtári (EISZ) hozzáférés."
+],
+"tankonyvkatalogus-oh": [
+"TLS connection reset via the proxy and WebFetch 503 (2026-11-14); verify from a Hungarian connection. Per press (Eduline 2023), OH's newly developed materials are free for everyone on the catalogue. Download all OH-owned grade 1–12 textbooks, especially science, math, technology and biology, while they are online.",
+"A proxyn keresztül a TLS-kapcsolat megszakadt, a WebFetch 503-at kapott (2026-11-14); magyar kapcsolatról ellenőrizd. Sajtóhírek szerint (Eduline 2023) az OH újonnan fejlesztett anyagai a katalógusban mindenki számára ingyenesek. Töltsd le az összes OH-tulajdonú 1–12. évfolyamos tankönyvet, különösen a természettudományi, matematika-, technika- és biológiakönyveket, amíg elérhetők."
+],
+"nkp-okostankonyv": [
+"Connection failed via the proxy. Interactive content archives poorly offline; the tankonyvkatalogus.hu PDFs are the better target.",
+"A kapcsolat a proxyn keresztül sikertelen volt. Az interaktív tartalom offline rosszul archiválható; a tankonyvkatalogus.hu PDF-jei jobb célpontok."
+],
+"digitalis-tankonyvtar": [
+"TLS reset via the proxy (2026-11-14); verify from a Hungarian connection. The registration requirement for PDF download is unverified. High priority for agrár (e.g. növénytermesztés, állattenyésztés), műszaki and orvosi jegyzetek in Hungarian.",
+"A proxyn keresztül a TLS-kapcsolat megszakadt (2026-11-14); magyar kapcsolatról ellenőrizd. Nem ellenőrzött, hogy a PDF-letöltéshez kell-e regisztráció. Magas prioritás a magyar nyelvű agrár (pl. növénytermesztés, állattenyésztés), műszaki és orvosi jegyzetek miatt."
+],
+"nava": [
+"No download option, and capturing streams would violate the terms, so practically not archivable. Look for the same educational series (Öveges, Mindentudás Egyeteme) on MEK/IA or as DVDs.",
+"Letöltési lehetőség nincs, és a streamek rögzítése sértené a feltételeket, így gyakorlatilag nem archiválható. Ugyanezeket az oktatási sorozatokat (Öveges, Mindentudás Egyeteme) keresd a MEK-en/IA-n vagy DVD-n."
+],
+"magyar-katolikus-lexikon": [
+"Static HTML that mirrors easily (use a polite wget with --wait). Cultural and community value, not technical.",
+"Statikus HTML, könnyen tükrözhető (kíméletes wgettel, --wait kapcsolóval). Kulturális és közösségi érték, nem műszaki."
+],
+"epa-oszk": [
+"Select practical titles (e.g. old agricultural and technical journals). Not everything is relevant, so do not mirror it all.",
+"Válogass gyakorlati címeket (pl. régi mezőgazdasági és műszaki folyóiratokat). Nem minden releváns, ezért ne tükrözd az egészet."
+],
+"real-mtak": [
+"Example: the 2026 Orvosi Hetilap summary of the ERC 2025 first-aid/BLS guidelines (real.mtak.hu/246229). Harvest selectively via OAI-PMH.",
+"Példa: az Orvosi Hetilap 2026-os összefoglalója az ERC 2025 elsősegély-/BLS-irányelveiről (real.mtak.hu/246229). OAI-PMH-n keresztül, szelektíven gyűjts."
+],
+"omsz-mentok-elsosegely": [
+"No PDF found on the page, so save the HTML and print it on paper. omsz.hu did not respond (use mentok.hu). Supplement with the ERC 2025 guideline summary (REAL) and the Hesperian books.",
+"Az oldalon nem találtunk PDF-et, ezért mentsd el a HTML-t, és nyomtasd ki papírra. Az omsz.hu nem válaszolt (használd a mentok.hu-t). Egészítsd ki az ERC 2025 irányelv-összefoglalóval (REAL) és a Hesperian-könyvekkel."
+],
+"voroskereszt-kiadvanyok": [
+"No downloadable first-aid textbook PDF was found. The first-aid course book is sold or handed out at courses, so get a physical copy by taking a course. The disaster-preparedness page text (flood procedures) is useful to print.",
+"Letölthető elsősegély-tankönyv PDF-et nem találtunk. Az elsősegély-tanfolyam könyvét a tanfolyamokon árusítják vagy osztják ki, ezért egy tanfolyam elvégzésével szerezz nyomtatott példányt. A katasztrófa-felkészülési oldal szövege (árvízi teendők) kinyomtatva hasznos."
+],
+"nebih-kiadvanyok": [
+"Many items are administrative forms with low value. Filter for kártevő-ismertetők, állategészségügyi tájékoztatók and élelmiszerbiztonsági útmutatók. For practical farming in Hungarian, the DTK agricultural textbooks and MEK old agrár books are better.",
+"Sok elem csekély értékű adminisztratív nyomtatvány. Szűrj a kártevő-ismertetőkre, az állategészségügyi tájékoztatókra és az élelmiszerbiztonsági útmutatókra. A magyar nyelvű gyakorlati gazdálkodáshoz a DTK mezőgazdasági tankönyvei és a MEK régi agrárkönyvei jobbak."
+],
+"ksh-stadat": [
+"Take the agriculture (földhasználat, állatállomány), population, settlement and energy tables plus the latest Statisztikai Évkönyv PDFs. Small and useful for planning.",
+"Töltsd le a mezőgazdasági (földhasználat, állatállomány), népességi, települési és energetikai táblákat, valamint a legfrissebb Statisztikai Évkönyv PDF-eket. Kicsi és hasznos a tervezéshez."
+],
+"lechner-terkepek": [
+"1:25k/1:100k/1:200k topographic maps come from the HM Zrínyi Térképészeti (Honvédség) mapping agency, so buy printed paper sheets for your own region; they are better than digital in a collapse. The free HRSZ-kereső is view-only. The free alternative is OSM (next item).",
+"Az 1:25k/1:100k/1:200k topográfiai térképeket a HM Zrínyi Térképészeti (Honvédség) térképészeti szervezet adja ki, ezért a saját régiódra vegyél nyomtatott papír térképlapokat; összeomlás esetén jobbak a digitálisnál. Az ingyenes HRSZ-kereső csak megtekintésre alkalmas. Az ingyenes alternatíva az OSM (következő elem)."
+],
+"hesperian-where-there-is-no-doctor-2025": [
+"26 parts: en_wtnd_2025_{fm,01..23,bm,resc}.pdf. Loop over the pattern, since no single full-book file exists (en_wtnd_2025.pdf returns 404). The servers send no Content-Length (gzip), so the size is summed downloaded bytes. Printed copy is US$29.95 at store.hesperian.org. Many other languages are on languages.hesperian.org. The New WTND wiki chapters are HTML-only on en.hesperian.org.",
+"26 rész: en_wtnd_2025_{fm,01..23,bm,resc}.pdf. Iterálj végig a mintán, mert egyetlen, teljes könyvet tartalmazó fájl nincs (az en_wtnd_2025.pdf 404-et ad). A szerverek nem küldenek Content-Lengthet (gzip), így a méret a letöltött bájtok összege. A nyomtatott példány US$29,95 a store.hesperian.org oldalon. Sok más nyelv a languages.hesperian.org oldalon érhető el. Az új WTND wiki fejezetei csak HTML-ben érhetők el az en.hesperian.org-on."
+],
+"hesperian-where-there-is-no-dentist-2025": [
+"Parts: en_dent_2025_{fm,01..12,resc,ob}.pdf. Size is summed downloaded bytes.",
+"Részek: en_dent_2025_{fm,01..12,resc,ob}.pdf. A méret a letöltött bájtok összege."
+],
+"hesperian-where-women-have-no-doctor-2023": [
+"Parts: en_wwhnd_2023_{fm,01..31,resc,ob}.pdf. Other Hesperian titles follow the same scheme (en_dvc_2025 Disabled Village Children, en_pcmh_2025 Community Mental Health, en_hhwl_2026). Mirror the whole set with one script.",
+"Részek: en_wwhnd_2023_{fm,01..31,resc,ob}.pdf. A többi Hesperian-cím is ugyanezt a sémát követi (en_dvc_2025 Disabled Village Children, en_pcmh_2025 Community Mental Health, en_hhwl_2026). A teljes készletet egyetlen szkripttel tükrözd."
+],
+"msf-essential-drugs": [
+"FR/ES/AR: guideline-339-{fr,es,ar}.pdf. An old copy sits on the CD3WD mirror (ftpmirror.your.org); avoid it as outdated.",
+"FR/ES/AR: guideline-339-{fr,es,ar}.pdf. Egy régi példány a CD3WD-tükrön van (ftpmirror.your.org); elavultsága miatt kerüld."
+],
+"msf-cholera-and-public-health-engineering": [
+"PHE PDF: https://medicalguidelines.msf.org/sites/default/files/2022-06/Public_health_engineering_2010.pdf (11,301,056 B). The same page also links Tuberculosis 2025 and Measles 2025 PDFs.",
+"PHE PDF: https://medicalguidelines.msf.org/sites/default/files/2022-06/Public_health_engineering_2010.pdf (11 301 056 B). Ugyanez az oldal a Tuberculosis 2025 és a Measles 2025 PDF-re is linkel."
+],
+"icrc-war-surgery-vol1": [
+"Redirects to /sites/default/files/external/doc/en/assets/files/other/icrc-002-0973.pdf (358 pp). Alternative file icrc.org/eng/assets/files/other/icrc_002_0973.pdf is 5.7 MB and 357 pp; keep both. shop.icrc.org lists it at CHF 0.",
+"Átirányít ide: /sites/default/files/external/doc/en/assets/files/other/icrc-002-0973.pdf (358 oldal). Alternatív fájl: icrc.org/eng/assets/files/other/icrc_002_0973.pdf, 5,7 MB és 357 oldal; tartsd meg mindkettőt. A shop.icrc.org CHF 0 áron listázza."
+],
+"icrc-war-surgery-vol2": [
+"The path says /fre/ but the content is the ENGLISH edition (checked: 640 pp, 'War Surgery volume 2'). The /en/doc/... variant returns 404.",
+"Az útvonalban /fre/ szerepel, de a tartalom az ANGOL kiadás (ellenőrizve: 640 oldal, „War Surgery volume 2”). A /en/doc/... változat 404-et ad."
+],
+"who-surgical-care-district-hospital": [
+"HEAD returns 500; GET returns 200 application/pdf. Save as 9241545755.pdf. A Vietnamese edition is in the same record.",
+"A HEAD 500-at ad; a GET 200 application/pdf választ ad. Mentsd 9241545755.pdf néven. Ugyanabban a rekordban vietnámi kiadás is van."
+],
+"who-anaesthesia-district-hospital": [
+"Size is the IRIS sizeBytes value (8,708,088). Uses the same GET-only API as SCDH.",
+"A méret az IRIS sizeBytes értéke (8 708 088). Ugyanazt a csak GET-tel működő API-t használja, mint az SCDH."
+],
+"who-model-formulary-2008": [
+"634 pp. Based on the 15th EML (2007), so newer drugs are missing. Pair it with EML 24.",
+"634 oldal. A 15. EML-en (2007) alapul, így az újabb gyógyszerek hiányoznak belőle. Egészítsd ki az EML 24-gyel."
+],
+"who-pocket-book-hospital-care-children": [
+"The same record also holds RU, VI, MR, HI and other translations. The IMCI chart booklet (IRIS 10665/43993, 0.47 MB, bitstream 3f2a512e-c6e2-418d-9af3-9989f0370fb3) is a good one-page-protocol companion.",
+"Ugyanebben a rekordban RU, VI, MR, HI és más fordítások is vannak. Az IMCI chart booklet (IRIS 10665/43993, 0,47 MB, bitstream 3f2a512e-c6e2-418d-9af3-9989f0370fb3) jó, egyoldalas protokollokat tartalmazó kiegészítő."
+],
+"who-managing-complications-pregnancy-childbirth": [
+"Overlaps with MSF EONC but goes deeper on procedures.",
+"Átfedésben van az MSF EONC-vel, de a beavatkozásokat részletesebben tárgyalja."
+],
+"who-basic-emergency-care": [
+"Good training material for new health workers.",
+"Jó képzési anyag új egészségügyi dolgozóknak."
+],
+"us-army-atp-4-02-11-first-aid": [
+"ATP 4-02.11 (March 2026) supersedes TC 4-02.1, which replaced FM 4-25.11. The older TC 4-02.1 with Change 2 is at a third-party mirror: https://ciehub.info/ref/TC/4-02x1_2018.pdf (1.6 MB, 200). FM 4-25.11 copies exist at irp.fas.org/doddir/milmed/first.pdf (200).",
+"Az ATP 4-02.11 (2026. március) felváltja a TC 4-02.1-et, amely az FM 4-25.11 helyébe lépett. A régebbi TC 4-02.1 a 2. módosítással (Change 2) egy harmadik fél tükrén érhető el: https://ciehub.info/ref/TC/4-02x1_2018.pdf (1,6 MB, 200). Az FM 4-25.11 példányai az irp.fas.org/doddir/milmed/first.pdf címen érhetők el (200)."
+],
+"special-forces-medical-handbook-st-31-91b": [
+"Officially obsolete (drug doses from 1982). The successor 'Special Operations Forces Medical Handbook' 2nd ed. (2008) has no verified free official PDF. It is sold by Skyhorse, ISBN 9781616082789 (paid, ~US$20-30).",
+"Hivatalosan elavult (a gyógyszeradagok 1982-esek). Az utódjához, a „Special Operations Forces Medical Handbook” 2. kiadásához (2008) nincs ellenőrzött, ingyenes hivatalos PDF. A Skyhorse árusítja, ISBN 9781616082789 (fizetős, ~US$20–30)."
+],
+"wikem-emergency-medicine-wiki": [
+"No official dump was found. Mirror with wget or the MediaWiki API, rate-limited. Assumes US resources and drugs, written for physicians. Check whether it is already inside the mdwiki/zimgit ZIMs before mirroring.",
+"Hivatalos dumpot nem találtunk. wgettel vagy a MediaWiki API-val tükrözd, sebességkorlátozással. Amerikai erőforrásokat és gyógyszereket feltételez, orvosoknak készült. Tükrözés előtt ellenőrizd, nincs-e már benne az mdwiki/zimgit ZIM-ekben."
+],
+"msd-merck-manual-professional": [
+"Mirroring the website is not permitted. For offline use buy the print 20th ed. or use the official app. Lower priority because the free MSF/WHO items cover field needs.",
+"A weboldal tükrözése nem engedélyezett. Offline használatra vedd meg a nyomtatott 20. kiadást, vagy használd a hivatalos alkalmazást. Alacsonyabb prioritás, mert az ingyenes MSF/WHO elemek lefedik a terepi igényeket."
+],
+"oxford-handbook-clinical-medicine-11": [
+"ISBN 9780198844013 (some listings 9780198844020). Buy as print. The OHCS (Clinical Specialties) companion is also worth having.",
+"ISBN 9780198844013 (egyes listákon 9780198844020). Nyomtatva vedd meg. Az OHCS (Clinical Specialties) kísérőkötetet is érdemes beszerezni."
+],
+"uptodate": [
+"Listed only for completeness. No offline export; licence forbids scraping. Low priority.",
+"Csak a teljesség kedvéért szerepel. Offline export nincs; a licenc tiltja a tömeges lementést (scraping). Alacsony prioritás."
+],
+"who-guidelines-drinking-water-quality": [
+"Issued 2026-05-06, ISBN 9789240121225; the edition label is not confirmed in the metadata. The previous 4th ed. with both addenda is IRIS 10665/352532 (5.3 MB, bitstream 69c17edd-ee26-425b-9d34-33799377e886). Keep both.",
+"Kiadva: 2026-05-06, ISBN 9789240121225; a kiadás számozása a metaadatokban nincs megerősítve. Az előző, 4. kiadás mindkét kiegészítéssel az IRIS 10665/352532 (5,3 MB, bitstream 69c17edd-ee26-425b-9d34-33799377e886). Tartsd meg mindkettőt."
+],
+"who-guidelines-sanitation-health": [
+"More policy-level. Hesperian CGEH and MSF PHE are more hands-on.",
+"Inkább szakpolitikai szintű. A Hesperian CGEH és az MSF PHE gyakorlatiasabb."
+],
+"cawst-biosand-filter-construction-manual": [
+"The direct PDF is the 2012 edition hosted by ECHO (asset CDN works without login; the echocommunity.org pages return 403 to curl). The CAWST library also has the sand-sieve fabrication guide and HWTS fact sheets in many languages. Use the SODIS method (sodis.ch, 200) alongside it.",
+"A közvetlen PDF a 2012-es kiadás, az ECHO tárolja (az asset CDN bejelentkezés nélkül működik; az echocommunity.org oldalai curlre 403-at adnak). A CAWST könyvtárában megtalálható a homokszita-készítési útmutató és sok nyelven a HWTS-tájékoztatók is. Mellette használd a SODIS-módszert (sodis.ch, 200)."
+],
+"hand-dug-wells-watt-wood": [
+"ISBN 9780903031271 (pb), 9781780445083 (eBook). Practical Action Publishing has an Open Access collection (practicalactionpublishing.com/open-access, 200) worth scanning for free titles. A free WaterAid 'Hand dug wells' technical brief (2013) is on pseau.org, but its TLS certificate failed to curl.",
+"ISBN 9780903031271 (puhafedeles), 9781780445083 (e-könyv). A Practical Action Publishingnek van Open Access gyűjteménye (practicalactionpublishing.com/open-access, 200), érdemes átnézni ingyenes címekért. Ingyenes WaterAid „Hand dug wells” műszaki ismertető (2013) is van a pseau.org-on, de a TLS-tanúsítványa curllel nem ment át az ellenőrzésen."
+],
+"sphere-handbook-2018": [
+"Size is from the SuSanA mirror listing (458 pp): https://www.susana.org/knowledge-hub/resources?id=4167 (page 200). Download the PDF manually in a browser.",
+"A méret a SuSanA-tükör listájából származik (458 oldal): https://www.susana.org/knowledge-hub/resources?id=4167 (az oldal 200). A PDF-et kézzel, böngészőben töltsd le."
+],
+"usda-complete-guide-home-canning-2015": [
+"Files: INTRO_HomeCanrev0715.pdf + GUIDE01..GUIDE07_HomeCan_rev0715.pdf under nchfp.uga.edu/papers/guide/. Also mirror NCHFP's drying, freezing, pickling and fermenting pages (wget). Avoid Amazon reprints, which are reported to omit content.",
+"Fájlok: INTRO_HomeCanrev0715.pdf + GUIDE01..GUIDE07_HomeCan_rev0715.pdf a nchfp.uga.edu/papers/guide/ alatt. Az NCHFP szárításról, fagyasztásról, savanyításról és erjesztésről szóló oldalait is tükrözd (wget). Kerüld az Amazon-utánnyomásokat, mert a beszámolók szerint hiányos a tartalmuk."
+],
+"kitinoja-kader-small-scale-postharvest": [
+"The FAO HTML version is verified. The UF/IFAS PDF mirror found in search returns 404. The 3rd ed. is at fao.org/4/x5403e/x5403e00.htm.",
+"Az FAO HTML-változata ellenőrizve. A keresésben talált UF/IFAS PDF-tükör 404-et ad. A 3. kiadás a fao.org/4/x5403e/x5403e00.htm címen van."
+],
+"fao-human-nutrition-developing-world": [
+"Mirror with wget -r -np restricted to the /4/w0073e/ path.",
+"wget -r -np paranccsal tükrözd, a /4/w0073e/ útvonalra korlátozva."
+],
+"usda-fooddata-central-sr-legacy": [
+"Skip the large Branded Foods set. Needs a spreadsheet or SQLite to use; consider pre-rendering a PDF table.",
+"A nagy Branded Foods készletet hagyd ki. Használatához táblázatkezelő vagy SQLite kell; érdemes előre PDF-táblázatot készíteni belőle."
+],
+"encyclopedia-of-country-living": [
+"ISBN 9781632172891 (paperback, 2019). ISBN 9781632175830 is a 2025 3-ring-binder edition (CA$65.99). Buy in print.",
+"ISBN 9781632172891 (puhafedeles, 2019). Az ISBN 9781632175830 egy 2025-ös, gyűrűs mappás kiadás (CA$65,99). Nyomtatva vedd meg."
+],
+"attra-ncat-publications": [
+"WP REST API https://www.ncat.org/wp-json/wp/v2/publication returns X-WP-Total 375. Page through it, then scrape each publication page for .pdf links. attra.ncat.org redirects to ncat.org. Some titles are in Spanish.",
+"A WP REST API (https://www.ncat.org/wp-json/wp/v2/publication) X-WP-Total 375 értéket ad. Lapozz végig rajta, majd minden kiadvány oldaláról gyűjtsd ki a .pdf linkeket. Az attra.ncat.org az ncat.org-ra irányít át. Egyes címek spanyol nyelvűek."
+],
+"fao-better-farming-series": [
+"FAO hosts EPUB compilations under /fileadmin/user_upload/faoweb/e-books/BetterFarming/ (no index page found). An HTML mirror of all booklets (from CD3WD) is at https://piku.codeberg.page/better_farming/INDEX.HTML (200). The journeytoforever links point to cd3wd.com, which is blocked through the proxy.",
+"Az FAO EPUB-gyűjteményeket tárol a /fileadmin/user_upload/faoweb/e-books/BetterFarming/ alatt (indexoldalt nem találtunk). Az összes füzet HTML-tükre (a CD3WD-ből) a https://piku.codeberg.page/better_farming/INDEX.HTML címen van (200). A journeytoforever linkjei a cd3wd.com-ra mutatnak, amely a proxyn keresztül blokkolva van."
+],
+"fao-teca-and-openknowledge": [
+"TECA: https://www.fao.org/teca/ (200). Pick a curated subset, for example the Manual on Meat Inspection for Developing Countries (fao.org/4/t0756e/T0756E00.htm, 200), the FAO Animal Production & Health, Soils and Fisheries Technical Paper series, and Diversification booklets (beekeeping). The legacy HTML library at www.fao.org/4/<code>/ can be mirrored with wget.",
+"TECA: https://www.fao.org/teca/ (200). Válassz egy válogatott részhalmazt, például a Manual on Meat Inspection for Developing Countries kézikönyvet (fao.org/4/t0756e/T0756E00.htm, 200), az FAO Animal Production & Health, Soils és Fisheries Technical Paper sorozatát, valamint a Diversification füzeteket (méhészet). A régi HTML-könyvtár a www.fao.org/4/<code>/ alatt wgettel tükrözhető."
+],
+"echo-technical-notes": [
+"Downloads need a free account. Direct asset URLs (assets-global.echocommunity.org/books/<uuid>/en/*.pdf) worked without login. Focus is tropical; less relevant to Hungary than ATTRA, but its seed-bank and storage notes apply widely.",
+"A letöltésekhez ingyenes fiók kell. A közvetlen asset URL-ek (assets-global.echocommunity.org/books/<uuid>/en/*.pdf) bejelentkezés nélkül is működtek. Trópusi fókuszú; Magyarország szempontjából kevésbé releváns, mint az ATTRA, de a vetőmagbankról és a tárolásról szóló ismertetői általánosan alkalmazhatók."
+],
+"peace-corps-ice-manuals": [
+"M-17 Small Scale Beekeeping: archive.org/download/ERIC_ED241775/ERIC_ED241775.pdf. M-2B Small Farm Grain Storage: archive.org/download/ERIC_ED241767/ERIC_ED241767.pdf. Many more ICE manuals are on archive.org: search 'Appropriate Technologies for Development'. The ERIC_* PDFs are small; the micro_IA* items are 1+ GB scans. peacecorps.gov returned 403.",
+"M-17 Small Scale Beekeeping: archive.org/download/ERIC_ED241775/ERIC_ED241775.pdf. M-2B Small Farm Grain Storage: archive.org/download/ERIC_ED241767/ERIC_ED241767.pdf. Sok további ICE-kézikönyv van az archive.org-on: keress rá az „Appropriate Technologies for Development” kifejezésre. Az ERIC_* PDF-ek kicsik; a micro_IA* elemek 1+ GB-os szkennelések. A peacecorps.gov 403-at adott."
+],
+"pfaf-plants-for-a-future": [
+"No bulk download was found. A mirror must be polite and limited, and the licence for redistribution is unclear, so ask PFAF first. PFAF also sells printed books.",
+"Tömeges letöltést nem találtunk. A tükrözésnek kíméletesnek és korlátozottnak kell lennie, a továbbterjesztés licence pedig tisztázatlan, ezért előbb kérdezd meg a PFAF-ot. A PFAF nyomtatott könyveket is árul."
+],
+"usda-plants-database": [
+"The site is an Angular SPA, and every deep URL tried (csvdownload, plantlst.txt) returned the 710-byte HTML shell to curl. Download the 'Complete PLANTS Checklist' manually from the Downloads page in a browser. Low priority for a European archive.",
+"Az oldal egy Angular SPA, és minden kipróbált mély URL (csvdownload, plantlst.txt) a 710 bájtos HTML-vázat adta vissza curlnek. A „Complete PLANTS Checklist” fájlt kézzel, böngészőből töltsd le a Downloads oldalról. Európai archívum számára alacsony prioritás."
+],
+"icraf-agroforestree-database": [
+"Mostly tropical species. Mirror only the species pages.",
+"Főleg trópusi fajok. Csak a fajoldalakat tükrözd."
+],
+"osa-seed-saving-guide": [
+"The download may ask for an email address. A Spanish version also exists. Pair it with ATTRA 'Harvesting, drying, processing and storing seed in hot and humid climates' (1.1 MB).",
+"A letöltés e-mail-címet kérhet. Spanyol változat is létezik. Egészítsd ki az ATTRA „Harvesting, drying, processing and storing seed in hot and humid climates” kiadványával (1,1 MB)."
+],
+"seed-to-seed-ashworth": [
+"ISBN 9781882424580. Also sold by Seed Savers Exchange (seedsavers.org, 200). Svalbard Global Seed Vault (seedvault.no, 200; croptrust.org) is reference info only, no downloadable resource.",
+"ISBN 9781882424580. A Seed Savers Exchange is árulja (seedsavers.org, 200). A Svalbard Global Seed Vault (seedvault.no, 200; croptrust.org) csak referencia-információ, letölthető anyag nincs."
+],
+"where-there-is-no-vet-forse": [
+"Files are bk-where-there-is-no-vet-part{1..6}-010199-en.pdf (DSpace 7; metadata via /server/api/core/bitstreams/<uuid>). Retry on resets. Buy a printed copy too.",
+"A fájlok: bk-where-there-is-no-vet-part{1..6}-010199-en.pdf (DSpace 7; metaadatok a /server/api/core/bitstreams/<uuid> végponton). Kapcsolatbontás esetén próbáld újra. Vegyél nyomtatott példányt is."
+],
+"cvm-where-there-is-no-animal-doctor": [
+"The WTNAD free PDF sits behind a cvm.org login. ECHO also hosts it (EN/ES/TH). ISBN 978-1-886532-45-8. Other direct CVM PDFs (Raising Healthy Goats, Raising Healthy Rabbits) are under /Files/Documents/Books/Book%20PDF's/.",
+"A WTNAD ingyenes PDF-je cvm.org-bejelentkezés mögött van. Az ECHO is tárolja (EN/ES/TH). ISBN 978-1-886532-45-8. Más közvetlen CVM PDF-ek (Raising Healthy Goats, Raising Healthy Rabbits) a /Files/Documents/Books/Book%20PDF's/ alatt találhatók."
+],
+"merck-veterinary-manual": [
+"Buy print for offline use. Do not scrape.",
+"Offline használatra vedd meg nyomtatva. Ne mentsd le automatizáltan (scraping)."
+],
+"fm-21-76-survival-mcrp-3-02f": [
+"Alternatives: the original 1957 FM 21-76 (archive.org/download/FM21-76Survival1957/FM21-76Survival1957.pdf, 18.2 MB), the Multi-Service SERE pocket manual FM 21-76-1 (rmp.nc.gov, 3.1 MB, 200), and USMC MCRP 3-02F in the MManuals item (36.3 MB). The current Army doctrine is ATP 3-50.21; no official URL was verified.",
+"Alternatívák: az eredeti, 1957-es FM 21-76 (archive.org/download/FM21-76Survival1957/FM21-76Survival1957.pdf, 18,2 MB), a Multi-Service SERE zsebkönyv, FM 21-76-1 (rmp.nc.gov, 3,1 MB, 200), valamint a USMC MCRP 3-02F a MManuals elemben (36,3 MB). Az amerikai szárazföldi haderő (Army) jelenlegi doktrínája az ATP 3-50.21; hivatalos URL-t nem ellenőriztünk."
+],
+"storeys-guides": [
+"Buy in print: Chickens, Goats, Sheep, Rabbits, Pigs, Dairy Animals and Beef Cattle are the core set. FAO Better Farming, Peace Corps manuals and CVM books are free partial substitutes.",
+"Nyomtatva vedd meg: az alapkészlet a Chickens, Goats, Sheep, Rabbits, Pigs, Dairy Animals és Beef Cattle. Az FAO Better Farming, a Peace Corps kézikönyvek és a CVM könyvei ingyenes, részleges helyettesítők."
+],
+"oss-joplin": [
+"Szinkron célként 'File system' (pl. Syncthing-mappa) teljesen offline működik. Logseq/Zettlr sima Markdown-fájlokban tárol – hosszú távon is olvasható.",
+"Szinkron célként 'File system' (pl. Syncthing-mappa) teljesen offline működik. Logseq/Zettlr sima Markdown-fájlokban tárol – hosszú távon is olvasható."
+],
+"oss-texlive": [
+"Az ISO-ról install-tl offline telepít (scheme-full ~8 GB lemezen). Debianban texlive-full meta-csomag is van. A magyar elválasztás (hyphen-hungarian, magyar babel) benne van.",
+"Az ISO-ról install-tl offline telepít (scheme-full ~8 GB lemezen). Debianban texlive-full meta-csomag is van. A magyar elválasztás (hyphen-hungarian, magyar babel) benne van."
+],
+"oss-kolibri": [
+"A tartalomcsatornákat (channels) a Kolibri Studióból előre exportáld USB-re; ezután a kolibri 'import from drive' teljesen offline működik. Raspberry Pi-n is fut.",
+"A tartalomcsatornákat (channels) a Kolibri Studióból előre exportáld USB-re; ezután a kolibri 'import from drive' teljesen offline működik. Raspberry Pi-n is fut."
+],
+"oss-vlc": [
+"Androidra töltsd le a VLC APK-t is (F-Droid). A VLC streamszerverként is használható LAN-on (rádió/óraközvetítés).",
+"Androidra töltsd le a VLC APK-t is (F-Droid). A VLC streamszerverként is használható LAN-on (rádió/óraközvetítés)."
+],
+"oss-audacity": [
+"Az MP3/FFmpeg import a disztribúció ffmpeg-könyvtárait használja – azokat is archiváld.",
+"Az MP3/FFmpeg import a disztribúció ffmpeg-könyvtárait használja – azokat is archiváld."
+],
+"oss-gimp": [
+"Az offline súgót (gimp-help) külön csomagként töltsd le (hu is van).",
+"Az offline súgót (gimp-help) külön csomagként töltsd le (hu is van)."
+],
+"oss-inkscape": [
+"AppImage-ként függőség nélkül hordozható; a beépített súgó/oktatóanyagok offline is elérhetők.",
+"AppImage-ként függőség nélkül hordozható; a beépített súgó/oktatóanyagok offline is elérhetők."
+],
+"oss-matrix-synapse": [
+"Szövetségi (federation) beállítás nélkül, csak LAN-on is működik; Element Web statikusan kiszolgálható Caddy/nginx-szel. Raspberry Pi-re a Conduit sokkal könnyebb.",
+"Szövetségi (federation) beállítás nélkül, csak LAN-on is működik; Element Web statikusan kiszolgálható Caddy/nginx-szel. Raspberry Pi-re a Conduit sokkal könnyebb."
+],
+"oss-sdrpp": [
+"Windows-on a Zadig (WinUSB) driver kell az RTL-SDR-hez – archiváld azt is. Raspberry Pi-n is fut.",
+"Windows-on a Zadig (WinUSB) driver kell az RTL-SDR-hez – archiváld azt is. Raspberry Pi-n is fut."
+],
+"oss-direwolf": [
+"Debian: apt install direwolf. A doc/ mappában kiváló PDF-kézikönyvek vannak – archiváld őket is.",
+"Debian: apt install direwolf. A doc/ mappában kiváló PDF-kézikönyvek vannak – archiváld őket is."
+],
+"oss-transmission": [
+"Offline LAN-on a Local Peer Discovery (LPD) tracker nélkül is megtalálja a társakat; saját tracker: opentracker vagy a qBittorrent beépített trackere.",
+"Offline LAN-on a Local Peer Discovery (LPD) tracker nélkül is megtalálja a társakat; saját tracker: opentracker vagy a qBittorrent beépített trackere."
+],
+"oss-postgresql": [
+"A PDF dokumentációt (postgresql.org/docs) offline is archiváld. Egyszerű nyilvántartáshoz az SQLite + LibreOffice Base vagy egy kis webapp is elég.",
+"A PDF dokumentációt (postgresql.org/docs) offline is archiváld. Egyszerű nyilvántartáshoz az SQLite + LibreOffice Base vagy egy kis webapp is elég."
+],
+"oss-esp-idf": [
+"`git clone --recursive`, majd install.sh/export.sh – az eszközláncot (~/.espressif) is mentsd. Az idf_versions.txt szerint aktuális ágak: v6.1, v6.0.3.",
+"`git clone --recursive`, majd install.sh/export.sh – az eszközláncot (~/.espressif) is mentsd. Az idf_versions.txt szerint aktuális ágak: v6.1, v6.0.3."
+],
+"oss-grafana": [
+"A pluginokat előre telepítsd (grafana-cli plugins install), mert a katalógus online.",
+"A pluginokat előre telepítsd (grafana-cli plugins install), mert a katalógus online."
+],
+"oss-mosquitto": [
+"Szinte minden Linux-disztribúció és az OpenWrt csomagtárában is megvan.",
+"Szinte minden Linux-disztribúció és az OpenWrt csomagtárában is megvan."
+],
+"oss-opensprinkler": [
+"A webes UI (OpenSprinkler-App) külön repó – mentsd azt is; Raspberry Pi-n OSPi módban is fut.",
+"A webes UI (OpenSprinkler-App) külön repó – mentsd azt is; Raspberry Pi-n OSPi módban is fut."
+],
+"oss-maxima": [
+"Grafikus felülethez a wxMaxima-t is mentsd (külön projekt).",
+"Grafikus felülethez a wxMaxima-t is mentsd (külön projekt)."
+],
+"oss-fiji": [
+"Az update site-ok online – a szükséges pluginokkal frissített példányt zipeld be.",
+"Az update site-ok online – a szükséges pluginokkal frissített példányt zipeld be."
+],
+"oss-graphhopper": [
+"Az előfeldolgozott gráf-mappát (graph-cache) is mentsd, így újraépítés nélkül indul.",
+"Az előfeldolgozott gráf-mappát (graph-cache) is mentsd, így újraépítés nélkül indul."
+]
+},
+"size_human": {
+"debian-13-amd64-bd-jigdo-set": [
+"~120-130 GB total (6 images; BD-1..5 up to 25 GB each, BD-6 small)",
+"összesen ~120–130 GB (6 képfájl; a BD-1..5 egyenként legfeljebb 25 GB, a BD-6 kicsi)"
+],
+"pypi-full-mirror-bandersnatch": [
+"51.5 TB total package files",
+"összesen 51,5 TB csomagfájl"
+],
+"crates-io-mirror": [
+"all crate files ~200+ GB (unverified); DB dump 2.22 GB (2,220,439,297 bytes)",
+"az összes crate-fájl ~200+ GB (nem ellenőrzött); a DB-dump 2,22 GB (2 220 439 297 bájt)"
+],
+"npm-go-registries-note": [
+"npm: 4,605,311 package docs (size tens-hundreds of TB, unverified); Go: no published total",
+"npm: 4 605 311 csomagdokumentum (a méret több tíz–száz TB, nem ellenőrzött); Go: nincs közzétett összméret"
+],
+"devdocs-offline": [
+"~2.0 GB for all 318 docs",
+"~2,0 GB mind a 318 dokumentációra"
+],
+"firefox-translations-bergamot": [
+"~15-40 MB per direction (unverified); 94 language-pair folders",
+"irányonként ~15–40 MB (nem ellenőrzött); 94 nyelvpár-mappa"
+],
+"geofabrik-hungary-pbf": [
+"~0.3-0.4 GB pbf (unverified); shapefile zip larger",
+"~0,3–0,4 GB pbf (nem ellenőrzött); a shapefile ZIP nagyobb"
+],
+"onegeology-portal": [
+"n/a (WMS/WFS services, not bulk files)",
+"nem értelmezhető (WMS/WFS szolgáltatások, nem tömeges fájlok)"
+],
+"stellarium-star-catalogs": [
+"app ~300 MB (unverified); extra catalogs stars4-8 = 4.75 GB total (53 MB + 245 MB + 912 MB + 1.71 GB + 1.83 GB)",
+"az alkalmazás ~300 MB (nem ellenőrzött); a stars4–8 extra katalógusok összesen 4,75 GB (53 MB + 245 MB + 912 MB + 1,71 GB + 1,83 GB)"
+],
+"pmc-open-access-s3": [
+"multi-TB with PDFs and media (unverified); XML+text only much smaller",
+"több TB a PDF-ekkel és médiafájlokkal (nem ellenőrzött); csak XML+szöveg esetén jóval kisebb"
+],
+"internet-archive-note": [
+"n/a (total ~ tens of PB; per item MB-GB)",
+"nem értelmezhető (összesen ~több tíz PB; elemenként MB–GB)"
+],
+"internet-in-a-box": [
+"software few GB after install; content depends on chosen ZIM/maps/videos (unverified)",
+"a szoftver telepítés után néhány GB; a tartalom a választott ZIM-ektől/térképektől/videóktól függ (nem ellenőrzött)"
+],
+"project-nomad": [
+"~5 GB base install; content extra",
+"~5 GB alaptelepítés; a tartalom ezen felül"
+],
+"neets-navy-electricity-electronics": [
+"132 MB (24 PDFs); full item 4.9 GB with jp2/epub",
+"132 MB (24 PDF); a teljes elem a jp2/epub fájlokkal 4,9 GB"
+],
+"gingery-metal-shop-from-scrap": [
+"7 slim paperbacks (~80-200 pages each)",
+"7 vékony, puhafedeles kötet (egyenként ~80–200 oldal)"
+],
+"us-army-construction-fms": [
+"13 MB total (4.0 + 5.2 + 3.8 MB PDFs)",
+"összesen 13 MB (4,0 + 5,2 + 3,8 MB PDF)"
+],
+"practical-action-knowledge-centre": [
+"hundreds of briefs, est. <1 GB",
+"több száz ismertető, becsült méret <1 GB"
+],
+"babcock-wilcox-steam-1913": [
+"8.2 MB (HTML zip with images)",
+"8,2 MB (HTML ZIP képekkel)"
+],
+"nasa-ntrs": [
+"650,206 citations (API total); full-text corpus many TB, use a curated subset",
+"650 206 hivatkozás (az API szerinti összesen); a teljes szöveges korpusz sok TB, válogatott részhalmazt használj"
+],
+"engineering-toolbox": [
+"unknown (thousands of pages, est. several GB with images)",
+"ismeretlen (több ezer oldal, képekkel becsülten több GB)"
+],
+"farm-hack-tools": [
+"unknown (hundreds of tool pages, est. <2 GB with attachments)",
+"ismeretlen (több száz eszközoldal, mellékletekkel becsülten <2 GB)"
+],
+"mdisc-bdxl-archival-media": [
+"500 GB capacity per 5-pack",
+"5 darabos csomagonként 500 GB kapacitás"
+],
+"hub-ds-common-voice-mdc": [
+"a magyar rész néhány GB (unverified)",
+"a magyar rész néhány GB (nem ellenőrzött)"
+],
+"kiwix-hotspot": [
+"64 GB to 512 GB depending on bundle",
+"csomagtól függően 64 GB-tól 512 GB-ig"
+],
+"britannica-offline": [
+"DVD editions approx. 4–8 GB (unverified)",
+"a DVD-kiadások kb. 4–8 GB (nem ellenőrzött)"
+],
+"internet-archive-ia-cli": [
+"tens of petabytes in total; pick collections",
+"összesen több tíz petabájt; gyűjteményeket válassz"
+],
+"hathitrust": [
+"approx. 18M+ volumes total (unverified); PD subset several million",
+"összesen kb. 18 millió+ kötet (nem ellenőrzött); a közkincs (PD) részhalmaz több millió kötet"
+],
+"google-books-pd": [
+"millions of PD volumes (unverified); per book 5–100 MB",
+"több millió közkincs (PD) kötet (nem ellenőrzött); könyvenként 5–100 MB"
+],
+"project-gutenberg-rsync": [
+"main collection 1.065 TB (3,444,781 files); generated (epub/mobi/html) collection 1.378 TB (2,685,662 files)",
+"fő gyűjtemény 1,065 TB (3 444 781 fájl); generált (epub/mobi/html) gyűjtemény 1,378 TB (2 685 662 fájl)"
+],
+"open-library": [
+"all-types dump approx. 12.4 GB; complete with history approx. 29.6 GB",
+"az all-types dump kb. 12,4 GB; a teljes, előzményekkel együtt kb. 29,6 GB"
+],
+"openstax": [
+"8.34 GB (83 of 84 live books' PDFs)",
+"8,34 GB (a 84 élő könyvből 83 PDF-je)"
+],
+"open-textbook-library": [
+"1,915 textbooks; approx. 20–40 GB PDF (estimate)",
+"1915 tankönyv; kb. 20–40 GB PDF (becslés)"
+],
+"mit-ocw": [
+"2,500+ courses; sample ZIP 18.01SC = 144 MB; full set without video estimated 200–400 GB",
+"2500+ kurzus; a 18.01SC minta-ZIP 144 MB; a teljes készlet videók nélkül becsülten 200–400 GB"
+],
+"saylor-academy": [
+"160+ courses; size unknown",
+"160+ kurzus; a méret ismeretlen"
+],
+"librivox": [
+"28.4 TB for all 21,950 IA items (all formats); 64 kbps MP3 subset much smaller (not measured)",
+"28,4 TB mind a 21 950 IA-elemre (minden formátum); a 64 kbps-os MP3-részhalmaz jóval kisebb (nem mért)"
+],
+"doab": [
+"111,000+ books; full PDF set multiple TB (estimate)",
+"111 000+ könyv; a teljes PDF-készlet több TB (becslés)"
+],
+"oapen": [
+"approx. 30,000+ books (unverified)",
+"kb. 30 000+ könyv (nem ellenőrzött)"
+],
+"pmc-open-access": [
+"several million articles; several TB with PDFs and media (unverified)",
+"több millió cikk; a PDF-ekkel és médiafájlokkal több TB (nem ellenőrzött)"
+],
+"annas-archive": [
+"approx. 1.1 PB total torrents; approx. 68.7M books and 156M papers (Aug 2026, press reports)",
+"a torrentek összesen kb. 1,1 PB; kb. 68,7 millió könyv és 156 millió tanulmány (2026. augusztus, sajtóhírek szerint)"
+],
+"library-genesis": [
+"libgen.li fork approx. 336 TB total (2025-10 snapshot); sci-tech (non-fiction) subset much smaller (tens of TB, unverified)",
+"a libgen.li fork összesen kb. 336 TB (2025-10-es pillanatkép); a tudományos-műszaki (non-fiction) részhalmaz jóval kisebb (több tíz TB, nem ellenőrzött)"
+],
+"sci-hub": [
+"approx. 99.6 TB, 95.7M files",
+"kb. 99,6 TB, 95,7 millió fájl"
+],
+"z-library": [
+"approx. 154.5 TB, 22.4M files (zlib dataset)",
+"kb. 154,5 TB, 22,4 millió fájl (zlib adatkészlet)"
+],
+"mek-oszk": [
+"approx. 30,500 item IDs (latest 30582 on 2026-11-13); total size not published, likely 1 TB+ (rough estimate)",
+"kb. 30 500 elemazonosító (a legutóbbi 2026-11-13-án: 30582); az összméret nincs közzétéve, valószínűleg 1 TB+ (durva becslés)"
+],
+"revai-nagy-lexikona": [
+"PDF 4.21 GB (39 files); DjVu approx. 1.49 GB (21 volumes)",
+"PDF 4,21 GB (39 fájl); DjVu kb. 1,49 GB (21 kötet)"
+],
+"dka-oszk": [
+"174,622 documents; size unknown",
+"174 622 dokumentum; a méret ismeretlen"
+],
+"hungaricana": [
+"millions of pages (unverified)",
+"több millió oldal (nem ellenőrzött)"
+],
+"arcanum-adt": [
+"tens of millions of pages (unverified)",
+"több tízmillió oldal (nem ellenőrzött)"
+],
+"tankonyvkatalogus-oh": [
+"hundreds of titles; approx. 20–60 GB (estimate)",
+"több száz cím; kb. 20–60 GB (becslés)"
+],
+"digitalis-tankonyvtar": [
+"thousands of titles (2019 press: 6,000+ journals, study volumes and textbooks); approx. 50–150 GB (estimate)",
+"több ezer cím (2019-es sajtóhír: 6000+ folyóirat, tanulmánykötet és tankönyv); kb. 50–150 GB (becslés)"
+],
+"magyar-katolikus-lexikon": [
+"approx. 1 GB HTML (estimate)",
+"kb. 1 GB HTML (becslés)"
+],
+"voroskereszt-kiadvanyok": [
+"tens of MB (single PDFs 6–9 MB each)",
+"több tíz MB (az egyes PDF-ek 6–9 MB-osak)"
+],
+"nebih-kiadvanyok": [
+"approx. 0.5–2 GB (estimate)",
+"kb. 0,5–2 GB (becslés)"
+],
+"ksh-stadat": [
+"approx. 1–5 GB for STADAT + key publications (estimate)",
+"kb. 1–5 GB a STADAT-ra és a fő kiadványokra (becslés)"
+],
+"lechner-terkepek": [
+"varies (nationwide orthophoto is TB-scale)",
+"változó (az országos ortofotó TB-nagyságrendű)"
+],
+"fao-better-farming-series": [
+"~1.6 MB per EPUB volume; full series unknown",
+"EPUB-kötetenként ~1,6 MB; a teljes sorozat mérete ismeretlen"
+],
+"fao-teca-and-openknowledge": [
+"unknown (repository is hundreds of GB)",
+"ismeretlen (a repozitórium több száz GB)"
+],
+"cvm-where-there-is-no-animal-doctor": [
+"96.2 MB ('Drugs and their usage' PDF); WTNAD PDF size unknown",
+"96,2 MB (a „Drugs and their usage” PDF); a WTNAD PDF mérete ismeretlen"
+],
+"storeys-guides": [
+"~300-450 pp. per volume",
+"kötetenként ~300–450 oldal"
+]
+}
+}

@@ -1,0 +1,962 @@
+# Anti-bot / CAPTCHA-mentes letöltés és keresés AI agentnek: kutatási jelentés (2026-11-14)
+
+**Ellenőrzés módja**
+- Verziók és dátumok: PyPI JSON API és npm registry.
+- Repók: `git ls-remote` és shallow clone. Innen jönnek a LICENSE fájlok, az utolsó commit dátuma és a README/pyproject részletek.
+- Árak: a hivatalos pricing oldalak, WebFetch-csel letöltve (2026-11-14).
+- A kódrészletek API-ját a README-kből és a forráskódból ellenőriztem, **élesben nem futtattam őket**. A sandbox TLS-t bontó (MITM) agent proxyn keresztül megy ki, így itt a TLS-fingerprint teszt értelmetlen lett volna.
+- Ahol valamit nem tudtam ellenőrizni, ott `UNVERIFIED` a jelölés.
+
+---
+
+## (a) Eszközök (YAML)
+
+```yaml
+# ===================== 1. STEALTH BROWSER / LIBRARY =====================
+- id: camoufox
+  name: Camoufox
+  kind: stealth_browser
+  repo_or_url: https://github.com/daijro/camoufox  (docs: https://camoufox.com)
+  latest_version: "python/npm camoufox 0.5.9 (2026-11-01); browser build v158.0.1-beta.41 (tag commit 2026-10-29)"
+  release_date: 2026-11-01
+  license: "browser: MPL-2.0 (repo LICENSE); python/npm package metadata: MIT"
+  access: free
+  price: "0 (a README-t proxy-szolgáltatók szponzorálják)"
+  install: 'pip install -U "camoufox[geoip]" && camoufox fetch   |  npm install camoufox playwright-core && npx camoufox fetch'
+  python_or_node: both
+  maintained: "yes – utolsó commit 2026-11-14; a README szerint 'under development, may not be suitable for stable production use'"
+  how_it_works_hu: "Patchelt Firefox. Minden indításkor új, belsőleg konzisztens eszköz-identitást sorsol a valós eloszlásból (fpgen). Ezt a navigator, screen, WebGL, fonts, WebRTC és geolocation értékekben C++ szinten, natívan adja ki, nem JS override-dal. A vezérlés Playwright, a patchelt Juggler protokollon át, és a page számára láthatatlan isolated world-ben fut. A visszakapott objektum normál Playwright Browser."
+  strengths_hu: "Erős fingerprint-konzisztencia; geoip=True a proxy kilépő IP-jéhez igazítja a timezone/locale/WebRTC értékeket; humanize=True (valódi egérmozgás-felvételek); beépített uBlock Origin; headless='virtual' (Xvfb); sync és async Python API; Node binding."
+  limits_hu: "Csak Firefox-motor (egyes oldalak Chrome-ra optimalizálnak). Béta státusz. Szerveren, GPU nélkül software rendering (llvmpipe) megy, ami 'server'-szagú. A block_images opció WAF-gyanús. Nehéz, ~böngészőnyi RAM kell. A geoip extra az első induláskor DB-t tölt le."
+  scores: {effectiveness: 9, ease: 7, offline_relevance: 9, cost: 10}
+
+- id: patchright
+  name: Patchright
+  kind: stealth_browser
+  repo_or_url: https://github.com/Kaliiiiiiiiii-Vinyzu/patchright  (python: …/patchright-python, node: …/patchright-nodejs)
+  latest_version: "PyPI 1.64.4 (2026-11-02); npm 1.64.3 (2026-11-02); driver tag v1.64.1"
+  release_date: 2026-11-02
+  license: Apache-2.0
+  access: free
+  price: "0"
+  install: "pip install patchright && patchright install chrome   (vagy: patchright install chromium)  |  npm i patchright"
+  python_or_node: both (+ közösségi .NET)
+  maintained: "yes – utolsó commit 2026-11-12; automatikusan követi a Playwright release-eket"
+  how_it_works_hu: "Drop-in Playwright-csere, csak Chromiumra. A Runtime.enable CDP-leak ellen isolated ExecutionContextben futtat JS-t. Kikapcsolja a Console API-t. Javítja a parancssori flageket: --enable-automation ki, AutomationControlled be. Closed shadow root-okkal is tud dolgozni."
+  strengths_hu: "Ha már van Playwright-kódunk, csak az importot kell cserélni. Saját állítása szerint átmegy Cloudflare, Kasada, Akamai, Datadome és CreepJS teszteken. Best practice: launch_persistent_context(channel='chrome', headless=False, no_viewport=True), saját UA vagy header nélkül."
+  limits_hu: "Firefox és WebKit nem támogatott. A console.log nem működik. Az init scriptek route-injektálással mennek, ami timing-attackkal elvileg detektálható. Néhány Playwright-teszten elbukik. A legjobb eredmény headful Chrome-mal jön, szerveren ehhez Xvfb kell."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 8, cost: 10}
+
+- id: rebrowser
+  name: rebrowser-patches / rebrowser-playwright / rebrowser-puppeteer
+  kind: stealth_browser
+  repo_or_url: https://github.com/rebrowser/rebrowser-patches
+  latest_version: "patches 1.1.3 (npm, 2026-11-02); rebrowser-playwright PyPI 1.64.102 és npm 1.64.102 (2026-11-02)"
+  release_date: 2026-11-02
+  license: "patches: MIT; drop-in csomagok: Apache-2.0"
+  access: free
+  price: "0"
+  install: "pip install rebrowser-playwright (import: rebrowser_playwright)  |  npm install playwright@npm:rebrowser-playwright playwright-core@npm:rebrowser-playwright-core"
+  python_or_node: both
+  maintained: "yes – utolsó commit 2026-11-02"
+  how_it_works_hu: "Forráskód-patchek Puppeteerhez és Playwrighthoz. Fő célpont a Runtime.Enable leak: kontextusokat kézzel hoz létre (addBinding vagy isolated world mód). Csak a library-t patcheli, a böngészőt nem."
+  strengths_hu: "npm alias-szal kódváltoztatás nélkül beköthető; Puppeteerhez is van; saját bot-detector tesztoldal."
+  limits_hu: "Fingerprintet nem hamisít. A böngésző stock marad, így UA, WebGL és IP-reputáció továbbra is a felhasználó dolga. Önmagában gyengébb, mint a Patchright vagy a Camoufox."
+  scores: {effectiveness: 6, ease: 8, offline_relevance: 6, cost: 10}
+
+- id: nodriver
+  name: nodriver
+  kind: stealth_browser
+  repo_or_url: https://github.com/ultrafunkamsterdam/nodriver  (docs: ultrafunkamsterdam.github.io/nodriver)
+  latest_version: "0.50.99"
+  release_date: 2026-10-26
+  license: AGPL-3.0
+  access: free
+  price: "0"
+  install: "pip install nodriver"
+  python_or_node: python
+  maintained: "yes – utolsó commit 2026-10-26; az undetected-chromedriver hivatalos utódja"
+  how_it_works_hu: "Selenium és chromedriver nélkül, közvetlenül CDP-n vezérli a telepített Chrome/Edge/Brave böngészőt, teljesen async módon. Minden futáshoz friss profilt használ, a végén takarít."
+  strengths_hu: "Valódi Chrome-ot használ, nincs webdriver-lenyomat; 1–2 soros indítás; okos tab.find(text) elemkeresés; cookie mentése és betöltése."
+  limits_hu: "AGPL licenc (beágyazásnál számít). Szerény dokumentáció, egyszemélyes projekt. Fájlletöltés-kezeléshez CDP-t kell kézzel használni (Browser.setDownloadBehavior)."
+  scores: {effectiveness: 8, ease: 6, offline_relevance: 7, cost: 10}
+
+- id: zendriver
+  name: Zendriver
+  kind: stealth_browser
+  repo_or_url: https://github.com/cdpdriver/zendriver  (docs: zendriver.dev)
+  latest_version: "0.17.1"
+  release_date: 2026-10-02
+  license: AGPL-3.0
+  access: free
+  price: "0"
+  install: "pip install zendriver"
+  python_or_node: python
+  maintained: "yes – utolsó commit 2026-10-01; közösségi nodriver-fork (bugfixek, docs, Docker)"
+  how_it_works_hu: "Ugyanaz a CDP-alapú megközelítés, mint a nodrivernél, több beolvasztott javítással. Van hozzá zendriver-docker image (GPU-gyorsított, nem headless Chrome)."
+  strengths_hu: "Jobb dokumentáció és közösség, mint a nodrivernél; Docker-támogatás."
+  limits_hu: "AGPL; a stealth szintje a nodriverével azonos; csak Python."
+  scores: {effectiveness: 8, ease: 7, offline_relevance: 7, cost: 10}
+
+- id: undetected-chromedriver
+  name: undetected-chromedriver
+  kind: stealth_browser
+  repo_or_url: https://github.com/ultrafunkamsterdam/undetected-chromedriver
+  latest_version: "3.5.5"
+  release_date: 2024-02-17
+  license: GPL-3.0
+  access: free
+  price: "0"
+  install: "pip install undetected-chromedriver"
+  python_or_node: python
+  maintained: "stale – PyPI utoljára 2024-02, utolsó commit 2025-07-05; a szerző maga a nodrivert ajánlja utódként"
+  how_it_works_hu: "Patchelt Selenium chromedriver, a ChromeDriver ismert lenyomatait eltávolítja."
+  strengths_hu: "Rengeteg régi példa és tutorial; a FlareSolverr erre épül."
+  limits_hu: "Elavult; Chrome-verzió-inkompatibilitások gyakoriak. Új projekthez helyette nodriver vagy zendriver kell."
+  scores: {effectiveness: 4, ease: 7, offline_relevance: 4, cost: 10}
+
+- id: seleniumbase
+  name: SeleniumBase (UC Mode / CDP Mode / Stealthy Playwright Mode)
+  kind: stealth_browser
+  repo_or_url: https://github.com/seleniumbase/SeleniumBase
+  latest_version: "4.57.1"
+  release_date: 2026-11-05
+  license: MIT
+  access: free
+  price: "0"
+  install: "pip install seleniumbase"
+  python_or_node: python
+  maintained: "yes – utolsó commit 2026-11-13, nagyon aktív"
+  how_it_works_hu: "Az UC Mode undetected-chromedriver-szerű Selenium. A CDP Mode (sb_cdp.Chrome() vagy SB(uc=True) + sb.activate_cdp_mode()) tiszta CDP-re vált. Az sb.solve_captcha() kattintással kezeli a Turnstile-t és hasonlókat. A Stealthy Playwright Mode Playwrightot köt a stealth Chrome-ra."
+  strengths_hu: "Nagyon sok kész Cloudflare-bypass példa (examples/cdp_mode); pytest-integráció; aktív fejlesztő."
+  limits_hu: "Nagy framework, sokféle mód, ami az agentnek zavaros lehet. Selenium-függőség. Headful működéshez Xvfb kell."
+  scores: {effectiveness: 8, ease: 7, offline_relevance: 7, cost: 10}
+
+- id: botasaurus
+  name: Botasaurus
+  kind: stealth_browser
+  repo_or_url: https://github.com/omkarcloud/botasaurus
+  latest_version: "botasaurus 4.0.97 (2026-01-06); botasaurus-driver 4.0.101 (2026-08-10)"
+  release_date: 2026-01-06
+  license: MIT
+  access: free
+  price: "0"
+  install: "python -m pip install --upgrade botasaurus"
+  python_or_node: python
+  maintained: "yes – utolsó repo-commit 2026-11-13 (a fő PyPI csomag ritkábban frissül)"
+  how_it_works_hu: "Scraping framework @browser és @request dekorátorokkal. Saját 'humane' CDP-driver, emberi egérmozgással. Cloudflare-hez: driver.google_get(url, bypass_cloudflare=True)."
+  strengths_hu: "All-in-one: cache, párhuzamosítás, UI és API generálás; HTTP- és böngészőmód is van."
+  limits_hu: "Saját, véleményes framework-stílus. A 'minden bot-tesztet átmegy' állítás marketing. Kisebb közösség."
+  scores: {effectiveness: 7, ease: 7, offline_relevance: 6, cost: 10}
+
+- id: playwright-stealth
+  name: playwright-stealth (Python) / puppeteer-extra-plugin-stealth (Node)
+  kind: stealth_browser
+  repo_or_url: "https://github.com/Mattwmaster58/playwright_stealth ; https://github.com/berstend/puppeteer-extra"
+  latest_version: "playwright-stealth 2.0.3 (PyPI, 2026-04-04); puppeteer-extra-plugin-stealth 2.11.2 (npm, 2023-03-01); tf-playwright-stealth 1.2.0 (2025-06-13)"
+  release_date: "2026-04-04 / 2023-03-01"
+  license: MIT
+  access: free
+  price: "0"
+  install: "pip install playwright-stealth  |  npm i puppeteer-extra puppeteer-extra-plugin-stealth"
+  python_or_node: both
+  maintained: "playwright-stealth: low (utolsó commit 2026-04); puppeteer-extra: stale (utolsó commit 2023-03-01)"
+  how_it_works_hu: "JS-injekció: navigator.webdriver és plugins kozmetikázása, chrome.runtime stub és hasonlók."
+  strengths_hu: "Könnyű ráhúzni meglévő kódra."
+  limits_hu: "A saját README szerint 'Don't expect this to bypass anything but the simplest of bot detection methods'. A JS-override-ok maguk is detektálhatók. A CDP-leaket nem javítja. Modern Cloudflare ellen elavult."
+  scores: {effectiveness: 2, ease: 9, offline_relevance: 2, cost: 10}
+
+- id: scrapling
+  name: Scrapling (Fetcher / StealthyFetcher / DynamicFetcher)
+  kind: stealth_browser
+  repo_or_url: https://github.com/D4Vinci/Scrapling  (docs: scrapling.readthedocs.io)
+  latest_version: "0.5.1"
+  release_date: 2026-11-04
+  license: BSD-3-Clause
+  access: free
+  price: "0"
+  install: 'pip install "scrapling[fetchers]" && scrapling install   (MCP-hez: "scrapling[ai]")'
+  python_or_node: python
+  maintained: "yes – utolsó commit 2026-11-11"
+  how_it_works_hu: "Egységes API. A Fetcher/FetcherSession curl_cffi-alapú, TLS-impersonate-tel (impersonate='chrome'). A StealthyFetcher/StealthySession patchright + browserforge fingerprinttel, és solve_cloudflare=True kezeli a Turnstile/Interstitial oldalt. Adaptív parser, spider, MCP szerver, Agent Skill."
+  strengths_hu: "Egy könyvtárban van a sima letöltés és a böngészős bypass; beépített MCP szerver AI agentnek; kész Docker image."
+  limits_hu: "Gyorsan változó API: a 0.3→0.5 között a StealthyFetcher Camoufoxról Chromium/patchright alapra váltott, ezért régi tutorialok félrevezethetnek. Nagy függőségi lánc."
+  scores: {effectiveness: 8, ease: 8, offline_relevance: 8, cost: 10}
+
+# ===================== TLS IMPERSONATION (böngésző nélkül) =====================
+- id: curl_cffi
+  name: curl_cffi (+ curl-impersonate)
+  kind: tls_impersonation
+  repo_or_url: "https://github.com/lexiforest/curl_cffi ; https://github.com/lexiforest/curl-impersonate (az eredeti lwthiker/curl-impersonate 2024-03 óta stale)"
+  latest_version: "curl_cffi 0.17.0 (PyPI 2026-10-26); curl-impersonate v2.3.2 (2026-10-29)"
+  release_date: 2026-10-26
+  license: MIT
+  access: free
+  price: "0 (opcionális kereskedelmi fingerprint-DB: impersonate.pro)"
+  install: "pip install curl_cffi --upgrade"
+  python_or_node: "python (Node binding: lexiforest/impers)"
+  maintained: "yes – utolsó commit 2026-10-27; a 0.17.0 hozza a Chrome 151/152, Safari 27 és Firefox 153–155 profilokat"
+  how_it_works_hu: "A libcurl egy forkja, amely bájtpontosan a valódi böngésző TLS ClientHello-ját (JA3/JA4) és HTTP/2 SETTINGS/priority lenyomatát küldi, opcionálisan HTTP/3-mal. requests-szerű API: impersonate='chrome' | 'firefox' | 'safari' | konkrét verzió (pl. chrome124); ja3= és akamai= paraméterrel egyedi lenyomat is megadható."
+  strengths_hu: "Gyors és könnyű, JS nem kell. Streamelt letöltés (stream=True + iter_content). Async, WebSocket, proxy. Sok '403 curl-ra, de böngészőben megy' esetet megold. A Scrapling Fetcher is erre épül."
+  limits_hu: "JS-challenge-et (Cloudflare 'Just a moment…', Turnstile) nem old meg. Ha a válasz 403 és 'cf-mitigated: challenge' header jön, böngésző kell. TLS-t bontó (MITM) céges vagy agent proxy mögött az impersonation hatástalan, mert a proxy saját TLS-t épít."
+  scores: {effectiveness: 7, ease: 10, offline_relevance: 10, cost: 10}
+
+- id: hrequests
+  name: hrequests
+  kind: tls_impersonation
+  repo_or_url: https://github.com/daijro/hrequests
+  latest_version: "0.9.2"
+  release_date: 2024-12-01
+  license: MIT
+  access: free
+  price: "0"
+  install: "pip install hrequests"
+  python_or_node: python
+  maintained: "stale – utolsó commit 2024-11-30"
+  how_it_works_hu: "requests-csere TLS-fingerprint-utánzással (Go tls-client), header-generálással és opcionális headless böngészővel."
+  strengths_hu: "Kényelmes API volt."
+  limits_hu: "Két éve nem frissült, a fingerprintek elavulnak. Helyette curl_cffi."
+  scores: {effectiveness: 4, ease: 8, offline_relevance: 4, cost: 10}
+
+- id: cloudscraper
+  name: cloudscraper
+  kind: challenge_solver
+  repo_or_url: https://github.com/VeNoMouS/cloudscraper
+  latest_version: "PyPI 1.2.71 (2023-04-25); a repóban van '3.0.0' tag (2025-06-10), de PyPI-n NEM jelent meg"
+  release_date: 2023-04-25
+  license: MIT
+  access: free
+  price: "0"
+  install: "pip install cloudscraper"
+  python_or_node: python
+  maintained: "stale – utolsó commit 2025-06-10; a README '100% success' állításai nem ellenőrizhetők"
+  how_it_works_hu: "requests-alapú; a régi Cloudflare IUAM JS-challenge-et JS-interpreterrel (js2py vagy Node) oldotta meg."
+  strengths_hu: "Régi, egyszerű oldalakon néha még működik."
+  limits_hu: "A modern Cloudflare (managed challenge, Turnstile, TLS-ellenőrzés) ellen gyakorlatilag hatástalan. Ne erre építsünk."
+  scores: {effectiveness: 2, ease: 9, offline_relevance: 2, cost: 10}
+
+# ===================== CHALLENGE SOLVER PROXY =====================
+- id: flaresolverr
+  name: FlareSolverr
+  kind: challenge_solver
+  repo_or_url: https://github.com/FlareSolverr/FlareSolverr
+  latest_version: "v3.5.2 (tag commit 2026-09-12)"
+  release_date: 2026-09-12
+  license: MIT
+  access: free
+  price: "0"
+  install: "docker run -d --name=flaresolverr -p 127.0.0.1:8191:8191 -e LOG_LEVEL=info --restart unless-stopped ghcr.io/flaresolverr/flaresolverr:latest"
+  python_or_node: "HTTP API (bármely nyelv)"
+  maintained: "yes – utolsó commit 2026-10-24"
+  how_it_works_hu: "Helyi proxy-szerver. POST /v1 {cmd:'request.get', url, maxTimeout:60000} kérésre Selenium + undetected-chromedriver Chrome-ot indít, megvárja a Cloudflare vagy DDoS-Guard challenge végét, és visszaadja a HTML-t, a cookie-kat (cf_clearance) és a User-Agentet. Ezekkel aztán sima HTTP-klienssel lehet tovább letölteni."
+  strengths_hu: "Nyelvfüggetlen; kész Docker image (amd64/arm64/arm7); a *arr ökoszisztéma bevett eszköze."
+  limits_hu: "Kérésenként új böngészőt indít, ezért RAM-igényes. Az undetected-chromedriver alap gyengülő. Turnstile-t kattintásos captchaként nem garantáltan old. Internetre kitenni tilos. A cf_clearance UA-hoz és IP-hez kötött, a tovább-letöltésnél ugyanazt kell használni."
+  scores: {effectiveness: 6, ease: 8, offline_relevance: 7, cost: 10}
+
+- id: byparr
+  name: Byparr
+  kind: challenge_solver
+  repo_or_url: https://github.com/ThePhaseless/Byparr
+  latest_version: "v3.1.1 (tag commit 2026-11-05)"
+  release_date: 2026-11-05
+  license: GPL-3.0
+  access: free
+  price: "0"
+  install: "docker run -p 8191:8191 ghcr.io/thephaseless/byparr:latest"
+  python_or_node: "HTTP API; FlareSolverr-kompatibilis POST /v1 (+ /load endpoint Open WebUI RAG-hez)"
+  maintained: "yes – utolsó commit 2026-11-09"
+  how_it_works_hu: "FlareSolverr-alternatíva, ugyanazzal a /v1 API-val. Alatta invisible-playwright (patchelt Firefox, determinisztikus stealth profil) és playwright-captcha (Turnstile/Interstitial kattintás) fut. GeoIP-ből állítja a locale-t és a timezone-t."
+  strengths_hu: "Modernebb böngésző-alap; drop-in a FlareSolverr helyére; proxy per request (X-Proxy-Server header)."
+  limits_hu: "A README szerint nem garantál bypasst, a hálózati forgalom (IP-reputáció) is számít. Indításkor GitHubról GeoIP DB-t tölt. Sok disk I/O, tmpfs ajánlott. A NAS/ARM támogatás minimális."
+  scores: {effectiveness: 7, ease: 8, offline_relevance: 7, cost: 10}
+
+# ===================== AGENT / CRAWL FRAMEWORK =====================
+- id: crawl4ai
+  name: Crawl4AI
+  kind: agent_framework
+  repo_or_url: https://github.com/unclecode/crawl4ai
+  latest_version: "0.9.5"
+  release_date: 2026-10-14
+  license: Apache-2.0
+  access: free
+  price: "0"
+  install: "pip install -U crawl4ai && crawl4ai-setup"
+  python_or_node: python (+ Docker server)
+  maintained: "yes – utolsó commit 2026-11-04"
+  how_it_works_hu: "LLM-barát crawler: Playwright, patchright és playwright-stealth függőségekkel; HTML-ből Markdownt készít, mélységi crawlt végez. Stealth: enable_stealth, undetected-browser adapter, magic=True."
+  strengths_hu: "Offline archívumhoz kiváló: tiszta Markdown, link-gráf, cache-mód, deep crawl."
+  limits_hu: "A stealth szintje nagyjából a patchrightéval egyezik, nem Camoufox-szintű. Nehéz függőségek."
+  scores: {effectiveness: 6, ease: 8, offline_relevance: 9, cost: 10}
+
+- id: browser-use
+  name: Browser Use
+  kind: agent_framework
+  repo_or_url: https://github.com/browser-use/browser-use
+  latest_version: "PyPI 1.0.4 (2026-11-13); a gitben van 1.0.5 tag; npm browser-use 0.9.0"
+  release_date: 2026-11-13
+  license: MIT
+  access: "free (OSS) + paid cloud (cloud.browser-use.com)"
+  price: "OSS 0; Cloud: UNVERIFIED"
+  install: "pip install browser-use   (Python >=3.11)"
+  python_or_node: python
+  maintained: "yes – utolsó commit 2026-11-14"
+  how_it_works_hu: "LLM-vezérelt böngésző-agent: a modell Python-kódot ír egy perzisztens REPL-ben, és helyi vagy felhős böngészőt vezérel. A stealth böngészőt és a CAPTCHA-kezelést a felhős verzió adja."
+  strengths_hu: "Interaktív, többlépéses feladatokra jó (űrlap, lapozás, bejelentkezés)."
+  limits_hu: "Tömeges letöltésre drága és lassú (LLM-token lépésenként). A helyi verzió önmagában nem stealth."
+  scores: {effectiveness: 5, ease: 7, offline_relevance: 4, cost: 7}
+
+- id: steel
+  name: Steel Browser
+  kind: agent_framework
+  repo_or_url: https://github.com/steel-dev/steel-browser  (cloud: steel.dev)
+  latest_version: "v0.5.5-beta (tag 2026-10-31); steel-sdk PyPI és npm 0.23.0 (2026-11-10)"
+  release_date: 2026-10-31
+  license: Apache-2.0
+  access: "free (self-host) + paid cloud"
+  price: "Cloud Launch: $0/hó + használat, $30 egyszeri kredit; $0.10/browser-óra, proxy $10/GB, CAPTCHA $3/1k. Scale: $250/hó ($0.08/óra, $6/GB, $1/1k CAPTCHA)"
+  install: "docker run -p 3000:3000 -p 9223:9223 ghcr.io/steel-dev/steel-browser   |  pip install steel-sdk"
+  python_or_node: both
+  maintained: "yes – utolsó commit 2026-11-13"
+  how_it_works_hu: "Self-hostolható browser-API: session-kezelés, proxy chain, stealth pluginok és fingerprint-kezelés. CDP-n Playwright vagy Puppeteer csatlakozik hozzá. Van debug UI."
+  strengths_hu: "Saját infrán futtatható 'Browserbase'; agentekhez tervezték."
+  limits_hu: "A self-host stealth szintje inkább plugin-alapú; a CAPTCHA-solve a cloudban van. Béta."
+  scores: {effectiveness: 6, ease: 7, offline_relevance: 6, cost: 8}
+
+- id: lightpanda
+  name: Lightpanda
+  kind: agent_framework
+  repo_or_url: https://github.com/lightpanda-io/browser
+  latest_version: "repo-tag v0.2.6 (2026-03-14) + nightly buildek; PyPI lightpanda 1.0.3 (2026-11-05, Python wrapper); npm @lightpanda/browser 1.6.0 (2026-08-31)"
+  release_date: "nightly (utolsó commit 2026-11-14)"
+  license: AGPL-3.0
+  access: free
+  price: "0 (van cloud is: UNVERIFIED ár)"
+  install: "curl -L -o lightpanda https://github.com/lightpanda-io/browser/releases/download/nightly/lightpanda-x86_64-linux && chmod a+x ./lightpanda ; Docker: lightpanda/browser"
+  python_or_node: "CDP és WebDriver BiDi szerver (Puppeteer/Playwright csatlakozik), plusz Python és Node wrapper"
+  maintained: "yes – aktív"
+  how_it_works_hu: "Nulláról, Zig nyelven írt headless böngésző V8 JS-motorral (nem Chromium-fork). A saját benchmark szerint ~16x kevesebb memóriát használ és ~9x gyorsabb a headless Chrome-nál. 'fetch --dump html/markdown' parancs, --obey-robots kapcsoló."
+  strengths_hu: "Nagy tömegű JS-renderelésre és Markdown-dumpra nagyon olcsó."
+  limits_hu: "NEM anti-detect eszköz: nincs fingerprint-spoofing, és a nem-szabványos böngésző könnyen kiszúrható. A Web API lefedettség hiányos. A telemetria alapból be van kapcsolva (LIGHTPANDA_DISABLE_TELEMETRY=true kapcsolja ki). Cloudflare-védett oldalra nem való."
+  scores: {effectiveness: 2, ease: 7, offline_relevance: 6, cost: 10}
+
+- id: firecrawl
+  name: Firecrawl
+  kind: agent_framework
+  repo_or_url: https://github.com/firecrawl/firecrawl  (cloud: firecrawl.dev)
+  latest_version: "firecrawl-py 4.57.0 (2026-11-12); npm firecrawl / @mendable/firecrawl-js 4.54.0 (2026-11-12)"
+  release_date: 2026-11-12
+  license: "AGPL-3.0 (core); SDK-k: MIT"
+  access: "free-tier (cloud) + self-host"
+  price: "Free: 1 000 kredit/hó; Hobby $19/hó 5 000; Standard $99/hó 100 000; Growth $399/hó 500 000. Scrape: 1 kredit/oldal; Search: 2 kredit/10 találat. A 403-at visszaadó oldal is 1 kreditbe kerül."
+  install: "pip install firecrawl-py ; self-host: docker compose (SELF_HOST.md)"
+  python_or_node: both
+  maintained: "yes – utolsó commit 2026-11-13"
+  how_it_works_hu: "Scrape, crawl, map, search és interact API, LLM-kész Markdown/JSON kimenettel. A cloud saját proxy- és anti-bot-réteggel dolgozik."
+  strengths_hu: "Search és scrape egy hívásban; agent-integrációk (MCP, skills)."
+  limits_hu: "A self-hosted verzióból hiányoznak a cloud-only funkciók, és ott az anti-bot gyengébb. AGPL."
+  scores: {effectiveness: 7, ease: 9, offline_relevance: 7, cost: 6}
+
+# ===================== KERESŐ API-K =====================
+- id: searxng
+  name: SearXNG
+  kind: search_selfhosted
+  repo_or_url: https://github.com/searxng/searxng  (docs.searxng.org)
+  latest_version: "rolling release (nincsenek git tagek); utolsó commit 2026-11-14; image: docker.io/searxng/searxng:latest"
+  release_date: 2026-11-14
+  license: AGPL-3.0
+  access: free
+  price: "0"
+  install: 'mkdir -p searxng/config searxng/data && cd searxng && docker run --name searxng -d -p 8888:8080 -v "./config/:/etc/searxng/" -v "./data/:/var/cache/searxng/" docker.io/searxng/searxng:latest   # utána settings.yml: search.formats: [html, json]'
+  python_or_node: "HTTP JSON API (/search?q=…&format=json)"
+  maintained: "yes – nagyon aktív"
+  how_it_works_hu: "Metakereső: párhuzamosan kérdez sok motort (Google, Bing, DDG, Brave, Mojeek, Wikipedia stb.), és összefésüli a találatokat. Alapból csak html formátumot ad; JSON-hoz a settings.yml-ben a 'formats' listába fel kell venni a json-t."
+  strengths_hu: "Ingyenes, kulcs nélküli; a saját példányon a limiter kikapcsolható; motoronként hangolható."
+  limits_hu: "Az upstream motorok (főleg a Google) a szerver IP-jét CAPTCHA-zhatják vagy tilthatják; a SearXNG ilyenkor felfüggeszti az adott motort (suspended_times). Nyilvános példányokat ne scrape-eljünk, saját példány kell."
+  scores: {effectiveness: 7, ease: 8, offline_relevance: 9, cost: 10}
+
+- id: ddgs
+  name: ddgs (korábban duckduckgo_search)
+  kind: search_api
+  repo_or_url: https://github.com/deedy5/ddgs
+  latest_version: "ddgs 9.16.1 (2026-10-23); a régi duckduckgo_search 8.1.1 (2025-07-06) már nem fejlődik"
+  release_date: 2026-10-23
+  license: MIT
+  access: free
+  price: "0, kulcs nélkül"
+  install: "pip install -U ddgs   (ddgs[api] = FastAPI szerver, ddgs[mcp] = MCP szerver)"
+  python_or_node: "python + CLI + REST API + MCP"
+  maintained: "yes – utolsó commit 2026-10-24"
+  how_it_works_hu: "Metakereső library. Text-backendek: bing, brave, duckduckgo, google, grokipedia, mojeek, startpage, yandex, yahoo, wikipedia; books: annasarchive. A backend='auto' váltogat köztük. Az eredmény {title, href, body} lista."
+  strengths_hu: "Nulla setup; filetype:pdf operátor; extract() is van; MCP szerverként agentbe köthető."
+  limits_hu: "Nem hivatalos API, scrape-alapú: rate-limit és Ratelimit-hibák jöhetnek, a backendek viselkedése bármikor változhat. Nincs SLA."
+  scores: {effectiveness: 7, ease: 10, offline_relevance: 9, cost: 10}
+
+- id: brave-search-api
+  name: Brave Search API
+  kind: search_api
+  repo_or_url: https://brave.com/search/api/
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Search: $5/1 000 kérés, havi $5 ingyen kredit (~1 000 kérés), 50 QPS; Answers: $4/1k + $5/M token. A fejlécben 'Up to $20 free' szerepel, ami ellentmond ennek (az oldal nem tisztázza)."
+  install: "REST; header: X-Subscription-Token"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Saját, független webindex hivatalos API-n."
+  strengths_hu: "Saját index (nem Google vagy Bing proxy); stabil; agentekben bevett."
+  limits_hu: "A free tierhez is fiók és kártya kell (UNVERIFIED, hogy kötelező-e)."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 8, cost: 7}
+
+- id: tavily
+  name: Tavily
+  kind: search_api
+  repo_or_url: https://tavily.com  (pip: tavily-python 0.8.5, 2026-10-06)
+  latest_version: "tavily-python 0.8.5"
+  release_date: 2026-10-06
+  license: "proprietary API; SDK: UNVERIFIED"
+  access: free-tier
+  price: "1 000 kredit/hó ingyen; PAYG $0.008/kredit; basic search 1 kredit (~$8/1k), advanced 2 kredit (~$16/1k); Project $30/hó 4 000 kredit"
+  install: "pip install tavily-python"
+  python_or_node: both
+  maintained: yes
+  how_it_works_hu: "LLM-agentekre optimalizált kereső. A találatokból kivonatot vagy tartalmat ad (search, extract, crawl)."
+  strengths_hu: "Agent-keretrendszerekben (LangChain stb.) alapértelmezett; az extract endpoint letöltést is spórol."
+  limits_hu: "Drágább per query, mint a Serper vagy a Brave."
+  scores: {effectiveness: 8, ease: 10, offline_relevance: 7, cost: 6}
+
+- id: exa
+  name: Exa
+  kind: search_api
+  repo_or_url: https://exa.ai  (pip: exa-py 2.28.0, 2026-11-06)
+  latest_version: "exa-py 2.28.0"
+  release_date: 2026-11-06
+  license: "proprietary API; SDK MIT"
+  access: free-tier
+  price: "$10 ingyen kredit, minden hónap 1-jén visszaáll (+ egyszeri $10 bónusz); search: lite/instant $4/1k, auto/fast $7/1k; contents $1/1k oldal, tartalomtípusonként"
+  install: "pip install exa-py"
+  python_or_node: both
+  maintained: yes
+  how_it_works_hu: "Neurális (embedding-alapú) saját index; szemantikus 'hasonló oldalak' keresés és teljes szöveg lekérése."
+  strengths_hu: "Kutatási jellegű, dokumentum-típusú keresésre (PDF-ek, reportok) jó."
+  limits_hu: "Az index nem teljes webes lefedettségű; a friss vagy niche oldalak hiányozhatnak."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 8, cost: 7}
+
+- id: jina
+  name: Jina Reader (r.jina.ai) / Search (s.jina.ai)
+  kind: search_api
+  repo_or_url: https://jina.ai/reader/
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary (a Reader régebbi kódja OSS volt: UNVERIFIED)
+  access: free-tier
+  price: "r.jina.ai: kulcs nélkül 20 RPM, ingyen kulccsal 500 RPM; s.jina.ai: CSAK kulccsal, 100 RPM, legalább 10 000 token kérésenként; új kulcs: 10M ingyen token. Token-ár: UNVERIFIED"
+  install: "curl https://r.jina.ai/https://example.org   |  curl -H 'Authorization: Bearer …' 'https://s.jina.ai/?q=…'"
+  python_or_node: any (HTTP)
+  maintained: yes
+  how_it_works_hu: "Az r.jina.ai a megadott URL-t a saját infráján rendereli, és LLM-barát Markdownként adja vissza; az s.jina.ai keres, és a top találatokat már olvasható formában adja."
+  strengths_hu: "Egyetlen URL-prefix, setup nélkül; néha átjut ott, ahol a saját IP-nk blokkolva van (más IP-ről kér)."
+  limits_hu: "Binárisokhoz (PDF/ZIP archiválás) nem ideális, szöveget ad vissza. Erős Cloudflare-védelmen ő is elbukhat. Harmadik fél látja az URL-eket."
+  scores: {effectiveness: 6, ease: 10, offline_relevance: 6, cost: 8}
+
+- id: kagi
+  name: Kagi Search API
+  kind: search_api
+  repo_or_url: https://kagi.com/api/docs
+  latest_version: "v1 (POST /search); a v0 legacy"
+  release_date: n/a
+  license: proprietary
+  access: paid
+  price: "$12/1 000 kérés (pay-as-you-go)"
+  install: "REST; Authorization: Bearer $KAGI_API_KEY"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "A Kagi prémium találatai API-n; Lenses, domain-rangsorolás, opcionálisan a top találatok Markdown-kivonatával."
+  strengths_hu: "Magas minőség, hirdetés- és SEO-spam-szűrés."
+  limits_hu: "A legdrágábbak egyike, nincs free tier."
+  scores: {effectiveness: 8, ease: 8, offline_relevance: 6, cost: 4}
+
+- id: serpapi
+  name: SerpApi
+  kind: search_api
+  repo_or_url: https://serpapi.com
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Free 250 keresés/hó; Starter $25/1 000 (= $25/1k); Developer $75/5 000; Production $150/15 000; … Cloud 1M $3 750 (= $3.75/1k)"
+  install: "pip install google-search-results (UNVERIFIED csomagnév) vagy REST"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Valódi Google, Bing és más SERP-ek scrape-elése a saját infrájukon (proxy és CAPTCHA-kezelés), strukturált JSON-ként."
+  strengths_hu: "Pontos Google-eredmények; sok motor és vertikális (Scholar, Images stb.)."
+  limits_hu: "Kis volumenen drága."
+  scores: {effectiveness: 9, ease: 9, offline_relevance: 7, cost: 4}
+
+- id: serper
+  name: Serper.dev
+  kind: search_api
+  repo_or_url: https://serper.dev
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "2 500 ingyen query (kártya nélkül); Starter $50/50k (= $1.00/1k), Standard $375/500k ($0.75/1k), Scale $1 250/2.5M ($0.50/1k), Ultimate $3 750/12.5M ($0.30/1k); a kredit 6 hónapig érvényes"
+  install: "REST POST https://google.serper.dev/search, X-API-KEY header (endpoint: UNVERIFIED a mostani oldalon)"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Google SERP JSON-ban, gyorsan és olcsón."
+  strengths_hu: "A legolcsóbb Google-SERP API."
+  limits_hu: "Kevesebb vertikális és motor, mint a SerpApinál."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 8, cost: 8}
+
+- id: mojeek
+  name: Mojeek Search API
+  kind: search_api
+  repo_or_url: https://www.mojeek.com/services/search/web-search-api/
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: paid
+  price: "£2/1k (Startup: 5 QPS, 10 találat/kérés), £3/1k (Business); a regisztráció ad némi kreditet (összeg UNVERIFIED), bankkártya kell"
+  install: REST
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Független brit saját index."
+  strengths_hu: "Olcsó, privacy-fókuszú, független index."
+  limits_hu: "Kisebb index, gyengébb relevancia niche témákban."
+  scores: {effectiveness: 5, ease: 8, offline_relevance: 6, cost: 8}
+
+- id: marginalia
+  name: Marginalia Search API
+  kind: search_api
+  repo_or_url: https://about.marginalia-search.com/article/api/
+  latest_version: "új endpoint: https://api2.marginalia-search.com/search (az api.marginalia.nu deprecated)"
+  release_date: n/a
+  license: "a kulcs CC-BY-NC-SA 4.0 (nem kereskedelmi)"
+  access: free
+  price: "Ingyenes nem kereskedelmi kulcs e-mailben kérhető; a 'public' kulcs csak tesztre jó, gyakran rate-limitelt (503); a kereskedelmi kulcs mérős (ár UNVERIFIED)"
+  install: "GET …/search?query=…  header: API-Key"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Kis, független index, amely a 'small web'-et (szöveges, nem kereskedelmi oldalakat) részesíti előnyben."
+  strengths_hu: "Ingyenes; régi, dokumentum-jellegű oldalakra meglepően jó."
+  limits_hu: "Kicsi index; NC licenc."
+  scores: {effectiveness: 4, ease: 7, offline_relevance: 5, cost: 10}
+
+- id: google-cse
+  name: Google Custom Search JSON API (Programmable Search)
+  kind: search_api
+  repo_or_url: https://developers.google.com/custom-search/v1/overview
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: "free-tier (csak meglévő ügyfeleknek)"
+  price: "100 query/nap ingyen, utána $5/1k, napi plafon 10 000"
+  install: REST (key + cx)
+  python_or_node: any
+  maintained: "KIVEZETÉS ALATT – 'closed to new customers'; a meglévő ügyfelek 2027-01-01-ig állhatnak át"
+  how_it_works_hu: "Google-találatok egy programozható keresőmotorhoz (cx)."
+  strengths_hu: "Hivatalos Google-forrás."
+  limits_hu: "Új projektnek nem elérhető, ne erre tervezzünk."
+  scores: {effectiveness: 6, ease: 7, offline_relevance: 3, cost: 7}
+
+- id: bing-api
+  name: Bing Search API
+  kind: search_api
+  repo_or_url: https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: "megszűnt"
+  price: n/a
+  install: n/a
+  python_or_node: n/a
+  maintained: "no – 2025-08-11-én nyugdíjazták (a Bing Custom Search-csel együtt); utódja a 'Grounding with Bing Search' az Azure AI Agents-ben, ami nyers találatokat nem ad"
+  how_it_works_hu: "-"
+  strengths_hu: "-"
+  limits_hu: "Nem használható."
+  scores: {effectiveness: 0, ease: 0, offline_relevance: 0, cost: 0}
+
+- id: perplexity
+  name: Perplexity Search API / Sonar
+  kind: search_api
+  repo_or_url: https://docs.perplexity.ai
+  latest_version: "Search API (POST /search); a Sonar Chat Completions támogatása a docs szerint 2026-09-27-ig tartott, utódja az Agent API (/v1/agent, model 'perplexity/sonar')"
+  release_date: n/a
+  license: proprietary
+  access: paid
+  price: "Search API: $5/1k kérés, Fast Search $1/1k (egy kérés legfeljebb 5 query-t tartalmazhat, egy egységnek számít). Sonar/Agent token-árak: UNVERIFIED"
+  install: REST
+  python_or_node: any
+  maintained: "yes, de a Sonar éppen átalakul"
+  how_it_works_hu: "Saját index plusz LLM-válasz forrásokkal (Agent API), vagy nyers rangsorolt találatok (Search API)."
+  strengths_hu: "A Fast Search $1/1k-s ára nagyon olcsó."
+  limits_hu: "Az API-felület 2026-ban változik, ellenőrizni kell a docs-ot."
+  scores: {effectiveness: 7, ease: 8, offline_relevance: 6, cost: 7}
+
+# ===================== CLOUD UNBLOCKER / BROWSER-AS-A-SERVICE =====================
+- id: browserbase
+  name: Browserbase
+  kind: cloud_unblocker
+  repo_or_url: https://www.browserbase.com/pricing
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Free: 1 browser-óra; Developer $20/hó, 100 óra (+$0.12/óra), 1 GB proxy, utána $12/GB, auto-CAPTCHA, basic stealth; Startup $99/hó, 500 óra; Scale: egyedi (advanced stealth)"
+  install: "SDK + CDP-csatlakozás (Playwright/Puppeteer); Stagehand framework"
+  python_or_node: both
+  maintained: yes
+  how_it_works_hu: "Távoli, menedzselt Chromium-session-ök CDP-n, proxyval, CAPTCHA-solve-val és fingerprinttel."
+  strengths_hu: "Agentekhez épült; session-rögzítés; skálázható."
+  limits_hu: "A free tier csak kipróbálásra elég; a stealth a drágább csomagokban erősebb."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 6, cost: 5}
+
+- id: brightdata
+  name: Bright Data Web Unlocker / Browser API (Scraping Browser)
+  kind: cloud_unblocker
+  repo_or_url: https://brightdata.com/pricing/web-unlocker
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Web Unlocker: 5k kérés/hó ingyen, PAYG $1.5/1k (csak sikeres kérés), Scale $499/hó 383k kéréssel. Browser API: free 5k kredit + 1 GB/hó, PAYG $8/GB, Scale $499/hó 71 GB"
+  install: "proxy-endpoint (HTTP proxy-ként) vagy CDP wss endpoint"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Hatalmas residential proxy-háló, automatikus fingerprint, CAPTCHA és retry; proxyként vagy távoli böngészőként használható."
+  strengths_hu: "Iparági csúcs a nehéz célpontokon; csak a sikeres kérést számlázza."
+  limits_hu: "KYC/compliance-folyamat; nagy volumenen drága."
+  scores: {effectiveness: 9, ease: 8, offline_relevance: 6, cost: 5}
+
+- id: zenrows
+  name: ZenRows
+  kind: cloud_unblocker
+  repo_or_url: https://www.zenrows.com/pricing
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Free: 5 000 kredit/hó (kártya nélkül); Build $19/hó 45k kredit … Scale $2 999/hó 45M; basic kérés 1 kredit, protected (JS + premium proxy) 25 kredit (saját számítás: ~$0.42/1k basic, ~$10.6/1k protected a legkisebb csomagon)"
+  install: "REST API vagy proxy-mód"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Universal Scraper API: anti-bot bypass, JS-render és residential proxy egy GET-ben."
+  strengths_hu: "Egyszerű URL-wrapper; nagylelkű free tier."
+  limits_hu: "A protected kérés 25x drágább."
+  scores: {effectiveness: 8, ease: 9, offline_relevance: 6, cost: 6}
+
+- id: scrapingbee
+  name: ScrapingBee
+  kind: cloud_unblocker
+  repo_or_url: https://www.scrapingbee.com/pricing/
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "1 000 ingyen kredit; Hobby $19/hó 75k, Freelance $49/hó 250k, Startup $99/hó 1M; JS-render 5 kredit, premium proxy 10 vagy 25 kredit (a 'stealth proxy' kreditára UNVERIFIED)"
+  install: REST
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Headless böngésző + proxy-rotáció API-ként."
+  strengths_hu: "Egyszerű és olcsó belépő."
+  limits_hu: "A legnehezebb célpontokon gyengébb, mint a Bright Data vagy a Zyte (anekdotikus, UNVERIFIED)."
+  scores: {effectiveness: 7, ease: 9, offline_relevance: 6, cost: 7}
+
+- id: scrapfly
+  name: Scrapfly
+  kind: cloud_unblocker
+  repo_or_url: https://scrapfly.io/pricing
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "1 000 ingyen kredit; Discovery $30/hó 200k; Pro $100/hó 1M; Startup $250/hó 2.5M; a funkciónkénti (ASP/Unblocker, JS, residential) kreditköltséget az oldal nem listázza, ezt ?cost=true lekérdezéssel lehet megtudni"
+  install: "REST / Python SDK"
+  python_or_node: both
+  maintained: yes
+  how_it_works_hu: "Scrape API ASP (anti-scraping protection) bypass-szal; Camoufox-szponzor és fingerprint-generator (fpgen) fejlesztő."
+  strengths_hu: "Átlátható költségbecslés hívás előtt."
+  limits_hu: "A kreditköltség a feature-ektől függ, így nehezebb előre tervezni."
+  scores: {effectiveness: 8, ease: 8, offline_relevance: 6, cost: 6}
+
+- id: oxylabs
+  name: Oxylabs Web Unblocker
+  kind: cloud_unblocker
+  repo_or_url: https://oxylabs.io/products/web-unblocker
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: paid
+  price: "GB-alapú: $7.2/GB (legfeljebb 2 GB) … $3/GB (833+ GB); Starter $15/hó, Basic $100/hó; $5 welcome kredit kártya nélkül"
+  install: "proxy-endpoint"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "AI-alapú proxy-réteg: fingerprint, retry, JS-render, residential IP."
+  strengths_hu: "Proxyként transzparens, minden klienssel működik."
+  limits_hu: "A GB-alapú díj nagy fájlok (PDF/ZIP) letöltésekor drága."
+  scores: {effectiveness: 8, ease: 8, offline_relevance: 5, cost: 5}
+
+- id: zyte
+  name: Zyte API
+  kind: cloud_unblocker
+  repo_or_url: https://www.zyte.com/pricing/
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "$5 ingyen kredit, 30 napos trial; HTTP PAYG $0.13–$1.27/1k (1–5. nehézségi szint), browser-render $1.01–$16.08/1k; havi commitmenttel olcsóbb"
+  install: "REST / Scrapy plugin (scrapy-zyte-api)"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Site-onként automatikusan választ stratégiát; a díj a célsite nehézségétől függ."
+  strengths_hu: "Könnyű oldalakon nagyon olcsó; Scrapy-natív."
+  limits_hu: "Az ár site-függő, előre nehéz kiszámolni."
+  scores: {effectiveness: 8, ease: 8, offline_relevance: 6, cost: 7}
+
+- id: hyperbrowser
+  name: Hyperbrowser
+  kind: cloud_unblocker
+  repo_or_url: https://www.hyperbrowser.ai/pricing
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: free-tier
+  price: "Free: 5 000 kredit, 1 párhuzamos session; Startup $30/hó 30k kredit; Scale $100/hó 100k; browser-óra $0.10 (100 kredit), proxy $10/GB, Ultra stealth +$0.009/oldal"
+  install: "SDK + CDP"
+  python_or_node: both
+  maintained: yes
+  how_it_works_hu: "Felhős böngésző-session-ök agentekhez, stealth-tel, auto-CAPTCHA-val és residential proxyval."
+  strengths_hu: "Olcsó óradíj; agent-integrációk."
+  limits_hu: "Fiatal szolgáltatás."
+  scores: {effectiveness: 7, ease: 9, offline_relevance: 6, cost: 6}
+
+# ===================== KERESKEDELMI ANTI-DETECT BÖNGÉSZŐK (röviden) =====================
+- id: commercial-antidetect
+  name: "Kameleo / Multilogin / GoLogin / AdsPower / Octo Browser / Dolphin{anty}"
+  kind: stealth_browser
+  repo_or_url: "kameleo.io, multilogin.com, gologin.com, adspower.com, octobrowser.net, dolphin-anty.com"
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: "free-tier (a legtöbbnél) / paid"
+  price: >
+    Kameleo: Free (2 párhuzamos böngésző, 300 perc), Startup €59/hó, Business €299/hó.
+    Multilogin: Free 5 profil (API nélkül), Pro 10 $11/hó, Business 100 $40/hó.
+    GoLogin: Free 3 profil, Professional $9/hó (éves fizetéssel $4.50), Business $99/hó.
+    AdsPower: Free 2 profil; Business profilonkénti sávos díj ($0.90 → $0.01/profil/hó) + $5/tag.
+    Octo: Lite €10/hó (3 profil), Starter €29 (30), Base €79 (200, API-val).
+    Dolphin{anty}: Free 3 profil, Starter $10/hó, Base $89/hó.
+  install: "desktop app + lokális REST API (Selenium/Playwright/Puppeteer CDP-csatlakozással)"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Módosított Chromium- vagy Firefox-kernel profilonként tárolt, konzisztens fingerprinttel. Elsődleges célpiacuk a multi-accounting (marketing, e-commerce)."
+  strengths_hu: "GUI, profil-perzisztencia, csapatmegosztás; erős fingerprint."
+  limits_hu: "Desktop-központú, headless szerveren körülményes. Az API gyakran csak fizetős csomagban érhető el. Archiváló agenthez a Camoufox vagy a Patchright ingyen hasonló eredményt ad."
+  scores: {effectiveness: 8, ease: 6, offline_relevance: 4, cost: 5}
+
+# ===================== CAPTCHA SOLVER SZOLGÁLTATÁSOK =====================
+- id: captcha-solvers
+  name: "2Captcha / CapSolver / Anti-Captcha / CapMonster Cloud / NopeCHA"
+  kind: captcha_solver
+  repo_or_url: "2captcha.com, capsolver.com, anti-captcha.com, capmonster.cloud, nopecha.com"
+  latest_version: n/a
+  release_date: n/a
+  license: proprietary
+  access: paid
+  price: >
+    2Captcha: image $0.5–1, reCAPTCHA v2 $1–2.99, v3 $1.45–2.99, Turnstile $1.45 (per 1000).
+    CapSolver: reCAPTCHA v2 $0.8, v3 $1.0, Turnstile $1.2, Cloudflare Challenge $1.2, AWS WAF $2.0, image-to-text $0.4.
+    Anti-Captcha: image $0.5–0.7, reCAPTCHA v2 $0.95–2, v3 $1–2, Turnstile $2.
+    CapMonster Cloud: reCAPTCHA v2 $0.60 (token), v3 $0.90, Turnstile $1.30, Cloudflare Bot Challenge $1.30, text $0.30.
+    NopeCHA: előfizetés, Starter $4.99/hó (2 000 megoldás/nap) … Enterprise $99.99/hó (200 000/nap); free tier: UNVERIFIED.
+  install: "REST API / SDK / böngésző-extension (pl. playwright-captcha integráció)"
+  python_or_node: any
+  maintained: yes
+  how_it_works_hu: "Tokent ad vissza (embercsoport vagy ML oldja meg), amit az oldalnak kell beadni. A Cloudflare Challenge-hez általában a saját proxyt és UA-t is meg kell adni."
+  strengths_hu: "Ott is működik, ahol a stealth böngésző elakad."
+  limits_hu: "ToS és jog: a CAPTCHA kifejezetten 'ne automatizálj' jelzés, és megkerülése a legtöbb oldal ToS-ét sérti; egyes joghatóságokban (pl. US CFAA-viták) kockázatos. Nyilvános dokumentum-archiváláshoz ritkán indokolt: előbb más forrást vagy tükört kell keresni."
+  scores: {effectiveness: 7, ease: 7, offline_relevance: 3, cost: 6}
+```
+
+---
+
+## (b) Döntési tábla
+
+| Helyzet / tünet | Első választás | Ha nem megy | Megjegyzés |
+|---|---|---|---|
+| Sima fájl (PDF/ZIP) letöltése; `curl` → 403, de a böngészőben megnyílik; a válaszban **nincs** `cf-mitigated: challenge` header | **curl_cffi** `impersonate="chrome"` (+ teljes böngésző-headerek, Referer) | Scrapling `Fetcher` vagy `FetcherSession`; utána Camoufox | A TLS/JA3 és HTTP/2 fingerprint a leggyakoribb ok. MITM proxy mögött hatástalan. |
+| 403 vagy 503 + „Just a moment…” HTML, `cf-mitigated: challenge` header (JS challenge vagy Turnstile) | **Camoufox** (`humanize=True`, headful/virtual), vagy **Patchright** `channel="chrome"`, headful | Scrapling `StealthyFetcher(solve_cloudflare=True)`, SeleniumBase CDP Mode `sb.solve_captcha()` | A cookie átadható a curl_cffi-nek, de a cf_clearance UA-hoz és IP-hez kötött. |
+| Sok URL ugyanarról a védett site-ról, nyelvfüggetlen pipeline | **Byparr** vagy **FlareSolverr** (Docker, `POST /v1`) → cookie + UA → curl_cffi | Camoufox, perzisztens profillal | Csak 127.0.0.1-re bindolva szabad futtatni. |
+| Webes keresés (források felkutatása) | **SearXNG** (saját példány, JSON) vagy **ddgs** | **Brave Search API** (~1k ingyen/hó), Serper (2 500 ingyen), Exa vagy Tavily | Google-t közvetlenül ne scrape-eljünk. A Bing API megszűnt, a Google CSE új ügyfélnek zárva. |
+| Oldal szövegét kell Markdownként archiválni | **Crawl4AI**, vagy `r.jina.ai/<url>` (20 RPM kulcs nélkül) | Firecrawl (cloud) | Binárisokhoz curl_cffi vagy böngésző-download kell. |
+| Nagyon erős védelem (Akamai, Datadome, Kasada) vagy datacenter IP-ről minden blokkolva | **Residential proxy** + Camoufox `geoip=True` | **Cloud unblocker**: Zyte (olcsó könnyű site-on), Bright Data Web Unlocker ($1.5/1k), ZenRows, Scrapfly | A GB-díjas (Oxylabs, Bright Data Browser) nagy fájloknál drága, a kérésenkénti díjas jobb. |
+| Interaktív folyamat (űrlap, lapozó, „I agree” gomb) | Patchright vagy Camoufox, scriptelve | Browser Use (LLM-vezérelt), Browserbase vagy Steel cloud | Az LLM-agent drága és lassú, tömeges munkára nem való. |
+| Interaktív CAPTCHA (reCAPTCHA, hCaptcha) | **Más forrás keresése** (tükör, Wayback, kiadói repo) | CAPTCHA-solver API ($0.6–3/1k) | ToS- és jogi kockázat, lásd lent. |
+| JS-renderelés nagy tömegben, védelem nélkül | **Lightpanda** (CDP) | Playwright, headless | Nem stealth eszköz. |
+
+**Residential proxy.** A legtöbb 403 oka az IP-reputáció (datacenter ASN), nem a böngésző. A Camoufox és az undetected-chromedriver README-je is kiemeli, hogy datacenter IP-ről „chances are large you will not pass”. Ha minden eszköz elbukik, előbb a proxyt kell kipróbálni (Camoufox: `proxy={...}, geoip=True`, hogy a timezone, locale és WebRTC egyezzen az IP-vel). Residential proxy ára a szponzori README-k szerint kb. $0.3–8/GB.
+
+**Rate-limit etikett.** Egyszerre 1–2 kapcsolat domainenként. A kérések között 2–10 s véletlen késleltetés legyen. A `Retry-After` headert és a 429-et tartsuk be, exponenciális backoffal. Cache-eljünk (ETag / If-Modified-Since), és ugyanazt a fájlt ne töltsük le kétszer. Éjszakai, kis forgalmú idősávban fussunk. Legyen azonosítható a kapcsolattartás, ha a site kéri.
+
+**robots.txt / ToS.** Archiválás előtt nézzük meg a robots.txt-t és a felhasználási feltételeket. Sok humanitárius forrás (Sphere, Peace Corps, ECHO) kifejezetten engedi a dokumentumok letöltését és terjesztését, de a licencet (gyakran CC-BY-NC vagy hasonló) rögzíteni kell a metaadatban. A Cloudflare-blokk a forgalom szűrésére szolgál, nem tiltja a tartalom felhasználását. A tömeges, agresszív kérés viszont ToS-sértés lehet. CAPTCHA-solvert csak akkor használjunk, ha nincs más legitim út.
+
+---
+
+## (c) Kódrészletek (Python)
+
+> Az API-kat a projektek mostani README-jéből és forrásából ellenőriztem (camoufox 0.5.9, patchright 1.64.4, curl_cffi 0.17.0, ddgs 9.16.1, SearXNG master). Élesben nem futtak.
+
+### 1. Camoufox: oldal mentése + fájl letöltése
+
+```python
+# pip install -U "camoufox[geoip]" && camoufox fetch
+from pathlib import Path
+import base64
+from camoufox.sync_api import Camoufox
+
+PAGE_URL = "https://example.org/resources"
+FILE_URL = "https://example.org/files/manual.pdf"
+OUT = Path("archive"); OUT.mkdir(exist_ok=True)
+
+# headless="virtual" (Linux, Xvfb) stealthebb, mint a headless=True
+with Camoufox(headless=True, humanize=True) as browser:   # proxy={"server": "...", "username": "...", "password": "..."}, geoip=True
+    page = browser.new_page()
+    page.goto(PAGE_URL, wait_until="domcontentloaded", timeout=90_000)
+    page.wait_for_load_state("networkidle")        # itt fut le a JS-challenge
+    (OUT / "page.html").write_text(page.content(), encoding="utf-8")
+
+    # A) Navigáció, ami letöltést indít (Content-Disposition: attachment)
+    try:
+        with page.expect_download(timeout=120_000) as dl_info:
+            try:
+                page.goto(FILE_URL)
+            except Exception:
+                pass                                # Playwright: "Download is starting" -> várt hiba
+        dl = dl_info.value
+        dl.save_as(OUT / dl.suggested_filename)
+    except Exception:
+        # B) Fallback: in-page fetch a böngésző saját TLS-ével és cookie-jaival (kis/közepes fájlra)
+        b64 = page.evaluate("""async (u) => {
+            const r = await fetch(u, {credentials: 'include'});
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const b = new Uint8Array(await r.arrayBuffer());
+            let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000));
+            return btoa(s);
+        }""", FILE_URL)
+        (OUT / Path(FILE_URL).name).write_bytes(base64.b64decode(b64))
+        # Ha az isolated world-ben a fetch nem megy: Camoufox(main_world_eval=True), és "mw:"-prefixes evaluate.
+```
+
+### 2. Patchright (Chromium, drop-in Playwright)
+
+```python
+# pip install patchright && patchright install chrome
+from pathlib import Path
+from patchright.sync_api import sync_playwright
+
+URL = "https://example.org/files/manual.pdf"
+OUT = Path("archive"); OUT.mkdir(exist_ok=True)
+
+with sync_playwright() as p:
+    # README best practice: valódi Chrome, perzisztens profil, headful, saját UA vagy header NÉLKÜL
+    ctx = p.chromium.launch_persistent_context(
+        user_data_dir="./pr-profile",
+        channel="chrome",
+        headless=False,          # szerveren: xvfb-run python script.py
+        no_viewport=True,
+        accept_downloads=True,
+    )
+    page = ctx.new_page()
+    page.goto("https://example.org/", wait_until="networkidle")   # challenge itt
+    with page.expect_download(timeout=120_000) as dl_info:
+        try:
+            page.goto(URL)
+        except Exception:
+            pass
+    dl_info.value.save_as(OUT / dl_info.value.suggested_filename)
+    ctx.close()
+```
+
+### 3. curl_cffi: böngésző-TLS-t utánzó streamelt letöltés
+
+```python
+# pip install curl_cffi --upgrade
+from pathlib import Path
+import curl_cffi
+
+URL = "https://example.org/files/manual.pdf"
+OUT = Path("archive") / Path(URL).name
+OUT.parent.mkdir(exist_ok=True)
+
+with curl_cffi.Session(impersonate="chrome") as s:     # "firefox", "safari", vagy fix pl. "chrome124"
+    r = s.get(URL, stream=True, timeout=120,
+              headers={"Referer": "https://example.org/"})  # proxies={"https": "http://user:pass@host:port"}
+    if r.status_code == 403 and r.headers.get("cf-mitigated") == "challenge":
+        r.close()
+        raise SystemExit("JS challenge -> böngésző (Camoufox/Patchright) vagy Byparr/FlareSolverr kell")
+    r.raise_for_status()
+    with open(OUT, "wb") as f:
+        for chunk in r.iter_content():
+            f.write(chunk)
+    r.close()
+
+# Cookie-átadás FlareSolverr/Byparr után: ugyanaz a User-Agent kell, cookies={"cf_clearance": "..."};
+# Camoufox-cookie-hoz impersonate="firefox" illik (curl_cffi 0.17: firefox -> firefox155).
+```
+
+### 4. SearXNG JSON API
+
+```python
+# docker run --name searxng -d -p 8888:8080 -v "./config/:/etc/searxng/" -v "./data/:/var/cache/searxng/" docker.io/searxng/searxng:latest
+# config/settings.yml -> search: formats: [html, json]   (alapból csak html van!) ; utána docker restart searxng
+import requests
+
+r = requests.get("http://localhost:8888/search",
+                 params={"q": "sphere handbook filetype:pdf", "format": "json", "language": "en"},
+                 timeout=30)
+r.raise_for_status()
+for res in r.json()["results"][:10]:
+    print(res["url"], "|", res.get("title"))
+```
+
+### 5. ddgs (kulcs nélküli metakeresés)
+
+```python
+# pip install -U ddgs
+from ddgs import DDGS
+
+results = DDGS(timeout=10).text(
+    "peace corps manual filetype:pdf",
+    region="us-en", safesearch="off", max_results=20, backend="auto",   # vagy "brave,mojeek,duckduckgo"
+)
+for r in results:
+    print(r["href"], "|", r["title"])
+```
+
+---
+
+## (d) Mire figyeljen az AI
+
+1. **Diagnosztizáljon, mielőtt eszközt vált.** Nézze meg a státuszkódot, a `server: cloudflare` és a `cf-mitigated: challenge` headert, valamint a „Just a moment…” vagy Turnstile jelenlétét. Ha nincs challenge, curl_cffi elég. Ha van, böngésző kell. Ha minden 403, az IP-vel van baj.
+2. **Mindig a legolcsóbb működő réteggel kezdjen.** Sorrend: curl_cffi → Byparr/FlareSolverr cookie-val → Camoufox vagy Patchright → residential proxy → cloud unblocker → (kivételesen) CAPTCHA-solver.
+3. **Ne használjon elavult eszközt.** A cloudscraper (PyPI 2023), a puppeteer-extra-plugin-stealth (2023), az undetected-chromedriver (2024), a hrequests (2024) és a playwright-stealth modern Cloudflare ellen nem működik. A Bing Search API 2025-08-11-én megszűnt; a Google CSE új ügyfélnek zárva van, és 2027-01-01-gyel leáll.
+4. **TLS-t bontó (MITM) proxy mögött a TLS-impersonation hatástalan**, mert a célszerver a proxy fingerprintjét látja. Ilyenkor böngésző vagy külső hálózat kell.
+5. **Legyen konzisztens az identitás.** A cf_clearance cookie UA-hoz és IP-hez kötött. A cookie-t kinyerő böngésző és a letöltő kliens ugyanazt a UA-t, IP-t és lehetőleg ugyanazt a böngészőcsaládot használja (Camoufox → `impersonate="firefox"`, Chrome → `"chrome"`). Patchrightnál ne állítson saját UA-t vagy headert.
+6. **Headful jobb, mint headless.** Szerveren `xvfb-run` vagy Camoufox `headless="virtual"`. Képblokkolást (`block_images`) és animáció-kikapcsolást ne használjon védett oldalon, mert detektálható.
+7. **Keresni API-val vagy saját SearXNG-vel kell, nem Google-scrape-pel.** Kis volumenre a ddgs vagy a SearXNG ingyenes; megbízhatóbb a Brave ($5/1k, ~1k ingyen/hó), a Serper ($0.30–1/1k, 2 500 ingyen) vagy az Exa ($4–7/1k, havi $10 ingyen).
+8. **Mielőtt bypassol, keressen alternatív forrást.** Ilyen a hivatalos tükör, a kiadói repository, a `web.archive.org/web/2id_/<URL>` (az `id_` a nyers eredeti fájlt adja), vagy ugyanaz a dokumentum másik szervezet oldalán. Ez gyakran gyorsabb és jogilag tisztább.
+9. **Udvariasan töltsön le.** Domainenként 1–2 párhuzamos kapcsolat, 2–10 s jitter, 429 vagy `Retry-After` esetén backoff, és sose töltse le kétszer ugyanazt (hash vagy ETag). Minden fájlhoz naplózza: forrás-URL, dátum, HTTP-státusz, SHA-256, licenc.
+10. **CAPTCHA-solvert és cloud unblockert csak tudatos döntéssel használjon.** Pénzbe kerül, harmadik fél látja az URL-eket, és ToS-kockázatot jelent. A GB-alapú díjazás nagy PDF/ZIP-gyűjteménynél gyorsan elszáll. A Firecrawl a 403-as választ is felszámolja.
+
+---
+
+**Források (fő):**
+- PyPI JSON API, registry.npmjs.org.
+- GitHub repók `git ls-remote` + shallow clone-nal: daijro/camoufox, Kaliiiiiiiiii-Vinyzu/patchright(-python), rebrowser/rebrowser-patches, ultrafunkamsterdam/nodriver és undetected-chromedriver, cdpdriver/zendriver, seleniumbase/SeleniumBase, omkarcloud/botasaurus, D4Vinci/Scrapling, lexiforest/curl_cffi és curl-impersonate, daijro/hrequests, VeNoMouS/cloudscraper, FlareSolverr/FlareSolverr, ThePhaseless/Byparr, unclecode/crawl4ai, browser-use/browser-use, steel-dev/steel-browser, lightpanda-io/browser, firecrawl/firecrawl, searxng/searxng, deedy5/ddgs, Mattwmaster58/playwright_stealth, berstend/puppeteer-extra.
+- Árazási oldalak: brave.com/search/api, tavily.com/pricing, docs.tavily.com, exa.ai/pricing, serpapi.com/pricing, serper.dev, jina.ai/reader, kagi.com/api/pricing, developers.google.com/custom-search/v1/overview, docs.perplexity.ai, firecrawl.dev/pricing, mojeek.com, about.marginalia-search.com, browserbase.com, brightdata.com, zenrows.com, scrapingbee.com, scrapfly.io, oxylabs.io, zyte.com, hyperbrowser.ai, steel.dev, 2captcha.com, capsolver.com, anti-captcha.com, capmonster.cloud, nopecha.com, kameleo.io, multilogin.com, gologin.com, adspower.com, octobrowser.net, dolphin-anty.com.
+- Bing API megszűnése: [Microsoft lifecycle notice](https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement).
+- Perplexity Sonar → Agent API: [Perplexity migration doc](https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar).
+
+Nem készítettem fájlt a projektbe. A scratchpadben csak ideiglenes repó-klónok vannak: /tmp/claude-0/-home-user-Personal/5fbce50e-ce84-531e-8258-3354b3da35f3/scratchpad/repos

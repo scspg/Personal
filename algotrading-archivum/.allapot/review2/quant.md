@@ -1,0 +1,11 @@
+# Kvant – 2. kör: 90,3 (1. kör 81,7); javítás után ~92,5
+a 90 · b 93 · c 93 · d 87 · e 87 · f 92. Ellenőrzés: 90 DOI + 25 arXiv mind feloldódik, címegyezés; absztraktszámok mintán helyesek; Appendix A grid-MC pontosan reprodukálódik (35,33%, −32,0%, 11 453, 1413-ból 284 negatív; σ×1,5: 67,2%, P(csőd) 85,2%, −57,8%); MinTRL ~684 nap (SR 1), 173 (SR 2), SPRT ln A 2,77 / ln B −1,56, CPCV 45 split → 9 pálya.
+1 (d) prereg csak a JSONL-ben; 16. (Hipotézisgyár) fejezet, HTML, katalógus a régi egysoros „Cáfoló teszt”-et mutatja → metric, min_n, α/BH, oos_start, kill_rule megjelenítése (+2).
+2 (d) min_n i.i.d.-t feltételez (átfedő/autokorrelált hozam) → n_eff (Newey–West vagy stationary bootstrap blokkhossz); teljesítmény a várható BH-küszöbön; „×1,5” heurisztika (+1).
+3 (d) újszerűség: idea-abm-retail-grid-population 7 → Brock & Hommes 1998 JEDC 10.1016/s0165-1889(98)00011-6; idea-abm-bbook-hedging 8 → Butz & Oomen QF 10.1080/14697688.2018.1504167; idea-fx-liquidation-heatmap 8 → ~6 (Osler már idézve) (+1).
+4 (e) PIT-mezők nagyrészt null (401-ből pit null 359, survivorship_free null 392) → minden 0–1. szintű adattételre pit/survivorship_free/vintages; ellentmondások (google-trends pit:null → false) (+3).
+5 (a) 35 decay „Nem ellenőrzött.” → BAB: Novy-Marx & Velikov 2022 JFE 10.1016/j.jfineco.2021.05.023; G10 carry: Daniel–Hodrick–Lu NBER w20433; pre-FOMC: works/dies „2016 után” vs decay „2015 után” – Kurov 2015 mellett.
+6 (a) 25. fejezet cellái mondat közepén vágva; „Korábbi megjegyzés:” maradványok.
+7 (b) §8.4.4 kettős korrekció: p_h = 1 − DSR_h globális N_eff-fel, majd BH → hipotézisenkénti N_eff + BH; saját jel haircut 0,75 feltevésként jelölve.
+8 (c,f) cs-renaissance-berlekamp-1990 Wikipédiát használ („~30% DD 1989 tavasz”) → Cornell Table 1; Cornell „béta ≈ −1,0” csak PDF-ből; PBO dátum: a6 2016 vs spec 20(4) 2017 → „online 2016, 20(4) 2017” mindkettőben.
+Forráskorlát: (d) ~90 az ötletek tesztje nélkül (élő Vantage tick/swap/fill napló, ~10 ötlet pilot); (e) 342 pit_source „gyártói dokumentáció nem elérhető”, Ken French nem elérhető; (f) Medallion auditálatlan, Bloomberg-kódok bejelentkezés mögött, BlackRock „2200+ kockázati faktor” csak keresési kivonat; (a) 34 bizonyítéknak nincs nyílt absztraktja.

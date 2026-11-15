@@ -1,0 +1,939 @@
+```yaml
+# Medicine, water, food, agriculture: verified resource list (checked 2026-11-14)
+# Method: curl -sSIL (HEAD) plus GET where HEAD failed. Sizes marked "measured" are from content-length or the actual downloaded bytes.
+# Host notes:
+#  - WHO IRIS (DSpace 7): the old /bitstream/handle/... URLs now return a 755-byte JS stub. Use /server/api/core/bitstreams/<uuid>/content. HEAD returns 500 but GET returns 200 application/pdf (tested).
+#  - Hesperian: no full-book PDF exists. Each book is split into per-chapter PDFs named <lang>_<code>_<year>_{fm,01..NN,bm,resc,ob}.pdf under hesperian.org/wp-content/uploads/pdf/<lang>_<code>_<year>/. Every part was GET-verified and the bytes summed.
+#  - Cloudflare returned 403 to curl for echocommunity.org, spherestandards.org, peacecorps.gov, stem.org.uk, oup.com.au and sasquatchbooks.com. cd3wd.com and pdf.usaid.gov returned 502 through the proxy.
+#  - tagari.com (Permaculture: A Designers' Manual) redirects to an unrelated gambling domain. Domain looks hijacked, so it is NOT listed.
+
+- id: hesperian-where-there-is-no-doctor-2025
+  name: "Where There Is No Doctor (Hesperian, 2025 printing) – chapter PDFs"
+  category: medicine
+  description_hu: "A legismertebb falusi egészségügyi kézikönyv laikusoknak: diagnózis, elsősegély, gyógyszerek, szülés, higiénia egyszerű nyelven, rajzokkal. Orvos nélküli közösségek alap-egészségügyi bibliája."
+  url_info: https://en.hesperian.org/hhg/Where_There_Is_No_Doctor_Series
+  url_download: https://hesperian.org/wp-content/uploads/pdf/en_wtnd_2025/en_wtnd_2025_01.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial copying/adaptation with credit"
+  size: "11.9 MB (26 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "26 parts: en_wtnd_2025_{fm,01..23,bm,resc}.pdf. Loop over the pattern, since no single full-book file exists (en_wtnd_2025.pdf returns 404). The servers send no Content-Length (gzip), so the size is summed downloaded bytes. Printed copy is US$29.95 at store.hesperian.org. Many other languages are on languages.hesperian.org. The New WTND wiki chapters are HTML-only on en.hesperian.org."
+  scores: {survival: 10, rebuild: 7, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: hesperian-where-there-is-no-dentist-2025
+  name: "Where There Is No Dentist (Hesperian, 2025) – chapter PDFs"
+  category: medicine
+  description_hu: "Közösségi fogászati kézikönyv: fogfájás, tályog, foghúzás, tömés, szájhigiénia fogorvos nélkül. Az egyetlen igazán gyakorlati laikus fogászati forrás."
+  url_info: https://en.hesperian.org/hhg/Where_There_Is_No_Dentist
+  url_download: https://hesperian.org/wp-content/uploads/pdf/en_dent_2025/en_dent_2025_fm.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "25.1 MB (15 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Parts: en_dent_2025_{fm,01..12,resc,ob}.pdf. Size is summed downloaded bytes."
+  scores: {survival: 7, rebuild: 7, actionable: 9, uniqueness: 9, reliability: 9, offline_ease: 10}
+
+- id: hesperian-book-for-midwives-2021
+  name: "A Book for Midwives (Hesperian, 2021) – chapter PDFs"
+  category: medicine
+  description_hu: "Bábakézikönyv: terhesgondozás, szülésvezetés, szövődmények (vérzés, farfekvés), újszülött-ellátás, egyszerű eszközökkel. Szülészeti ellátáshoz alapmű."
+  url_info: https://en.hesperian.org/hhg/A_Book_for_Midwives
+  url_download: https://hesperian.org/wp-content/uploads/pdf/en_midw_2021/en_midw_2021_fm.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "11.6 MB (28 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Parts: en_midw_2021_{fm,01..25,resc,ob}.pdf."
+  scores: {survival: 9, rebuild: 7, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: hesperian-where-women-have-no-doctor-2023
+  name: "Where Women Have No Doctor (Hesperian, 2023) – chapter PDFs"
+  category: medicine
+  description_hu: "Női egészség kézikönyv: terhesség, abortusz-szövődmények, STI, meddőség, mellrák, erőszak utáni ellátás. A WTND kiegészítője."
+  url_info: https://en.hesperian.org/hhg/Where_Women_Have_No_Doctor
+  url_download: https://hesperian.org/wp-content/uploads/pdf/en_wwhnd_2023/en_wwhnd_2023_fm.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "14.1 MB (34 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Parts: en_wwhnd_2023_{fm,01..31,resc,ob}.pdf. Other Hesperian titles follow the same scheme (en_dvc_2025 Disabled Village Children, en_pcmh_2025 Community Mental Health, en_hhwl_2026). Mirror the whole set with one script."
+  scores: {survival: 7, rebuild: 6, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: hesperian-community-guide-environmental-health
+  name: "A Community Guide to Environmental Health (Hesperian, 2012)"
+  category: water_sanitation
+  description_hu: "Közösségi környezet-egészségügyi kézikönyv: ivóvíz-védelem, szűrés, latrinák, komposztvécé, hulladék, peszticidek. Gyakorlati WASH-építési útmutatókkal."
+  url_info: https://en.hesperian.org/hhg/A_Community_Guide_to_Environmental_Health
+  url_download: https://hesperian.org/wp-content/uploads/pdf/en_cgeh_2012/en_cgeh_2012_fm.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Hesperian; free non-commercial use with credit"
+  size: "26.6 MB (26 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Parts: en_cgeh_2012_{fm,01..23,resc,ob}.pdf. Has hands-on build instructions (latrines, sand filters, rainwater tanks)."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: msf-clinical-guidelines
+  name: "MSF Clinical Guidelines – Diagnosis and Treatment Manual"
+  category: medicine
+  description_hu: "Az MSF terepi klinikai kézikönyve: tünetek és betegségek szerinti diagnózis és kezelés, korlátozott erőforrású kórházaknak és rendelőknek. Tömör, protokollszerű."
+  url_info: https://medicalguidelines.msf.org/en
+  url_download: https://medicalguidelines.msf.org/sites/default/files/2026-05/guideline-170-en.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© Médecins Sans Frontières, all rights reserved (free download)"
+  size: "6.8 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "The file path carries a date folder (2026-05) that changes on each update. Re-scrape the landing page for the current link. FR/ES/AR versions are at /sites/default/files/pdf/guideline-170-{es,ar}.pdf."
+  scores: {survival: 10, rebuild: 8, actionable: 9, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: msf-essential-drugs
+  name: "MSF Essential Drugs – Practical Guidelines"
+  category: medicine
+  description_hu: "Az MSF gyógyszer-kézikönyve: alapgyógyszerek adagolása, ellenjavallatok, kölcsönhatások, tárolás, lejárt gyógyszerek. Terepi gyógyszerészeti alapmű."
+  url_info: https://medicalguidelines.msf.org/en
+  url_download: https://medicalguidelines.msf.org/sites/default/files/pdf/guideline-339-en.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© MSF, all rights reserved (free download)"
+  size: "2.8 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "FR/ES/AR: guideline-339-{fr,es,ar}.pdf. An old copy sits on the CD3WD mirror (ftpmirror.your.org); avoid it as outdated."
+  scores: {survival: 9, rebuild: 8, actionable: 9, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: msf-essential-obstetric-newborn-care
+  name: "MSF Essential Obstetric and Newborn Care (2019 ed.)"
+  category: medicine
+  description_hu: "Szülészeti vészhelyzetek és újszülött-ellátás protokolljai bábáknak és orvosoknak (vérzés, eklampszia, császármetszés indikációi, újraélesztés)."
+  url_info: https://medicalguidelines.msf.org/en
+  url_download: https://medicalguidelines.msf.org/sites/default/files/pdf/guideline-449-en.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© MSF, all rights reserved (free download)"
+  size: "4.9 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "279 pages, exported 2025-04. FR/AR versions also exist."
+  scores: {survival: 9, rebuild: 7, actionable: 9, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: msf-cholera-and-public-health-engineering
+  name: "MSF Management of a Cholera Epidemic + Public Health Engineering in Precarious Situations (2010)"
+  category: water_sanitation
+  description_hu: "Kolerajárvány kezelése (rehidráció, CTC-tervezés, klórozás) és MSF vízellátási-szennyvíz mérnöki kézikönyv táborokhoz. Járványok és tömeges ivóvízellátás megszervezéséhez."
+  url_info: https://medicalguidelines.msf.org/en
+  url_download: https://medicalguidelines.msf.org/sites/default/files/pdf/guideline-800-en.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© MSF, all rights reserved (free download)"
+  size: "2.3 MB (cholera) + 11.3 MB (PHE)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "PHE PDF: https://medicalguidelines.msf.org/sites/default/files/2022-06/Public_health_engineering_2010.pdf (11,301,056 B). The same page also links Tuberculosis 2025 and Measles 2025 PDFs."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 8, reliability: 10, offline_ease: 10}
+
+- id: icrc-war-surgery-vol1
+  name: "ICRC War Surgery: Working with Limited Resources, Vol. 1 (Giannou & Baldan)"
+  category: medicine
+  description_hu: "A Vöröskereszt háborús sebészeti kézikönyve: sebellátás, debridement, triage, lőtt sebek, amputáció, korlátozott eszközökkel. Trauma-sebészet alapműve."
+  url_info: https://www.icrc.org/en/publication/0973-war-surgery-working-limited-resources-armed-conflict-and-other-situations-violence
+  url_download: https://www.icrc.org/en/doc/assets/files/other/icrc-002-0973.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© ICRC (free download)"
+  size: "7.1 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Redirects to /sites/default/files/external/doc/en/assets/files/other/icrc-002-0973.pdf (358 pp). Alternative file icrc.org/eng/assets/files/other/icrc_002_0973.pdf is 5.7 MB and 357 pp; keep both. shop.icrc.org lists it at CHF 0."
+  scores: {survival: 9, rebuild: 8, actionable: 8, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: icrc-war-surgery-vol2
+  name: "ICRC War Surgery, Vol. 2 (Giannou, Baldan, Molde)"
+  category: medicine
+  description_hu: "A 2. kötet régiónként tárgyalja a sérüléseket (fej, mellkas, has, végtagok, égés), műtéti technikákkal. Az 1. kötettel együtt teljes trauma-sebészeti tankönyv."
+  url_info: https://www.icrc.org/en/publication/4105-war-surgery-working-limited-resources-armed-conflict-and-other-situations-violence
+  url_download: https://www.icrc.org/fre/assets/files/publications/icrc-002-4105.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© ICRC (free download)"
+  size: "11.1 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "The path says /fre/ but the content is the ENGLISH edition (checked: 640 pp, 'War Surgery volume 2'). The /en/doc/... variant returns 404."
+  scores: {survival: 8, rebuild: 8, actionable: 8, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: who-surgical-care-district-hospital
+  name: "WHO Surgical Care at the District Hospital (SCDH, 2003)"
+  category: medicine
+  description_hu: "WHO kézikönyv alap- és sürgősségi sebészethez kis kórházakban: sebészi technikák, szülészet, ortopédia, trauma, aneszteziológia. Első szintű sebészet tankönyve."
+  url_info: https://iris.who.int/handle/10665/42564
+  url_download: https://iris.who.int/server/api/core/bitstreams/8ece1ef3-1a8f-4003-a0a9-d46c3fa4f748/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO 2003, all rights reserved (free download)"
+  size: "7.0 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "HEAD returns 500; GET returns 200 application/pdf. Save as 9241545755.pdf. A Vietnamese edition is in the same record."
+  scores: {survival: 9, rebuild: 9, actionable: 9, uniqueness: 8, reliability: 10, offline_ease: 10}
+
+- id: who-anaesthesia-district-hospital
+  name: "WHO Anaesthesia at the District Hospital (Dobson, 2nd ed.)"
+  category: medicine
+  description_hu: "Érzéstelenítés egyszerű eszközökkel: ketamin, spinális, regionális blokkok, éteres/drawover rendszerek. Sebészet nélkülözhetetlen kiegészítője."
+  url_info: https://iris.who.int/handle/10665/42193
+  url_download: https://iris.who.int/server/api/core/bitstreams/c6d73f2a-9092-496b-81bf-a0bc6e1f868e/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "8.7 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "Size is the IRIS sizeBytes value (8,708,088). Uses the same GET-only API as SCDH."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 9, reliability: 10, offline_ease: 10}
+
+- id: who-model-formulary-2008
+  name: "WHO Model Formulary 2008"
+  category: medicine
+  description_hu: "A WHO alapgyógyszer-listához tartozó gyógyszer-kézikönyv: javallat, adagolás, mellékhatás, terhesség, vese/máj-elégtelenség. BNF-szerű, ingyenes formulárium."
+  url_info: https://iris.who.int/handle/10665/44053
+  url_download: https://iris.who.int/server/api/core/bitstreams/614b1dd8-8006-489d-a83c-51c657f8d3f2/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC BY-NC-SA 3.0 IGO (per WHO publication page)"
+  size: "3.7 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "634 pp. Based on the 15th EML (2007), so newer drugs are missing. Pair it with EML 24."
+  scores: {survival: 8, rebuild: 8, actionable: 7, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: who-essential-medicines-list-2025
+  name: "WHO Model List of Essential Medicines, 24th list (2025) + EMLc 10th list"
+  category: medicine
+  description_hu: "A WHO alapgyógyszer-listája felnőtteknek és gyermekeknek. Megmutatja, melyik ~500 gyógyszer fedi le a legfontosabb szükségleteket (készletezés, újragyártás prioritása)."
+  url_info: https://www.who.int/groups/expert-committee-on-selection-and-use-of-essential-medicines/essential-medicines-lists
+  url_download: https://iris.who.int/server/api/core/bitstreams/17642505-ecd3-4940-a691-4f1dfa0d835a/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "WHO (check item; recent WHO lists are CC BY-NC-SA 3.0 IGO)"
+  size: "1.4 MB + 0.8 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "EML: IRIS 10665/382243 (B09474-eng.pdf). EMLc: 10665/382242, bitstream 337edac2-d0aa-4e19-9d72-3acb11d09808. Mirror copy: iccp-portal.org/sites/default/files/2025-09/B09474-eng.pdf (1.24 MB, 200)."
+  scores: {survival: 6, rebuild: 8, actionable: 5, uniqueness: 6, reliability: 10, offline_ease: 10}
+
+- id: who-pocket-book-hospital-care-children
+  name: "WHO Pocket Book of Hospital Care for Children (2nd ed., 2013)"
+  category: medicine
+  description_hu: "Gyermekgyógyászati kórházi zsebkönyv: triage, sürgősségi ellátás, tüdőgyulladás, hasmenés, alultápláltság, malária, újszülöttek. Gyermekhalálozás csökkentésének alapja."
+  url_info: https://iris.who.int/handle/10665/81170
+  url_download: https://iris.who.int/server/api/core/bitstreams/8f110da0-22e6-4ef1-90e4-c9f1b7daa363/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO, all rights reserved (free download)"
+  size: "3.1 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "The same record also holds RU, VI, MR, HI and other translations. The IMCI chart booklet (IRIS 10665/43993, 0.47 MB, bitstream 3f2a512e-c6e2-418d-9af3-9989f0370fb3) is a good one-page-protocol companion."
+  scores: {survival: 9, rebuild: 7, actionable: 9, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: who-imai-district-clinician-manual
+  name: "WHO IMAI District Clinician Manual: Hospital Care for Adolescents and Adults (2 vols)"
+  category: medicine
+  description_hu: "Felnőtt belgyógyászati/sürgősségi kórházi kézikönyv korlátozott erőforrásokhoz: tünetalapú algoritmusok, HIV, TB, sepsis, eljárások. A gyermek Pocket Book felnőtt párja."
+  url_info: https://iris.who.int/handle/10665/77751
+  url_download: https://iris.who.int/server/api/core/bitstreams/ebb5d5b5-7fb2-4163-a9dd-a3a8598ef13f/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© WHO (free download)"
+  size: "2.9 MB + 3.9 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "Vol 2 bitstream: 8ca41728-72d6-4c6b-87cc-6c7c30fd1d17 (9789241548290_Vol2_eng.pdf)."
+  scores: {survival: 8, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 10, offline_ease: 10}
+
+- id: who-managing-complications-pregnancy-childbirth
+  name: "WHO Managing Complications in Pregnancy and Childbirth (MCPC, 2nd ed. 2017)"
+  category: medicine
+  description_hu: "Szülészeti szövődmények kezelése bábáknak és orvosoknak: tünetalapú lépések, eljárások (vákuum, manuális lepényleválasztás, császármetszés)."
+  url_info: https://iris.who.int/handle/10665/255760
+  url_download: https://iris.who.int/server/api/core/bitstreams/3bda1306-da5d-487d-b2ad-aff995112a7a/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "WHO (check item; 2017 WHO titles usually CC BY-NC-SA 3.0 IGO)"
+  size: "5.1 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "Overlaps with MSF EONC but goes deeper on procedures."
+  scores: {survival: 8, rebuild: 7, actionable: 9, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: who-basic-emergency-care
+  name: "WHO/ICRC Basic Emergency Care: Approach to the Acutely Ill and Injured (participant workbook)"
+  category: medicine
+  description_hu: "Sürgősségi alapellátás ABCDE-szemlélettel: trauma, nehézlégzés, sokk, eszméletlenség. Rövid, oktatásra kész munkafüzet."
+  url_info: https://iris.who.int/handle/10665/275635
+  url_download: https://iris.who.int/server/api/core/bitstreams/63432b9f-8808-44c5-9692-cea717c0cbda/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "WHO (check item)"
+  size: "4.3 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "Good training material for new health workers."
+  scores: {survival: 8, rebuild: 6, actionable: 9, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: us-army-atp-4-02-11-first-aid
+  name: "US Army ATP 4-02.11 Casualty Response, TCCC and First Aid (2026) + TC 4-02.1 (2016) / FM 4-25.11 lineage"
+  category: medicine
+  description_hu: "Az amerikai hadsereg aktuális elsősegély/harctéri sérültellátás kézikönyve (vérzéscsillapítás, légút, tourniquet, szállítás). Laikusok számára is lépésről lépésre."
+  url_info: https://www.army.mil/article/291504/medcoe_publishes_atp_4_02_11_casualty_response_tactical_combat_casualty_care_and_first_aid
+  url_download: https://armypubs.army.mil/epubs/DR_pubs/DR_a/ARN46159-ATP_4-02.11-000-WEB-1.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government work, public domain"
+  size: "12.7 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "ATP 4-02.11 (March 2026) supersedes TC 4-02.1, which replaced FM 4-25.11. The older TC 4-02.1 with Change 2 is at a third-party mirror: https://ciehub.info/ref/TC/4-02x1_2018.pdf (1.6 MB, 200). FM 4-25.11 copies exist at irp.fas.org/doddir/milmed/first.pdf (200)."
+  scores: {survival: 9, rebuild: 4, actionable: 10, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: special-forces-medical-handbook-st-31-91b
+  name: "US Army Special Forces Medical Handbook ST 31-91B (1982)"
+  category: medicine
+  description_hu: "Klasszikus különleges erők orvosi kézikönyve: diagnosztika, sebészeti eljárások, fogászat, állatorvoslás, terepi labor. Elavult gyógyszerekkel, de nagyon gyakorlatias."
+  url_info: https://archive.org/details/MManuals
+  url_download: https://archive.org/download/MManuals/UsArmySpecialForcesMedicalHandbookSt31-91b_text.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government work, public domain"
+  size: "11.2 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Officially obsolete (drug doses from 1982). The successor 'Special Operations Forces Medical Handbook' 2nd ed. (2008) has no verified free official PDF. It is sold by Skyhorse, ISBN 9781616082789 (paid, ~US$20-30)."
+  scores: {survival: 7, rebuild: 6, actionable: 8, uniqueness: 6, reliability: 6, offline_ease: 10}
+
+- id: wikem-emergency-medicine-wiki
+  name: "WikEM – The Global Emergency Medicine Wiki"
+  category: medicine
+  description_hu: "Sürgősségi orvosi wiki: tömör diagnózis- és kezelési lapok, gyógyszeradagok, algoritmusok. Orvosi személyzetnek gyors referencia."
+  url_info: https://www.wikem.org/wiki/Main_Page
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "CC BY-SA 4.0 (verified on WikEM:Copyrights)"
+  size: "unknown"
+  size_status: "estimated(not measured; MediaWiki site, several thousand pages)"
+  format: html
+  language: en
+  notes: "No official dump was found. Mirror with wget or the MediaWiki API, rate-limited. Assumes US resources and drugs, written for physicians. Check whether it is already inside the mdwiki/zimgit ZIMs before mirroring."
+  scores: {survival: 7, rebuild: 5, actionable: 8, uniqueness: 4, reliability: 8, offline_ease: 7}
+
+- id: msd-merck-manual-professional
+  name: "MSD/Merck Manual Professional Edition (+ Merck Manual print, paid)"
+  category: medicine
+  description_hu: "Átfogó belgyógyászati referencia minden betegségre. Online ingyenes, nyomtatott kiadása fizetős."
+  url_info: https://www.merckmanuals.com/professional
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "print edition approx. US$50-100 (unverified)"
+  license: "© Merck & Co.; online free to read, no redistribution"
+  size: "unknown"
+  size_status: "estimated(no download offered)"
+  format: html
+  language: multi
+  notes: "Mirroring the website is not permitted. For offline use buy the print 20th ed. or use the official app. Lower priority because the free MSF/WHO items cover field needs."
+  scores: {survival: 6, rebuild: 7, actionable: 5, uniqueness: 5, reliability: 10, offline_ease: 3}
+
+- id: oxford-handbook-clinical-medicine-11
+  name: "Oxford Handbook of Clinical Medicine, 11th ed. (2024)"
+  category: medicine
+  description_hu: "Klasszikus orvosi zsebkönyv: tömör klinikai összefoglalók minden szakterületről. Képzett orvosoknak, nyomtatott formában kiváló offline forrás."
+  url_info: https://global.oup.com/academic/product/oxford-handbook-of-clinical-medicine-9780198844013
+  url_download: null
+  url_status: "unverified (OUP returned 202/403 to curl)"
+  method: purchase
+  access: paid
+  price: "approx. US$45 / €45 / AU$81-84 (retailer listings)"
+  license: "© Oxford University Press"
+  size: "~900 pp. paperback"
+  size_status: official(stated on page)
+  format: physical
+  language: en
+  notes: "ISBN 9780198844013 (some listings 9780198844020). Buy as print. The OHCS (Clinical Specialties) companion is also worth having."
+  scores: {survival: 6, rebuild: 7, actionable: 6, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: uptodate
+  name: "UpToDate (Wolters Kluwer) – clinical decision support"
+  category: medicine
+  description_hu: "Vezető fizetős klinikai döntéstámogató adatbázis. Csak online, előfizetéssel. Összeomlás után használhatatlan, alacsony prioritás."
+  url_info: https://www.wolterskluwer.com/en/solutions/uptodate
+  url_download: null
+  url_status: "unverified (403 to curl)"
+  method: purchase
+  access: paid
+  price: "approx. US$500+/year individual (unverified)"
+  license: "proprietary subscription"
+  size: "n/a (online service)"
+  size_status: "estimated(online-only)"
+  format: db
+  language: en
+  notes: "Listed only for completeness. No offline export; licence forbids scraping. Low priority."
+  scores: {survival: 2, rebuild: 3, actionable: 6, uniqueness: 3, reliability: 10, offline_ease: 1}
+
+- id: who-guidelines-drinking-water-quality
+  name: "WHO Guidelines for Drinking-water Quality (2026 release; also 4th ed. + 1st/2nd addenda 2022)"
+  category: water_sanitation
+  description_hu: "A WHO ivóvízminőségi irányelve: mikrobiológiai és kémiai határértékek, vízbiztonsági tervek, fertőtlenítés. Vízművek újraindításának szabványa."
+  url_info: https://iris.who.int/handle/10665/385570
+  url_download: https://iris.who.int/server/api/core/bitstreams/c60cc28e-defe-45ed-b157-71fdd43902bf/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "CC BY-NC-SA 3.0 IGO (IRIS metadata)"
+  size: "6.3 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Issued 2026-05-06, ISBN 9789240121225; the edition label is not confirmed in the metadata. The previous 4th ed. with both addenda is IRIS 10665/352532 (5.3 MB, bitstream 69c17edd-ee26-425b-9d34-33799377e886). Keep both."
+  scores: {survival: 6, rebuild: 9, actionable: 6, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: who-guidelines-sanitation-health
+  name: "WHO Guidelines on Sanitation and Health (2018)"
+  category: water_sanitation
+  description_hu: "WHO szanitációs irányelv: latrinatípusok, széklet-kezelés, szennyvíz, ürülék-eredetű fertőzések megelőzése. Közegészségügyi tervezéshez."
+  url_info: https://iris.who.int/handle/10665/274939
+  url_download: https://iris.who.int/server/api/core/bitstreams/2f17fb04-1425-4680-bf39-d5bb6da0b7ed/content
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "WHO (check item; likely CC BY-NC-SA 3.0 IGO)"
+  size: "6.0 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "More policy-level. Hesperian CGEH and MSF PHE are more hands-on."
+  scores: {survival: 5, rebuild: 8, actionable: 5, uniqueness: 5, reliability: 10, offline_ease: 10}
+
+- id: cawst-biosand-filter-construction-manual
+  name: "CAWST Biosand Filter Construction Manual (v10) + CAWST WASH Resources library"
+  category: water_sanitation
+  description_hu: "Lépésről lépésre útmutató a biohomokszűrő (betonházas lassú homokszűrő) megépítéséhez: zsalu, homok szitálása, beüzemelés, karbantartás. Háztartási víztisztítás kulcsa."
+  url_info: https://washresources.cawst.org/en/resources/b6be2637/biosand-filter-construction-manual
+  url_download: https://assets-global.echocommunity.org/books/431bc155-e633-4786-a6ff-7bc2a17fd1f0/en/en_biosand-filter-co_screen.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "© CAWST (free; check terms)"
+  size: "6.0 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "The direct PDF is the 2012 edition hosted by ECHO (asset CDN works without login; the echocommunity.org pages return 403 to curl). The CAWST library also has the sand-sieve fabrication guide and HWTS fact sheets in many languages. Use the SODIS method (sodis.ch, 200) alongside it."
+  scores: {survival: 9, rebuild: 7, actionable: 10, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: hand-dug-wells-watt-wood
+  name: "Hand Dug Wells and their Construction (Watt & Wood, Practical Action Publishing)"
+  category: water_sanitation
+  description_hu: "A kézzel ásott kutak klasszikus kézikönyve: helykiválasztás, ásás, betongyűrűs bélelés, kútfej, fertőtlenítés. Gépek nélküli vízbeszerzés alapműve."
+  url_info: https://practicalactionpublishing.com/book/983/hand-dug-wells-and-their-construction
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "£9.99 eBook / £19.95 paperback"
+  license: "© Practical Action Publishing"
+  size: "256 pp."
+  size_status: official(stated on page)
+  format: pdf
+  language: en
+  notes: "ISBN 9780903031271 (pb), 9781780445083 (eBook). Practical Action Publishing has an Open Access collection (practicalactionpublishing.com/open-access, 200) worth scanning for free titles. A free WaterAid 'Hand dug wells' technical brief (2013) is on pseau.org, but its TLS certificate failed to curl."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: sphere-handbook-2018
+  name: "The Sphere Handbook 2018 – Humanitarian Charter and Minimum Standards"
+  category: water_sanitation
+  description_hu: "Humanitárius minimumstandardok: liter/fő/nap víz, latrina/fő, élelmiszer-kalória, menedék, egészségügy. Táborok és menekültellátás szervezéséhez mérőszámok."
+  url_info: https://spherestandards.org/handbook
+  url_download: null
+  url_status: "unverified (403 Cloudflare to curl)"
+  method: manual
+  access: free
+  price: null
+  license: "© Sphere Association (free PDF download per site)"
+  size: "5.98 MB"
+  size_status: official(stated on page)
+  format: pdf
+  language: multi
+  notes: "Size is from the SuSanA mirror listing (458 pp): https://www.susana.org/knowledge-hub/resources?id=4167 (page 200). Download the PDF manually in a browser."
+  scores: {survival: 7, rebuild: 7, actionable: 6, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: usda-complete-guide-home-canning-2015
+  name: "USDA Complete Guide to Home Canning (AIB 539, rev. 2015)"
+  category: food
+  description_hu: "Az USDA tudományosan validált befőzési útmutatója: vízfürdős és nyomás alatti befőzés, savasság, botulizmus-megelőzés, receptek. Biztonságos tartósítás etalonja."
+  url_info: https://nchfp.uga.edu/resources/entry/about-the-usda-guide-to-home-canning-2015-revision
+  url_download: https://nchfp.uga.edu/papers/guide/GUIDE01_HomeCan_rev0715.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government work, public domain"
+  size: "14.2 MB (8 PDFs)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Files: INTRO_HomeCanrev0715.pdf + GUIDE01..GUIDE07_HomeCan_rev0715.pdf under nchfp.uga.edu/papers/guide/. Also mirror NCHFP's drying, freezing, pickling and fermenting pages (wget). Avoid Amazon reprints, which are reported to omit content."
+  scores: {survival: 7, rebuild: 7, actionable: 10, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: kitinoja-kader-small-scale-postharvest
+  name: "Small-Scale Postharvest Handling Practices: A Manual for Horticultural Crops (Kitinoja & Kader, 4th ed., UC Davis/FAO)"
+  category: food
+  description_hu: "Betakarítás utáni kezelés kistermelőknek: válogatás, csomagolás, hűtés energia nélkül, tárolás, szárítás, feldolgozás. Az élelmiszer-veszteség csökkentésének kézikönyve."
+  url_info: https://www.fao.org/4/ae075e/ae075e00.htm
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© UC Davis PTRIC / FAO (free online)"
+  size: "unknown"
+  size_status: "estimated(HTML book, a few MB with images)"
+  format: html
+  language: en
+  notes: "The FAO HTML version is verified. The UF/IFAS PDF mirror found in search returns 404. The 3rd ed. is at fao.org/4/x5403e/x5403e00.htm."
+  scores: {survival: 6, rebuild: 7, actionable: 9, uniqueness: 7, reliability: 9, offline_ease: 8}
+
+- id: fao-human-nutrition-developing-world
+  name: "FAO Human Nutrition in the Developing World (Latham, 1997)"
+  category: food
+  description_hu: "Táplálkozástudományi tankönyv szegény környezetre: makro- és mikrotápanyagok, hiánybetegségek (skorbut, pellagra, kwashiorkor), étrend-tervezés helyi élelmiszerekből."
+  url_info: https://www.fao.org/4/w0073e/w0073e00.htm
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© FAO (free online)"
+  size: "unknown"
+  size_status: "estimated(HTML book, a few MB)"
+  format: html
+  language: en
+  notes: "Mirror with wget -r -np restricted to the /4/w0073e/ path."
+  scores: {survival: 6, rebuild: 7, actionable: 6, uniqueness: 7, reliability: 9, offline_ease: 8}
+
+- id: usda-fooddata-central-sr-legacy
+  name: "USDA FoodData Central – SR Legacy + Foundation Foods datasets"
+  category: food
+  description_hu: "Az USDA élelmiszer-összetételi adatbázisa (~7800 élelmiszer tápanyagtartalma) CSV/JSON formában. Étrend- és fejadag-tervezéshez."
+  url_info: https://fdc.nal.usda.gov/download-datasets/
+  url_download: https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government data, public domain (FDC states CC0; not re-checked)"
+  size: "6.1 MB (SR Legacy CSV) + 0.7 MB (Foundation JSON 2026-10-29)"
+  size_status: measured(content-length)
+  format: csv
+  language: en
+  notes: "Skip the large Branded Foods set. Needs a spreadsheet or SQLite to use; consider pre-rendering a PDF table."
+  scores: {survival: 4, rebuild: 6, actionable: 4, uniqueness: 6, reliability: 10, offline_ease: 6}
+
+- id: encyclopedia-of-country-living
+  name: "The Encyclopedia of Country Living, 50th Anniversary Ed. (Carla Emery)"
+  category: food
+  description_hu: "Önellátó tanyasi élet enciklopédiája: kertészet, állattartás, vágás, tartósítás, sajtkészítés, főzés. Egy kötetben a háztáji gazdálkodás egésze."
+  url_info: https://sasquatchbooks.com/book/the-encyclopedia-of-country-living-50th-anniversary-edition/
+  url_download: null
+  url_status: "unverified (403 to curl)"
+  method: purchase
+  access: physical
+  price: "US$29.95 list (paperback)"
+  license: "© Sasquatch Books"
+  size: "~900 pp. paperback"
+  size_status: "estimated(retail listings)"
+  format: physical
+  language: en
+  notes: "ISBN 9781632172891 (paperback, 2019). ISBN 9781632175830 is a 2025 3-ring-binder edition (CA$65.99). Buy in print."
+  scores: {survival: 7, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 7, offline_ease: 10}
+
+- id: attra-ncat-publications
+  name: "ATTRA / NCAT Sustainable Agriculture Publications (~375 titles)"
+  category: agriculture
+  description_hu: "Az USA fenntartható mezőgazdasági tájékoztató szolgálatának gyakorlati füzetei: talaj, vetésforgó, kártevők, legelő, baromfi, vetőmag, értékesítés. Ingyen letölthető, bulk-ban is."
+  url_info: https://www.ncat.org/tools-and-media/?media-type=publication
+  url_download: https://www.ncat.org/wp-content/uploads/2026/08/seed-in-hot-and-humid-climates-1.pdf
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© NCAT (free download)"
+  size: "~0.4 GB"
+  size_status: "estimated(375 publications × ~1 MB; sample PDF 1.13 MB)"
+  format: pdf
+  language: multi
+  notes: "WP REST API https://www.ncat.org/wp-json/wp/v2/publication returns X-WP-Total 375. Page through it, then scrape each publication page for .pdf links. attra.ncat.org redirects to ncat.org. Some titles are in Spanish."
+  scores: {survival: 6, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: fao-better-farming-series
+  name: "FAO/INADES Better Farming Series (46 booklets)"
+  category: agriculture
+  description_hu: "Egyszerű nyelvű FAO gazdafüzetek: növényélettan, talajvédelem, gabona, gumós növények, szarvasmarha, kecske, csirke, igás állatok. Alacsony írásbeliségű oktatáshoz ideális."
+  url_info: https://journeytoforever.org/farm_library/faobetfarm.html
+  url_download: https://www.fao.org/fileadmin/user_upload/faoweb/e-books/BetterFarming/Food_Crops16.epub
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© FAO (free)"
+  size: "~1.6 MB per EPUB volume; full series unknown"
+  size_status: "measured(content-length) for sample EPUB; total estimated"
+  format: epub
+  language: en
+  notes: "FAO hosts EPUB compilations under /fileadmin/user_upload/faoweb/e-books/BetterFarming/ (no index page found). An HTML mirror of all booklets (from CD3WD) is at https://piku.codeberg.page/better_farming/INDEX.HTML (200). The journeytoforever links point to cd3wd.com, which is blocked through the proxy."
+  scores: {survival: 7, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 8}
+
+- id: fao-teca-and-openknowledge
+  name: "FAO TECA (Technologies & Practices for Small Producers) + FAO Open Knowledge Repository"
+  category: agriculture
+  description_hu: "A FAO gyakorlati technológia-adatbázisa (TECA) és teljes kiadványtára (több tízezer agronómiai, állattenyésztési, halászati, erdészeti dokumentum). A mezőgazdasági újjáépítés legnagyobb ingyenes forrása."
+  url_info: https://openknowledge.fao.org
+  url_download: null
+  url_status: "200 verified 2026-11-14 (landing pages); OKR API returned 403 to curl"
+  method: manual
+  access: free
+  price: null
+  license: "mostly CC BY-NC-SA 3.0 IGO (newer); older © FAO free"
+  size: "unknown (repository is hundreds of GB)"
+  size_status: "estimated(full repository; curate a subset)"
+  format: pdf
+  language: multi
+  notes: "TECA: https://www.fao.org/teca/ (200). Pick a curated subset, for example the Manual on Meat Inspection for Developing Countries (fao.org/4/t0756e/T0756E00.htm, 200), the FAO Animal Production & Health, Soils and Fisheries Technical Paper series, and Diversification booklets (beekeeping). The legacy HTML library at www.fao.org/4/<code>/ can be mirrored with wget."
+  scores: {survival: 6, rebuild: 9, actionable: 6, uniqueness: 8, reliability: 10, offline_ease: 7}
+
+- id: echo-technical-notes
+  name: "ECHOcommunity Technical Notes & library (ECHO, Inc.)"
+  category: agriculture
+  description_hu: "Trópusi/szubtrópusi kisgazdaságoknak szóló technikai jegyzetek: talajjavítás, alulhasznosított növények, magtárolás, állattartás. A CVM állatorvosi könyvei is itt érhetők el."
+  url_info: https://www.echocommunity.org/en/resources
+  url_download: null
+  url_status: "unverified (403 Cloudflare to curl); asset CDN assets-global.echocommunity.org returns 200"
+  method: manual
+  access: free-registration
+  price: null
+  license: "© ECHO / respective authors"
+  size: "unknown"
+  size_status: "estimated(hundreds of PDFs, 1-10 MB each)"
+  format: pdf
+  language: multi
+  notes: "Downloads need a free account. Direct asset URLs (assets-global.echocommunity.org/books/<uuid>/en/*.pdf) worked without login. Focus is tropical; less relevant to Hungary than ATTRA, but its seed-bank and storage notes apply widely."
+  scores: {survival: 6, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 9}
+
+- id: cd3wd-2012-dvd-isos
+  name: "CD3WD – Collection of Development Documents (2012, 6 DVD ISOs)"
+  category: agriculture
+  description_hu: "Hatalmas fejlesztési dokumentumgyűjtemény (FAO, Peace Corps, VITA, GTZ, ITDG stb.): mezőgazdaság, víz, egészség, építés, energia, kisipar. Egyetlen letöltéssel több ezer kézikönyv."
+  url_info: https://ftpmirror.your.org/pub/misc/cd3wd/
+  url_download: https://ftpmirror.your.org/pub/misc/cd3wd/cd3wd%202012%206%20dvds/1001_cd3wd.iso
+  url_status: "200 verified 2026-11-14"
+  method: rsync
+  access: free
+  price: null
+  license: "mixed (redistributed third-party docs); gray"
+  size: "~26 GiB (6 × 4.3-4.4 GiB ISOs)"
+  size_status: measured(content-length)
+  format: iso
+  language: multi
+  notes: "ISOs 1001..1006_cd3wd.iso with cd3wd_checksums.sha1/.md5 in the same directory. The original cd3wd.com is blocked through the proxy (502). your.org also serves FTP/rsync; the module path was not checked. The extracted tree is in /pub/misc/cd3wd/1001..1006/. Content is dated (pre-2012) but huge. Dedupe against FAO and Peace Corps items."
+  scores: {survival: 7, rebuild: 9, actionable: 7, uniqueness: 8, reliability: 6, offline_ease: 7}
+
+- id: peace-corps-ice-manuals
+  name: "Peace Corps ICE 'Appropriate Technologies for Development' manuals (via ERIC/Internet Archive)"
+  category: agriculture
+  description_hu: "Peace Corps terepi kézikönyvek: halastó-építés és -gazdálkodás, kisüzemi méhészet, gabonatárolás. Önkénteseknek írt, lépésről lépésre útmutatók."
+  url_info: https://archive.org/details/ERIC_ED242565
+  url_download: https://archive.org/download/ERIC_ED242565/ERIC_ED242565.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government work, public domain"
+  size: "5.6 MB (M-1B pond) + 2.2 MB (M-17 beekeeping) + 1.8 MB (M-2B grain storage)"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "M-17 Small Scale Beekeeping: archive.org/download/ERIC_ED241775/ERIC_ED241775.pdf. M-2B Small Farm Grain Storage: archive.org/download/ERIC_ED241767/ERIC_ED241767.pdf. Many more ICE manuals are on archive.org: search 'Appropriate Technologies for Development'. The ERIC_* PDFs are small; the micro_IA* items are 1+ GB scans. peacecorps.gov returned 403."
+  scores: {survival: 7, rebuild: 8, actionable: 9, uniqueness: 7, reliability: 8, offline_ease: 10}
+
+- id: pfaf-plants-for-a-future
+  name: "PFAF – Plants For A Future database"
+  category: agriculture
+  description_hu: "8000+ ehető és hasznos növény adatbázisa (ehetőség, gyógyhatás, termesztés, hidegtűrés). Permakultúrához és vadon gyűjtéshez."
+  url_info: https://pfaf.org/user/Default.aspx
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: donation
+  price: null
+  license: "© PFAF (free to use online; donation-funded)"
+  size: "unknown"
+  size_status: "estimated(~8000 plant pages, HTML)"
+  format: html
+  language: en
+  notes: "No bulk download was found. A mirror must be polite and limited, and the licence for redistribution is unclear, so ask PFAF first. PFAF also sells printed books."
+  scores: {survival: 6, rebuild: 7, actionable: 5, uniqueness: 7, reliability: 7, offline_ease: 6}
+
+- id: usda-plants-database
+  name: "USDA NRCS PLANTS Database"
+  category: agriculture
+  description_hu: "Az USA növény-taxonómiai és jellemző-adatbázisa (elterjedés, invazivitás, felhasználás, növényadatlapok). Főleg észak-amerikai, Európában korlátozott értékű."
+  url_info: https://plants.usda.gov
+  url_download: null
+  url_status: "200 verified 2026-11-14 (SPA shell only)"
+  method: manual
+  access: free
+  price: null
+  license: "US Government data, public domain"
+  size: "unknown"
+  size_status: "estimated(checklist CSV is a few MB)"
+  format: csv
+  language: en
+  notes: "The site is an Angular SPA, and every deep URL tried (csvdownload, plantlst.txt) returned the 710-byte HTML shell to curl. Download the 'Complete PLANTS Checklist' manually from the Downloads page in a browser. Low priority for a European archive."
+  scores: {survival: 3, rebuild: 5, actionable: 3, uniqueness: 4, reliability: 9, offline_ease: 6}
+
+- id: icraf-agroforestree-database
+  name: "World Agroforestry (ICRAF) Agroforestree Database"
+  category: agriculture
+  description_hu: "600+ fafaj adatlapja agrárerdészethez: ökológia, szaporítás, felhasználás (tűzifa, takarmány, gyümölcs). Erdészeti és talajvédelmi tervezéshez."
+  url_info: https://apps.worldagroforestry.org/treedb/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: "© ICRAF (free online)"
+  size: "unknown"
+  size_status: "estimated(HTML species pages)"
+  format: html
+  language: en
+  notes: "Mostly tropical species. Mirror only the species pages."
+  scores: {survival: 3, rebuild: 6, actionable: 5, uniqueness: 6, reliability: 8, offline_ease: 6}
+
+- id: osa-seed-saving-guide
+  name: "Organic Seed Alliance – A Seed Saving Guide for Gardeners and Farmers (rev. 2026)"
+  category: agriculture
+  description_hu: "Vetőmagfogás gyakorlati útmutatója: beporzás, izolációs távolságok, populációméret, tisztítás, tárolás fajonként. A vetőmag-önellátás alapja."
+  url_info: https://seedalliance.org/publications/seed-saving-guide/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free-registration
+  price: null
+  license: "© Organic Seed Alliance"
+  size: "unknown"
+  size_status: "estimated(single PDF, a few MB)"
+  format: pdf
+  language: en
+  notes: "The download may ask for an email address. A Spanish version also exists. Pair it with ATTRA 'Harvesting, drying, processing and storing seed in hot and humid climates' (1.1 MB)."
+  scores: {survival: 7, rebuild: 9, actionable: 9, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: seed-to-seed-ashworth
+  name: "Seed to Seed, 2nd ed. (Suzanne Ashworth, Seed Savers Exchange)"
+  category: agriculture
+  description_hu: "160 zöldségfaj vetőmagfogásának kézikönyve: botanika, beporzás, izoláció, magtisztítás. A vetőmagmentés standard referenciája."
+  url_info: https://www.rizzoliusa.com/book/9781882424580/
+  url_download: null
+  url_status: "200 verified 2026-11-14 (publisher page); shop.seedsavers.org returned 403"
+  method: purchase
+  access: physical
+  price: "US$24.95 list"
+  license: "© Seed Savers Exchange"
+  size: "~228 pp. paperback"
+  size_status: "estimated(retail listings)"
+  format: physical
+  language: en
+  notes: "ISBN 9781882424580. Also sold by Seed Savers Exchange (seedsavers.org, 200). Svalbard Global Seed Vault (seedvault.no, 200; croptrust.org) is reference info only, no downloadable resource."
+  scores: {survival: 6, rebuild: 9, actionable: 9, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: where-there-is-no-vet-forse
+  name: "Where There Is No Vet (Bill Forse; Oxfam/CTA/Macmillan)"
+  category: veterinary
+  description_hu: "Laikus állategészségügyi kézikönyv: szarvasmarha, kecske, juh, sertés, baromfi, teve betegségei, sebellátás, ellés, gyógyszerek. Állatorvos nélküli gazdálkodás alapműve."
+  url_info: https://oxfamilibrary.openrepository.com/handle/10546/123108
+  url_download: https://oxfamilibrary.openrepository.com/bitstreams/1dc5bb59-bc94-4d3f-bc16-f79ce0ef488e/download
+  url_status: "200 verified 2026-11-14 (record page); bitstream downloads flaky (connection resets via proxy)"
+  method: http
+  access: free
+  price: "print approx. US$20-40 (ISBN 9780333588994, Macmillan) – unverified"
+  license: "© Oxfam/Bill Forse (free on Oxfam repository)"
+  size: "~20-25 MB (6 PDF parts)"
+  size_status: "measured(content-length) for parts 1,3,5,6 = 15.6 MB; parts 2,4 estimated"
+  format: pdf
+  language: en
+  notes: "Files are bk-where-there-is-no-vet-part{1..6}-010199-en.pdf (DSpace 7; metadata via /server/api/core/bitstreams/<uuid>). Retry on resets. Buy a printed copy too."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 9, reliability: 8, offline_ease: 10}
+
+- id: cvm-where-there-is-no-animal-doctor
+  name: "Where There Is No Animal Doctor (Christian Veterinary Mission, rev. 2016) + CVM livestock books"
+  category: veterinary
+  description_hu: "Közösségi állategészségügyi kézikönyv és kiegészítő CVM-könyvek (állatgyógyszerek és használatuk, kecske-, nyúltartás). Gyakorlati, laikusoknak szól."
+  url_info: https://cvm.org/book/animal-health-where-there-is-no-animal-doctor
+  url_download: "https://cvm.org/Files/Documents/Books/Book%20PDF's/download_Drugs%20and%20their%20usage.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free-registration
+  price: "Kindle US$15; printed via store.hesperian.org US$11.95 (listed price)"
+  license: "© Christian Veterinary Mission"
+  size: "96.2 MB ('Drugs and their usage' PDF); WTNAD PDF size unknown"
+  size_status: "measured(content-length) for Drugs PDF"
+  format: pdf
+  language: multi
+  notes: "The WTNAD free PDF sits behind a cvm.org login. ECHO also hosts it (EN/ES/TH). ISBN 978-1-886532-45-8. Other direct CVM PDFs (Raising Healthy Goats, Raising Healthy Rabbits) are under /Files/Documents/Books/Book%20PDF's/."
+  scores: {survival: 7, rebuild: 7, actionable: 9, uniqueness: 7, reliability: 8, offline_ease: 10}
+
+- id: merck-veterinary-manual
+  name: "Merck Veterinary Manual (online free / print paid)"
+  category: veterinary
+  description_hu: "Az állatorvoslás átfogó referenciája minden fajra (haszonállatok, kisállatok): betegségek, kezelés, adagolás. Képzett személyzetnek."
+  url_info: https://www.merckvetmanual.com
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "print edition approx. US$100+ (unverified)"
+  license: "© Merck & Co.; online free to read, no redistribution"
+  size: "unknown"
+  size_status: "estimated(no download offered)"
+  format: html
+  language: en
+  notes: "Buy print for offline use. Do not scrape."
+  scores: {survival: 5, rebuild: 7, actionable: 5, uniqueness: 6, reliability: 10, offline_ease: 3}
+
+- id: fm-21-76-survival-mcrp-3-02f
+  name: "US Army FM 21-76 / MCRP 3-02F Survival (1992)"
+  category: survival
+  description_hu: "Az amerikai hadsereg túlélési kézikönyve: víz- és élelemszerzés, ehető növények, csapdák, menedék, tűz, tájékozódás, elsősegély. A túlélés alap-kézikönyve."
+  url_info: https://archive.org/details/MCRP_3-02F_FM_21-76_Survival
+  url_download: https://archive.org/download/MCRP_3-02F_FM_21-76_Survival/MCRP_3-02F_FM_21-76_Survival.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "US Government work, public domain"
+  size: "34.9 MB"
+  size_status: measured(content-length)
+  format: pdf
+  language: en
+  notes: "Alternatives: the original 1957 FM 21-76 (archive.org/download/FM21-76Survival1957/FM21-76Survival1957.pdf, 18.2 MB), the Multi-Service SERE pocket manual FM 21-76-1 (rmp.nc.gov, 3.1 MB, 200), and USMC MCRP 3-02F in the MManuals item (36.3 MB). The current Army doctrine is ATP 3-50.21; no official URL was verified."
+  scores: {survival: 8, rebuild: 3, actionable: 9, uniqueness: 4, reliability: 8, offline_ease: 10}
+
+- id: storeys-guides
+  name: "Storey's Guide to Raising … series (Chickens, Goats, Sheep, Pigs, Rabbits, Beef Cattle, Dairy)"
+  category: agriculture
+  description_hu: "Fajonkénti állattartási kézikönyvek: tartás, takarmányozás, szaporítás, betegségek, vágás. Háztáji állattartáshoz a legjobb nyomtatott sorozat."
+  url_info: https://www.storey.com/
+  url_download: null
+  url_status: "unverified (storey.com product URLs returned a 301 with an empty Location to curl)"
+  method: purchase
+  access: physical
+  price: "approx. US$20-30 per volume (unverified)"
+  license: "© Storey Publishing"
+  size: "~300-450 pp. per volume"
+  size_status: "estimated(typical volume length)"
+  format: physical
+  language: en
+  notes: "Buy in print: Chickens, Goats, Sheep, Rabbits, Pigs, Dairy Animals and Beef Cattle are the core set. FAO Better Farming, Peace Corps manuals and CVM books are free partial substitutes."
+  scores: {survival: 6, rebuild: 8, actionable: 9, uniqueness: 5, reliability: 8, offline_ease: 10}
+```
+
+Notes (outside the YAML):
+- There are 48 entries, slightly over the 30-45 asked for. If you need to cut, drop UpToDate, USDA PLANTS, the Merck Veterinary Manual and the ICRAF database first.
+- Every "200 verified" status is from 2026-11-14.
+- Some sizes come from the server's own file-size metadata instead of a download. These are marked official, mainly the WHO IRIS files.
+- A few sizes are rough estimates, marked as such: ATTRA (~0.4 GB), Where There Is No Vet parts 2 and 4, and the CD3WD total.
+- Two things need a script:
+  - **Hesperian:** every book is split into per-chapter PDFs, so it needs a loop that tries each chapter number.
+  - **WHO IRIS:** use the `/server/api/core/bitstreams/<uuid>/content` links with GET. A HEAD request returns 500, and the old `/bitstream/handle/...` links no longer work.
+- These sites refused automated checks, so their files have to be downloaded by hand in a browser: echocommunity.org, spherestandards.org, peacecorps.gov and the PLANTS downloads page. The ECHO files and the CD3WD collection have working mirrors, given in the entries.
+- Do not use tagari.com, the old site for "Permaculture: A Designers' Manual". It now redirects to an unrelated gambling site, so I left that book out.
+- Scratch files from the checks are in `/tmp/claude-0/-home-user-Personal/5fbce50e-ce84-531e-8258-3354b3da35f3/scratchpad/` (check scripts, plus a few sample PDFs in `dl1/`). They are not needed for anything.

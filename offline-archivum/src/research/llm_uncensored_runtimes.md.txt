@@ -1,0 +1,747 @@
+# Offline LLM archívum: uncensored/abliterated és kis modellek, runtime-ok (állapot: 2026-11-14)
+
+A kért szűrést alkalmaztam: csak a legújabb generációs bázisokra épülő modellek szerepelnek. Az elavult bázisokat (Qwen2.5, Llama 3.x, Gemma 3, Qwen3.5-122B és -397B, GLM-4.x, Mistral Small 3.x) kihagytam, a végén listázom őket. A bázis megjelenési dátuma (`base_created`) a HF API `createdAt` mezője.
+
+**Ellenőrzési módszer**
+- **HF API**: model info és a `tree/main?recursive=true` lista. A quant-méreteket python3 -I-vel összegeztem a split részekkel együtt. A méretek decimális GB-ban vannak (10^9 byte).
+- **GitHub**: az API és a github.com web 403-at adott a proxy mögött. Helyette `git ls-remote --tags` adta a repo létezését és a legutolsó taget, sparse `git clone` a flageket a forráskódból, WebFetch pedig a `releases/expanded_assets/<tag>` oldalakat.
+- **PyPI**: a verziókhoz.
+- **UGI leaderboard**: a Space `ugi-leaderboard-data.csv` fájlja (frissítve 2026-10-17). Qwen3.8 alapú modell még nincs benne.
+- **Jelölések**: `verified_api` = HF API-ból összegezve. `unverified` = nem ellenőrzött vagy következtetett adat.
+
+---
+
+## 1. Módszerek röviden
+
+- **Abliteration (refusal-direction orthogonalization)** (Arditi et al. 2024, arXiv 2406.11717)
+  - A residual stream aktivációiból kiszámítja a "harmful − harmless" átlagkülönbséget. Ez a refusal irány.
+  - Ezt kivetíti azokból a súlymátrixokból, amelyek a residual streambe írnak (attn output, MLP/FFN down).
+  - Változatai: projected és norm-preserving/biprojected (MPOA), valamint rank-2 subspace.
+  - Az mrfakename DeepSeek-V4.1 kártya szerint a chat és a think mód külön irányban utasít el.
+  - Az mrfakename kártya mérése: refusal 97→4 (chat), 98→9 (think), first-token KL 0.067.
+  - A huihui-ai most már közvetlenül GGUF-on abliterál a llama.cpp `cvector-generator`-ral. A nagy modelleknél "patch" GGUF-ot ad, amit az unsloth quantra kell ráfuttatni a repóban lévő python scripttel.
+- **Heretic**
+  - Repo: `https://github.com/p-e-w/heretic` (git-tel ellenőrizve). Legutolsó tag v2.1.0, PyPI `heretic-llm` 2.1.0, 2026-11-08. Python ≥3.10, PyTorch 2.6+.
+  - Automatikus Optuna TPE keresés, ami a refusal rate-et és a KL divergence-et együtt minimalizálja.
+  - A v2 default modifier az ARA (Arbitrary-Rank Ablation). Klasszikus abliteration is választható, MPOA/projected opciókkal.
+  - `quantization = bnb_4bit` opció VRAM spóroláshoz. Configfájl: `config.toml`, vagy a `HERETIC_CONFIG_FILE` env változó. A v1-es configok nem kompatibilisek a v2-vel.
+  - Saját magad is futtathatod offline (a forrásban ellenőrzött datasetekkel):
+    ```bash
+    pip install -U heretic-llm   # online gépen, majd wheel-ek: pip download heretic-llm -d wheels/
+    hf download Qwen/Qwen3.5-4B --local-dir models/Qwen3.5-4B
+    hf download mlabonne/harmful_behaviors --repo-type dataset
+    hf download mlabonne/harmless_alpaca --repo-type dataset
+    # offline gépen:
+    HF_HUB_OFFLINE=1 heretic models/Qwen3.5-4B
+    ```
+    A README szerint egy 4B modell RTX 3090-en kb. 30–40 perc.
+- **SFT-alapú "decensoring"**
+  - Dolphin, Hermes: általános low-refusal fine-tune.
+  - NousResearch **Arete-27B**: a régi Perplexity R1-1776 utóda (lásd A11).
+- **Intelligenciaveszteség (UGI NatInt, base → uncensored)**
+
+  | Modell | Base NatInt | Uncensored NatInt | Változás |
+  |---|---|---|---|
+  | gemma-4-31B, thought prefill → coder3101 heretic | 38.91 | 36.53 | −2.4 |
+  | gemma-4-26B-A4B → llmfan46 ultra-heretic | 34.44 | 35.71 | nincs veszteség |
+  | Qwen3.6-35B-A3B → llmfan46 heretic | 31.03 | 31.62 | nincs veszteség |
+  | gemma-4-E4B → coder3101 heretic | 18.21 | 18.73 | nincs veszteség |
+  | gpt-oss-120b → kldzj heretic | 33.68 | 33.41 | ≈0 |
+  | gpt-oss-120b → MuXodious tainted-heresy | 33.68 | 32.25 | −1.4 |
+  | gpt-oss-20b (medium) → RichardErkhov-heresy | 27.18 | 22.52 | −4.7 |
+  | gpt-oss-20b (medium) → p-e-w ara-v3 | 27.18 | 20.17 | −7.0 |
+  | Qwen3.5-9B → trohrbaugh heretic-v2 | 30.98 | 24.2 | −6.8 |
+  | Qwen3.5-9B → huihui abliterated | 30.98 | 19.8 | −11.2 |
+  | Qwen3.5-4B → MuXodious SOMPOA-heresy-v2 | 23.88 | 22.35 | −1.5 |
+
+  Tanulság: a heretic/ARA nagy modellen általában veszteségmentes, kis modellen (9B, 20B) jelentős lehet.
+
+---
+
+## 2. PART A — Uncensored modellek (YAML)
+
+```yaml
+models_uncensored:
+- id: A1
+  name: DeepSeek-V4.1-Flash-1017 abliterated (huihui GGUF) / heretic (pqhaz) / abliterated (mrfakename)
+  hf_repo: https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF
+  base: deepseek-ai/DeepSeek-V4.1-Flash-1017
+  base_created: 2026-10-17
+  license: MIT
+  params: "763.2B total (safetensors); 384 routed experts, 6 per token + 1 shared; az aktív paraméterszám nincs a kártyán (unverified, becslés kb. 13–15B); ctx 1M"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/huihui-ai/Huihui-DeepSeek-V4.1-Flash-1017-abliterated-GGUF, quant: UD-IQ1_S, size: "232.98 GB (5 parts)", size_status: verified_api, tier: T2}
+  - {format: GGUF, repo_url: same, quant: UD-IQ1_M, size: "250.40 GB (5 parts)", size_status: verified_api, tier: T2}
+  - {format: GGUF-patch, repo_url: same, quant: "patch-unsloth-Q2 a unsloth UD-IQ2_XXS (300.48 GB) / UD-Q2_K_XL (334.79 GB) / UD-Q3_K_XL (485.07) / UD-Q4_K_XL (500.71) quantra", size: "patch Q2-1: 3.66 GB; Q2-2: 6 fájl, összesen 212.79 GB", size_status: verified_api, tier: T1/T2}
+  - {format: GGUF, repo_url: https://huggingface.co/pqhaz/DeepSeek-V4.1-Flash-1017-heretic-GGUF, quant: Q8_0, size: "507.95 GB (10 parts)", size_status: verified_api, tier: T1}
+  - {format: safetensors FP8, repo_url: https://huggingface.co/mrfakename/DeepSeek-V4.1-Flash-1017-abliterated, quant: original FP8, size: "510.32 GB", size_status: verified_api, tier: T1 (vLLM/SGLang)}
+  - {format: MLX, repo_url: https://huggingface.co/apetersson/DeepSeek-V4.1-Flash-1017-Abliterated-MLX, quant: "n/a (heretic alapú)", size: "422.59 GB", size_status: verified_api, tier: T2}
+  - {format: mmproj, quant: BF16, size: 0.97 GB, size_status: verified_api}
+  scores: {intelligence: 9.5, uncensored: 9, multilingual_hu: 8, offline_ease: 5}
+  notes: >
+    huihui: csak a 11–28. réteg 18 db attn_output tensorát abliterálta, az expertek érintetlenek.
+    llama.cpp ≥ b11870 kell. A bázisnak nincs Jinja chat template-je (a DeepSeek encoding.py adja).
+    Ha nem jut 335 GB+, az IQ1 quantok nagyon veszteségesek.
+- id: A2
+  name: GLM-5.3 abliterated (huihui GGUF)
+  hf_repo: https://huggingface.co/huihui-ai/Huihui-GLM-5.3-abliterated-GGUF
+  base: zai-org/GLM-5.3
+  base_created: 2026-08-25
+  license: "other (glm-5.3)"
+  params: "753.3B (safetensors); ctx 1M"
+  quants:
+  - {format: GGUF, quant: UD-IQ1_S, size: "216.72 GB (6 parts)", size_status: verified_api, tier: T2}
+  - {format: GGUF-patch, quant: "patch Q2-1 (attn_output + shexp, 'fewer warnings')", size: 6.45 GB, size_status: verified_api, tier: T1/T2}
+  - {format: GGUF-patch, quant: "patch Q2-2 (+experts, 'no warnings')", size: 102.24 GB, size_status: verified_api, tier: T1/T2}
+  - {format: GGUF base for patch, repo_url: https://huggingface.co/unsloth/GLM-5.3-GGUF, quant: "UD-IQ1_M 228.49 / UD-Q2_K_XL 253.88 / UD-Q3_K_XL 342.97 / UD-Q4_K_XL 467.29 / Q8_0 801.36 GB", size_status: verified_api}
+  - {format: MLX (NEM abliterated), repo_url: https://huggingface.co/mlx-community/GLM-5.3-4bit, size: 418.34 GB, size_status: verified_api}
+  scores: {intelligence: 9, uncensored: 8.5, multilingual_hu: 7.5, offline_ease: 4}
+  notes: >
+    Patch-folyamat (a README szerint):
+    hf download unsloth/GLM-5.3-GGUF --include "UD-IQ1_S/*";
+    python patch-unsloth-Q2/patch-unsloth-GLM-5.3-all.py --input-path ... --patch-file ...Q2-1.gguf --output-path ... --start-layer 0 --end-layer 77 --ablate-experts 2
+- id: A3
+  name: GLM-5.3-Flash abliterated (huihui GGUF)
+  hf_repo: https://huggingface.co/huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF
+  base: zai-org/GLM-5.3-Flash
+  base_created: 2026-08-25
+  license: MIT
+  params: "320B total / 18B active (kártya); VL; ctx 1M"
+  quants:
+  - {format: GGUF, quant: UD-IQ1_S, size: "93.09 GB (3)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: UD-IQ2_XXS, size: "101.84 GB (4)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: UD-Q2_K_XL, size: "108.72 GB (4)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: UD-IQ3_XXS, size: "120.37 GB (4)", size_status: verified_api, tier: T3/T2}
+  - {format: GGUF, quant: UD-Q3_K_XL, size: "147.54 GB (4)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: UD-IQ4_XS, size: "156.82 GB (5)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: UD-Q4_K_XL, size: "199.71 GB (6)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: UD-Q5_K_XL, size: "240.31 GB (6)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: UD-Q6_K_XL, size: "291.83 GB (7)", size_status: verified_api, tier: T2}
+  - {format: mmproj, quant: bf16, size: 1.16 GB, size_status: verified_api}
+  - {format: MLX, repo_url: https://huggingface.co/grant-ai/GLM-5.3-Flash-Abliterated-MLX-4bit, quant: 4bit, size: 185.94 GB, size_status: verified_api, tier: T2}
+  scores: {intelligence: 8.5, uncensored: 8.5, multilingual_hu: 7.5, offline_ease: 6}
+  notes: >
+    Az MLX változat egy "DERISKED" Blackfrost bázisból készült; a módszer unverified.
+    KTransformers natívan támogatja (FP8 kb. 306 GiB, legalább 350 GB RAM, RTX 40/50).
+- id: A4
+  name: Qwen3.8-Flash-Next abliterated v2 (huihui GGUF)
+  hf_repo: https://huggingface.co/huihui-ai/Huihui-Qwen3.8-Flash-Next-abliterated-v2-GGUF
+  base: Qwen/Qwen3.8-Flash-Next
+  base_created: 2026-08-24
+  license: "other (qwen-community-1.0)"
+  params: "125B, ebből 6B aktív + 51B n-gram embedding + 4B MTP (kártya); safetensors összesen kb. 180B; ctx 262k natív, 1M-ig bővíthető; VL"
+  quants:
+  - {format: GGUF, quant: "Swift GSQ-RCO IQ2_XS", size: "68.15 GB (2)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: "Swift IQ3_XXS", size: "75.97 GB (2)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: "Swift IQ3_S", size: "83.74 GB (2)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: "unsloth-UD-IQ4_XS", size: "93.68 GB (3)", size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: "unsloth-UD-Q4_K_XL", size: "111.33 GB (4)", size_status: verified_api, tier: T3/T2}
+  - {format: GGUF, quant: "UD-Q5_K_XL", size: "158.29 GB (6)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: "UD-Q6_K_XL", size: "169.17 GB (6)", size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: "Q8_0", size: "188.23 GB (6)", size_status: verified_api, tier: T2}
+  - {format: mmproj, quant: BF16, size: 0.91 GB, size_status: verified_api}
+  - {format: MLX, repo_url: https://huggingface.co/mlx-community/Qwen3.8-Flash-Next-Uncensored-oQ5e-mtp, quant: "oQ5e-mtp", size: 128.57 GB, size_status: verified_api, tier: T2}
+  scores: {intelligence: 8.5, uncensored: 9, multilingual_hu: 8.5, offline_ease: 8}
+  notes: >
+    T3 legjobb választása: csak 6B aktív, így --n-cpu-moe offloaddal 24–32 GB VRAM + 128 GB RAM mellett gyors.
+    Az MLX bázis (orcarouter/...-Uncensored) módszere unverified, és az "oQ" formátum runtime-kompatibilitása is unverified.
+- id: A5
+  name: Kimi-K3 Abliterated V1 (Uniboshi)
+  hf_repo: https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1
+  base: moonshotai/Kimi-K3
+  base_created: 2026-06-13
+  license: "other (kimi-k3)"
+  params: "2.8T total / 104B active (kártya); ctx 1M"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/Uniboshi/Kimi-K3-Abliterated-V1-GGUF, quant: MXFP4_MOE, size: "1508.37 GB (31 parts) + imatrix 3.42 GB", size_status: verified_api, tier: T1}
+  - {format: GGUF base, repo_url: https://huggingface.co/unsloth/Kimi-K3-GGUF, quant: "UD-IQ1_S 594.04 / UD-Q2_K_XL 861.28 / UD-Q4_K_XL 1508.67 GB (NEM abliterated)", size_status: verified_api}
+  scores: {intelligence: 9.5, uncensored: 7, multilingual_hu: 8, offline_ease: 2}
+  notes: >
+    Közösségi modell, kevés letöltéssel, gated:auto (HF login + elfogadás kell); a minőség unverified.
+    A legújabb Kimi-K3.1-Pro (2026-11-02, szintén 2.8T/104B) abliterated változatát nem találtam.
+- id: A6
+  name: MiniMax-M3.1-Flash abliterated (orcarouter GGUF)
+  hf_repo: https://huggingface.co/orcarouter/MiniMax-M3.1-Flash-abliterated-GGUF
+  base: MiniMaxAI/MiniMax-M3.1-Flash
+  base_created: 2026-10-17
+  license: "other (minimax-community)"
+  params: "kb. 428B / 23B active (kártya); ctx 1M"
+  quants:
+  - {format: GGUF, quant: "Mix-128G", size: "111.94 GB (3) + imatrix 0.93", size_status: verified_api, tier: T3/T2}
+  scores: {intelligence: 8, uncensored: 7, multilingual_hu: 6.5, offline_ease: 5}
+  notes: "gated:auto. A módszer és a minőség unverified. Nem abliterated unsloth UD-Q4_K_XL: 249.40 GB."
+- id: A7
+  name: gpt-oss-120b heretic (MuXodious tainted-heresy / kldzj heretic)
+  hf_repo: https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy
+  base: openai/gpt-oss-120b
+  base_created: 2025-08-04
+  base_note: "még mindig az OpenAI legújabb nyílt LLM-je (a gpt-oss-safeguard egy osztályozó-variáns)"
+  license: Apache-2.0
+  params: "116.8B; az aktív kb. 5.1B (OpenAI release, itt nem API-ból ellenőrizve)"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy-GGUF, quant: MXFP4_MoE, size: 63.39 GB, size_status: verified_api, tier: T3/T2}
+  - {format: GGUF, repo_url: https://huggingface.co/bartowski/kldzj_gpt-oss-120b-heretic-GGUF, quant: MXFP4_MOE, size: "63.39 GB (2)", size_status: verified_api, tier: T3}
+  - {format: MLX, repo_url: https://huggingface.co/MuXodious/gpt-oss-120b-tainted-heresy-mlx-MXFP4, quant: MXFP4, size: 62.16 GB, size_status: verified_api, tier: T2/T4 (128GB Mac)}
+  scores: {intelligence: 7.5, uncensored: 8.5, multilingual_hu: 6, offline_ease: 9}
+  notes: "UGI: tainted-heresy 53.81 (W10 9.2, NatInt 32.25); kldzj v1 46.78 (NatInt 33.41); base 19.65."
+- id: A8
+  name: Mistral-Small-4-119B-2603 heretic (darkc0de, GGUF: Rioky)
+  hf_repo: https://huggingface.co/darkc0de/Mistral-Small-4-119B-2603-heretic
+  base: mistralai/Mistral-Small-4-119B-2603
+  base_created: 2026-01-23
+  license: "Apache-2.0 (bázis); a heretic repón nincs license mező"
+  params: "119.4B MoE; VL; ctx 1M (GGUF metadata)"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/Rioky/Mistral-Small-4-119B-2603-heretic-gguf, quant: Q2_K, size: 43.40 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q3_K_M, size: 56.93 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q4_K_S, size: 67.68 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q4_K_M, size: 72.16 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q5_K_M, size: 84.52 GB, size_status: verified_api, tier: T2}
+  - {format: GGUF, quant: Q8_0, size: 126.47 GB, size_status: verified_api, tier: T2}
+  - {format: mmproj, quant: F16, size: 1.67 GB, size_status: verified_api}
+  scores: {intelligence: 7, uncensored: 8, multilingual_hu: 8, offline_ease: 8}
+  notes: >
+    A bázis már alapból is engedékeny (UGI W10 4.5). Erős EU-nyelveken.
+    A mrfakename/Mistral-Large-4-1T-A52B-abliterated-GGUF repo üres, ezért kihagytam.
+- id: A9
+  name: Qwen3.8-27B abliterated (huihui) / heretic-ara (trohrbaugh)
+  hf_repo: https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF
+  base: Qwen/Qwen3.8-27B
+  base_created: 2026-08-05
+  license: Apache-2.0
+  params: "27.8B dense; VL; ctx 262k → 1M"
+  quants:
+  - {format: GGUF, quant: Q2_K, size: 10.86 GB, size_status: verified_api, tier: T4}
+  - {format: GGUF, quant: UD-IQ4_XS, size: 14.40 GB, size_status: verified_api, tier: "T4 (16 GB VRAM, szoros)"}
+  - {format: GGUF, quant: UD-DW-Q4_K_M, size: 16.55 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q6_K, size: 22.43 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q8_0, size: 29.05 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, repo_url: https://huggingface.co/mradermacher/Huihui-Qwen3.8-27B-abliterated-GGUF, quant: "Q3_K_M 13.50 / IQ4_XS 15.42 / Q4_K_M 16.81 / Q5_K_M 19.54 GB", size_status: verified_api}
+  - {format: GGUF, repo_url: https://huggingface.co/mradermacher/Qwen3.8-27B-heretic-ara-GGUF, quant: "Q4_K_M 16.81 / Q6_K 22.43 / Q8_0 29.05 GB", size_status: verified_api}
+  - {format: safetensors, repo_url: https://huggingface.co/trohrbaugh/Qwen3.8-27B-heretic-ara, size: 55.59 GB, size_status: verified_api}
+  - {format: MLX, repo_url: https://huggingface.co/mlx-community/Qwen3.8-27B-Uncensored-OptiQ-4bit, quant: OptiQ-4bit, size: 19.76 GB, size_status: verified_api, tier: T4 (32GB Mac)}
+  - {format: mmproj, quant: "bf16 0.93 / Q8_0 0.63 GB", size_status: verified_api}
+  scores: {intelligence: 8, uncensored: 8.5, multilingual_hu: 8.5, offline_ease: 9}
+  notes: "Még nem szerepel a UGI-n, ezért mért veszteségadat nincs. A huihui safetensors repója 401-et ad (privát vagy törölt)."
+- id: A10
+  name: NousResearch Arete-27B (a "R1-1776 utód")
+  hf_repo: https://huggingface.co/NousResearch/Arete-27B
+  base: Qwen/Qwen3.8-27B
+  base_created: 2026-08-05
+  model_created: 2026-11-06
+  license: Apache-2.0
+  params: 27.4B
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/bartowski/NousResearch_Arete-27B-GGUF, quant: IQ4_XS, size: 15.24 GB, size_status: verified_api, tier: T4/T3}
+  - {format: GGUF, quant: Q4_K_M, size: 17.20 GB, size_status: verified_api, tier: T3}
+  - {format: GGUF, quant: Q5_K_M, size: 20.68 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q6_K, size: 23.62 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 28.67 GB, size_status: verified_api}
+  scores: {intelligence: 8, uncensored: 4, multilingual_hu: 8, offline_ease: 9}
+  notes: >
+    Tisztán SFT, amely a CCP-keretezést és propagandát szorítja vissza
+    (kártya: propaganda 22%→0.9%, fact score 2.32→2.98/5). NEM általános refusal-eltávolító.
+    A Perplexity perplexity-ai/r1-1776 eredetije ma 401-et ad, és a DeepSeek-R1 (2025-01) bázis elavult, ezért kihagytam.
+    Mirrorok még léteznek (pl. unsloth/r1-1776-GGUF).
+- id: A11
+  name: gemma-4-31B-it heretic (coder3101) / uncensored-heretic (llmfan46)
+  hf_repo: https://huggingface.co/coder3101/gemma-4-31B-it-heretic
+  base: google/gemma-4-31B-it
+  base_created: 2026-03-11
+  license: "Apache-2.0, NEM gated"
+  params: "31.3B dense; VL; ctx 256k"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/mradermacher/gemma-4-31B-it-heretic-GGUF, quant: IQ4_XS, size: 16.86 GB, size_status: verified_api, tier: T4/T3}
+  - {format: GGUF, quant: Q4_K_M, size: 18.69 GB, size_status: verified_api, tier: "T3 (24 GB VRAM)"}
+  - {format: GGUF, quant: Q6_K, size: 25.20 GB, size_status: verified_api, tier: "T3 (32 GB)"}
+  - {format: GGUF, quant: Q8_0, size: 32.64 GB, size_status: verified_api}
+  - {format: GGUF, repo_url: https://huggingface.co/llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF, quant: "Q3_K_M 15.29 / Q4_K_M 18.69 / Q5_K_M 21.85 GB + mmproj BF16 1.20", size_status: verified_api}
+  - {format: MLX, repo_url: https://huggingface.co/mlx-community/gemma-4-31B-it-uncensored-heretic-4bit, quant: 4bit, size: 17.30 GB, size_status: verified_api, tier: T4 (32GB Mac)}
+  scores: {intelligence: 8, uncensored: 10, multilingual_hu: 8.5, offline_ease: 10}
+  notes: >
+    UGI: 65.69 (thought prefill), a legjobb nyílt modell 40B alatt; W10 10; NatInt 36.53 a base 38.91-hez képest.
+    TheDrummer Artemis-31B-v1.2 (2026-09-25) ugyanerre épülő kreatív/RP fine-tune.
+- id: A12
+  name: gemma-4-26B-A4B-it ultra-uncensored-heretic (llmfan46)
+  hf_repo: https://huggingface.co/llmfan46/gemma-4-26B-A4B-it-ultra-uncensored-heretic-GGUF
+  base: google/gemma-4-26B-A4B-it
+  base_created: 2026-03-11
+  license: Apache-2.0
+  params: "25.8B MoE, kb. 4B aktív; VL"
+  quants:
+  - {format: GGUF, quant: Q3_K_M, size: 13.29 GB, size_status: verified_api, tier: T4}
+  - {format: GGUF, quant: Q4_K_M, size: 16.80 GB, size_status: verified_api, tier: T4/T3}
+  - {format: GGUF, quant: Q5_K_M, size: 19.13 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q6_K, size: 22.64 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 26.86 GB, size_status: verified_api}
+  - {format: mmproj, quant: BF16, size: 1.19 GB, size_status: verified_api}
+  - {format: MLX, repo_url: https://huggingface.co/mlx-community/gemma-4-26B-A4B-it-heretic-4bit, quant: 4bit, size: 15.64 GB, size_status: verified_api, note: "melyik heretic forrásból készült: unverified"}
+  scores: {intelligence: 7.5, uncensored: 10, multilingual_hu: 8, offline_ease: 10}
+  notes: "UGI 52.39, W10 10, NatInt 35.71 (base 34.44). Laptopon is gyors, mert MoE. TheDrummer Orion-26B-A4B-v1.1 ugyanerre épül."
+- id: A13
+  name: Qwen3.6-35B-A3B uncensored-heretic (llmfan46) / abliterated-MTP (huihui)
+  hf_repo: https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF
+  base: Qwen/Qwen3.6-35B-A3B
+  base_created: 2026-04-15
+  license: Apache-2.0
+  params: "36B MoE, 3B aktív; VL; ctx 262k"
+  quants:
+  - {format: GGUF, quant: Q3_K_M, size: 16.87 GB, size_status: verified_api, tier: T4}
+  - {format: GGUF, quant: Q4_K_M, size: 21.23 GB, size_status: verified_api, tier: T3/T4 (32GB RAM)}
+  - {format: GGUF, quant: Q5_K_M, size: 24.76 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q6_K, size: 28.58 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 36.90 GB, size_status: verified_api}
+  - {format: GGUF, repo_url: https://huggingface.co/huihui-ai/Huihui-Qwen3.6-35B-A3B-abliterated-MTP-GGUF, quant: "Q2_K 13.25 / Q6_K 29.21 / Q8_0 37.80 GB", size_status: verified_api}
+  scores: {intelligence: 7, uncensored: 10, multilingual_hu: 8, offline_ease: 10}
+  notes: "UGI 50.9, NatInt 31.62 (base 31.03). A 35B-A3B méretben ez a legújabb (Qwen3.8-ból nincs ilyen méret)."
+- id: A14
+  name: gpt-oss-20b heretic (MuXodious RichardErkhov-heresy / p-e-w heretic)
+  hf_repo: https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy
+  base: openai/gpt-oss-20b
+  base_created: 2025-08-04
+  license: Apache-2.0
+  params: "20.9B MoE (az aktív kb. 3.6B, itt nem API-ból ellenőrizve)"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/MuXodious/gpt-oss-20b-RichardErkhov-heresy-GGUF, quant: MXFP4_MoE, size: 12.65 GB, size_status: verified_api, tier: T4}
+  - {format: GGUF, repo_url: https://huggingface.co/bartowski/p-e-w_gpt-oss-20b-heretic-GGUF, quant: "MXFP4_MOE 12.11 / Q8_0 12.11 / Q4_K_M 15.85 GB (a K-quantok itt nagyobbak)", size_status: verified_api}
+  scores: {intelligence: 6, uncensored: 9.5, multilingual_hu: 5, offline_ease: 10}
+  notes: "UGI 46.67; NatInt 22.52 (base medium 27.18), tehát látható veszteség. A p-e-w ara-v4 (2026-04-02) a legújabb p-e-w változat; UGI-mérése nincs."
+- id: A15
+  name: gemma-4-12B-it uncensored-heretic (llmfan46) / abliterated QAT (huihui)
+  hf_repo: https://huggingface.co/llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF
+  base: google/gemma-4-12B-it
+  base_created: 2026-05-23
+  license: Apache-2.0
+  params: "11.96B; any-to-any"
+  quants:
+  - {format: GGUF, quant: Q4_K_M, size: 8.54 GB, size_status: verified_api, tier: T4}
+  - {format: GGUF, quant: Q5_K_M, size: 9.43 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q6_K, size: 9.79 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 12.67 GB, size_status: verified_api}
+  - {format: mmproj, quant: BF16, size: 0.18 GB, size_status: verified_api}
+  - {format: GGUF, repo_url: https://huggingface.co/huihui-ai/Huihui-gemma-4-12B-it-qat-q4_0-unquantized-abliterated-GGUF, quant: "Q4_K 7.38 / bf16 23.83 GB", size_status: verified_api}
+  scores: {intelligence: 6, uncensored: 9, multilingual_hu: 8, offline_ease: 10}
+  notes: "UGI-mérés nincs a heretic változatra (a base NatInt 29.47 thought prefill-lel)."
+- id: A16
+  name: Qwen3.5-9B heretic-v2 (trohrbaugh)
+  hf_repo: https://huggingface.co/trohrbaugh/Qwen3.5-9B-heretic-v2
+  base: Qwen/Qwen3.5-9B
+  base_created: 2026-02-27
+  base_note: "a repo metadata bázisa a Qwen3.5-9B-Base"
+  license: Apache-2.0
+  params: "9.4–9.65B; VL"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/filvyb/Qwen3.5-9B-heretic-v2-GGUF, quant: Q4_K_M, size: 5.63 GB, size_status: verified_api, tier: T4/T5}
+  - {format: GGUF, quant: Q8_0, size: 9.53 GB, size_status: verified_api, tier: T4}
+  - {format: mmproj, quant: "Q8_0 0.62 / F16 0.92 GB", size_status: verified_api}
+  - {format: GGUF alt, repo_url: https://huggingface.co/mradermacher/Huihui-Qwen3.5-9B-abliterated-GGUF, quant: "IQ4_XS 5.10 / Q4_K_M 5.63 / Q6_K 7.36 GB", size_status: verified_api}
+  scores: {intelligence: 5.5, uncensored: 9.5, multilingual_hu: 7.5, offline_ease: 10}
+  notes: >
+    NatInt 24.2 (heretic-v2) és 19.8 (huihui) a base 30.98-hoz képest; a kicsi modellek többet veszítenek.
+    A mradermacher Qwen3.5-9B-heretic-v2-GGUF egy másik feltöltőtől (ansulev) származik, nem trohrbaugh-tól.
+- id: A17
+  name: Qwen3.5-4B heretic-2.0 (p-e-w) / SOMPOA-heresy-v2 (MuXodious)
+  hf_repo: https://huggingface.co/p-e-w/Qwen3.5-4B-heretic-2.0
+  base: Qwen/Qwen3.5-4B
+  base_created: 2026-02-27
+  model_created: 2026-11-01
+  license: Apache-2.0
+  params: "4.5–4.66B; VL"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/mradermacher/Qwen3.5-4B-heretic-2.0-GGUF, quant: IQ4_XS, size: 2.53 GB, size_status: verified_api, tier: T5}
+  - {format: GGUF, quant: Q4_K_M, size: 2.71 GB, size_status: verified_api, tier: T5}
+  - {format: GGUF, quant: Q6_K, size: 3.46 GB, size_status: verified_api, tier: T5}
+  - {format: GGUF, quant: Q8_0, size: 4.48 GB, size_status: verified_api, tier: T5/T4}
+  - {format: mmproj, quant: "Q8_0 0.37 / f16 0.67 GB", size_status: verified_api}
+  - {format: GGUF alt, repo_url: https://huggingface.co/mradermacher/Qwen3.5-4B-SOMPOA-heresy-v2-GGUF, quant: "Q4_K_M 2.71 / Q8_0 4.48 GB", size_status: verified_api}
+  scores: {intelligence: 4.5, uncensored: 9.5, multilingual_hu: 6.5, offline_ease: 10}
+  notes: "SOMPOA-heresy-v2: UGI 44.73, W10 10, NatInt 22.35 (base 23.88). A heretic-2.0 még nincs a UGI-n."
+- id: A18
+  name: gemma-4-E4B-it heretic (coder3101; GGUF Abiray) / ultra-uncensored (llmfan46)
+  hf_repo: https://huggingface.co/coder3101/gemma-4-E4B-it-heretic
+  base: google/gemma-4-E4B-it
+  base_created: 2026-03-02
+  license: Apache-2.0
+  params: "8B összesen / kb. 4.5B effektív; any-to-any (kép+audio)"
+  quants:
+  - {format: GGUF, repo_url: https://huggingface.co/Abiray/gemma-4-E4B-it-heretic-GGUF, quant: Q4_K_M, size: 5.34 GB, size_status: verified_api, tier: T5 (8–12GB RAM phone)/T4}
+  - {format: GGUF, quant: Q6_K, size: 6.22 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 8.03 GB, size_status: verified_api}
+  - {format: mmproj, quant: "F16 0.99 GB", size_status: verified_api}
+  - {format: GGUF alt, repo_url: https://huggingface.co/llmfan46/gemma-4-E4B-it-ultra-uncensored-heretic-GGUF, quant: "Q4_K_M 5.34 / Q5_K_M 5.76 / Q8_0 8.03 GB", size_status: verified_api}
+  scores: {intelligence: 4.5, uncensored: 9.5, multilingual_hu: 7.5, offline_ease: 10}
+  notes: "NatInt 18.73 (base 18.21), tehát nincs veszteség. A p-e-w/gemma-4-E4B-it-heretic is létezik (2026-06-11)."
+- id: A19
+  name: gemma-4-E2B-it ultra-uncensored-heretic (llmfan46)
+  hf_repo: https://huggingface.co/llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF
+  base: google/gemma-4-E2B-it
+  base_created: 2026-03-02
+  license: Apache-2.0
+  params: "5.1B összesen (kb. 2B effektív)"
+  quants:
+  - {format: GGUF, quant: Q4_K_M, size: 3.43 GB, size_status: verified_api, tier: T5}
+  - {format: GGUF, quant: Q5_K_M, size: 3.63 GB, size_status: verified_api, tier: T5}
+  - {format: GGUF, quant: Q6_K, size: 3.85 GB, size_status: verified_api}
+  - {format: GGUF, quant: Q8_0, size: 4.97 GB, size_status: verified_api}
+  - {format: mmproj, quant: BF16, size: 0.99 GB, size_status: verified_api}
+  scores: {intelligence: 3, uncensored: 9, multilingual_hu: 6.5, offline_ease: 10}
+```
+
+**Kizárt modellek (elavult bázis vagy ellenőrizhetetlen)**
+- R1-1776 (DeepSeek-R1, 2025-01; az eredeti repo 401).
+- Dolphin-X1-8B (Llama-3.1).
+- Dolphin-Mistral-24B-Venice (Mistral Small 3.x).
+- Hermes 4 70B/405B (Llama-3.1).
+- Hermes 4.3-36B: a Seed-OSS-36B bázis (2025-08) még a legújabb Seed-OSS, de UGI 38.06, NatInt 20.66, ezért gyenge.
+- Dolphin-X1-Trinity-Nano: arcee Trinity-Nano-Preview, 6B, kevés letöltés.
+- mlabonne gemma-3 abliterated.
+- Josiefied Qwen2.5/Qwen3: a JOSIE-2-OSS Qwen3.5-9B-re épül, de csak MLX "oQ" formátumban van, kevés letöltéssel.
+- Llama-3.3-70B abliterated.
+- GLM-4.6 Derestricted: a UGI #2, de a GLM-5.3 felváltotta.
+- Qwen3.5-122B-A10B és -397B-A17B heretic: a Qwen3.8 generáció felváltotta. Ha mégis kell: mradermacher/Qwen3.5-122B-A10B-heretic-GGUF Q4_K_M 74.21 GB.
+- Mistral-Large-4 abliterated: a GGUF repo üres.
+
+---
+
+## 3. PART B — Kis és laptop/phone modellek (legújabb generáció)
+
+```yaml
+models_small:
+- {id: B1, name: Qwen3.5 0.8B/2B/4B/9B, hf_repo: https://huggingface.co/Qwen/Qwen3.5-9B, base_created: "2026-02-27/28", license: Apache-2.0, params: "0.87B / 2.27B / 4.66B / 9.65B; natívan VL",
+   quants: [
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF, quant: "Q4_K_M 0.53 / Q8_0 0.81 GB + mmproj 0.20", size_status: verified_api, tier: T5},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.5-2B-GGUF, quant: "Q4_K_M 1.28 / Q8_0 2.01 + mmproj 0.67", size_status: verified_api, tier: T5},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.5-4B-GGUF, quant: "Q4_K_M 2.74 / UD-Q4_K_XL 2.91 / Q8_0 4.48 + mmproj 0.67", size_status: verified_api, tier: T5},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.5-9B-GGUF, quant: "Q4_K_M 5.68 / UD-Q4_K_XL 5.97 / Q8_0 9.53 + mmproj 0.92", size_status: verified_api, tier: T4},
+    {format: MLX, repo_url: "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit (3.06 GB), https://huggingface.co/mlx-community/Qwen3.5-9B-4bit (5.98 GB)", size_status: verified_api}],
+   scores: {intelligence: "3–6", uncensored: 2, multilingual_hu: 7.5, offline_ease: 10}, notes: "A kártya szerint 201 nyelvet támogat. Ezekben a méretekben ez a legújabb Qwen (a 3.6/3.8 csak 27B és felette)."}
+- {id: B2, name: Gemma 4 (E2B, E4B, 12B, 26B-A4B, 31B), hf_repo: https://huggingface.co/google/gemma-4-E4B-it, base_created: "E2B/E4B 2026-03-02; 26B/31B 2026-03-11; 12B 2026-05-23", license: "Apache-2.0, NEM gated (a Gemma 3 még manual gated)",
+   quants: [
+    {format: GGUF QAT q4_0 (Google), repo_url: https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf, quant: "gemma-4-E2B_q4_0-it.gguf 3.35 GB + mmproj 0.99", size_status: verified_api, tier: T5},
+    {format: GGUF QAT, repo_url: https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf, quant: "gemma-4-E4B_q4_0-it.gguf 5.15 + mmproj 0.99", size_status: verified_api, tier: T5/T4},
+    {format: GGUF QAT, repo_url: https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf, quant: "gemma-4-12b-it-qat-q4_0.gguf 6.98 + mmproj 0.18", size_status: verified_api, tier: T4},
+    {format: GGUF QAT, repo_url: https://huggingface.co/google/gemma-4-26B-A4B-it-qat-q4_0-gguf, quant: "gemma-4-26B_q4_0-it.gguf 14.44 + mmproj 1.19", size_status: verified_api, tier: T4},
+    {format: GGUF QAT, repo_url: https://huggingface.co/google/gemma-4-31B-it-qat-q4_0-gguf, quant: "gemma-4-31B_q4_0-it.gguf 17.65 + mmproj 1.20", size_status: verified_api, tier: T3},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF, quant: "Q4_K_M 4.98 / Q8_0 8.19", size_status: verified_api},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/gemma-4-12B-it-GGUF, quant: "Q4_K_M 7.12 / Q8_0 12.67", size_status: verified_api},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/gemma-4-26B-A4B-it-GGUF, quant: "MXFP4_MOE 16.55 / UD-Q4_K_M 16.95 / Q8_0 26.86", size_status: verified_api},
+    {format: GGUF, repo_url: https://huggingface.co/unsloth/gemma-4-31B-it-GGUF, quant: "Q4_K_M 18.32 / Q8_0 32.64", size_status: verified_api},
+    {format: MLX, repo_url: "mlx-community/gemma-4-e4b-it-4bit 5.18 GB; mlx-community/gemma-4-12B-it-4bit 6.77 GB", size_status: verified_api}],
+   scores: {intelligence: "3–8", uncensored: 2, multilingual_hu: 8, offline_ease: 10}, notes: "A kártya szerint 140+ nyelvet tanult. Az E2B/E4B/12B any-to-any (audio is)."}
+- {id: B3, name: Qwen3.8-27B / Qwen3.6-35B-A3B (nem uncensored), base_created: "2026-08-05 / 2026-04-15", license: Apache-2.0,
+   quants: [{format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.8-27B-GGUF, quant: "Q4_0 16.06 / UD-Q4_K_M 16.56 / Q8_0 29.05 + MTP draft 1.37", size_status: verified_api, tier: T3/T4},
+            {format: GGUF, repo_url: https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF, quant: "MXFP4_MOE 21.71 / UD-Q4_K_M 22.13 / Q8_0 36.90", size_status: verified_api, tier: T3/T4},
+            {format: MLX, repo_url: "mlx-community/Qwen3.8-27B-4bit 16.07 GB; mlx-community/Qwen3.6-35B-A3B-4bit 20.43 GB", size_status: verified_api}]}
+- {id: B4, name: gpt-oss-20b, hf_repo: https://huggingface.co/ggml-org/gpt-oss-20b-GGUF, base_created: 2025-08-04, license: Apache-2.0, quants: [{format: GGUF, quant: "gpt-oss-20b-MXFP4.gguf 12.11 GB (+ eagle3 draft 0.92)", size_status: verified_api, tier: T4}, {format: MLX, repo_url: mlx-community/gpt-oss-20b-MXFP4-Q8, size: 12.10 GB, size_status: verified_api}], notes: "magyarul gyengébb (unverified, becslés)"}
+- {id: B5, name: Ministral 3 (3B/8B/14B Instruct 2512), hf_repo: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512, base_created: 2025-10-31, license: Apache-2.0,
+   quants: [{format: GGUF (official), repo_url: https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512-GGUF, quant: "Q4_K_M 2.15 / Q8_0 3.65 + mmproj 0.84", size_status: verified_api, tier: T5},
+            {format: GGUF, repo_url: https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512-GGUF, quant: "Q4_K_M 5.20 / Q8_0 9.03", size_status: verified_api, tier: T4},
+            {format: GGUF, repo_url: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512-GGUF, quant: "Q4_K_M 8.24 / Q5_K_M 9.62 / Q8_0 14.36", size_status: verified_api, tier: T4}],
+   notes: "A Ministral 3 8B Reasoning UGI W10 értéke 8.2, tehát alapból is engedékeny. A magyar nincs kifejezetten listázva."}
+- {id: B6, name: LiquidAI LFM3 (1.7B, VL-2B, Omni-2B), hf_repo: https://huggingface.co/LiquidAI/LFM3-1.7B, base_created: "2026-10-19..23", license: "other (lfm1.0)",
+   quants: [{format: GGUF, repo_url: https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF, quant: "Q4_K_M 1.10 / Q8_0 1.85 / QAD-Q4_0 1.05", size_status: verified_api, tier: T5},
+            {format: GGUF, repo_url: https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF, quant: "Q4_K_M 1.10 + mmproj Q8_0 0.20", size_status: verified_api, tier: T5},
+            {format: GGUF, repo_url: https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF, quant: "Q4_K_M 1.10 + mmproj Q4_K_M 0.29", size_status: verified_api, tier: T5}]}
+- {id: B7, name: IBM Granite 4.2 (3b/8b/30b), base_created: 2026-08-07, license: Apache-2.0, quants: [{format: GGUF, repo_url: https://huggingface.co/ibm-granite/granite-4.2-8b-GGUF, quant: "3b Q4_K_M 2.24 / 8b Q4_K_M 5.35 / 30b Q4_K_M 17.72 GB", size_status: verified_api}], notes: "A nyelvlistában nincs magyar."}
+- {id: B8, name: SmolLM3-3B, base_created: 2025-07-08, license: Apache-2.0, quants: [{format: GGUF, repo_url: https://huggingface.co/ggml-org/SmolLM3-3B-GGUF, quant: "Q4_K_M 1.92 / Q8_0 3.28", size_status: verified_api}], notes: "Még mindig a legújabb SmolLM, de csak 6 nyelvet tud, magyart nem."}
+- {id: B9, name: Phi-4-reasoning-vision-15B, base_created: 2026-01-23, license: MIT, notes: "A GGUF méretet nem ellenőriztem (unverified)."}
+- {id: B10, name: "Llama: nincs új kis modell", notes: "A Llama 3.2 3B 2024-es és manual gated; a Llama 4 (2025-04) csak 17B×16E méretben van, ezért kihagytam."}
+```
+
+**Speech**
+```yaml
+speech:
+- {name: whisper.cpp ggml modellek, repo_url: https://huggingface.co/ggerganov/whisper.cpp, sizes_MB: {tiny: 77.7, tiny-q5_1: 32.2, base: 148.0, base-q5_1: 59.7, small: 487.6, small-q5_1: 190.1, medium: 1533.8, medium-q5_0: 539.2, large-v3: 3095.0, large-v3-q5_0: 1081.1, large-v3-turbo: 1624.6, large-v3-turbo-q8_0: 874.2, large-v3-turbo-q5_0: 574.0}, size_status: verified_api, notes: "Magyarhoz a large-v3-turbo-q5_0 / q8_0 ajánlott. Runtime: ggml-org/whisper.cpp v1.9.5 (whisper-cli, whisper-server)."}
+- {name: Qwen3-ASR-1.7B / 0.6B, hf_repo: https://huggingface.co/Qwen/Qwen3-ASR-1.7B, base_created: 2026-01-28, notes: "A kártya listájában szerepel a Hungarian (52 nyelv/dialektus). GGUF: handy-computer/Qwen3-ASR-1.7B-gguf Q4_K_M 1.32 / Q8_0 2.19 GB (verified_api); hogy melyik runtime futtatja, az unverified."}
+- {name: Piper TTS magyar, repo_url: https://huggingface.co/rhasspy/piper-voices/tree/main/hu/hu_HU, license: MIT (repo), voices: [
+   {file: hu_HU-anna-medium.onnx, size: 63.22 MB, sha256: 134086669d0c0565672a4d9db812d8a8578d8dfc8f675a3f730456cf535bd1f2},
+   {file: hu_HU-berta-medium.onnx, size: 63.22 MB, sha256: dfab34c778ca19b3c8aa9a87dc1f542def96810419920f51330567093068478b},
+   {file: hu_HU-imre-medium.onnx, size: 63.22 MB, sha256: bcec8e6e5404baca0fcaf2895da4d02d414d3340b9f80bd94a2112b5c67061ae}],
+   notes: "Mindegyikhez kell a .onnx.json is. Runtime: OHF-Voice/piper1-gpl v1.8.0 (PyPI piper-tts 1.8.0); a rhasspy/piper archív (v1.2.0). Parancs: python3 -m piper -m hu_HU-anna-medium -f out.wav -- 'Szöveg'"}
+```
+
+**Embedding (RAG)**
+```yaml
+embeddings:
+- {name: EmbeddingGemma 2, hf_repo: https://huggingface.co/google/embeddinggemma-2, base_created: 2026-09-14, license: Apache-2.0, params: "740M (270M text + vision + audio), 768-dim, 100+ nyelv", gguf: "ggml-org/embeddinggemma-2-GGUF: Q8_0 0.31 / BF16 0.56 GB + mmproj Q8_0 0.55 (verified_api)"}
+- {name: Qwen3-Embedding, hf_repo: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B, base_created: 2025-06-03, license: Apache-2.0, gguf: "0.6B Q8_0 0.64 / f16 1.20; 4B Q4_K_M 2.50 / Q8_0 4.28; 8B Q4_K_M 4.68 / Q8_0 8.05 GB (Qwen/*-GGUF, verified_api)"}
+- {name: bge-m3, hf_repo: https://huggingface.co/BAAI/bge-m3, base_created: 2024-01-27, license: MIT, gguf: "gpustack/bge-m3-GGUF Q4_K_M 0.44 / Q8_0 0.63 GB (verified_api)", notes: "Régi, de bevált többnyelvű modell, a magyart is jól kezeli; a BAAI-nak nincs újabb generációja."}
+- {name: nomic-embed-text-v2-moe, base_created: 2025-02-07, gguf: "nomic-ai/nomic-embed-text-v2-moe-GGUF Q4_K_M 0.34 / Q8_0 0.51 GB (verified_api)"}
+```
+
+**Kiwix ZIM (download.kiwix.org, a listázás szerinti méretek)**
+- `wikipedia_hu_all_maxi_2026-06.zim` 11G, `wikipedia_hu_all_nopic_2026-10.zim` 4.0G, `wikipedia_hu_all_mini_2026-10.zim` 1.1G.
+- `wikipedia_en_all_maxi_2026-08.zim` 119G, `wikipedia_en_all_nopic_2026-06.zim` 49G, `wikipedia_en_all_mini_2026-09.zim` 13G.
+- kiwix-tools 3.8.2: például `kiwix-tools_linux-x86_64-3.8.2.tar.gz`, `kiwix-tools_linux-aarch64-3.8.2.tar.gz`, `kiwix-tools_macos-arm64-3.8.2.tar.gz`.
+
+---
+
+## 4. PART C — Runtime-ok (YAML)
+
+```yaml
+runtimes:
+- id: R1
+  name: llama.cpp
+  repo: https://github.com/ggml-org/llama.cpp
+  version: "b12387 (legutolsó nightly tag); v1.0.0 'release' 2026-11-13"
+  platforms: [Linux, Windows, macOS, Android, s390x]
+  tiers: [T1, T2, T3, T4, T5(Termux)]
+  release_assets_b12387: "llama-b12387-bin-ubuntu-x64.tar.gz 22.3MB; -ubuntu-cuda-13.5-x64.tar.gz 192MB (+ cudart-... 424MB); -ubuntu-cuda-12.8-x64 190MB; -ubuntu-vulkan-x64 34.5MB; -ubuntu-rocm-10.0-x64 259MB; -ubuntu-arm64 18.1MB; -macos-arm64 16.1MB; -win-cuda-13.5-x64.zip 193MB (+ cudart-llama-bin-win-cuda-13.5-x64.zip 407MB); -win-vulkan-x64.zip 36.4MB; -win-cpu-x64.zip 24MB; -android-arm64.tar.gz 75.3MB; -xcframework.zip 62.7MB (WebFetch expanded_assets)"
+  install_offline_steps:
+  - "Online gépen töltsd le a platformodnak megfelelő zip/tar.gz-t, és másold át. Alternatíva: git clone, majd cmake -B build -DGGML_CUDA=ON && cmake --build build -j --target llama-server llama-cli llama-gguf-split"
+  - "llama-server -m model-00001-of-0000N.gguf --mmproj mmproj.gguf -c 32768 -ngl 99 --jinja -fa on --host 0.0.0.0 --port 8080"
+  - "MoE expert offload: --n-cpu-moe N (-ncmoe) vagy --cpu-moe (-cmoe), illetve -ot 'exps=CPU'"
+  notes: >
+    Forrásból ellenőrzött flagek: -ngl/--n-gpu-layers, -ncmoe/--n-cpu-moe, -cmoe/--cpu-moe, -ot/--override-tensor,
+    --jinja (default: enabled), -fa/--flash-attn [on|off|auto], -c/--ctx-size, -ctk/--cache-type-k,
+    -hf/--hf-repo user/model[:quant], --mmproj, -fit/--fit (default on), --rpc, --spec-type, -md/--model-draft,
+    --embedding(s), --rerank, --pooling, -np/--parallel, --models-dir (router), --api-key, --tools, --mcp-servers-config.
+    A --no-mmap helyett most -lm/--load-mode {auto,none,mmap,mlock,mmap+mlock,dio} van.
+    A splitet nem kell merge-ölni: elég az első részre (-00001-of-) mutatni.
+    A README már egy egységes `llama cli` / `llama serve` parancsot is említ (llama.app installer), de a llama-server és llama-cli targetek megvannak.
+- id: R2
+  name: ik_llama.cpp
+  repo: https://github.com/ikawrakow/ik_llama.cpp
+  version: "nincs release tag (csak 't0002'); HEAD 2026-11-14; csak forrásból"
+  platforms: [Linux, Windows(build), macOS]
+  tiers: [T1, T2, T3]
+  install_offline_steps: ["git clone + cmake -DGGML_CUDA=ON (a forrást előre töltsd le)", "llama-server -m X.gguf -ngl 99 --n-cpu-moe N -mla 3 -amb 512 -rtr -ger -fa"]
+  notes: "Flagek forrásból ellenőrizve: -rtr, -mla, -amb, -ot, --n-cpu-moe, -ger, --jinja, -fa, -ctk, -sm. A -fmoe nem található (valószínűleg default lett, unverified). CPU+GPU MoE hibrid futtatásra erős; a saját IQ_K quantjai csak ezzel mennek."
+- id: R3
+  name: Ollama
+  repo: https://github.com/ollama/ollama
+  version: "v0.40.16 stable (v0.40.17-rc0)"
+  release_assets: "OllamaSetup.exe 1.73GB; Ollama.dmg 219MB; ollama-linux-amd64.tar.zst 1.44GB; ollama-linux-amd64-rocm.tar.zst 1010MB; ollama-linux-amd64-mlx.tar.zst 1.13GB; ollama-linux-arm64.tar.zst 1.49GB; ollama-windows-amd64.zip 1.51GB; sha256sum.txt"
+  platforms: [Linux, macOS, Windows]
+  tiers: [T3, T4]
+  install_offline_steps: ["tar --zstd -xf ollama-linux-amd64.tar.zst -C /usr/local (az asset alapján; a pontos útvonal unverified)", "Modelfile: FROM /path/model.gguf (split: FROM /path/model-*.gguf) → ollama create mymodel -f Modelfile", "OLLAMA_MODELS=/mnt/archive/ollama"]
+  notes: "A docs/import.mdx-ben ellenőrizve: FROM .gguf és a split wildcard. A vision mmproj és a legújabb architektúrák támogatása gyakran késik a llama.cpp-hez képest."
+- id: R4
+  name: LM Studio (+ llmster headless, lms CLI)
+  repo: "https://lmstudio.ai (zárt forrás); CLI: https://github.com/lmstudio-ai/lms"
+  version: "0.4.28 (lmstudio.ai/download)"
+  platforms: [Windows, macOS, Linux]
+  tiers: [T3, T4]
+  install_offline_steps: ["Töltsd le online a telepítőt (Win: lmstudio.ai/download/latest/win32/x64)", "llmster: curl -fsSL https://lmstudio.ai/install.sh | bash", "Másold a GGUF/MLX modellt a models mappába, vagy használd: lms import (unverified)"]
+  notes: "Mac-en MLX és GGUF backend."
+- id: R5
+  name: KTransformers (kt-kernel + SGLang)
+  repo: https://github.com/kvcache-ai/ktransformers
+  version: "v0.7.2 (PyPI 2026-10-15)"
+  platforms: [Linux, CUDA (SM89/SM120), AVX2/AVX512/AMX CPU, Ascend]
+  tiers: [T1, T2, T3]
+  install_offline_steps: ['pip download "ktransformers[sglang]" -d wheels/ → pip install --no-index -f wheels "ktransformers[sglang]"', "python -m sglang.launch_server --model-path $M --kt-weight-path $M --kt-method FP8 --kt-cpuinfer 64 --kt-threadpool-count 2 --kt-num-gpu-experts 0 --tp-size 1 ..."]
+  notes: "Natív támogatás: DeepSeek-V4-Flash, GLM-5.3-Flash (FP8 kb. 306 GiB, legalább 350 GB RAM), MiniMax-M3, Kimi K2.x. Az abliterated safetensors (mrfakename/pqhaz DeepSeek FP8) ezzel is futhat (unverified)."
+- id: R6
+  name: vLLM
+  repo: https://github.com/vllm-project/vllm
+  version: "0.33.0 (PyPI 2026-11-02); rc v0.34.0rc4"
+  platforms: [Linux CUDA/ROCm]
+  tiers: [T1]
+  install_offline_steps: ["pip download vllm -d wheels/ (vagy docker save vllm/vllm-openai)", "vllm serve /models/X --tensor-parallel-size 8 --max-model-len 131072"]
+  notes: "A CLI-t nem ellenőriztem a forrásból (ismert használat). Safetensors/FP8 kell (pl. mrfakename DeepSeek-V4.1 abliterated 510 GB)."
+- id: R7
+  name: SGLang
+  repo: https://github.com/sgl-project/sglang
+  version: "v0.5.23 (PyPI 2026-10-30)"
+  tiers: [T1]
+  install_offline_steps: ["pip download sglang -d wheels/", "python -m sglang.launch_server --model-path /models/X --tp-size 8"]
+- id: R8
+  name: MLX-LM (+ mlx.distributed)
+  repo: https://github.com/ml-explore/mlx-lm
+  version: "mlx-lm 0.32.2 (PyPI 2026-10-16), mlx v0.32.4"
+  platforms: [macOS Apple Silicon]
+  tiers: [T2, T4]
+  install_offline_steps: ["pip download mlx-lm -d wheels/", "mlx_lm.server --model /models/mlx-model --port 8080", "Elosztott futtatás: mlx.launch --backend jaccl --env MLX_METAL_FAST_SYNCH=1 --hostfile hosts.json examples/sharded_generate.py --model /models/X --prompt '...'"]
+  notes: "A jaccl backend RDMA over Thunderbolt 5-öt használ (lásd exo: macOS 26.2+). Ellenőrizve a mlx-lm/examples/sharded_generate.py-ban."
+- id: R9
+  name: exo
+  repo: https://github.com/exo-explore/exo
+  version: "v1.0.71 (EXO-1.0.71.dmg 394 MB)"
+  platforms: [macOS (app, Sequoia 15.1+), Linux (source: uv run exo)]
+  tiers: [T2]
+  install_offline_steps: ["dmg vagy brew install --cask exo", "Ugyanaz a verzió fusson minden Macen, azonos hálózaton vagy Thunderbolt kábellel", "Dashboard/API: http://localhost:52415"]
+  notes: "Tensor parallel RDMA TB5-ön (macOS 26.2+). Mac és Linux nem csatlakozik egymáshoz (eltérő MLX build)."
+- id: R10
+  name: llamafile
+  repo: "https://github.com/mozilla-ai/llamafile (a Mozilla-Ocho/llamafile ugyanaz a HEAD)"
+  version: "0.10.6"
+  release_assets: "llamafile-0.10.6 351MB; llamafile-0.10.6-thin 41.8MB; whisperfile-0.10.6 5.21MB; transcribefile 7.29MB; diffusionfile 70.5MB; zipalign 832KB"
+  tiers: [T3, T4]
+  install_offline_steps: ["chmod +x llamafile-0.10.6", "./llamafile-0.10.6 -m model.gguf (a flagek a llama.cpp-hez hasonlók, unverified)"]
+  notes: "Egyetlen fájl, minden OS-en fut, ezért archívumba ideális. A Windows 4 GB-os exe-limitje miatt a GGUF-ot külön -m-mel add meg."
+- id: R11
+  name: Jan
+  repo: https://github.com/janhq/jan
+  version: "v0.8.8"
+  release_assets: "Jan_0.8.8_x64-setup.exe 545MB; Jan_0.8.8_universal.dmg 111MB; Jan_0.8.8_amd64.AppImage 680MB; Jan_0.8.8_amd64.deb 1010MB; Jan_0.8.8_arm64-setup.exe 320MB"
+  tiers: [T3, T4]
+- id: R12
+  name: Open WebUI
+  repo: https://github.com/open-webui/open-webui
+  version: "v0.13.3 (PyPI 2026-11-08), Python 3.11–3.12"
+  tiers: [T1, T2, T3, T4]
+  install_offline_steps:
+  - "pip download open-webui -d wheels/ (python 3.11) → pip install --no-index -f wheels open-webui"
+  - "OFFLINE_MODE=true (beállítja a HF_HUB_OFFLINE=1-et) OPENAI_API_BASE_URL=http://127.0.0.1:8080/v1 ENABLE_OLLAMA_API=false DATA_DIR=/archive/owui open-webui serve"
+  - "RAG: RAG_EMBEDDING_ENGINE=openai RAG_OPENAI_API_BASE_URL=http://127.0.0.1:8081/v1 RAG_EMBEDDING_MODEL=bge-m3 (egy llama-server --embedding példánnyal); vagy a sentence-transformers modell előre letöltve a RAG_EMBEDDING_MODEL útvonalra. WHISPER_MODEL a beépített STT-hez."
+  notes: "Az env változók nevét a backend/open_webui/env.py és config.py forrásban ellenőriztem. Knowledge → dokumentumok feltöltése → #knowledge a chatben."
+- id: R13
+  name: AnythingLLM
+  repo: https://github.com/Mintplex-Labs/anything-llm
+  version: "v1.19.0"
+  tiers: [T3, T4]
+  notes: "Desktop app beépített RAG-gal és workspace-ekkel; a release asset-eket nem ellenőriztem."
+- id: R14
+  name: KoboldCpp
+  repo: https://github.com/LostRuins/koboldcpp
+  version: "v1.124.2"
+  release_assets: "koboldcpp.exe 594MB; koboldcpp-nocuda.exe 85.7MB; koboldcpp-oldpc.exe 458MB; koboldcpp-linux-x64 600MB; koboldcpp-linux-x64-nocuda 102MB; koboldcpp-mac-arm64 65.2MB"
+  tiers: [T3, T4]
+  notes: "Egyetlen bináris, kiváló offline; GGUF + whisper + TTS + képgenerálás."
+- id: R15
+  name: PocketPal AI
+  repo: https://github.com/a-ghorbani/pocketpal-ai
+  version: "v1.23.0 (app-prod-release.apk 263 MB)"
+  platforms: [Android, iOS (App Store, unverified)]
+  tiers: [T5]
+  install_offline_steps: ["APK sideload", "Models → + → Add local model → válaszd ki a .gguf fájlt (pl. Qwen3.5-4B-heretic-2.0.Q4_K_M.gguf, 2.71 GB)"]
+- id: R16
+  name: MLC LLM / MLC Chat
+  repo: https://github.com/mlc-ai/mlc-llm
+  version: "tag v0.26.dev0"
+  tiers: [T5, T4]
+  notes: "Saját (MLC) formátumot használ, nem GGUF-ot; a modelleket előre le kell fordítani vagy letölteni."
+- id: R17
+  name: Google AI Edge Gallery
+  repo: https://github.com/google-ai-edge/gallery
+  version: "1.0.23"
+  release_assets: "ai_edge_gallery_app.apk 83.6MB (+ SoC-specifikus sm8550/8650/8750/8850 104–105MB, tensor_g5/g6 89.2MB)"
+  tiers: [T5]
+  notes: "LiteRT-LM (.litertlm) modelleket futtat (pl. litert-community/...), GGUF-ot nem; Gemma 4 E2B/E4B mobil QAT."
+- id: R18
+  name: ChatterUI
+  repo: https://github.com/Vali-98/ChatterUI
+  version: "v0.11.0-beta1 (ChatterUI_ChatterUI_v0.11.0-beta1.apk 72 MB)"
+  tiers: [T5]
+  notes: "Android, llama.cpp alapú, helyi GGUF-ot futtat."
+- id: R19
+  name: LLMFarm (iOS/macOS)
+  repo: https://github.com/guinmoon/LLMFarm
+  version: "tag 1.4.3"
+  tiers: [T5]
+  notes: "Az App Store/TestFlight elérhetőség unverified."
+- id: R20
+  name: "Locally AI (iOS/macOS, MLX) és Apollo (Liquid AI, iOS)"
+  repo: "zárt forrás, csak App Store"
+  tiers: [T5]
+  notes: "Forrás: web search (App Store oldalak). Locally AI: iOS 18+, MLX, offline a modell letöltése után. Apollo: iOS 17.6+, LEAP/LFM modellek, saját szerverhez is kapcsolódik. A Layla zárt forrású, nem ellenőriztem."
+- id: R21
+  name: Heretic (decensoring tool)
+  repo: https://github.com/p-e-w/heretic
+  version: "v2.1.0 / PyPI heretic-llm 2.1.0"
+  tiers: [T3 (≤30B bnb_4bit), T1/T2 (nagy modellek)]
+- id: R22
+  name: Kiwix + LLM
+  repo: "kiwix-tools: https://github.com/kiwix/kiwix-tools (3.8.2); MCP: https://github.com/cameronrye/openzim-mcp (v3.4.0, PyPI openzim-mcp 3.4.0); alternatívák: https://github.com/epheterson/Zimi (PyPI zimi-mcp 1.15.7), https://github.com/scottyphillips/kiwix-mcp (HEAD létezik); WikiChat: https://github.com/stanford-oval/WikiChat (v2.1)"
+  install_offline_steps:
+  - "kiwix-serve --port 8888 /archive/zim/*.zim (böngészős olvasás)"
+  - "pip download openzim-mcp -d wheels/ → pip install; a ZIM fájlok egy mappában: openzim-mcp ~/zim-files"
+  - 'llama-server ... --mcp-servers-config mcp.json, ahol mcp.json = {"mcpServers":{"zim":{"command":"openzim-mcp","args":["/archive/zim"]}}}. Az eszközök a beépített Web UI-ban jelennek meg; ezt a funkciót forrásból ellenőriztem.'
+  notes: "A WikiChat saját indexet épít (nehéz). Az Open WebUI MCP vagy OpenAPI tool integrációját nem ellenőriztem."
+```
+
+---
+
+## 5. Letöltés, ellenőrzés, tárolás
+
+- **Hugging Face CLI**: a `huggingface_hub` 2.4.0 wheel egyetlen CLI entry pointja a `hf`. A `huggingface-cli` már nincs benne.
+  - Paraméterek (a download.py-ban ellenőrizve): `--include`, `--exclude`, `--local-dir`, `--cache-dir`, `--force-download`, `--dry-run`, `--max-workers`, és ugyanott a `--repo-type dataset` használat is.
+  ```bash
+  pip install -U huggingface_hub hf_xet
+  export HF_XET_HIGH_PERFORMANCE=1    # a HF_HUB_ENABLE_HF_TRANSFER deprecated
+  hf download mradermacher/Qwen3.5-4B-heretic-2.0-GGUF --include "*Q4_K_M*" "*mmproj-Q8_0*" --local-dir /archive/llm/qwen35-4b-heretic
+  hf download huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF --include "UD-Q4_K_XL/*" --local-dir /archive/llm/glm53flash --max-workers 8
+  ```
+  Megszakadás után ugyanazt a parancsot kell újra futtatni, és folytatja.
+- **aria2c párhuzamos letöltés**: az URL minta `https://huggingface.co/OWNER/REPO/resolve/main/PATH`. A publikus fájl 206-ot adott range kérésre, ezt ellenőriztem.
+  ```bash
+  aria2c -x16 -s16 -k10M -c -d /archive/llm "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/main/Qwen3.5-9B-Q4_K_M.gguf"
+  # gated: --header="Authorization: Bearer $HF_TOKEN"
+  ```
+- **sha256 ellenőrzés**: a tree API `lfs.oid` mezője a sha256.
+  - Például a `Qwen3.5-0.8B-Q4_K_M.gguf` oid értéke `bd258782e35f7f458f8aced1adc053e6e92e89bc735ba3be89d38a06121dc517`.
+  - A nagy repók `recursive=true` listája lapozott. A rhasspy/piper-voices-nál hiányos volt, ezért alkönyvtárra kérdezz (`tree/main/<subdir>`), vagy használd a `HfApi().list_repo_tree`-t.
+  ```bash
+  curl -sS "https://huggingface.co/api/models/OWNER/REPO/tree/main/SUBDIR" | python3 -I -c "import json,sys;[print(f['lfs']['oid']+'  '+f['path'].split('/')[-1]) for f in json.load(sys.stdin) if f.get('lfs')]" > SHA256SUMS
+  sha256sum -c SHA256SUMS --ignore-missing
+  ```
+- **Fájlrendszer**: FAT32-n a fájlméret limit 4 GB, ezért exFAT, ext4 vagy NTFS kell.
+  - Ha mégis FAT32: `llama-gguf-split --split-max-size 3G in.gguf out` (a flag a forrásban ellenőrizve).
+  - Összefűzés: `llama-gguf-split --merge in-00001-of-0000N.gguf out.gguf`. Erre ritkán van szükség, mert a llama.cpp az első részről betölti a teljes splitet.
+- **Gated repók**:
+  - A legtöbb modellhez nem kell regisztráció.
+  - A Llama (pl. meta-llama/Llama-3.2-3B-Instruct, Llama-4-Scout) `gated=manual`; a resolve URL 401-et ad. Kell HF fiók, a license elfogadása és token (`hf auth login` vagy `HF_TOKEN`).
+  - A Gemma 4 NEM gated, a Gemma 3 még igen.
+  - A Uniboshi Kimi-K3 és az orcarouter MiniMax `gated=auto`, ezekhez login és kattintás kell.
+
+---
+
+## 6. "Nulláról a chatig" tier-enként
+
+**T1 – szerver (pl. 8×H100/H200 vagy 1–2 TB RAM + GPU-k)**
+1. Válassz modellt:
+   - Legerősebb uncensored: DeepSeek-V4.1-Flash-1017 abliterated (mrfakename FP8 safetensors, 510 GB) vLLM-mel vagy SGLang-gal (`vllm serve /m/ds41 --tensor-parallel-size 8`).
+   - Alternatíva GLM-5.3 huihui patch-csel.
+   - Kimi-K3 abliterated MXFP4 (1.51 TB) llama.cpp-vel CPU+GPU-n.
+2. GGUF út:
+   - `hf download unsloth/DeepSeek-V4.1-Flash-1017-GGUF --include "UD-Q2_K_XL/*"`, majd `hf download huihui-ai/...-abliterated-GGUF --include "patch-unsloth-Q2/*"`, és futtasd a patch scriptet (README-patch-unsloth.md).
+   - Indítás: `llama-server -m .../...-00001-of-00007.gguf --mmproj mmproj-BF16.gguf -c 65536 -ngl 99 --n-cpu-moe 30 --jinja -fa on`.
+3. Frontend: Open WebUI (`OFFLINE_MODE=true`), RAG bge-m3 vagy Qwen3-Embedding-8B embeddinggel; Kiwix-hez openzim-mcp.
+
+**T2 – workstation 400–1000 GB unified memory (Mac Studio 512 GB, vagy exo cluster)**
+1. Fő modell:
+   - GLM-5.3-Flash abliterated UD-Q4_K_XL (199.71 GB) vagy UD-Q6_K_XL (291.83).
+   - Másik lehetőség Qwen3.8-Flash-Next abliterated UD-Q6_K_XL (169.17) vagy Q8_0 (188.23).
+   - 512 GB fölött a DeepSeek-V4.1-Flash abliterated MLX (422.59 GB).
+2. Mac-en `llama-server` (macos-arm64 binary, 16.1 MB), vagy MLX: `mlx_lm.server --model /m/GLM-5.3-Flash-Abliterated-MLX-4bit`.
+3. Több Mac esetén exo (dmg, `localhost:52415`) vagy `mlx.launch --backend jaccl --hostfile hosts.json`.
+
+**T3 – gaming PC, 24–32 GB VRAM + 64–192 GB RAM**
+1. Teljesen GPU-n: gemma-4-31B-it heretic Q4_K_M (18.69 GB), 24 GB-on 16–32k contexttel; vagy Qwen3.8-27B abliterated Q4_K_M (16.81) vagy Q6_K (22.43, 32 GB VRAM).
+2. Nagy MoE hibriden:
+   - Qwen3.8-Flash-Next abliterated UD-IQ4_XS (93.68 GB, 6B aktív) 128 GB RAM mellett: `llama-server -m Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf -ngl 99 --n-cpu-moe 40 -c 32768 --jinja -fa on`. Csökkentsd az N-t, amíg elfér a VRAM-ban; a default `--fit on` is segít.
+   - További lehetőségek: gpt-oss-120b tainted-heresy MXFP4 (63.39 GB) 64 GB RAM-mal; Mistral-Small-4 heretic Q4_K_M (72.16).
+3. GUI: KoboldCpp (egy exe), LM Studio vagy Jan; Open WebUI a llama-serverre.
+
+**T4 – laptop (≤16 GB VRAM vagy unified)**
+- 16 GB-on:
+  - gemma-4-26B-A4B heretic Q3_K_M (13.29), vagy Q4_K_M (16.80) 32 GB RAM-mal.
+  - gpt-oss-20b heresy MXFP4 (12.65).
+  - gemma-4-12B heretic Q4_K_M (8.54).
+  - Qwen3.5-9B heretic-v2 Q4_K_M (5.63).
+- Mac 32 GB+: mlx-community/gemma-4-31B-it-uncensored-heretic-4bit (17.30) vagy Qwen3.6-35B-A3B heretic Q4_K_M (21.23).
+- Parancs: `llama-server -m gemma-4-26B-A4B-it-ultra-uncensored-heretic-Q4_K_M.gguf --mmproj gemma-4-26B-A4B-it-mmproj-BF16.gguf -ngl 99 -c 16384 --jinja` (vagy LM Studio/Jan).
+- Beszéd: whisper.cpp large-v3-turbo-q5_0 (574 MB) és Piper hu_HU-anna-medium (63.22 MB).
+
+**T5 – telefon**
+- Android:
+  1. PocketPal APK (263 MB) vagy ChatterUI APK (72 MB).
+  2. GGUF másolása: Qwen3.5-4B-heretic-2.0 Q4_K_M (2.71 GB), gemma-4-E2B ultra-heretic Q4_K_M (3.43), 12 GB RAM-os telefonon gemma-4-E4B heretic Q4_K_M (5.34); a legkisebb a LFM3-1.7B Q4_K_M (1.10).
+  3. Add local model → chat.
+  - A Google AI Edge Gallery LiteRT modellekkel működik (nem uncensored).
+- iOS: PocketPal, LLM Farm, Locally AI (MLX) vagy Apollo (LFM). Uncensored GGUF-ot a PocketPal és az LLM Farm tud betölteni a Files appból.
+
+**Források (web search)**
+- [OpenZIM MCP (PyPI)](https://pypi.org/project/openzim-mcp/)
+- [Kiwix MCP Server (glama)](https://glama.ai/mcp/servers/scottyphillips/kiwix-mcp)
+- [ZIM MCP Server (glama)](https://glama.ai/mcp/servers/ThinkInAI-Hackathon/zim-mcp-server)
+- [Locally AI – App Store](https://apps.apple.com/app/id6741426692)
+- [Apollo – Powered by Liquid](https://apps.apple.com/app/id6448019325)
+- [Liquid AI LEAP & Apollo blog](https://liquid.ai/blog/liquid-ai-launches-leap-and-apollo-bringing-edge-ai-to-every-developer)
+
+**Korlátok**
+- A GitHub API és a github.com web blokkolt volt. A release asset-ek a WebFetch `expanded_assets` oldalairól származnak; a whisper.cpp v1.9.5-nek nincs bináris assetje.
+- A pontszámok (0–10) saját becslések, a UGI NatInt és W10 alapján, ahol volt adat.
+- A Qwen3.8-alapú uncensored modellek még nincsenek a UGI-n.
+- Néhány nagy közösségi uncensored repo (Uniboshi, orcarouter, grant-ai) minősége nem ellenőrzött.

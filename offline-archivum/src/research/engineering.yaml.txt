@@ -1,0 +1,909 @@
+```yaml
+# Domain: Engineering/Manufacturing/Energy/Chemistry/Electronics/Comms/Navigation/Open Hardware
+# Verification date: 2026-11-14. Method notes:
+#  - api.github.com and github.com web pages are BLOCKED in this sandbox (403 "access not enabled"), but git over HTTPS works.
+#    Repo sizes were measured by `git clone --depth 1` followed by `du`. "git=" is the .git size (the download size); "checkout" is the full working tree on disk.
+#  - archive.org sizes come from https://archive.org/metadata/ID. Other sizes come from the HTTP Content-Length header.
+#  - Blocked or unreachable from this sandbox: msi.nga.mil (503), usbr.gov (timeout), publications.usace.army.mil (403), cdsarc.cds.unistra.fr (conn reset), cd3wd.com (down), opensourcebeehives.com (403), fpl.fs.usda.gov (502; a working mirror URL is given below).
+
+- id: navedtra-trade-manuals-everyspec
+  name: US Navy NAVEDTRA rate training manuals (Steelworker, Construction Electrician, Blueprint Reading, Tools & Their Uses, Fluid Power, Seabee Combat Handbook etc.)
+  category: manufacturing
+  description_hu: Az amerikai haditengerészet szakmunkás-képző kézikönyvei (hegesztés/acélszerkezet, villanyszerelés, műszaki rajz, kéziszerszámok, hidraulika), lépésről lépésre. A szakmák újraoktatásának egyik legjobb ingyenes alapja.
+  url_info: https://everyspec.com/USN/NAVEDTRA/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "~35 documents, est. 0.3-0.8 GB"
+  size_status: estimated(35 entries counted on 4 listing pages x typical 5-30 MB per PDF)
+  format: PDF
+  language: en
+  notes: "EverySpec has only ~35 NAVEDTRA titles. Builder (14043/14044), Machinery Repairman (12204), Utilitiesman, Engineering Aid and Construction Mechanic are missing there; get them from archive.org (e.g. https://archive.org/details/navedtra-14081-equipment-operator-basic-1994, navedtra-14050-construction-mechanic-advanced-1992; search title:navedtra = 41 hits). tpub.com has HTML versions of almost all of them. Download per PDF page with a polite wget and a browser user agent."
+  scores: {survival: 6, rebuild: 9, actionable: 9, uniqueness: 8, reliability: 9, offline_ease: 10}
+
+- id: neets-navy-electricity-electronics
+  name: NEETS - Navy Electricity and Electronics Training Series, Modules 1-24 (NAVEDTRA 14173-14196)
+  category: electronics
+  description_hu: 24 modulos ingyenes elektronika-tankönyv az egyenáramtól a motorokon/generátorokon, elektroncsöveken, félvezetőkön és antennákon át a rádiózásig. Önálló tanuláshoz ideális.
+  url_info: https://archive.org/details/neetsmodules_202003
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "132 MB (24 PDFs); full item 4.9 GB with jp2/epub"
+  size_status: measured(archive.org metadata API, PDF files only)
+  format: PDF
+  language: en
+  notes: "Download only the PDFs: ia download neetsmodules_202003 --glob='*.pdf'. Do not take the jp2.zip files. Alternate item: navy-electricity-and-electronics-training-series-mod-14 (24 PDFs, 59 MB). The modules are also listed individually on EverySpec."
+  scores: {survival: 3, rebuild: 9, actionable: 7, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: doe-fundamentals-handbooks
+  name: DOE Fundamentals Handbooks (Classical Physics, Electrical Science 1-4, Thermodynamics/Heat Transfer/Fluid Flow 1-3, Mathematics, Chemistry, Engineering Symbology/Prints, Material Science, Mechanical Science, Nuclear Physics)
+  category: engineering
+  description_hu: Az amerikai Energiaügyi Minisztérium tömör, gyakorlatias mérnöki alapkönyvei (villamosság, termodinamika, áramlástan, gépészet, anyagtudomány, műszaki rajz). Üzemeltetők képzésére írták.
+  url_info: https://www.energy.gov/ehss/doe-technical-standards-program
+  url_download: https://www.energy.gov/sites/default/files/2026-04/DOE-HDBK-1011-92_VOL2.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "38 MB (20 PDFs)"
+  size_status: measured(HTTP Content-Length on 20 files)
+  format: PDF
+  language: en
+  notes: "URL pattern: https://www.energy.gov/sites/default/files/2026-04/DOE-HDBK-<num>-<yy>_VOL<n>.pdf. Verified: 1010-92; 1011-92 VOL1-4; 1012-92 VOL1-3; 1014-92 VOL1-2; 1015-93, 1016-93, 1017-93, 1018-93, 1019-93 each VOL1-2. 1013 (Instrumentation & Control) returns 404 under that pattern; fallback is archive.org items doe-hdbk-1013-1-92 and doe-hdbk-1013v-2. The folder date (2026-04) may change if DOE reorganises the site."
+  scores: {survival: 3, rebuild: 9, actionable: 6, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: machinerys-handbook-1924-pd
+  name: Machinery's Handbook, 6th edition (1924), public domain scan
+  category: manufacturing
+  description_hu: A gépészek "bibliája" 1924-es (USA-ban közkincs) kiadásban. Menetek, fogaskerekek, tűrések, anyagok, forgácsolási adatok, képletek és táblázatok.
+  url_info: https://archive.org/details/machineryshandbo00indu
+  url_download: https://archive.org/download/machineryshandbo00indu/machineryshandbo00indu.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain in the US (published 1924)
+  size: "151 MB PDF"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "A 1914 first edition was not found on archive.org; the 1924 6th edition is the oldest full PD scan found. Also: machineryshandbo0000vari (1930, 71 MB PDF; may still be in copyright, not checked). Some data (materials, standards) is out of date but fine for low-tech rebuilding."
+  scores: {survival: 3, rebuild: 9, actionable: 6, uniqueness: 7, reliability: 8, offline_ease: 10}
+
+- id: machinerys-handbook-32nd-paid
+  name: Machinery's Handbook, 32nd edition (Industrial Press, 2024)
+  category: manufacturing
+  description_hu: A gépészeti referenciakönyv legfrissebb, kb. 3000 oldalas kiadása, mai szabványokkal és anyagadatokkal. Nyomtatott példányként ajánlott tartalékba.
+  url_info: https://www.industrialpress.com/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "~169.95 USD (Toolbox print); Digital Edition ~174.95 USD; Large Print ~199.95 USD"
+  license: Copyright Industrial Press
+  size: "~3,008 pages (print)"
+  size_status: official(retailer listings)
+  format: print / DRM digital
+  language: en
+  notes: "Prices come from retailer listings (Penn Tool, IndiePubs), not the publisher site. The Digital Edition is DRM/online, so prefer print for offline. Older editions (e.g. 1992) are lending-only on archive.org (machineryshandbo0000unse_c3g0)."
+  scores: {survival: 3, rebuild: 9, actionable: 6, uniqueness: 6, reliability: 10, offline_ease: 9}
+
+- id: us-army-tc-9-524-machine-tools
+  name: US Army TC 9-524 Fundamentals of Machine Tools (1996)
+  category: manufacturing
+  description_hu: Amerikai katonai kézikönyv esztergáláshoz, maráshoz, fúráshoz, köszörüléshez és mérőeszközökhöz, rengeteg ábrával. Kezdő gépműhelyben azonnal használható.
+  url_info: https://archive.org/details/tc9-524
+  url_download: https://archive.org/download/tc9-524/tc9_524.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain mark on item)
+  size: "7.0 MB PDF"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "Other scans exist: tc9-524_202010, tc-9-524-fundamentals-of-machine-tools-1996, machinist_202001."
+  scores: {survival: 3, rebuild: 9, actionable: 9, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: us-army-tm-9-237-welding
+  name: US Army TM 9-237 Welding Theory and Application (1967)
+  category: manufacturing
+  description_hu: Átfogó hegesztési kézikönyv (gáz-, ív-, védőgázas hegesztés, forrasztás, vágás, fémtan, varrattípusok). Javításhoz és fémszerkezet-építéshez alapmű.
+  url_info: https://archive.org/details/TM9-237
+  url_download: https://archive.org/download/TM9-237/TM9-237.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain mark)
+  size: "28.8 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "A newer revision (1993/2004 TC 9-237) may exist but was not checked. Companion item: TM9-237-1MaterialsUsedforBrazingWeldingSoldering (1960)."
+  scores: {survival: 4, rebuild: 9, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: south-bend-how-to-run-a-lathe-1934
+  name: South Bend "How to Run a Lathe" (1934 edition)
+  category: manufacturing
+  description_hu: A klasszikus esztergálási tankönyv kezdőknek: beállítás, menetvágás, szerszámélezés. Egyszerű nyelvezetű és nagyon jól illusztrált.
+  url_info: https://archive.org/details/how_to_run_a_lathe_1934
+  url_download: https://archive.org/download/how_to_run_a_lathe_1934/how_to_run_a_lathe_1934_big_text.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain mark (on item)
+  size: "12.6 MB (text PDF); 269.5 MB hi-res PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "Use the _text.pdf for low-power devices. Other editions on archive.org: howtorunlathecar00sout (1958), howtorunlathe0000jjob (1941)."
+  scores: {survival: 2, rebuild: 8, actionable: 9, uniqueness: 5, reliability: 8, offline_ease: 10}
+
+- id: foundry-work-wendt-1923
+  name: Foundry Work - molding, dry-sand core-making, melting and mixing of metals (Wendt, 1923)
+  category: manufacturing
+  description_hu: Közkincs öntödei tankönyv: formázás, magkészítés, kupolókemence, fémek olvasztása és ötvözése. A fémöntés újraindításához.
+  url_info: https://archive.org/details/foundryworktexto00wend
+  url_download: https://archive.org/download/foundryworktexto00wend/foundryworktexto00wend.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain in the US (1923)
+  size: "13.6 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "A bigger companion for pattern-making is gri_33125000004859 'Modern moulding and pattern-making' (1907). It is a 4.9 GB item, so take only the PDF."
+  scores: {survival: 2, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 7, offline_ease: 10}
+
+- id: practical-blacksmithing-richardson
+  name: Practical Blacksmithing (M.T. Richardson, 1888-91)
+  category: manufacturing
+  description_hu: Gyakorló kovácsok cikkgyűjteménye: kovácstűzhely, szerszámok, edzés, hegesztés tűzben, patkolás, szerszámkészítés. Kézműves fémmegmunkáláshoz.
+  url_info: https://archive.org/details/practicalblacksm00richrich
+  url_download: https://archive.org/download/practicalblacksm00richrich/practicalblacksm00richrich.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain
+  size: "15.6 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "The original work has 4 volumes. This item's metadata says '4 v.' but the PDF size suggests it may hold only part of them; check the contents. Another scan: practicalblacks03richgoog. Modern paid alternatives: Weygers 'The Complete Modern Blacksmith', Bealer 'The Art of Blacksmithing'."
+  scores: {survival: 5, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 7, offline_ease: 10}
+
+- id: gingery-metal-shop-from-scrap
+  name: David J. Gingery "Build Your Own Metal Working Shop From Scrap" series
+  category: manufacturing
+  description_hu: Klasszikus sorozat egy teljes gépműhely felépítéséhez hulladékból: faszenes öntöde, eszterga, gyalugép, marógép, élhajlító. Ehhez a lépéssorhoz nincs igazi ingyenes megfelelő.
+  url_info: https://www.gingerybookstore.com/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: physical
+  price: "8.95-15.95 USD per book (The Metal Lathe 12.95, Metal Shaper 12.95, Milling Machine 12.95, Sheet Metal Brake 10.95 ...)"
+  license: Copyright (Gingery Publishing)
+  size: "7 slim paperbacks (~80-200 pages each)"
+  size_status: official(store listing)
+  format: print
+  language: en
+  notes: "URGENT: the Gingery Book Store says it is retiring at the end of 2026 and will not reprint. Buy now. Book #1 'The Charcoal Foundry' was not on the listing page (may be out of stock); look for it from Lindsay Books or second hand. gingerybooks.com has a bad TLS certificate."
+  scores: {survival: 3, rebuild: 9, actionable: 10, uniqueness: 9, reliability: 8, offline_ease: 9}
+
+- id: us-army-construction-fms
+  name: US Army FM 5-426 Carpentry (1995), FM 5-428 Concrete and Masonry (1998), FM 5-125 Rigging (1995)
+  category: construction
+  description_hu: Amerikai katonai építőipari kézikönyvek: ácsmunka és faszerkezetek, beton, falazás, valamint emelés, kötélzet és csigasorok. Tábori építkezéshez lépésről lépésre.
+  url_info: https://archive.org/details/FM_5_428_C_M_1998
+  url_download: "https://archive.org/download/FM_5_428_C_M_1998/FM%205-428%20Concrete%20and%20Masonry%20%281998%29.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "13 MB total (4.0 + 5.2 + 3.8 MB PDFs)"
+  size_status: measured(archive.org metadata API / HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "Carpentry: https://archive.org/download/FM_5_426_C_1995/FM%205-426%20Carpentry%20%281995%29.pdf ; Rigging: https://archive.org/details/fm-5-125-rigging-techniques-procedures-and-applications-1995 . armypubs.army.mil is reachable but may hold only newer superseding TMs (e.g. TM 3-34.47 Carpentry), not checked."
+  scores: {survival: 6, rebuild: 8, actionable: 9, uniqueness: 5, reliability: 9, offline_ease: 10}
+
+- id: us-army-fm-5-34-engineer-field-data
+  name: US Army FM 5-34 Engineer Field Data (1999, w/ change 3)
+  category: engineering
+  description_hu: Zsebkönyv tábori mérnököknek: anyagszilárdság, fahidak, kötélzet, robbantás, utak, vízellátás, gyors számítási táblázatok. Terepen gyors döntésekhez.
+  url_info: https://archive.org/details/fm-5-34-engineer-field-data-w-change-3-1999
+  url_download: "https://archive.org/download/fm-5-34-engineer-field-data-w-change-3-1999/FM%205-34%20Engineer%20Field%20Data%20w-change%203%20%201999.pdf"
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain mark)
+  size: "9.4 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "1962 and 1976 editions are also on archive.org (FM_5_34_E_F_D_1962, FM_5_34_E_F_D_1976). Older editions have more improvised and low-tech material."
+  scores: {survival: 6, rebuild: 7, actionable: 8, uniqueness: 6, reliability: 9, offline_ease: 10}
+
+- id: usda-fpl-wood-handbook-2021
+  name: Wood Handbook - Wood as an Engineering Material (USDA FPL-GTR-282, 2021)
+  category: construction
+  description_hu: Az USDA Erdészeti Termékek Laboratóriumának teljes kézikönyve a fáról mint szerkezeti anyagról: szilárdság, nedvesség, szárítás, kötések, ragasztás, védelem. Faépítéshez nélkülözhetetlen.
+  url_info: https://www.fs.usda.gov/research/treesearch/62200
+  url_download: https://research.fs.usda.gov/download/treesearch/62200.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "104 MB PDF"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "The old fpl.fs.usda.gov/documnts/... URL returned 502; use the research.fs.usda.gov link. A 1935 edition is on archive.org (CAT10503670)."
+  scores: {survival: 4, rebuild: 8, actionable: 6, uniqueness: 7, reliability: 10, offline_ease: 10}
+
+- id: usbr-design-of-small-dams
+  name: Bureau of Reclamation - Design of Small Dams (1960, 1st ed. scan)
+  category: construction
+  description_hu: Az USBR klasszikus kézikönyve kis gátak, földgátak, árapasztók és vízkivételi művek tervezéséhez. Vízenergiához, öntözéshez és víztározáshoz.
+  url_info: https://archive.org/details/designofsmalldam00unit
+  url_download: https://archive.org/download/designofsmalldam00unit/designofsmalldam00unit.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: US Government work (public domain)
+  size: "49.7 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "The 3rd edition (1987) and the Earth Manual are free at usbr.gov/tsc/techreferences/mands/, but usbr.gov timed out from here (blocked, unverified). archive.org also has 'Earth Manual' scans (earthmanual0000unse etc., possibly lending-only)."
+  scores: {survival: 4, rebuild: 7, actionable: 6, uniqueness: 7, reliability: 9, offline_ease: 10}
+
+- id: vita-village-technology-handbook
+  name: VITA Village Technology Handbook
+  category: engineering
+  description_hu: A VITA klasszikus falusi technológiai kézikönyve: kutak, szivattyúk, víztisztítás, mezőgazdasági eszközök, építés, egyszerű gépek. Közösségi szintű újjáépítéshez.
+  url_info: https://archive.org/details/village-technology-handbook
+  url_download: https://archive.org/download/village-technology-handbook/Village%20Technology%20Handbook.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: unclear (VITA; widely redistributed, often via USAID)
+  size: "14.7 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "A USAID copy is pnaas277 (7.0 MB PDF). Many other VITA technical papers are inside CD3WD and the Village Earth ATL."
+  scores: {survival: 8, rebuild: 8, actionable: 9, uniqueness: 5, reliability: 7, offline_ease: 10}
+
+- id: cd3wd-2012-dvd-set
+  name: CD3WD (CDs for the Third World) 2012 DVD set - 6 ISOs
+  category: engineering
+  description_hu: Hatalmas, offline böngészhető fejlesztési és megfelelő technológiai könyvtár (mezőgazdaság, víz, energia, egészség, kézművesség) HTML/PDF formában DVD-képeken.
+  url_info: https://archive.org/details/2012_cdw3d_dvd_set
+  url_download: https://archive.org/download/2012_cdw3d_dvd_set/1001_cd3wd.iso
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: mixed (compiled third-party docs; non-commercial redistribution intended)
+  size: "27.8 GB (6 x ~4.6 GB ISO, 1001-1006)"
+  size_status: measured(archive.org metadata API)
+  format: ISO (HTML + PDF inside)
+  language: en (some fr/es)
+  notes: "cd3wd.com is down (connection fails). Also 2015_cdw3d_high_school_dvd_set (41.7 GB, school level). Par2 repair files for both are in cd3wd_2012-2015_audit. There is much overlap with Practical Action, VITA and Village Earth."
+  scores: {survival: 8, rebuild: 8, actionable: 7, uniqueness: 5, reliability: 7, offline_ease: 8}
+
+- id: survivor-library
+  name: Survivor Library (pre-industrial/19th-c. technology books, category ZIPs)
+  category: engineering
+  description_hu: Több tízezer régi (főleg 1800-as évekbeli) szakkönyv kategóriánként ZIP-ben: kovácsolás, öntés, szappan, üveg, mész, gőzgépek, távíró és sok más. Ipar előtti technológiák újraindításához.
+  url_info: https://www.survivorlibrary.com/index.php/main-category-index/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: mostly public domain scans
+  size: "~200 GB+ (2021 mirror: ~200 GB / 13,763 PDFs; has grown since)"
+  size_status: estimated(third-party 2021 open-directory report)
+  format: PDF (category ZIPs)
+  language: en
+  notes: "Category ZIPs were rebuilt in Aug-Sep 2026; per the site, users had download problems that were 'fixed (maybe)' on 2026-09-28. The Scientific American Series 2 ZIP alone is ~28 GB. The site also sells flash drives (store was being repaired). Many scans are low quality; there are many duplicates and it is poorly curated."
+  scores: {survival: 6, rebuild: 9, actionable: 6, uniqueness: 7, reliability: 6, offline_ease: 9}
+
+- id: village-earth-appropriate-technology-library
+  name: Village Earth Appropriate Technology Library (ATL) USB
+  category: engineering
+  description_hu: Több mint 1050 válogatott megfelelő-technológiai könyv (150 000+ oldal) USB-meghajtón: vízellátás, mezőgazdaság, energia, építés, egészség. Kurált és kereshető.
+  url_info: https://villageearth.org/appropriate-technology-library/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "69 USD + shipping"
+  license: Copyright compilation (licensed reproductions)
+  size: "1,050+ books, 150,000+ pages on one USB flash drive"
+  size_status: official(stated on page)
+  format: PDF/DjVu on USB (bundled Xubuntu, 7.5 GB)
+  language: en
+  notes: "Only the USB is offered (no download). Content overlaps a lot with CD3WD, but the ATL is better curated and includes ITDG/Practical Action and VITA classics."
+  scores: {survival: 8, rebuild: 8, actionable: 8, uniqueness: 5, reliability: 8, offline_ease: 9}
+
+- id: practical-action-knowledge-centre
+  name: Practical Action - technical briefs (free) and Practical Action Publishing (paid books, e.g. Harvey "Micro-Hydro Design Manual")
+  category: energy
+  description_hu: A Practical Action (korábban ITDG) ingyenes műszaki ismertetői és fizetős szakkönyvei mikro-vízerőműről, biogázról, kis szélturbinákról, kemencékről és kisipari gyártásról.
+  url_info: https://practicalaction.org/knowledge-centre/resources/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: "briefs free; books ~20-60 GBP each at practicalactionpublishing.com (estimate)"
+  license: Copyright Practical Action (free briefs for non-commercial use)
+  size: "hundreds of briefs, est. <1 GB"
+  size_status: estimated(resource listing, not counted)
+  format: PDF
+  language: en (some es/fr)
+  notes: "The Harvey Micro-Hydro Design Manual and Thake Pelton Turbine Manual are the key paid titles for micro-hydro. Many old ITDG briefs are already in CD3WD and ATL. Publishing site: https://practicalactionpublishing.com/ (200)."
+  scores: {survival: 6, rebuild: 8, actionable: 8, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: dartnell-the-knowledge
+  name: '"The Knowledge: How to Rebuild Our World from Scratch" - Lewis Dartnell (2014)'
+  category: engineering
+  description_hu: Népszerű áttekintő könyv a civilizáció újraindításának sorrendjéről (élelem, anyagok, energia, vegyipar, orvoslás). Ütemterv és "mi a következő lépés" útmutató, nem részletes kézikönyv.
+  url_info: https://archive.org/details/knowledgehowtore0000dart
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "~15-20 USD paperback (estimate)"
+  license: Copyright (Penguin / Bodley Head)
+  size: "~350 pages"
+  size_status: estimated(typical paperback)
+  format: print / ebook
+  language: en (Hungarian translation existence not verified)
+  notes: "The archive.org item is access-restricted (lending only). Several unauthorized uploads exist on archive.org (gray), so do not use them. Buy print for the archive."
+  scores: {survival: 5, rebuild: 7, actionable: 4, uniqueness: 6, reliability: 8, offline_ease: 9}
+
+- id: foxfire-book-series
+  name: The Foxfire Book series (Vols. 1-12, Anchor/Doubleday; Foxfire Fund)
+  category: manufacturing
+  description_hu: Appalache-i hagyományos mesterségek gyűjteménye: rönkház, kovácsolás, szappanfőzés, tímárság, eszközkészítés, élelmiszer-tartósítás. Szóbeli tudás, gyakorlati leírásokkal.
+  url_info: https://www.foxfire.org/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: physical
+  price: "~20-25 USD per volume (estimate)"
+  license: Copyright Foxfire Fund
+  size: "12 volumes + anniversary editions"
+  size_status: official(series is 12 numbered volumes)
+  format: print
+  language: en
+  notes: "Archive.org has lending copies (e.g. foxfire-5-by-eliot-wigginton; copyright status unclear, treat as gray). Buy print."
+  scores: {survival: 7, rebuild: 7, actionable: 8, uniqueness: 7, reliability: 7, offline_ease: 9}
+
+- id: henleys-formulas-1916
+  name: Henley's Twentieth Century Formulas, Recipes and Processes (1916)
+  category: chemistry
+  description_hu: Tízezer receptet tartalmazó gyűjtemény: szappan, ragasztók, festékek, tinták, forraszok, ötvözetek, cement, üvegmaratás, tisztítószerek. Kisüzemi vegyi termékek előállításához.
+  url_info: https://archive.org/details/cu31924003643172
+  url_download: https://archive.org/download/cu31924003643172/cu31924003643172.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain (1916)
+  size: "53.4 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "Some recipes use toxic substances (mercury, arsenic, lead) that were normal then. A safety review is needed."
+  scores: {survival: 4, rebuild: 8, actionable: 8, uniqueness: 7, reliability: 6, offline_ease: 10}
+
+- id: rogers-industrial-chemistry-1912
+  name: Rogers' Industrial Chemistry (1912)
+  category: chemistry
+  description_hu: Közkincs ipari kémia kézikönyv: kénsav, szóda, klór, mész, cement, üveg, kerámia, műtrágya, szappan, festékek, fémkohászat. A vegyipar újjáépítésének áttekintő alapja.
+  url_info: https://archive.org/details/in.ernet.dli.2015.141919
+  url_download: https://archive.org/download/in.ernet.dli.2015.141919/2015.141919.Rogers-Industrial-Chemistry.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain (1912)
+  size: "50.6 MB PDF"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "This is a Digital Library of India scan; OCR quality varies. A later edition (dli.ernet.19657, 1942) exists but may still be in copyright. A modern paid equivalent is Riegel's Handbook of Industrial Chemistry."
+  scores: {survival: 3, rebuild: 9, actionable: 5, uniqueness: 7, reliability: 7, offline_ease: 10}
+
+- id: organic-syntheses
+  name: Organic Syntheses (orgsyn.org) - checked laboratory procedures, free online
+  category: chemistry
+  description_hu: Több ezer független laborban ellenőrzött szerves kémiai szintézisleírás. A gyógyszer-alapanyagok és vegyszerek kis léptékű előállításának legmegbízhatóbb ingyenes forrása.
+  url_info: https://orgsyn.org/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: manual
+  access: free
+  price: null
+  license: Copyright Organic Syntheses, Inc. (free to read)
+  size: "unknown (several thousand procedure PDFs)"
+  size_status: estimated(not measured)
+  format: PDF/HTML
+  language: en
+  notes: "No bulk download was found, and mass scraping may break the terms of use. Download selected procedures or Collective Volumes by hand. For lab technique, pair with Vogel's Textbook of Practical Organic Chemistry (paid, ~100+ USD)."
+  scores: {survival: 2, rebuild: 8, actionable: 9, uniqueness: 8, reliability: 10, offline_ease: 9}
+
+- id: babcock-wilcox-steam-1913
+  name: '"Steam, Its Generation and Use" - Babcock & Wilcox (Project Gutenberg #22657)'
+  category: energy
+  description_hu: A Babcock & Wilcox klasszikus kazán- és gőztechnikai kézikönyve: tüzelés, kazánszerkezet, gőztáblázatok, hatásfok. Gőzgépek és erőművek újraépítéséhez.
+  url_info: https://www.gutenberg.org/ebooks/22657
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: Public domain (Project Gutenberg)
+  size: "8.2 MB (HTML zip with images)"
+  size_status: measured(archive.org mirror steamitsgenerati22657gut metadata)
+  format: HTML/EPUB
+  language: en
+  notes: "Archive.org mirror: https://archive.org/details/steamitsgenerati22657gut . Scans of other editions: steamitsgenerati00babc_0 (1894)."
+  scores: {survival: 2, rebuild: 8, actionable: 5, uniqueness: 7, reliability: 9, offline_ease: 9}
+
+- id: esha-small-hydropower-guide
+  name: ESHA "Guide on How to Develop a Small Hydropower Plant" (2004, Parts 1-2; successor of the Layman's Guidebook)
+  category: energy
+  description_hu: Az Európai Kisvízerőmű Szövetség útmutatója: vízhozam-mérés, esés, vízvezetés, turbinaválasztás, generátor és szabályozás. Kis vízerőmű tervezéséhez.
+  url_info: https://skat.ch/publications/laymans-guidebook-on-how-to-develop-a-small-hydro-site
+  url_download: https://canyonhydro.com/images/Part_1_ESHA_Guide_on_how_to_develop_a_small_hydropower_plant.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: European Commission/ESHA publication (free distribution)
+  size: "14.3 MB (8.05 + 6.22 MB)"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "Part 2: https://canyonhydro.com/images/Part_2_ESHA_Guide_on_how_to_develop_a_small_hydropower_plant.pdf . The skat.ch page hosts the 1998 Layman's Guidebook (Penche). It is aimed at 100 kW-10 MW; for under 100 kW pair it with Practical Action micro-hydro books."
+  scores: {survival: 4, rebuild: 8, actionable: 6, uniqueness: 6, reliability: 8, offline_ease: 10}
+
+- id: piggott-wind-turbine-recipe-book
+  name: Hugh Piggott - A Wind Turbine Recipe Book (metric 2023 / inch 2014) + free PMG construction manual (2001)
+  category: energy
+  description_hu: A világszerte használt házi építésű axiális fluxusú szélgenerátor (1,2-4,2 m) teljes építési leírása: lapátfaragás, tekercselés, öntés gyantába, irányítás. Hulladékból is építhető.
+  url_info: https://scoraigwind.co.uk/all-of-the-books-by-hugh-how-to-get-them/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "13 GBP paper (UK) / 17 GBP outside EU; inch edition 20 USD; old Kindle 5 USD"
+  license: Copyright Hugh Piggott
+  size: "~100-page booklet"
+  size_status: estimated(booklet format)
+  format: print / PDF / ebook
+  language: en (translations fr, de, es, nl, it; a Hungarian PDF is available on request per the page)
+  notes: "The author's page says a Hungarian PDF exists on request through the contact page, which is directly useful for this archive. The 2001 'PMG construction manual' is a free PDF. No mailing to the EU; use the Stripe option or the EU resellers."
+  scores: {survival: 4, rebuild: 8, actionable: 10, uniqueness: 8, reliability: 8, offline_ease: 9}
+
+- id: radio-amateurs-handbook-1926
+  name: The Radio Amateur's Handbook, 1st edition (ARRL, 1926)
+  category: communications
+  description_hu: Az ARRL első rádióamatőr kézikönyve: elektroncsöves vevők és adók építése, antennák, morze. Egyszerű, alkatrész-szegény rádiók építéséhez meglepően hasznos.
+  url_info: https://archive.org/details/the-radio-amateurs-handbook-arrl-francis-edward-handy-ed-1-1926
+  url_download: https://archive.org/download/the-radio-amateurs-handbook-arrl-francis-edward-handy-ed-1-1926/TheRadioAmateursHandbook_ARRL_FrancisEdwardHandy_Ed1_1926_text.pdf
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: Public domain mark (on item)
+  size: "17.3 MB (text PDF); 356.5 MB hi-res"
+  size_status: measured(archive.org metadata API)
+  format: PDF
+  language: en
+  notes: "Also on archive.org: TM 11-666 Antennas and Radio Propagation (1953, tm11666departmen00depa, 21.9 MB PDF) and FM 24-18 radio techniques. 1930s-40s handbooks exist but their copyright status is unclear."
+  scores: {survival: 4, rebuild: 7, actionable: 7, uniqueness: 6, reliability: 7, offline_ease: 10}
+
+- id: arrl-handbook-current
+  name: The ARRL Handbook for Radio Communications (current edition, ~103rd/2026)
+  category: communications
+  description_hu: A rádióamatőrök modern standard kézikönyve: áramköri elmélet, tápegységek, adó-vevők, antennák, digitális módok, építési projektek. Kommunikációs hálózat újraépítéséhez.
+  url_info: https://www.arrl.org/shop/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: purchase
+  access: paid
+  price: "~50-70 USD (softcover historically 49.95 USD; 6-volume boxed set 69.95 USD for the 101st ed.)"
+  license: Copyright ARRL
+  size: "~1,200 pages"
+  size_status: estimated(recent editions)
+  format: print (+ digital extras)
+  language: en
+  notes: "The current edition's price was not confirmed (search found only older-edition prices). The ARRL Antenna Book (paid) is a good companion."
+  scores: {survival: 4, rebuild: 9, actionable: 7, uniqueness: 6, reliability: 10, offline_ease: 9}
+
+- id: bowditch-american-practical-navigator-2024
+  name: Bowditch - American Practical Navigator, NGA Pub. 9, 2024 edition (Vols. 1-2)
+  category: navigation
+  description_hu: A navigáció alapműve: csillagászati navigáció, holtszámítás, árapály, meteorológia, matematikai táblázatok. Hajózáshoz és helymeghatározáshoz GPS nélkül.
+  url_info: https://thenauticalalmanac.com/2024_Bowditch-_American_Practical_Navigator.html
+  url_download: https://thenauticalalmanac.com/2024_Bowditch-_American_Practical_Navigator/Volume_1/Bowditch_Vol_1_2024.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: US Government work (NGA, public domain)
+  size: "207 MB (Vol1 174.4 MB + Vol2 32.5 MB); Vol1 LoRes 44.4 MB"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "The official source msi.nga.mil returned 503 from here (blocked). The mirror uses mod_security: wget/curl need a browser User-Agent or they get 406. Vol2: .../Volume_2/Bowditch_Vol_2_2024.pdf ; LoRes: .../Volume_1/Bowditch_Vol_1_LoRes_2024.pdf. The 2002, 2017 and 2019 editions are mirrored there too."
+  scores: {survival: 4, rebuild: 8, actionable: 7, uniqueness: 8, reliability: 10, offline_ease: 10}
+
+- id: nautical-almanac-and-sight-reduction-tables
+  name: Nautical Almanac 2026/2027, Air Almanac 2026, Pub. 229 (Vols 1-6), Pub. 249, long-term Sun tables 2001-2036 (TheNauticalAlmanac.com)
+  category: navigation
+  description_hu: Ingyenes csillagászati évkönyvek és helyzetszámító táblázatok szextánsos helymeghatározáshoz. A 2001-2036-os napállás- és Aries-táblázatok évtizedekig használhatók.
+  url_info: https://thenauticalalmanac.com/Everything_You_Need_For_2026.html
+  url_download: https://thenauticalalmanac.com/TNARegular/2026_Nautical_Almanac.pdf
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: "Free download (independently computed; Pub. 229/249 are US Gov PD)"
+  size: "~82 MB (NA 2026 6.8 MB + NA 2027 6.9 MB + Air Almanac 2026 27.8 MB + Pub 229 Vols 1-6 40.6 MB); Pub 249 extra"
+  size_status: measured(HTTP Content-Length)
+  format: PDF
+  language: en
+  notes: "Use a browser User-Agent (mod_security). Pub 229: https://thenauticalalmanac.com/Pub_No_229/Pub229Vol1.pdf ... Vol6.pdf. Long-term tables: /Tables/TABLE_4-_GHA_and_Declination_of_the_Sun_for_the_Years_2001_to_2036.pdf and /GHA_Aries_Long_Term/GHA_Aries_2022_to_2030.pdf. The official HMNAO/USNO printed Nautical Almanac costs ~40-60 USD per year (estimate). Download future-year almanacs while they are available."
+  scores: {survival: 3, rebuild: 7, actionable: 8, uniqueness: 8, reliability: 8, offline_ease: 10}
+
+- id: hyg-star-database
+  name: HYG stellar database v4.4 (Hipparcos + Yale Bright Star + Gliese)
+  category: navigation
+  description_hu: Kb. 120 000 csillag egyesített katalógusa (pozíció, fényesség, távolság) CSV-ben. Navigációs, csillagászati és oktatási programokhoz.
+  url_info: https://codeberg.org/astronexus/hyg
+  url_download: https://codeberg.org/astronexus/hyg/media/branch/main/data/hyg/CURRENT/hyg_v44.csv.gz
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: CC BY-SA 4.0
+  size: "13.6 MB (csv.gz)"
+  size_status: measured(HTTP Content-Length)
+  format: CSV (gzip)
+  language: en
+  notes: "The /raw/ URL returns a 133-byte Git LFS pointer; use the /media/ URL. The original CDS catalogs (V/50 Yale BSC, I/239 Hipparcos) at cdsarc.cds.unistra.fr were blocked here (connection reset). Full Codeberg repo ~126 MB (API). Needs a spreadsheet or program to read."
+  scores: {survival: 1, rebuild: 5, actionable: 3, uniqueness: 6, reliability: 9, offline_ease: 7}
+
+- id: nasa-ntrs
+  name: NASA Technical Reports Server (NTRS)
+  category: engineering
+  description_hu: A NASA és elődje, a NACA kb. 650 000 műszaki jelentése (aerodinamika, anyagok, napelemek, akkumulátorok, hőtechnika). Mélyebb mérnöki kutatáshoz válogatva érdemes letölteni.
+  url_info: https://ntrs.nasa.gov/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: mostly US Government work (public domain); some restricted
+  size: "650,206 citations (API total); full-text corpus many TB, use a curated subset"
+  size_status: measured(API stats.total) / estimated(corpus size)
+  format: PDF
+  language: en
+  notes: "API: https://ntrs.nasa.gov/api/citations/search?q=... (JSON, works). Use https://ntrs.nasa.gov, not www.ntrs.nasa.gov (expired certificate). Suggested subsets: NACA reports, the 'NASA SP' series, photovoltaic and battery handbooks."
+  scores: {survival: 1, rebuild: 7, actionable: 3, uniqueness: 6, reliability: 9, offline_ease: 9}
+
+- id: engineering-toolbox
+  name: The Engineering ToolBox (engineeringtoolbox.com)
+  category: engineering
+  description_hu: Hatalmas online mérnöki adattár: anyagjellemzők, csőáramlás, hőátadás, villamos táblázatok, átváltások. Gyors kikereséshez, de az offline mentése nehéz.
+  url_info: https://www.engineeringtoolbox.com/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: gray
+  price: null
+  license: Proprietary (all rights reserved; no bulk-download permission)
+  size: "unknown (thousands of pages, est. several GB with images)"
+  size_status: estimated(not measured)
+  format: HTML
+  language: en
+  notes: "Mirroring probably breaks the terms of service, and many calculators are JavaScript. Mirror only selected pages, or 'print to PDF' the key tables. The DOE handbooks and Machinery's Handbook cover much of the same data legally."
+  scores: {survival: 2, rebuild: 6, actionable: 5, uniqueness: 4, reliability: 7, offline_ease: 6}
+
+- id: ose-wiki-dump-gvcs
+  name: Open Source Ecology wiki (Global Village Construction Set) - WikiTeam dump 2025-08-09
+  category: open_hardware
+  description_hu: Az OSE wiki teljes mentése: az 50 gépes "Global Village Construction Set" (CEB téglaprés, LifeTrac traktor, fűrészüzem, indukciós kemence, CNC) tervei, dokumentációi és képei.
+  url_info: https://archive.org/details/wiki-wiki.opensourceecology.org-20250809
+  url_download: https://archive.org/download/wiki-wiki.opensourceecology.org-20250809/wiki.opensourceecology.org-20250809-images.7z
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: CC BY-SA 4.0 (OSE wiki); GPL/CC on designs
+  size: "10.3 GB (images.7z 10.25 GB + history.xml.zst 0.04 GB)"
+  size_status: measured(archive.org metadata API)
+  format: MediaWiki XML + 7z of images/CAD/PDF
+  language: en
+  notes: "Needs MediaWiki import (or a converter such as mwoffliner to ZIM) to browse; the images archive alone is readable files. The live wiki (15,355 content pages, 18,289 files) is behind Cloudflare, so wget mirroring will fail. Many GVCS machines are incomplete or prototype-level. Extra git repo: https://github.com/OpenSourceEcology/LifeTrac (git clone --depth 1; 118 MB .git, 534 MB checkout). The 'Civilization-Starter-Kit-DVD' repo was not reachable."
+  scores: {survival: 4, rebuild: 7, actionable: 5, uniqueness: 8, reliability: 5, offline_ease: 4}
+
+- id: reprap-wiki-dump
+  name: RepRap.org wiki - WikiTeam dump 2025-06-12
+  category: open_hardware
+  description_hu: A RepRap önreplikáló 3D-nyomtató projekt teljes wikije: Mendel, Prusa, Huxley tervek, elektronika, firmware, extruderek. Additív gyártás alulról való újraépítéséhez.
+  url_info: https://archive.org/details/wiki-reprap.org_mediawiki-20250612
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: archive.org
+  access: free
+  price: null
+  license: GNU FDL / GPL (designs)
+  size: "16.4 GB (images.7z 16.36 GB + history.xml.zst 0.02 GB)"
+  size_status: measured(archive.org metadata API)
+  format: MediaWiki XML + 7z
+  language: en (+ others)
+  notes: "The live reprap.org returns Cloudflare 520 or a bot challenge, so mirroring is impractical. Use the dump. Older smaller dump: wiki-repraporg-20151016 (0.7 GB)."
+  scores: {survival: 1, rebuild: 7, actionable: 6, uniqueness: 6, reliability: 6, offline_ease: 4}
+
+- id: prusa-original-i3
+  name: Prusa Original i3 (MK2/MK3 family) printed parts and sources
+  category: open_hardware
+  description_hu: A legelterjedtebb nyílt 3D-nyomtató nyomtatott alkatrészeinek forrásai (OpenSCAD/STL). Pótalkatrészekhez és nyomtatók építéséhez.
+  url_info: https://github.com/prusa3d/Original-Prusa-i3
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: GPL-2.0
+  size: "4.8 MB download (.git), 31 MB checkout"
+  size_status: measured(git clone --depth 1 + du)
+  format: SCAD/STL
+  language: en
+  notes: "git clone --depth 1 https://github.com/prusa3d/Original-Prusa-i3 . Add firmware: https://github.com/MarlinFirmware/Marlin (42 MB .git / 153 MB) or https://github.com/Klipper3d/klipper (12 MB / 230 MB, GPL-3.0). Build manuals are online (help.prusa3d.com), so save them as PDF separately."
+  scores: {survival: 1, rebuild: 6, actionable: 5, uniqueness: 3, reliability: 8, offline_ease: 5}
+
+- id: voron-2-4-and-trident
+  name: Voron Design - Voron 2.4 and Voron Trident (CoreXY printers)
+  category: open_hardware
+  description_hu: Nagy pontosságú, zárt házas, nyílt CoreXY 3D-nyomtatók teljes CAD-je, STL-jei és PDF összeszerelési kézikönyve. Megbízható gyártóeszköz alkatrészekhez.
+  url_info: https://docs.vorondesign.com/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: GPL-3.0
+  size: "Voron-2: 219 MB .git / 523 MB checkout; Voron-Trident: 246 MB .git / 565 MB checkout"
+  size_status: measured(git clone --depth 1 + du)
+  format: STEP/STL/PDF manual
+  language: en
+  notes: "git clone --depth 1 https://github.com/VoronDesign/Voron-2 ; git clone --depth 1 https://github.com/VoronDesign/Voron-Trident . Needs commercial parts (linear rails, stepper motors, boards), so it is only realistic early while stocks last."
+  scores: {survival: 1, rebuild: 6, actionable: 7, uniqueness: 3, reliability: 8, offline_ease: 6}
+
+- id: wikihouse-skylark
+  name: WikiHouse Skylark (CNC-cut plywood building system)
+  category: construction
+  description_hu: CNC-vel rétegelt lemezből kivágható, kézzel összeszerelhető moduláris házépítési rendszer (Skylark 150/200). Gyors, szerszámszegény lakásépítéshez.
+  url_info: https://www.wikihouse.cc/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: CC BY-SA 4.0
+  size: "217 MB .git, 1.3 GB checkout (SKYLARK150 862 MB, SKYLARK200 230 MB)"
+  size_status: measured(git clone --depth 1 + du)
+  format: DXF/3D models/PDF
+  language: en
+  notes: "git clone --depth 1 https://github.com/wikihouseproject/Skylark . Needs a CNC router and sheet goods. Structural approval is for the UK context."
+  scores: {survival: 3, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 7, offline_ease: 5}
+
+- id: precious-plastic-download-kit-v4
+  name: Precious Plastic Download Kit V4.1 (shredder, injection, extrusion, compression, sheetpress, Pro machines)
+  category: open_hardware
+  description_hu: Műanyag-újrahasznosító gépek (aprító, fröccsöntő, extruder, lemezprés) teljes tervei, rajzai, CAD-je és üzleti útmutatói. Hulladékból alapanyag előállításához.
+  url_info: https://community.preciousplastic.com/library/download-kit
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: CC BY-SA 4.0 (Precious Plastic)
+  size: "635 MB .git, 2.0 GB checkout"
+  size_status: measured(git clone --depth 1 + du)
+  format: PDF blueprints, STEP/IGES/DXF, F3D
+  language: en
+  notes: "git clone --depth 1 https://github.com/ONEARMY/precious-plastic-kit . Note: github.com/hakkens/precious-plastic is only the website export, not the kit. Docs/academy: https://github.com/ONEARMY/academy (111 MB .git / 229 MB)."
+  scores: {survival: 1, rebuild: 6, actionable: 8, uniqueness: 7, reliability: 7, offline_ease: 6}
+
+- id: openflexure-microscope
+  name: OpenFlexure Microscope
+  category: open_hardware
+  description_hu: 3D-nyomtatható, laborminőségű nyílt mikroszkóp (mechanikus és Raspberry Pi-s változat). Orvosi diagnosztikához (pl. malária) és oktatáshoz.
+  url_info: https://openflexure.org/projects/microscope/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: CERN-OHL-S-2.0
+  size: "7 MB .git, 18 MB checkout"
+  size_status: measured(git clone --depth 1 + du)
+  format: OpenSCAD sources + build scripts; docs
+  language: en
+  notes: "git clone --depth 1 https://gitlab.com/openflexure/openflexure-microscope.git . The repo holds OpenSCAD sources; STLs are generated by build.py. Also download ready STLs and assembly instructions from the openflexure.org build pages. Needs an objective lens and camera."
+  scores: {survival: 4, rebuild: 6, actionable: 7, uniqueness: 8, reliability: 8, offline_ease: 5}
+
+- id: libre-solar-hardware
+  name: Libre Solar - MPPT 2420 HC charge controller, BMS C1, charge-controller firmware
+  category: energy
+  description_hu: Nyílt forrású napelemes MPPT töltésvezérlő és lítium akkumulátor-felügyelet (BMS) KiCad-tervekkel és firmware-rel. Sziget-üzemű napelemes rendszerekhez.
+  url_info: https://libre.solar/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: CERN-OHL-W-2.0 (hardware); Apache-2.0 (firmware)
+  size: "~36 MB checkout total (mppt-2420-hc 3.6 MB, bms-c1 31 MB, charge-controller-firmware 1.5 MB)"
+  size_status: measured(git clone --depth 1 + du)
+  format: KiCad, C (Zephyr)
+  language: en
+  notes: "git clone --depth 1 https://github.com/LibreSolar/mppt-2420-hc ; .../bms-c1 ; .../charge-controller-firmware . You need PCB fabrication and SMD parts. The value is mostly as a reference design."
+  scores: {survival: 2, rebuild: 6, actionable: 5, uniqueness: 6, reliability: 7, offline_ease: 4}
+
+- id: openinverter-stm32-sine
+  name: OpenInverter (stm32-sine motor inverter firmware, libopeninv) + openinverter.org wiki
+  category: energy
+  description_hu: Nyílt forrású inverter-firmware és dokumentáció AC/BLDC motorok (pl. bontott villanyautó-motorok) vezérléséhez. Elektromos hajtások és generátorok újrahasznosításához.
+  url_info: https://openinverter.org/wiki/Main_Page
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: GPL-3.0
+  size: "stm32-sine 1.6 MB checkout; libopeninv 0.75 MB; wiki unknown"
+  size_status: measured(git clone --depth 1 + du)
+  format: C source; wiki HTML
+  language: en
+  notes: "git clone --depth 1 https://github.com/jsphuebner/stm32-sine ; https://github.com/jsphuebner/libopeninv ; VCU: https://github.com/damienmaguire/Stm32-vcu. The wiki's API sits behind a bot challenge, so mirroring may fail. Only for advanced users with high-voltage experience."
+  scores: {survival: 1, rebuild: 5, actionable: 4, uniqueness: 6, reliability: 6, offline_ease: 3}
+
+- id: kicad-eda-and-libraries
+  name: KiCad 10.0.8 EDA + official symbol/footprint libraries
+  category: electronics
+  description_hu: Ingyenes, nyílt NYÁK-tervező program és hivatalos alkatrészkönyvtárai. Elektronikai áramkörök tervezéséhez és a nyílt hardveres tervek megnyitásához.
+  url_info: https://www.kicad.org/download/
+  url_download: https://github.com/KiCad/kicad-source-mirror/releases/download/10.0.8/kicad-10.0.8-x86_64.exe
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-3.0 (app); CC-BY-SA 4.0 with exception (libraries)
+  size: "Windows installer 969 MB; kicad-symbols 289 MB, kicad-footprints 199 MB checkout"
+  size_status: measured(HTTP Content-Length; git clone --depth 1 + du)
+  format: installer; KiCad lib files
+  language: multi (incl. hu UI)
+  notes: "Libraries: git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-symbols.git and .../kicad-footprints.git (the installer already bundles them). The 3D-models library is large and was not measured. Also save docs.kicad.org."
+  scores: {survival: 0, rebuild: 6, actionable: 4, uniqueness: 4, reliability: 9, offline_ease: 4}
+
+- id: freecad-and-parts-library
+  name: FreeCAD 1.1.4 + FreeCAD-library (parts) + FreeCAD-documentation
+  category: engineering
+  description_hu: Ingyenes, nyílt parametrikus 3D CAD program, alkatrészkönyvtárral és offline dokumentációval. A nyílt hardveres STEP/FCStd tervek megnyitásához és módosításához.
+  url_info: https://www.freecad.org/downloads.php
+  url_download: https://github.com/FreeCAD/FreeCAD/releases/download/1.1.4/FreeCAD_1.1.4-Linux-x86_64-py311.AppImage
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: LGPL-2.1+ (app); CC-BY 3.0 (parts library)
+  size: "AppImage 821 MB; Windows installer 519 MB; FreeCAD-library 1.4 GB .git / 4.2 GB checkout; FreeCAD-documentation 389 MB .git / 1.1 GB"
+  size_status: measured(HTTP Content-Length; git clone --depth 1 + du)
+  format: AppImage/EXE; FCStd/STEP
+  language: multi (incl. hu UI)
+  notes: "git clone --depth 1 https://github.com/FreeCAD/FreeCAD-library ; https://github.com/FreeCAD/FreeCAD-documentation . The parts library is big; consider a sparse checkout. Windows build: .../1.1.4/FreeCAD_1.1.4-Windows-x86_64-py311-installer.exe."
+  scores: {survival: 0, rebuild: 6, actionable: 3, uniqueness: 4, reliability: 8, offline_ease: 4}
+
+- id: arduino-ide-offline
+  name: Arduino IDE 1.8.19 (offline-friendly, bundled AVR core) + IDE 2.3.11 + ArduinoCore-avr
+  category: electronics
+  description_hu: A legelterjedtebb mikrovezérlő-fejlesztőkörnyezet. Az 1.8.19-es verzió internet nélkül is fordít AVR (Uno/Nano) lapokra, így vezérlések, szenzorok és automatizálás építhető.
+  url_info: https://www.arduino.cc/en/software
+  url_download: https://downloads.arduino.cc/arduino-1.8.19-linux64.tar.xz
+  url_status: "200 verified 2026-11-14"
+  method: http
+  access: free
+  price: null
+  license: GPL-2.0 / LGPL
+  size: "1.8.19 linux64 128.6 MB, windows 117.3 MB; IDE 2.3.11 AppImage 205 MB; ArduinoCore-avr 32 MB checkout"
+  size_status: measured(HTTP Content-Length; git clone --depth 1 + du)
+  format: tar.xz/exe/AppImage
+  language: multi (incl. hu)
+  notes: "IDE 2.x downloads board cores and libraries online on first use, so for offline pre-fetch them (copy ~/.arduino15) or prefer 1.8.19 (portable mode). Core source: git clone --depth 1 https://github.com/arduino/ArduinoCore-avr."
+  scores: {survival: 1, rebuild: 6, actionable: 5, uniqueness: 3, reliability: 8, offline_ease: 5}
+
+- id: open-source-beehives-bcn-warre
+  name: Open Source Beehives - Barcelona Warré Hive v2.4 (CNC)
+  category: open_hardware
+  description_hu: CNC-vel rétegelt lemezből kivágható Warré-kaptár tervei több lemezvastagságra, PDF összeszerelési útmutatóval. Méhészet és beporzás fenntartásához.
+  url_info: https://github.com/opensourcebeehives/Hive_BarcelonaWarre
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: CC BY-SA 4.0
+  size: "362 MB checkout (variants 18-21 mm)"
+  size_status: measured(git clone --depth 1 + du)
+  format: DXF, 3DM (Rhino), STL, PDF manual
+  language: en
+  notes: "git clone --depth 1 https://github.com/opensourcebeehives/Hive_BarcelonaWarre . The project site opensourcebeehives.com returned 403 and seems inactive. The DXF and PDF are the portable files (the Rhino files need Rhino). A Top Bar hive repo was not found under the guessed name."
+  scores: {survival: 4, rebuild: 4, actionable: 7, uniqueness: 5, reliability: 6, offline_ease: 6}
+
+- id: respiraworks-ventilator
+  name: RespiraWorks open-source ventilator (design, PCB, firmware, manufacturing docs)
+  category: open_hardware
+  description_hu: Alacsony költségű, nyílt forrású lélegeztetőgép teljes dokumentációja (mechanika, NYÁK, szoftver, minőségbiztosítás). Kórházi ellátás pótlására vészhelyzetben.
+  url_info: https://www.respira.works/
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: git
+  access: free
+  price: null
+  license: Apache-2.0
+  size: "37 MB .git, 85 MB checkout"
+  size_status: measured(git clone --depth 1 + du)
+  format: CAD, KiCad, C++, Markdown docs
+  language: en
+  notes: "git clone --depth 1 https://github.com/RespiraWorks/Ventilator . Not a certified medical device. Requires precise sensors, blowers and electronics. A list of other open ventilator projects: https://github.com/PubInv/covid19-vent-list."
+  scores: {survival: 3, rebuild: 4, actionable: 4, uniqueness: 6, reliability: 5, offline_ease: 4}
+
+- id: farm-hack-tools
+  name: Farm Hack - open source farm tools library
+  category: open_hardware
+  description_hu: Gazdák által dokumentált, házilag építhető mezőgazdasági eszközök (vetőgépek, mosóállomások, kultivátorok, hűtőkamra-vezérlés). Kisgazdaságok gépesítéséhez.
+  url_info: https://farmhack.org/tools
+  url_download: null
+  url_status: "200 verified 2026-11-14"
+  method: wget-mirror
+  access: free
+  price: null
+  license: mostly CC BY-SA (per tool; varies)
+  size: "unknown (hundreds of tool pages, est. <2 GB with attachments)"
+  size_status: estimated(not measured)
+  format: HTML + attached PDF/CAD
+  language: en
+  notes: "No bulk export was found. Use a polite wget mirror limited to /tools/ and attachments. Documentation quality varies a lot between tools."
+  scores: {survival: 5, rebuild: 5, actionable: 6, uniqueness: 6, reliability: 5, offline_ease: 7}
+```
+
