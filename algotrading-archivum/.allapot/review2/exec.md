@@ -1,0 +1,10 @@
+# Végrehajtási mérnök – 2. kör: 87,7 (1. kör 65,7)
+a 90 · b 86 · c 88 · d 88 · e 88 · f 86. Szúrópróba 16: 12 helyes, 2 részben, 1 hibás, 1 nem ellenőrizhető.
+D1 Fill: arrival_ns, send_ns, bid_at_send, ask_at_send kötelező, de kéretlen (SL/TP/stop-out/likvidáció) fillnél nincs → opcionális + validátor (origin=="client" esetén kötelező, egyébként None); TCA csak kliens fillt vesz.
+D2 dead-man: arm_dead_man(scope: KillScope | None, timeout_s); Binance countdownCancelAll szimbólumonkénti (symbol kötelező, 0 = leállít) → szimbólumonként élesíteni, súlyt a rate_limits-be; Polymarket: A3 polymarket-order-heartbeat (API-kulcsra szól, 10 s + ≤5 s scan, best-effort) → dead_man_timeout_s: 15, Capabilities.dead_man_guaranteed: bool, K5 időzítés nem garantált best-effort helyszínen; testnet-teszt: törli-e a countdownCancelAll a reduce-only védőstopokat (ha igen, a §1.7 „szerveroldali SL marad” Binance-en hamis).
+D3 Kalshi YES/NO: PRED:KALSHI:<ticker> = YES szerződés; „buy NO at p” → „sell YES at 1−p”, centben; pozíció-előjel szerződéses teszttel a Kalshi demón.
+D4 pUSD: Ccy regex ^[A-Z0-9]{2,10}$ → „PUSD” alias, tokencím a sources-ban; spec 2594–2595 USDC → PUSD.
+D5 Vantage-jogalany: a1_summary.md 9., 24. sor és ALGOTRADING.md 653., 668. sor VFSC 700271 mint jelenlegi → történeti jelölés, utalás A11 10. sorra.
+D6 TCA: többszörös tesztelés (Holm vagy BH) a vödrökön (ármozgás × session × helyszín × instrumentum), q-értékek; 1 s markout előtt referencia-feed késése lead-lag keresztkorrelációval.
+D7 A11 migráció „~70 ms (átnéző becslés)” → A8 wondernetwork-pings (London→NY 70,1 ms, mért); §1.7: virtualizált Windows VPS-en <1 ms w32time nem bizonyított, F1-kapu a Windows vs Linux+Wine döntés előtt.
+Forráskorlát-plafonok: b ~90 (Vantage oldalak 403, nincs független TCA), d ~92 (Vantage szerver adatközpont traceroute nélkül), a ~93 (FileFlush, CryptEncode HMAC, MetaEditor CLI Wine alatt, komment-csonkítás – csak F1 demón). Becslés javítás után ~91; 95 fölé csak mért F1/F4/§3.7 eredménnyel.
