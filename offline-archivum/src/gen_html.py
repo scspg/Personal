@@ -113,6 +113,7 @@ nav.tabs a[aria-current]{background:var(--sunk);box-shadow:inset 0 -2px var(--ac
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 section{display:grid;gap:14px}
 section,[id]{scroll-margin-top:60px}
+@media (max-width:600px){section,[id]{scroll-margin-top:130px}}
 .calc{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:20px;align-items:start}
 .calc>*{min-width:0}
 @media (max-width:900px){.calc{grid-template-columns:minmax(0,1fr)}}
@@ -348,14 +349,15 @@ function matrix(){const rows=Object.entries(PRESETS).map(([k,p])=>{const d=new D
   F('matrix').innerHTML=`<table class="matrix"><thead><tr><th>Eszköz</th><th>V1 – cenzúrázatlan</th><th>V2 – alap</th><th>V3 – csapat (alap)</th><th>V4 – vegyes csapat</th></tr></thead><tbody>${rows}</tbody></table>`;}
 /* ---------- modelltábla ---------- */
 let sortKey='aa',sortDir=-1;
-const COLS=[['m','Modell',0],['u','Típus',0],['aa','AA v5',1],['pct','% Opus 5.5',1],['rel','Kiadva',0],['act','Aktív param.',1],['minb','Legkisebb',1],['maxb','Legnagyobb',1],['n','Kvant',1],['plats','Formátum',0],['hw','Gépszint',0],['lic','Licenc',0],['info','Részletek',0]];
+const COLS=[['m','Modell',0],['pct','% Opus 5.5',1],['u','Típus',0],['aa','AA v5',1],['rel','Kiadva',0],['act','Aktív param.',1],['minb','Legkisebb',1],['maxb','Legnagyobb',1],['n','Kvant',1],['plats','Formátum',0],['hw','Gépszint',0],['lic','Licenc',0],['info','Részletek',0]];
 function modelTable(){const q=norm(F('mq').value), typ=F('mtyp').value, minp=parseFloat(F('mpct').value)||0, maxs=parseFloat(F('msize').value)||1e9;
   let L=M.filter(m=>(!q||norm(m.m+' '+(m.repo||'')).includes(q))&&(typ===''||(typ==='u')===m.u)&&pct(m.aa)>=minp&&m.minb/1e9<=maxs);
   L.sort((a,b)=>{const k=sortKey,x=k==='pct'?a.aa:a[k],y=k==='pct'?b.aa:b[k];return (x>y?1:x<y?-1:0)*sortDir;});
   const th=COLS.map(([k,l,n])=>k==='info'?`<th>${l}</th>`:`<th class="${n?'num':''}" data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}"><button type="button">${l}</button></th>`).join('');
   const tr=L.map(m=>`<tr><td><b>${esc(m.m)}</b>${m.repo?`<br><a href="https://huggingface.co/${esc(m.repo)}" target="_blank" rel="noopener">${esc(m.repo)}</a>`:''}</td>
-    <td><span class="chip ${m.u?'u':'a'}">${m.u?'cenzúrázatlan':'alap'}</span></td><td class="num">${m.est?'~':''}${fmt(m.aa)}</td>
     <td class="num"><div class="pctcell"><div class="track"><div class="fill${m.u?' u':''}" style="width:${Math.min(100,100*m.aa/OPUS)}%"></div></div><span>${m.est?'~':''}${pct(m.aa)}%</span></div></td>
+    <td><span class="chip ${m.u?'u':'a'}">${m.u?'cenzúrázatlan':'alap'}</span></td><td class="num">${m.est?'~':''}${fmt(m.aa)}</td>
+    
     <td class="date">${esc(m.rel)}</td><td class="num">${m.act?fmt(m.act,1)+'B '+(m.moe!==false?'MoE':'dense'):'?'}</td><td class="num">${gb(m.minb)}</td><td class="num">${gb(m.maxb)}</td><td class="num">${m.n}</td>
     <td>${m.plats.map(p=>({any:'GGUF',mac:'MLX',server:'vLLM',android:'LiteRT'}[p]||p)).join(', ')}</td><td>${esc(m.hw.join(' '))}</td><td>${esc(m.lic)}</td>
     <td class="det" style="min-width:260px"><div title="${esc(m.u?(m.why||''):(m.strength||''))}">${m.u?`alap: ${esc(m.base||'')} (AA ${fmt(m.base_aa)}) × ${fmt(m.ratio,3)} – ${esc(m.why||'')}`:esc(m.strength||'')}</div></td></tr>`).join('')||'<tr><td colspan="13" class="empty">Nincs a szűrésnek megfelelő modell.</td></tr>';
@@ -363,13 +365,15 @@ function modelTable(){const q=norm(F('mq').value), typ=F('mtyp').value, minp=par
   F('models').querySelectorAll('th[data-k]').forEach(t=>t.addEventListener('click',()=>{const k=t.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=['m','rel','lic','u'].includes(k)?1:-1;} modelTable(); F('models').querySelector('th[data-k="'+k+'"] button')?.focus();}));}
 /* ---------- szoftverek és modellek ---------- */
 const S=__SOFT__;
-function softTable(){const q=norm(F('sq').value), c=F('scat').value;
-  const L=S.filter(x=>(!c||x.c===c)&&(!q||norm(x.n+' '+x.need+' '+x.d+' '+x.alt+' '+x.c).includes(q)));
+let softAll=false; function softTable(){const q=norm(F('sq').value), c=F('scat').value;
+  const L0=S.filter(x=>(!c||x.c===c)&&(!q||norm(x.n+' '+x.need+' '+x.d+' '+x.alt+' '+x.c).includes(q)));
+  const short=!softAll&&!q&&!c&&matchMedia('(max-width:600px)').matches&&L0.length>40; const L=short?L0.slice(0,40):L0;
   const link=(u,l)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`:'';
   const tr=L.map(x=>`<tr><td>${esc(x.need)}<br><small class="muted">${esc(x.c)}</small></td><td><b>${esc(x.n)}</b><div class="sd">${esc(x.d)}</div><small>${[link(x.w,'web'),link(x.r,'repó'),link(x.rel,'letöltés')].filter(Boolean).join(' · ')}</small></td>
     <td class="num" data-l="Szint">${x.t}</td><td data-l="Verzió">${esc(x.v)||'–'}</td><td data-l="Licenc">${esc(x.lic)}</td><td class="num" data-l="Méret">${x.b?gb(x.b):'–'}</td><td class="sd" data-l="Alternatívák">${esc(x.alt).replace(/(\s*)([^;,()]+?)\s*\((https?:\/\/[^)\s;,]+)[;,]?\s*([^)]*)\)/g,(m,s,a,u,r)=>(s||'')+`<a href="${u}" target="_blank" rel="noopener">${a.trim()}</a>`+(r?` (${r})`:'')).replace(/(^|[\s;])(https?:\/\/[^\s<;,)]+)/g,'$1<a href="$2" target="_blank" rel="noopener">link</a>')||'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nincs találat.</td></tr>';
   F('soft').innerHTML=`<table class="soft"><thead><tr><th>Igény</th><th>Legjobb választás</th><th class="num">Szint</th><th>Verzió</th><th>Licenc</th><th class="num">Méret</th><th>Alternatívák</th></tr></thead><tbody>${tr}</tbody></table>`;
-  F('scount').textContent=L.length+' tétel';}
+  F('scount').textContent=L0.length+' tétel';
+  if(short){const btn=document.createElement('button');btn.type='button';btn.textContent='Mind a '+L0.length+' tétel mutatása';btn.onclick=()=>{softAll=true;softTable();};F('soft').appendChild(btn);}}
 (()=>{const sel=F('scat'); [...new Set(S.map(x=>x.c))].forEach(c=>sel.add(new Option(c,c))); F('sq').addEventListener('input',softTable); sel.addEventListener('change',softTable); softTable();})();
 /* ---------- tárolók ---------- */
 const ST=__STOR__;

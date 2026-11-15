@@ -110,6 +110,17 @@ def prod_index():
             idx.append((base, L[0]["url"], L[0].get("bolt")))
         for code in _r.findall(r"\(([A-Z0-9][A-Z0-9-]{6,})\)", p.get("nev") or ""):   # típuskód is (pl. MG10AFA22TE)
             idx.append((code, L[0]["url"], L[0].get("bolt")))
+    ALIAS = {"far-faraday-defense-nestz": ["NEST-Z"], "far-mfh-ammo-box-50cal": ["MFH .50 cal lőszerláda", "lőszerláda"],
+             "opt-verbatim-mdisc-bdxl-100": ["M-DISC BDXL"], "opt-verbatim-slimline-bd-writer-43890": ["Verbatim BD-író", "BD-író"],
+             "nas-ugreen-dxp4800plus": ["UGREEN DXP4800 Plus"], "nas-synology-ds1825plus": ["Synology DS1825+"],
+             "tape-lto9-drive-quantum": ["Quantum TC-L93CN-AR"], "hdd-toshiba-mg10afa22te": ["Toshiba MG10 22TB", "Toshiba MG10"],
+             "hdd-seagate-exosm-28": ["Exos M 28TB"], "hdd-wd-redpro-26": ["WD Red Pro 26TB"], "samsung-t7-shield": ["T7 Shield 2TB"]}
+    byid = {p["id"]: p for p in prods}
+    for pid, names in ALIAS.items():
+        p = byid.get(pid)
+        L = [l for l in ((p or {}).get("linkek") or []) if l.get("url") and "nem ellenőrizhető" not in str(l.get("bolt"))]
+        if p and L:
+            idx += [(n, L[0]["url"], L[0].get("bolt")) for n in names]
     return sorted(idx, key=lambda x: -len(x[0]))
 
 

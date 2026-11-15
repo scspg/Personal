@@ -142,6 +142,10 @@ def ssd_plans(cat_path, tmp):
         # a nagyobb meghajtó a kisebb teljes (nem LLM) tartalmát megtartja, csak bővül vagy jobb változatra cserél
         big = int(b[:-2]) >= 64        # 64 TB fölött: szerverszintű LLM-készlet is (pl. Kimi K3.1 Pro teljes kvantjai), több modell
         llm = ["--hw", "T1", "--mem", "2000GB", "--llm-models", "8"] if big else ["--hw", "T2", "--mem", "300GB", "--llm-models", "4"]
+        if int(b[:-2]) <= 2:      # kis meghajtón csak 1 cenzúrázatlan modell – a hely a tudásanyagé
+            llm += ["--max-uncensored", "1"]
+        if int(b[:-2]) <= 1:      # 1 TB: az LLM legfeljebb a keret 25%-a
+            llm += ["--llm-max", "0.25"]
         subprocess.run([sys.executable, "-I", os.path.join(HERE, "select_items.py"), cat_path, "--budget", b, *llm,
                         "--platform", "server", "--include", ",".join(prev), "--out", outp], check=True, capture_output=True)
         p = json.load(open(outp, encoding="utf-8"))
@@ -156,7 +160,7 @@ def ssd_section(plans):
     md = ["---", "", "## 4b. Hány TB-os SSD kell? – csomagok 1, 2, 4, 8, 16, 32, 64 és 128 TB-ra", "",
           "A `select_items.py` az alábbi beállítással számolt minden méretre: **balanced** profil, magyar + angol + többnyelvű anyag, ingyenes és regisztrációs források. "
           "LLM-ek: **1–32 TB-ig T2-es gép, ~300 GB LLM-memória** (2× MS-S1, vagy RTX 6090 + RTX Pro), legfeljebb 4 modell; **64 és 128 TB-nál T1 szerver, ~2 TB LLM-memória, legfeljebb 8 modell**. "
-          "Alap és cenzúrázatlan modell is; az LLM legfeljebb a keret 35%-át foglalhatja; szerverformátum is (`--platform server`). **A nagyobb méret a kisebb teljes tartalmát megtartja**, csak bővít vagy jobb változatra cserél. "
+          "Alap és cenzúrázatlan modell is (1–2 TB-on legfeljebb 1 cenzúrázatlan); az LLM legfeljebb a keret 35%-át foglalhatja (1 TB-on 25%-át); szerverformátum is (`--platform server`). **A nagyobb méret a kisebb teljes tartalmát megtartja**, csak bővít vagy jobb változatra cserél. "
           "A címkén szereplő TB decimális (10¹² bájt), és 8% tartalék marad a fájlrendszernek.", "",
           "### Összefoglaló", "",
           "| SSD | Felhasználva | Elemek | LLM | Életmentő | Mezőgazd./energia | Lexikon | Mérnöki | Tudomány/oktatás | Magyar | Térkép | Szoftver/OS | Nyílt szoftverek | AI-modellek, adatok | Olvasók, eszközök |",
@@ -237,6 +241,14 @@ HUNUM = re.compile(r"(?<![\w./-])(\d+)\.(\d+)(\s?(?:%|TB|GB|MB|PB|M Ft|GB/s|TB/s
 TABNUM = re.compile(r"(?<![\w./-])(\d{1,4})\.(\d{1,3})(?![\d.\w/-])")
 
 
+_NOCONV = re.compile(r"(PCIe|USB|STD-\d+\w*|Gen|v|DDR\d|LTO-|IP|HDMI|SATA|NVMe|Python|Wi-Fi)\s*$", re.I)
+
+
+def _tabrep(m):
+    pre = m.string[max(0, m.start() - 14):m.start()]
+    return m.group(0) if _NOCONV.search(pre) else f"{m.group(1)},{m.group(2)}"
+
+
 def _tabnum(text):
     """táblasorokban (| … |) a magányos tizedespontos számok tizedesvesszőre (verziók, URL-ek, kódblokkok nem)."""
     out, code = [], False
@@ -244,7 +256,7 @@ def _tabnum(text):
         if ln.startswith("```"):
             code = not code
         elif not code and ln.startswith("|"):
-            ln = "`".join(TABNUM.sub(r"\1,\2", part) if k % 2 == 0 else part for k, part in enumerate(ln.split("`")))
+            ln = "`".join(TABNUM.sub(_tabrep, part) if k % 2 == 0 else part for k, part in enumerate(ln.split("`")))
         out.append(ln)
     return "\n".join(out)
 
@@ -277,7 +289,7 @@ def device_digest():
             if "alternatíva" in str(role):
                 continue
             name = (v["name"].split(" · ") + [""])[1] or v["name"].split(" · ")[0]
-            out.append(f"{cut(name, 42)} ({round(100 * v['llm_aa'] / L.OPUS)}%, ~{round(r[0])} tok/s)")
+            out.append(f"{cut(name, 42)} ({'~' if v.get('llm_aa_est') else ''}{round(100 * v['llm_aa'] / L.OPUS)}%, ~{round(r[0])} tok/s)")
         return "<br>".join(out) or "–"
     md = ["### 6.10b Mi fut a gépeiden – a 4 változat tömören", "",
           "> V1 = legokosabb cenzúrázatlan · V2 = legokosabb alap · V3 = alap csapat · V4 = alap + cenzúrázatlan csapat. % = az AA v5 pont az Opus 5.5-höz (59,1) képest. Becslés, nem mérés.", "",

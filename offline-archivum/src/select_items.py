@@ -125,6 +125,7 @@ def main():
     ap.add_argument("--llm-max", type=float, default=0.35, help="a keret max. ennyi hányada mehet LLM-súlyokra (alap: %(default)s)")
     ap.add_argument("--platform", default="", help="LLM-formátumok a GGUF/Ollama mellé: mac (MLX), server (vLLM/SGLang: FP8/NVFP4/AWQ), android (LiteRT); vesszővel")
     ap.add_argument("--uncensored", choices=["no", "also", "only"], default="also", help="cenzúrázatlan LLM-változatok: no | also | only")
+    ap.add_argument("--max-uncensored", type=int, default=None, help="legfeljebb ennyi cenzúrázatlan LLM-modell (alap: nincs külön korlát)")
     ap.add_argument("--llm-models", type=int, default=3, help="legfeljebb ennyi különböző LLM-modell (group) kerüljön be (alap: %(default)s)")
     ap.add_argument("--mem", default=None, help="LLM-re használható memória (RAM+VRAM vagy unified), pl. 48GB / 512GB; a modell max. 85%%-a lehet")
     ap.add_argument("--focus", default="", help="kategória-szorzók, pl. medicine=2,agriculture=1.5")
@@ -253,6 +254,9 @@ def main():
             if llm_used() + delta > llm_cap:
                 return False
             if old is None and sum(1 for v in chosen.values() if v["cat"].startswith("ai_models")) >= a.llm_models:
+                return False
+            if (old is None and new["cat"] == "ai_models_uncensored" and a.max_uncensored is not None
+                    and sum(1 for v in chosen.values() if v["cat"] == "ai_models_uncensored") >= a.max_uncensored):
                 return False
         return True
 
