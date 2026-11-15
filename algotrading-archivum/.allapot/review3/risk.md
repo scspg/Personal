@@ -1,0 +1,6 @@
+# Kockázat/jog – 3. kör: 92,7 (81,8 → 89,0 → 92,7); e 89
+a 95 · b 95 · c 92 · d 92 · e 89 · f 93. Igazolva: teljes ECB keresztmetszet a stresszdátumokon, STRESS_UNDEFINED; F4.9 engine_reconcile ±2 pp; ETÜ t−2…t+2 egységes; Revolut két esemény; Bszt. 49. §; MiCA/DAC8 mért; VFSC történeti; HTML negatív arány kétféleképpen; OPA kézzel: MISSING_INPUT fail-closed, INVALID_REDUCE_ONLY, kizáró döntések, kilépés hiányzó mezőnél is.
+1 HTML margin-lábjegyzet: a stop-out mozgás képletéből hiányzik × FX (a kód lot × C × FX-szel oszt).
+2 4. fejezet AFM „[mért]” (ALGOTRADING.md 659–660, 686) → „(másodlagos: Finance Magnates, 2024-11-13)”.
+3 OPA sosem futott (az átnéző letöltötte, de a futtatást a jogosultsági rendszer blokkolta, törölte) → CI: opa check --strict policy/ és opa test policy/ -v az F4 átvétele előtt; valid_number csak sima decimálist fogad (1E+1, +5 deny) → Decimal normalizálás format(d,'f') OPA előtt + teszt.
+Forráskorlát: (e) ~90 Vantage/VIG ügyfélszerződés PDF (visszaélés, carry trade, profit-visszavonás, NBP), AFM elsődleges, Mauritius FSC GB20026165; (c) ~93–94 nincs NAV-iránymutatás a nem-ETÜ offshore CFD-ről és a Polymarket-besorolásról (76. § vs 67/C); (d) ~93 FCA COBS 22.5 elsődleges ellenőrzés; (f) ~94 Rego futtatás; (a) ~95–96 F4.9 független motor tényleges egyezése. Becslés 1–3 után ~93,5.

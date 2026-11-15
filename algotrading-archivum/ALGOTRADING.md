@@ -656,8 +656,8 @@ Korlát: a munkamenet közös WebSearch-kerete elfogyott a futás közben. Után
 
 ##### Fő megállapítások (A1)
 - A Vantage 1:500-as számlája offshore jogalanyhoz tartozik. A korábban idézett Vantage Global Limited (VFSC 700271) **történeti** adat [mért egy régebbi PDF-ből]; a Help Center (2026-11-05) szerint ma a VIG Group (Mauritius FSC GB20026165) szerződtet, és a kötelező forrás az ügyfél saját Client Agreementje (lásd a11_matrix.md 1. fejezet). Ennek EU-s befektetővédelme nincs, és MiFID-útlevele sincs. Ehhez a jogalanyhoz LEI-t sem találtam [mért].
-- Felügyeleti nyomás [mért]:
-  - AFM penalty payment order a Vantage Global Limited ellen, 2024-10-24.
+- Felügyeleti nyomás (FCA: mért; AFM: másodlagos forrásból):
+  - AFM penalty payment order a Vantage Global Limited ellen, 2024-10-24 (másodlagos forrás: Finance Magnates, 2024-11-13; az AFM elsődleges közleménye innen nem volt elérhető).
   - Az FCA 2026-04-02-án warning listára tette a vantagemarkets.com-ot, és kimondta, hogy az nem azonos az FCA-engedélyes Vantage Global Prime LLP-vel.
   - EU-s kockázat: a magyar ügyfelek kiszolgálása bármikor megszűnhet. B-terv bróker és rendszeres profitkivétel kell.
 - A Client Agreement (2023-05, 2025-08) tiltja az „abusive” kereskedést. Néven nevezi a cash-back arbitrázst és a „carry trade”-et [becsült, keresési kivonat; a PDF 403]. A swapgyűjtő hedge-grid ÁSZF-kockázatos lehet. EA-tilalmat nem találtam.
@@ -683,7 +683,7 @@ Korlát: a munkamenet közös WebSearch-kerete elfogyott a futás közben. Után
 | Szerverek | MT5: VantageInternational-Demo, Live3/4/6; MT4: Live 8/9/20/22 | becsült (név), mért (3. fél ping) |
 | Adatközpont | London + New York, Equinix-partner; LD4 nem megerősített | becsült |
 | ÁSZF | abusive trading; cash-back arbitrázs és carry trade tiltva; EA nem tiltott | becsült / nem ellenőrzött |
-| Szabályozói ügyek | AFM 2024-10-24; FCA warning 2026-04-02; DFSA 2023 | mért |
+| Szabályozói ügyek | AFM 2024-10-24 (másodlagos: Finance Magnates, 2024-11-13); FCA warning 2026-04-02 (mért); DFSA 2023 | vegyes: FCA mért, AFM másodlagos |
 | Kifizetési reputáció | Trustpilot ~4.3; FPA 2026: profit-levonások nagy nyereség után | becsült (anekdotikus) |
 | MNB-figyelmeztetés | nem találtam | nem ellenőrzött |
 
