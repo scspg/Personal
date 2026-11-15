@@ -313,6 +313,9 @@ for _k, _v in BINARY_ITEM.items():
     if _k != _v:
         PATCH.setdefault(_k, {})["binaries_item"] = _v
 
+PATCH.setdefault("soilgrids-1km", {})["download"] = {"method": "wget-mirror", "url": "https://files.isric.org/soilgrids/latest/data_aggregated/1000m/",
+                                                     "wget_args": "-l 2 -A tif -R index.html*"}
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {

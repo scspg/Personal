@@ -136,3 +136,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## 7. kör – SZKRIPT: átlag 95,0 (min 91) → rv7_gh_release.patch alkalmazva (261d94a). 8. kör fut: UX + ADAT átnéző. Ha ≥90 mindenhol és átlag ≥95 → VÉGSŐ több szemszögű átnézés (AI-ágens próbafuttatás, kezdő felhasználó, túlélési/orvosi/mezőgazdasági szakértő, adatmegőrzés) → make_zip → SendUserFile.
 
 ## 8. kör – UX ≈93,4 (min 92) → 4 hiba javítva (egyezség, ×, „” idézőjelek, Alternatívák linknévvel + szélességek). ADAT 8. kör fut.
+
+## 8. kör – ADAT 93,6 (min 90) → javítva: gh_release platformonként egy fő telepítő (prio + legnagyobb ami belefér), pdb/reh/server/web kizárva, újrafuttatáskor kihagyja ha release/ nem üres, keret csak a *.git mérettel csökken; soilgrids wget-mirror -A tif. KÖVETKEZŐ: VÉGSŐ több szemszögű átnézés.
