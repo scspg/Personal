@@ -138,3 +138,5 @@ KÉSZ: fordítás beépítve (src/research/notes_hu.json, fixes._notes_hu). KÖV
 ## 8. kör – UX ≈93,4 (min 92) → 4 hiba javítva (egyezség, ×, „” idézőjelek, Alternatívák linknévvel + szélességek). ADAT 8. kör fut.
 
 ## 8. kör – ADAT 93,6 (min 90) → javítva: gh_release platformonként egy fő telepítő (prio + legnagyobb ami belefér), pdb/reh/server/web kizárva, újrafuttatáskor kihagyja ha release/ nem üres, keret csak a *.git mérettel csökken; soilgrids wget-mirror -A tif. KÖVETKEZŐ: VÉGSŐ több szemszögű átnézés.
+
+## VÉGSŐ ÁTNÉZÉS INDÍTVA (2026-11-15): 4 friss ágens a kibontott ZIP-en (scratchpad/final/ARCHIVUM): AI-ágens próbafuttatás (final_agent), kezdő felhasználó (final_user), szakértői panel orvos/víz/agrár/energia/rádió (final_expert), adatmegőrzés (final_storage). Pontok: 8. kör UX ~93,4→javítva, ADAT 93,6→javítva, SZKRIPT 95,0. ZIP 2,43 MB, 67 fájl, a régi 49 mind benne, egyik sem kisebb.
