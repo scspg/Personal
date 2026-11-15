@@ -1,4 +1,4 @@
-# ALGOTRADING – kompakt (1631 tételből a 0–1. szint)
+# ALGOTRADING – kompakt (1632 tételből a 0–1. szint)
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 
@@ -259,7 +259,7 @@
 - [EU nemzeti nettó short pozíció nyilvántartások (BaFin/Bundesanzeiger, FCA, ESMA)](https://www.esma.europa.eu/esmas-activities/markets-and-infrastructure/short-selling) – ingyenes, ingyenes; SSR szerint a ≥0,5%-os nettó short pozíciók nyilvánosak, alap-nevekkel. Bundesanzeiger (DE) és FCA (UK) napi CSV-t ad. Hedge fund-crowding és squeeze-jel.
 - [AQR Data Sets (QMJ, BAB, Value Devil, Time-Series Momentum, Century of Factor Premia)](https://www.aqr.com/Insights/Datasets) – ingyenes, ingyenes (regisztráció egyes letöltésekhez); Faktorhozamok több eszközosztályra: Betting Against Beta, Quality Minus Junk, HML Devil, időbeli momentum (futures/FX), 'Century of Factor Premia'. Havonta frissülő XLSX-ek.
 - [OECD Data Explorer + SDMX API (.Stat Suite)](https://data-explorer.oecd.org/) – ingyenes, ingyenes; Kompozit vezető indikátorok (CLI), üzleti/fogyasztói bizalom, kamatok, munkaerőpiac, Main Economic Indicators; a régi OECD.Stat API helyett SDMX REST (sdmx.oecd.org).
-- [Európai Bizottság üzleti és fogyasztói felmérések (ESI)](https://economy-finance.ec.europa.eu/economic-forecasts-and-surveys/business-and-consumer-surveys_en) – ingyenes, ingyenes; Havi Economic Sentiment Indicator és ágazati bizalmi indexek tagállamonként (HU is), a hónap végén – a hivatalos adatok előtt. Gépi letöltés: az ESI/bizalmi indexek az Eurostat ei_
+- [Európai Bizottság üzleti és fogyasztói felmérések (ESI)](https://economy-finance.ec.europa.eu/economic-forecast-and-surveys/business-and-consumer-surveys_en) – ingyenes, ingyenes; Havi Economic Sentiment Indicator és ágazati bizalmi indexek tagállamonként (HU is), a hónap végén – a hivatalos adatok előtt. Gépi letöltés: az ESI/bizalmi indexek az Eurostat ei_
 - [Fed H.8 (kereskedelmi bankok mérlege)](https://www.federalreserve.gov/releases/h8/) – ingyenes, ingyenes; Heti banki hitelek és betétek: hitelkínálat, betétkiáramlás (2023-as bankválság mintája).
 - [Copernicus Data Space Ecosystem (Sentinel-1/2/3/5P)](https://dataspace.copernicus.eu/) – regisztrációs, ingyenes (kvótákkal); Ingyenes Sentinel-1 radar (felhőn át: olajtartály-árnyék, hajók), Sentinel-2 optikai (10 m, 5 napos visszatérés), Sentinel-5P (NO2: ipari aktivitás). STAC/OData/openEO API. A régi 
 - [Benzinga Pro és Benzinga News API](https://www.benzinga.com/pro/pricing) – fizetős, Pro Essential ~197 USD/hó (becsült); News API Massive-en 99 USD/hó (mért) (~90 €/hó); Gyors US részvényhírek, analyst ratings, audio squawk (Pro). Pro: Basic ~37 USD/hó, Essential ~197 USD/hó (~166 éves) – becsült, ellentmondó források. A News API a Massive (Polygon
