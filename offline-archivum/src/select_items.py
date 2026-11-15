@@ -504,10 +504,10 @@ def write_sh(plan, path, dest):
     for v in plan:
         d = v["download"]; m = d["method"]; sub = f'$DEST/{safe(v["cat"])}/{safe(v["id"])}'; vid = q(v["id"])
         L.append(f"# --- {v['id']}  ({human(size_of(v))})  {c(v.get('name'))}")
-        if v.get("notes") and v["download"]["method"] in ("agent", "manual", "wget-mirror"):
+        if v.get("notes") and (v["download"]["method"] in ("agent", "manual", "wget-mirror") or v["download"].get("todo_note")):
             L.append(f"# Megjegyzés: {c(v.get('notes'))[:600]}  (teljes rekord: plan.json → items[id={v['id']}])")
         if v.get("download", {}).get("todo_note"):
-            L.append(f'[ -f "{sub}/.done" ] || echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]))} | tee -a "$LOG" "$RUNLOG"')
+            L.append(f'[ -f "{sub}/.done" ] || echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]) + " (kész után: touch " + sub + "/.done)")} | tee -a "$LOG" "$RUNLOG"')
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
             fl = d.get("flavour") or ""
@@ -515,14 +515,17 @@ def write_sh(plan, path, dest):
             L.append(f'if [ -z "${{REFRESH:-}}" ] && [ -f "{sub}/.ok" ]; then ok {vid}; else')
             L.append(f'U=$(kiwix_latest {q(d["book"])} {q(fl)} {q(d.get("url") or "")})')
             L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --follow-metalink=mem -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
-            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ if [ -n "${{PRUNE:-}}" ]; then find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; elif ls "{sub}"/*.zim 2>/dev/null | grep -qv "${{U##*/}}"; then mkdir -p "{sub}/_old"; find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -exec mv -n {{}} "{sub}/_old/" ";"; echo "FIGYELEM: régi ZIM → {sub}/_old ($(du -sh "{sub}/_old" | cut -f1)); jóváhagyás után PRUNE=1 törli" | tee -a "$LOG"; fi; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
+            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ if [ -n "${{PRUNE:-}}" ]; then find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; elif ls "{sub}"/*.zim 2>/dev/null | grep -qv "${{U##*/}}"; then mkdir -p "{sub}/_old"; find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -exec mv -n {{}} "{sub}/_old/" ";"; echo "FIGYELEM: régi ZIM → {sub}/_old ($(du -sh "{sub}/_old" | cut -f1)); jóváhagyás után PRUNE=1 törli" | tee -a "$LOG" "$RUNLOG"; fi; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
             L.append('fi')
         elif m == "http":
             us = [u for u in (d.get("urls") or [d.get("url")]) if u]
+            share = 10 if d.get("todo_note") else 2          # a tervezett méret legalább 50%-a (todo_note-os készletnél 10%-a) legyen meg
+            minh = max(1, int((size_of(v) or 0) / 1000 / share))
+            guard = f'[ "$(du -sk "{sub}" | cut -f1)" -ge {minh} ]'
             if len(us) == 1:
-                L.append(f'fetch {q(us[0])} "{sub}" && ok {vid} || fail {vid}')
+                L.append(f'fetch {q(us[0])} "{sub}" && {guard} && ok {vid} || fail {vid}')
             elif us:      # több fájl: mind letöltődik, tételenként egy ítélet (részleges hiba = FAIL)
-                L.append(f'_r=0; for _u in {" ".join(q(u) for u in us)}; do fetch "$_u" "{sub}" || _r=1; done; [ $_r = 0 ] && ok {vid} || fail {vid}')
+                L.append(f'_r=0; for _u in {" ".join(q(u) for u in us)}; do fetch "$_u" "{sub}" || _r=1; done; [ $_r = 0 ] && {guard} && ok {vid} || fail {vid}')
         elif m == "jigdo":    # Debian BD/DVD-képek .jigdo leírókból (jigdo-file csomag), nem interaktívan
             base = d["url"].rstrip("/") + "/"
             L.append(f'if have jigdo-lite; then _r=0; _n=0; for _j in $(curl -fsSL {q(base)} | grep -o \'href="{d.get("match") or "debian-[0-9]"}[^"]*\\.jigdo"\' | sed \'s/^href="//;s/"$//\' | sort -u); do '
@@ -551,7 +554,8 @@ def write_sh(plan, path, dest):
                 rtag = d.get("tag") or v.get("latest_version") or ""
                 rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
                 cap_mb = max(50, int(((v.get("bytes") or v.get("bytes_est") or 0) * 1.2) / 1e6))   # a tétel tervbe számolt méretén belül
-                todo_txt = "TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB, platformok: linux-x64, win-x64, apk)"
+                todo_txt = ("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB; platformok: GH_PLATFORMS szerint, alap linux-x64, win-x64, apk; kész után: touch "
+                            + sub + "/release/.ok)")
                 todo = f'{{ [ -f "{sub}/release/.ok" ] || echo {q(todo_txt)} | tee -a "$LOG" "$RUNLOG"; }}'
                 bi = v.get("binaries_item")
                 if bi and bi in plan_ids:

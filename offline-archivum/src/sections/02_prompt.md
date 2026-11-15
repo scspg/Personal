@@ -42,7 +42,7 @@ MUNKAMENET:
    Minden fájl újraindítható legyen (-c / aria2c). Párhuzamosan max. 2-3 nagy letöltés fusson.
    A dl.sh "AGENT-FELADAT" blokkjait (API- vagy OAI-PMH-alapú listagyűjtés) neked kell megírnod és lefuttatnod.
    Ugyanígy a "# Telepítők/binárisok (AI-feladat)" megjegyzéseket és az `echo "TODO …"` sorokat: ezeknél a kiadási
-   oldalról (release_url) töltsd le a célplatformokhoz illő telepítőket (GitHub-projekteknél a dl.sh `gh_release` függvénye ezt már megpróbálja; csak a sikertelenekkel kell foglalkoznod) a megadott "release/" mappába (a forráskódot a dl.sh már leklónozza).
+   oldalról (release_url) töltsd le a célplatformokhoz illő telepítőket (GitHub-projekteknél a dl.sh `gh_release` függvénye ezt már megpróbálja; csak a sikertelenekkel kell foglalkoznod; kész után: `touch <mappa>/release/.ok`, AI-feladatnál `touch <mappa>/.done`) a megadott "release/" mappába (a forráskódot a dl.sh már leklónozza).
    Ha egy forrás 403-at vagy Cloudflare-t ad, a 9. fejezet lépcsőzetes stratégiája szerint haladj:
    curl_cffi → Byparr/FlareSolverr → Camoufox/Patchright → alternatív tükör vagy Wayback.
    CAPTCHA-feloldót csak az ember engedélyével használj.
@@ -57,7 +57,7 @@ MUNKAMENET:
    (id, név, mire jó, hogyan nyitható meg, méret, sha256), plusz egy manifest.json-t.
    Másold a meghajtóra az ARCHIVUM.md-t, az ARCHIVUM-LLM.html-t, a select_items.py-t és a llm_calc.py-t is.
 8. Olvasóprogramok: töltsd le a tool-* elemeket (Kiwix desktop/Android, kiwix-tools, VLC, PDF-olvasó,
-   llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), Windows/macOS/Linux/Android változatban.
+   llama.cpp binárisok, Ollama telepítő, Organic Maps APK stb.) a <cél>/tools/ alá (a dl.sh is ide tölti), a Telepítő-platformok szerint (alap: Windows, Linux, Android; macOS csak ha kérték).
 9. Második példány (ha van második meghajtó – lásd 4c fejezet), ebben a sorrendben:
    - a forráson a 0–1. szintű mappákra (listájuk: `jq -r '.items[]|select(.tier<=1)|"\(.cat)/\(.id)"' plan.json`): `(cd <mappa> && par2 create -R -r10 mag.par2 *)` (10% javító paritás);
    - a forráson: `(cd <cél> && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256)`;
