@@ -3,7 +3,7 @@
 import os, zipfile, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 TS = (2026, 11, 15, 0, 0, 0)
-FILES = ["OLVASS-EL.md", "ALGOTRADING.md", "ALGOTRADING.html", "ALGOTRADING-kompakt.md", "ALGOTRADING-chat.md", "FEJLESZTOI-SPEC.md", "katalogus.jsonl", "strategiak.jsonl", "otletek.jsonl", "letolto.sh"]
+FILES = ["ALGOTRADING-chat-mini.md", "ALGOTRADING.md", "ALGOTRADING.html", "ALGOTRADING-kompakt.md", "ALGOTRADING-chat.md", "FEJLESZTOI-SPEC.md", "katalogus.jsonl", "strategiak.jsonl", "otletek.jsonl", "letolto.sh"]
 out = os.path.join(ROOT, "ALGOTRADING.zip")
 with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     def add(src, arc):
@@ -13,11 +13,13 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for f in FILES:
         p = os.path.join(ROOT, f)
         if os.path.exists(p): add(p, "ALGOTRADING/" + f)
-    add(os.path.join(ROOT, "OLVASS-EL.md"), "ALGOTRADING/forras/OLVASS-EL.md")   # a forrásból újraépített ZIP-hez is
+    rd = next(p for p in (os.path.join(ROOT, "OLVASS-EL.md"), os.path.join(HERE, "OLVASS-EL.md")) if os.path.exists(p))   # repó vagy kicsomagolt forras/
+    add(rd, "ALGOTRADING/OLVASS-EL.md")
+    add(rd, "ALGOTRADING/forras/OLVASS-EL.md")
     for d, sub in ((HERE, "forras"), (os.path.join(ROOT, ".allapot"), "forras/allapot")):
         for r, _, fs in sorted(os.walk(d)):
             if "__pycache__" in r: continue
             for f in sorted(fs):
-                if f.endswith((".py", ".jsonl", ".md", ".json", ".yaml")) and not (d == HERE and r == HERE and f == "OLVASS-EL.md"):
+                if f.endswith((".py", ".jsonl", ".md", ".json", ".yaml")) and f != "OLVASS-EL.md":
                     p = os.path.join(r, f); add(p, "ALGOTRADING/" + sub + "/" + os.path.relpath(p, d))
 print(f"OK: {out} ({os.path.getsize(out)/1e6:.2f} MB)")

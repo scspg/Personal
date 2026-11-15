@@ -319,16 +319,21 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
 #### 2. Tételszintű séma (katalogus.jsonl)
 
 ```json
-{"id": "kebab-id", "name": "…", "cat": "…", "sub": "…", "url": "fő link", "docs_url": "…", "info_url": "…",
- "access": "free|registration|freemium|paid|institutional", "price": "eredeti szöveg", "price_eur_month": 0,
- "provider": "…", "assets": ["fx","cfd","equity","options","futures","crypto","prediction","sports","macro","alt"],
- "regions": ["global","us","eu","hu"], "history_from": "YYYY", "granularity": "tick|l2|l3|1s|1m|1h|1d|event|text",
- "latency": "realtime|delayed|eod|batch", "api": "rest|ws|fix|grpc|sdk|bulk|none", "license": "…",
- "bytes_est": null, "download": {"method": "http|git|hf|api|manual|agent", "url": "…"},
- "github": {"repo": "owner/name", "stars": 0, "last_commit": "YYYY-MM-DD", "license": "…"},
+{"id": "kebab-id", "name": "…", "cat": "…", "sub": "…", "url": "https://… (emberi oldal)", "docs_url": null, "info_url": null, "api_endpoint": null,
+ "access": "free|registration|freemium|paid|institutional", "price": null, "price_eur_month": null, "price_eur_once": null,
+ "price_verified": "mért|becsült|nem ellenőrzött|egyedi ajánlat|null",
+ "provider": null, "assets": ["fx","cfd","equity","options","futures","rates","commodities","energy","crypto","prediction","sports","macro","alt"],
+ "regions": ["global","us","eu","uk","hu","asia","other"], "history_from": "ÉÉÉÉ|null",
+ "granularity": "tick|l2|l3|1s|1m|1h|1d|event|text|null", "latency": "realtime|delayed|eod|batch|null",
+ "api": "rest|ws|fix|grpc|sdk|soap|bulk|none", "license": null, "redistribution": null, "exchange_fees": null,
+ "pit": null, "survivorship_free": null, "vintages": null, "revision_policy": null, "timestamp_semantics": null,
+ "bytes_est": null, "download": {"method": "http|git|hf|api|manual|agent", "url": "…", "files": ["https://…/fajl.zip"]},
+ "github": {"repo": "owner/name", "stars": 0, "last_commit": "ÉÉÉÉ-HH-NN", "license": "…"},
  "scores": {"R": 0, "E": 0, "Q": 0, "C": 0, "L": 0, "F": 0, "Z": 0},
- "tier": 0, "notes_hu": "…", "pitfalls_hu": "…", "verified": "mért|becsült|nem ellenőrzött", "checked": "2026-11-15"}
+ "tier": 0, "group": null, "related_ids": [], "notes_hu": "…", "pitfalls_hu": null, "verified": "mért|becsült|nem ellenőrzött", "checked": "2026-11-15"}
 ```
+
+**Adattétel gépi definíciója** (ezekre kötelezők a PIT-mezők): `src ∈ {a1_market_exec, a2_crypto, a3_predict_sports, a4_macro_news_alt}` és `cat` nem tartozik ezek közé: broker, platform, pro-status, execution, execution-quality, community, broker-regulation, kripto-strategia, kripto-irodalom, kripto-jog-ado, kripto-oss-eszkoz, kripto-infrastruktura. A `pitfalls_hu` opcionális (null, ha nincs ismert buktató). A `download.files[]` valódi fájl-URL-ek listája; ha van, elsőbbséget kap a repóval szemben.
 
 **Pontozás (0–10):**
 - R: relevancia a platformhoz;

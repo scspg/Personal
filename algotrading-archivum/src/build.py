@@ -193,10 +193,12 @@ def collect():
             nk = re.sub(r"[^a-z0-9]", "", re.sub(r"\(.*?\)|–.*$| - .*$", "", str(o.get("name", "")).lower()))
             name_dup = len(nk) >= 4 and nk in seen_name and not analysis and seen_name[nk]["_src"] != name
             url_dup = (nu and nu in seen_url and not analysis) or name_dup
-            if analysis and not o.get("group"):           # elemzési sor: összekötés a forrástétellel, nem összevonás
+            if analysis:                                  # elemzési sor: összekötés a forrástétellel, nem összevonás
                 hit = seen_url.get(nu) or (seen_name.get(nk) if len(nk) >= 4 else None)
                 if hit:
-                    o["group"] = hit.get("group") or hit["id"]   # esettanulmány/módszer nem forrástétel: ugyanarra a cikkre hivatkozhat
+                    o.setdefault("group", hit.get("group") or hit["id"])
+                    if hit["id"] not in (o.get("related_ids") or []):
+                        o["related_ids"] = (o.get("related_ids") or []) + [hit["id"]]   # esettanulmány/módszer nem forrástétel: ugyanarra a cikkre hivatkozhat
             if iid in seen_id or url_dup:
                 stats[name]["dup"] += 1
                 prev = seen_id.get(iid) or seen_url.get(nu) or seen_name.get(nk)
@@ -530,12 +532,19 @@ def main():
         L = sorted(by_src.get(name, []), key=lambda o: (o["tier"], -o["prof"]["kiegyensulyozott"]))
         if L:
             ch += [f"## {title}"] + [f"{o['id']} | {o['tier']} | {cut(o['name'], 70)} | {CAT_HU.get(o.get('cat'), o.get('cat'))} | {o['access']} | {cut(price(o), 40)} | "
-                                      f"{o['prof']['gyors_mt5']:.0f}/{o['prof']['kockazat']:.0f}/{o['prof']['kutatas']:.0f}/{o['prof']['predikcio']:.0f} | {o.get('url')}" + (f" | {cut(o.get('notes_hu'), 80)}" if o['tier'] <= 1 else "") for o in L] + [""]
+                                      f"{o['prof']['gyors_mt5']:.0f}/{o['prof']['kockazat']:.0f}/{o['prof']['kutatas']:.0f}/{o['prof']['predikcio']:.0f} | {o.get('url')} | " + (cut(o.get('notes_hu'), 80) if o['tier'] <= 1 else "") for o in L] + [""]
     if strategies:
         ch += ["## Stratégiák"] + [f"{esc(s.get('name'))} | MT5 {s.get('mt5_fit', '?')}/10 | {esc(s.get('formula_hu'))[:160]}" for s in strategies] + [""]
     if ideas:
         ch += ["## Ötletek"] + [f"{esc(s.get('title_hu'))} | új {s.get('novelty', '?')}/10 | {esc(s.get('test_hu'))[:160]}" for s in ideas] + [""]
     open(os.path.join(ROOT, "ALGOTRADING-chat.md"), "w", encoding="utf-8").write("\n".join(ch) + "\n")
+    mini = [f"# ALGOTRADING – chat-mini (csak 0–1. szintű tételek, kis kontextusú modellekhez). Kutatás: {DATE}", "",
+            "Formátum: id | név | hozzáférés | url | lényeg. A teljes lista: ALGOTRADING-chat.md; gépi adat: katalogus.jsonl.", ""]
+    for name, title in SOURCES:
+        L = sorted([o for o in by_src.get(name, []) if o["tier"] <= 1], key=lambda o: -o["prof"]["kiegyensulyozott"])
+        if L:
+            mini += [f"## {title}"] + [f"{o['id']} | {cut(o['name'], 50)} | {o['access']} | {o.get('url')} | {cut(o.get('notes_hu'), 60)}" for o in L] + [""]
+    open(os.path.join(ROOT, "ALGOTRADING-chat-mini.md"), "w", encoding="utf-8").write("\n".join(mini) + "\n")
     # gépi katalógus
     with open(os.path.join(ROOT, "katalogus.jsonl"), "w", encoding="utf-8") as f:
         for o in items:
@@ -564,6 +573,9 @@ def write_dl(items):
          'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"',
          'UA="${UA:-algotrading-archivum-letolto/1.0 (kutatási célú letöltés)}"   # a SEC és több hivatal UA nélkül 403-at ad; saját elérhetőséget az UA-ba a felhasználó írjon',
          'CURL="curl -fsSL --retry 3 --connect-timeout 20 --max-time 3600 -A"',
+         'MAX_GB=${MAX_GB:-500}; REFRESH=${REFRESH:-}   # MAX_GB: a becsült méret felső határa tételenként; REFRESH=1: meglévő fájlok újratöltése',
+         'big_ok(){ # becsült bájt',
+         '  [ "$1" -le $((MAX_GB*1000000000)) ] && return 0; echo "KIHAGYVA (méret > ${MAX_GB} GB, növeld MAX_GB-t): $2" | tee -a "$LOG"; return 1; }',
          'sec_ok(){ case "$UA" in *@*) return 0;; *) echo "KIHAGYVA (SEC): a SEC elérhetőséget kér az UA-ban, pl. UA=\"Nev nev@domain.hu\"" | tee -a "$LOG"; return 1;; esac; }', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
     n, seen_repo, scripted = 0, set(), set()
     q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
@@ -581,11 +593,22 @@ def write_dl(items):
                 fn = os.path.basename(u.split("?")[0]) or "file"
                 sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
                 pre = 'sec_ok && ' if "sec.gov" in u else ""
-                L.append(f'{pre}mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
+                L.append(f'{pre}mkdir -p {sub} && if [ -s {sub}/{q(fn)} ] && [ -z "$REFRESH" ]; then ok {o["id"]}; else $CURL "$UA" -o {sub}/{q(fn)}.part {q(u)} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
                 n += 1
             scripted.add(o["id"])
             continue
         sub = f'"$DEST/{o["_src"]}/{o["id"]}"'
+        if d.get("method") == "hf" and d.get("url"):
+            m = re.match(r"^(?:https?://huggingface\.co/)?(datasets/|spaces/)?([\w.-]+/[\w.-]+)", str(d["url"]))
+            if not m:
+                continue
+            rt = {"datasets/": " --repo-type dataset", "spaces/": " --repo-type space"}.get(m.group(1) or "", "")
+            big = (o.get("bytes_est") or 0) > 5e9
+            warn = f'echo "FIGYELEM: {o["id"]} becsült mérete {human(o.get("bytes_est"))}" ; ' if big else ""
+            L.append(f'{warn}big_ok {int(o.get("bytes_est") or 0)} {q(o["id"])} && if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
+            n += 1
+            scripted.add(o["id"])
+            continue
         if d.get("method") == "git" or (gh and re.match(r"^[\w.-]+/[\w.-]+$", gh)):
             url = d.get("url") if d.get("method") == "git" and d.get("url") else f"https://github.com/{gh}.git"
             if not re.match(r"^https://(github\.com|gitlab\.com|codeberg\.org|bitbucket\.org)/[\w.-]+/[\w.-]+(\.git)?/?$", url):
@@ -595,27 +618,18 @@ def write_dl(items):
                 continue                                   # ugyanaz a repó több tételben → egyszer klónozzuk
             seen_repo.add(key)
             L.append(f'if [ -d {sub}/.git ]; then git -C {sub} pull -q --ff-only && ok {o["id"]} || fail {o["id"]}; '
-                     f'else git clone -q --depth 1 --filter=blob:limit=50m {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
-            n += 1
-            scripted.add(o["id"])
-        elif d.get("method") == "hf" and d.get("url"):
-            m = re.match(r"^(?:https?://huggingface\.co/)?(datasets/|spaces/)?([\w.-]+/[\w.-]+)", str(d["url"]))
-            if not m:
-                continue
-            rt = {"datasets/": " --repo-type dataset", "spaces/": " --repo-type space"}.get(m.group(1) or "", "")
-            big = (o.get("bytes_est") or 0) > 5e9
-            warn = f'echo "FIGYELEM: {o["id"]} becsült mérete {human(o.get("bytes_est"))}" ; ' if big else ""
-            L.append(f'{warn}if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
+                     f'else git clone -q --depth 1 --single-branch {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
             scripted.add(o["id"])
     # kézi / regisztrációs / API-kulcsos tételek: TODO-lista, hogy semmi ne vesszen el csendben
     L += ["", "# --- Nem automatizálható ingyenes és regisztrációs tételek (kézi letöltés, API-kulcs vagy weboldal) ---",
-          'todo(){ echo "TODO $1 – $2" | tee -a "$DEST/_TODO.txt"; }']
+          'printf "id\tok\turl\n" > "$DEST/_manual.tsv"',
+          'todo(){ printf "%s\t%s\t%s\n" "$1" "$2" "$3" >> "$DEST/_manual.tsv"; }']
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] in ("free", "registration") and o["id"] not in scripted and o.get("cat") not in NON_SOURCE:
             why = "regisztráció/API-kulcs kell" if o["access"] == "registration" else "weboldal vagy API, nincs közvetlen fájl"
-            L.append(f'todo {q(o["id"])} {q(why + " – " + str(o.get("url") or ""))}')
-    L += ["", 'echo "Kész. Napló: $LOG; kézi tételek: $DEST/_TODO.txt"']
+            L.append(f'todo {q(o["id"])} {q(why)} {q(o.get("url") or "")}')
+    L += ["", 'echo "Kész. Napló: $LOG; kézi és kihagyott tételek: $DEST/_manual.tsv ($(($(wc -l < "$DEST/_manual.tsv")-1)) sor)"']
     p = os.path.join(ROOT, "letolto.sh")
     open(p, "w", encoding="utf-8").write("\n".join(L) + "\n")
     os.chmod(p, 0o755)

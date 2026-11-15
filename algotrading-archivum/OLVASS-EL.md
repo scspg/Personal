@@ -10,6 +10,7 @@ Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform épít�
 | `ALGOTRADING.md` | A teljes anyag: mesterprompt, pontozás, költségvetés szerinti válogatás, fejezetenként a tételek, stratégia-könyvtár, kockázati matek, hipotézisgyár, szerverhely- és adótáblák, fejlesztői specifikáció. |
 | `FEJLESZTOI-SPEC.md` | A fejlesztőcsapatnak: architektúra, MT5-híd, döntési réteg ördögügyvéddel, kockázati motor, a „mozgatókar” jogosultsági szintjei, ütemterv ellenőrizhető átvételi feltételekkel. |
 | `ALGOTRADING-chat.md` | Tömör változat LLM-kontextusba (ChatGPT, Claude, helyi modell): egy sor = egy tétel. Kb. 400 KB, 100–120 ezer token: a 200 ezres kontextusú modellekbe egyben belefér, kisebbekbe fejezetenként kell betölteni. |
+| `ALGOTRADING-chat-mini.md` | Csak a 0–1. szintű tételek, kb. 140 KB (~40 ezer token): 64–128 ezres kontextusú modellekhez. |
 | `ALGOTRADING-kompakt.md` | Csak a 0–1. szintű (nélkülözhetetlen és erősen ajánlott) tételek. |
 | `katalogus.jsonl` | Gépi katalógus, soronként egy JSON-objektum, pontszámokkal (R, E, Q, C, L, F, Z) és profilpontokkal. Séma: mesterprompt 2. és 2.1. fejezet. |
 | `strategiak.jsonl`, `otletek.jsonl` | A stratégia-könyvtár és a hipotézisgyár gépi formában (előregisztrációs mezőkkel). |
@@ -43,7 +44,7 @@ Kvant-, algo- és AI-kereskedési archívum egy pénzügyi meta-platform épít�
 3. Ingyenes források letöltése (Linux/macOS, Windowson WSL-ben):
 
 ```bash
-DEST=/abszolut/ut/algo bash letolto.sh
+DEST=/abszolut/ut/algo bash letolto.sh            # MAX_GB=500 (tételenkénti felső határ), REFRESH=1 (újratöltés), UA="Nev nev@domain.hu" (a SEC-hez kell)
 ```
 
 4. Újraépítés a forrásból (Python 3.9+, külső csomag nem kell):

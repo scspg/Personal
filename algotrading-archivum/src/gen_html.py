@@ -168,7 +168,7 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 <p class="mut">Modell: csak long rács EURUSD-szerű párra (ár 1,08, 100 000-es kontraktus), óránkénti geometriai bolyongás, drift nélkül, swap nélkül. Minden szint külön zár +célprofitnál. Determinisztikus mag: ugyanaz a bemenet ugyanazt adja. Becslés, nem előrejelzés: a valódi piac vastagabb farkú, és rezsimeket vált.</p></div>
 <div class="card"><h2>Kelly-méretezés</h2><div class="row">
 <label>Nyerési valószínűség p<input id="kp" type="number" value="0.55" step="0.01"></label><label>Nettó szorzó b (nyereség/kockázat)<input id="kb" type="number" value="1" step="0.05"></label></div>
-<p class="out" id="ko"></p><p class="mut">f* = p − (1 − p) / b. Várható log-növekedés tétenként: g(f) = p·ln(1 + b·f) + (1 − p)·ln(1 − f). A 2×Kelly várható növekedése ≈ 0, efölött negatív: a túlméretezés hosszú távon biztos veszteség.</p></div>
+<p class="out" id="ko"></p><p class="mut">f* = p − (1 − p) / b. Várható log-növekedés tétenként: g(f) = p·ln(1 + b·f) + (1 − p)·ln(1 − f). A 2× Kelly várható növekedése kis előnynél ≈ 0, nagyobb előnynél már negatív (pl. p = 0,6, b = 2 mellett −7%); efölött a túlméretezés hosszú távon biztos veszteség.</p></div>
 </div></section>
 
 <section id="str" hidden><div class="card"><input id="sq" placeholder="Keresés a stratégiák között"></div><div class="card tw"><table id="ts"><thead><tr><th>Stratégia</th><th>FX/CFD</th><th>Lényeg / képlet</th><th>Mikor működik</th><th>Mikor hal meg</th></tr></thead><tbody></tbody></table></div></section>
