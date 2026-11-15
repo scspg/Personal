@@ -332,7 +332,7 @@ def main():
         for k, g in sorted(groups.items(), key=lambda kv: -max(v["_score"] for v in kv[1])):
             if k in chosen and not is_llm(g) and chosen[k]["id"] not in incl and tier_of(k, g) <= maxtier:
                 for v in sorted(g, key=size_of, reverse=True):
-                    if v["download"]["method"] == "agent":          # AI-feladat sosem lehet bővítés (nem töltődik le magától)
+                    if v["download"]["method"] == "agent" and maxtier < 9:   # korai bővítés nem lehet AI-feladat (a végső, maradék helyes bővítés igen)
                         continue
                     if size_of(v) - size_of(chosen[k]) > cap:
                         continue

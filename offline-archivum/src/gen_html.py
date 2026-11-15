@@ -669,16 +669,32 @@ def core_links_html():
     except Exception:
         pass
     LANG = {"en": "EN", "fr": "FR", "es": "ES", "ar": "AR", "hu": "HU", "de": "DE", "pt": "PT", "ru": "RU"}
-    def label(u, k, n):
-        m = _re.search(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", u)
-        if m:
-            return LANG[m.group(1)] + (" (elég ez)" if m.group(1) == "en" else "")
-        m = _re.search(r"_(fm|bm|\d{2})\.pdf$", u)
+    def langset(urls):
+        stems = {_re.sub(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", "", u) for u in urls if _re.search(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", u)}
+        return len(urls) >= 2 and len(stems) == 1 and all(_re.search(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", u) for u in urls)
+    def label(u, k, n, langs):
+        name = _re.sub(r"[?#].*$", "", u.rstrip("/").split("/")[-1])
+        low = name.lower()
+        if langs:
+            g = _re.search(r"[-_](en|fr|es|ar|hu|de|pt|ru)\.pdf$", u).group(1)
+            return LANG[g] + (" (elég ez)" if g == "en" else "")
+        m = _re.search(r"_(fm|bm|resc|ob|\d{2})\.pdf$", low)
         if m:
             g = m.group(1)
-            return {"fm": "előszó", "bm": "függelék"}[g] if g in ("fm", "bm") else f"{int(g)}. fejezet"
-        name = _re.sub(r"[?#].*$", "", u.rstrip("/").split("/")[-1])
-        return html.escape(cut(name, 28)) if n > 1 else "letöltés"
+            return {"fm": "előszó", "bm": "függelék", "resc": "források", "ob": "utószó"}[g] if not g.isdigit() else f"{int(g)}. fejezet"
+        for pat, lab in ((r"windows.*x64|win64|x64.*\.exe$|\.msi$", "Windows"), (r"\.appimage$", "Linux (AppImage)"), (r"kiwix-tools.*aarch64|arm64", "ARM szerver"),
+                         (r"kiwix-tools.*x86_64|linux-x86_64", "Linux szerver"), (r"\.apk$", "Android"), (r"\.dmg$|macos", "macOS"),
+                         (r"vol[-_]?1|volume[-_]?1", "1. kötet"), (r"vol[-_]?2|volume[-_]?2", "2. kötet"), (r"^intro", "bevezető"),
+                         (r"atp_4-02\.11", "ATP 4-02.11"), (r"4-02x1", "TC 4-02.1"), (r"guideline-800", "Kolera-járvány kezelése"),
+                         (r"public_health_engineering", "Közegészségügyi mérnöki kézikönyv"), (r"guide0?(\d)", None)):
+            mm = _re.search(pat, low)
+            if mm:
+                return lab if lab else f"{int(mm.group(1))}. útmutató"
+        if n == 1:
+            return "letöltés"
+        t = _re.sub(r"\.(pdf|zip|zim|epub|tar\.gz|tar\.xz|gz|iso)$", "", name, flags=_re.I)
+        t = _re.sub(r"[_-]+", " ", t).strip()
+        return html.escape(cut(t, 34))
     rows, total, n = [], 0, 0
     first = []
     for i in sorted(items, key=lambda x: (x["cat"] != "hungarian", x["cat"], x["name"])):
@@ -702,7 +718,8 @@ def core_links_html():
         else:
             total += b
         n += 1
-        links = " · ".join(f'<a href="{html.escape(u)}" target="_blank" rel="noopener">{label(u, k, len(urls))}</a>' for k, u in enumerate(urls[:30]))
+        ls = langset(urls)
+        links = " · ".join(f'<a href="{html.escape(u)}" target="_blank" rel="noopener">{label(u, k, len(urls), ls)}</a>' for k, u in enumerate(urls[:30]))
         row = f"<li><b>{html.escape(cut(i['name'], 80))}</b> <span class='hint'>({html.escape(CAT_HU.get(i['cat'], i['cat']))}, {sz})</span>{alt} – {links}{how}</li>"
         rows.append(row)
     in_plan = len([i for i in items if i["id"] in plan1])
