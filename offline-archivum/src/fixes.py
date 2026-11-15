@@ -334,6 +334,26 @@ PATCH6 = {
 for _k, _v in PATCH6.items():
     PATCH.setdefault(_k, {}).update(_v)
 
+# --- AI-ágens végső átnézés (2026-11-15) ---
+AGENT_NOTE = "Gyűjteményoldal: a megjegyzésben (notes) leírt módon gyűjtsd ki a fájlokat, majd töltsd le őket; maradj a tétel tervezett méretén belül."
+PATCH7 = {
+    **{i: {"download": {"method": "agent", "note": AGENT_NOTE}} for i in
+       ["where-there-is-no-psychiatrist-2018", "fao-better-farming-series", "attra-ncat-publications"]},
+    "pfaf-plants-for-a-future": {"download": {"method": "agent", "note": "A PFAF adatbázis tükrözése előtt KÉRDEZD MEG AZ EMBERT (a megjegyzés szerint engedélyt kell kérni); robots.txt-et tartsd tiszteletben."}},
+    "wikem-emergency-medicine-wiki": {"download": {"method": "wget-mirror", "url": "https://www.wikem.org/wiki/Main_Page",
+                                                   "wget_args": "-l 4 --reject-regex '(Special:|action=|oldid=|diff=|printable=)'"}},
+    "esa-worldcover": {"download": {"method": "agent", "note": "Csak Magyarország csempéi (a teljes globális térkép sokkal nagyobb): aws s3 sync s3://esa-worldcover/v200/2021/map/ <cél> --no-sign-request --exclude '*' --include '*N4[5-8]E01[5-9]*' --include '*N4[5-8]E02[0-2]*'"}},
+    "cd3wd-2012-dvd-isos": {"access": "gray", "variant_role": "luxury"},
+    "kx-cd3wd": {"variant_role": "pref"},
+}
+for _k, _v in PATCH7.items():
+    _d = PATCH.setdefault(_k, {})
+    for _kk, _vv in _v.items():
+        if _kk == "download" and isinstance(_d.get("download"), dict) and "method" not in _vv:
+            _d["download"] = {**_d["download"], **_vv}
+        else:
+            _d[_kk] = _vv
+
 
 # hiányzó leírás / méret (validátor: 2026-11-14)
 EXTRA_DESC = {
@@ -463,8 +483,8 @@ def apply(items):
             it["download"] = {"method": "agent", "note": f"Letöltés {how}. Forrás/parancs: {src}", "seed_urls": [u for u in re.findall(r"(?:https?|s3)://\S+", str(src))]}
         if it["id"] in MULTI_FILE and it["id"] not in MULTI_FILE_DONE and it.get("download", {}).get("method") == "http":
             urls = it["download"].get("urls") or []
-            it["download"] = {"method": "agent", "note": "Több fájlból álló készlet: a kiinduló URL mellett a megjegyzésben (notes) és a forrásoldalon felsorolt további fájlok is kellenek.",
-                              "seed_urls": urls + ([it["info_url"]] if it.get("info_url") else [])}
+            # az ismert fájlok automatikusan jönnek; a további fájlok AI-feladatként (todo_note) – így nem vész el az életmentő alap
+            it["download"] = {**it["download"], "todo_note": "a készlet további fájljai a megjegyzésben (notes) és a forrásoldalon: " + (it.get("info_url") or "")}
         if it.get("cat") == "gpu_unlock":
             sc = it.setdefault("scores", {})
             sc["S"] = 0

@@ -335,13 +335,13 @@ def main():
                     break
     # 4) átfedések kiszűrése (pl. Wikipedia-orvosi részhalmaz, ha a teljes WP bent van), majd újratöltés
     for _ in range(10):
-        ids = {v["id"] for v in chosen.values()}
+        ids = {v["id"] for v in chosen.values() if v["download"]["method"] != "agent"}   # AI-feladat nem helyettesít automatikus letöltést
         drop = [k for k, v in chosen.items() if set(v.get("subsumed_by") or []) & ids and v["id"] not in incl]
         if not drop:
             break
         for k in drop:
             used -= size_of(chosen[k]); del chosen[k]
-        ids = {v["id"] for v in chosen.values()}
+        ids = {v["id"] for v in chosen.values() if v["download"]["method"] != "agent"}
         for t in tiers:
             fill(lambda k, g, t=t: tier_of(k, g) == t and not is_llm(g) and not any(set(v.get("subsumed_by") or []) & ids for v in g))
 
@@ -385,9 +385,13 @@ def main():
             print(f"FIGYELEM: a kötelezőnek kért tétel nem került be: {x} – {why}")
     left = sorted([it for k, g in groups.items() if k not in chosen for it in g[:1]], key=lambda x: (x["tier"], -x["_score"]))
     if left:
-        print(f"\nKimaradt (nem fért be) – első 15 a fontosság szerint:")
+        print(f"\nKimaradt – első 15 a fontosság szerint (ok: hely / átfedés / LLM-darabszám):")
+        pids = {v["id"] for v in plan}
+        nllm = len({v.get("group") for v in plan if v["cat"].startswith("ai_models")})
         for v in left[:15]:
-            print(f"     T{v['tier']} {v['_score']:5.2f} {human(size_of(v)):>10}  {v['id']}")
+            ov = set(v.get("subsumed_by") or []) & pids
+            why = ("átfedés: " + ",".join(sorted(ov))) if ov else ("LLM-darabszám (--llm-models)" if v["cat"].startswith("ai_models") and nllm >= a.llm_models else "hely")
+            print(f"     T{v['tier']} {v['_score']:5.2f} {human(size_of(v)):>10}  {v['id']}  [{why}]")
     if manual:
         print(f"\nKÉZI TEENDŐK (fizetős / regisztrációs / fizikai / kézi letöltés) – emberi döntés kell:")
         for v in sorted(manual, key=lambda x: (x["tier"], -x["_score"])):
@@ -403,7 +407,7 @@ def main():
 GH_RELEASE_SH = [
     'gh_release(){ # owner/repo tag célkönyvtár [tételkeret MB] – GitHub-kiadás fő telepítői platformonként (alap: Linux x86-64, Windows x64, Android APK), a terv szerinti méretkerettel',
     '  local a list="" u r=0 cap="${4:-4000}" alt="" used',
-    '  if [ -d "$3" ] && [ -n "$(ls -A "$3" 2>/dev/null)" ] && [ -z "${REFRESH:-}" ]; then return 0; fi   # már letöltve (REFRESH=1: újra)',
+    '  if [ -f "$3/.ok" ] && [ -z "${REFRESH:-}" ]; then return 0; fi   # már teljesen letöltve (REFRESH=1: újra)',
     '  used=$(du -smc "$(dirname "$3")"/*.git 2>/dev/null | tail -1 | cut -f1); cap=$(( cap - ${used:-0} ))   # a keretből csak a git-tükör jön le',
     '  [ "$cap" -gt 0 ] || { echo "FIGYELEM: $1 – a tétel kerete elfogyott a forráskódra, telepítő nem fér" >&2; return 1; }',
     '  [ -n "$2" ] && [ "${2#v}" = "$2" ] && alt="tags/v$2"   # v-előtagos tagnél nincs dupla API-hívás',
@@ -426,7 +430,7 @@ GH_RELEASE_SH = [
     '    for a in sorted([a for a in c if plat(a["name"]) == p], key=lambda a: (-prio(a["name"]), -a.get("size", 0))):',
     '        if a.get("size", 0) <= tot: tot -= a.get("size", 0); print(a["browser_download_url"]); break\' 2>/dev/null) && [ -n "$list" ] && break',
     '  done; [ -n "$list" ] || return 1',
-    '  mkdir -p "$3"; for u in $list; do fetch "$u" "$3" || r=1; done; return $r; }',
+    '  mkdir -p "$3"; for u in $list; do fetch "$u" "$3" || r=1; done; [ $r = 0 ] && touch "$3/.ok"; return $r; }',
 ]
 
 
@@ -440,7 +444,9 @@ def write_sh(plan, path, dest):
                          "git": ["git", "python3"], "jigdo": ["jigdo-lite"], "hf": ["hf|huggingface-cli"], "ollama": ["ollama"], "archive.org": ["ia"],
                          "torrent": ["aria2c"]}.items() if m in methods for t in ts})
     L = ["#!/usr/bin/env bash", "# ARCHIVUM letöltő – generálva select_items.py által. Újraindítható (resume).",
-         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", '_d=$(printf "%s" "$DEST" | tr -s / | sed -e "s#/\\./#/#g" -e "s#/\\.\\$##" -e "s#\\(.\\)/\\$#\\1#")   # //etc, /etc/, /./ → /etc, /',
+         "set -uo pipefail", f"DEST=${{DEST:-{q(dest)}}}", 'case "$DEST" in /*) ;; *) echo "DEST abszolút útvonal legyen (pl. /media/archivum)" >&2; exit 2;; esac',
+         'DEST=$(realpath -m -- "$DEST" 2>/dev/null || python3 -c "import os,sys; print(os.path.realpath(sys.argv[1]))" "$DEST")   # ../ és szimlinkek feloldva',
+         '_d=$(printf "%s" "$DEST" | tr -s / | sed -e "s#/\\./#/#g" -e "s#/\\.\\$##" -e "s#\\(.\\)/\\$#\\1#")   # //etc, /etc/, /./ → /etc, /',
          'case "$_d" in ""|/|/bin|/bin/*|/sbin|/sbin/*|/boot|/boot/*|/etc|/etc/*|/usr|/usr/*|/proc|/proc/*|/sys|/sys/*|/dev|/dev/*|/root|/var|/var/*|/lib|/lib/*|/lib64|/lib64/*|/opt|/home|/tmp|/Users|/System|/System/*|/Library|/Applications|"${HOME:-/nonexistent}")',
          '  echo "Hibás célkönyvtár: DEST=\\"$DEST\\" – adj meg egy külön meghajtót/mappát, pl. DEST=/media/archivum" >&2; exit 2;; esac',
          '_p=$DEST; while [ ! -d "$_p" ]; do _p=$(dirname "$_p"); done; if [ "$(df -P "$_p" 2>/dev/null | awk \'NR==2{print $6}\')" = / ]; then echo "FIGYELEM: $DEST nem külön csatolt meghajtón van – ellenőrizd, hogy nem a rendszerlemezt töltöd-e tele (Ctrl+C 10 mp-en belül)." >&2; sleep 10; fi', 'mkdir -p "$DEST"; LOG="$DEST/_log.txt"; RUNLOG="$DEST/_log_$(date +%Y%m%d-%H%M%S).txt"',
@@ -486,6 +492,10 @@ def write_sh(plan, path, dest):
     for v in plan:
         d = v["download"]; m = d["method"]; sub = f'$DEST/{safe(v["cat"])}/{safe(v["id"])}'; vid = q(v["id"])
         L.append(f"# --- {v['id']}  ({human(size_of(v))})  {c(v.get('name'))}")
+        if v.get("notes") and v["download"]["method"] in ("agent", "manual", "wget-mirror"):
+            L.append(f"# Megjegyzés: {c(v.get('notes'))[:600]}  (teljes rekord: plan.json → items[id={v['id']}])")
+        if v.get("download", {}).get("todo_note"):
+            L.append(f'echo {q("TODO " + v["id"] + " – " + c(v["download"]["todo_note"]))} | tee -a "$LOG" "$RUNLOG"')
         L.append(f'mkdir -p "{sub}"')
         if m == "kiwix":
             fl = d.get("flavour") or ""
@@ -493,7 +503,7 @@ def write_sh(plan, path, dest):
             L.append(f'if [ -z "${{REFRESH:-}}" ] && [ -f "{sub}/.ok" ]; then ok {vid}; else')
             L.append(f'U=$(kiwix_latest {q(d["book"])} {q(fl)} {q(d.get("url") or "")})')
             L.append(f'if have aria2c; then aria2c -c --auto-file-renaming=false --follow-metalink=mem -d "{sub}" "$U.meta4" || fetch "$U" "{sub}"; else fetch "$U" "{sub}"; fi')
-            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
+            L.append(f'(cd "{sub}" && curl -fsSL "$U.sha256" | sha256c) && {{ if [ -n "${{PRUNE:-}}" ]; then find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -delete; else mkdir -p "{sub}/_old"; find "{sub}" -maxdepth 1 -name "*.zim" ! -name "${{U##*/}}" -exec mv -n {{}} "{sub}/_old/" ";"; fi; touch "{sub}/.ok"; ok {vid}; }} || fail {vid}')
             L.append('fi')
         elif m == "http":
             us = [u for u in (d.get("urls") or [d.get("url")]) if u]
@@ -507,7 +517,9 @@ def write_sh(plan, path, dest):
                      f'_n=$((_n+1)); (cd "{sub}" && jigdo-lite --noask {q(base)}"$_j") || _r=1; done; [ $_r = 0 ] && [ $_n -gt 0 ] && ok {vid} || fail {vid}; '
                      f'else echo {q("TODO " + v["id"] + " – jigdo-lite kell (apt install jigdo-file)")} | tee -a "$LOG" "$RUNLOG"; fi')
         elif m == "wget-mirror":
-            L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}) && ok {vid} || fail {vid}')
+            mink = max(1, int((size_of(v) or 0) / 1000 / 20))   # legalább a tervezett méret ~5%-a jöjjön le, különben részleges tükör
+            L.append(f'(cd "{sub}" && wget -m -np -k -K -E -e robots=off --wait=1 --random-wait -U "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0" {d.get("wget_args","")} {q(d["url"])}); '
+                     f'if [ "$(du -sk "{sub}" | cut -f1)" -ge {mink} ]; then ok {vid}; else echo {q("TODO " + v["id"] + " – részleges tükör (a tervezett méret 5%-a alatt): kézzel vagy célzott letöltéssel pótold")} | tee -a "$LOG" "$RUNLOG"; fi')
         elif m == "rsync":
             L.append(f'rsync -avP --partial {d.get("rsync_args","")} {q(d["url"])} "{sub}/" && ok {vid} || fail {vid}')
         elif m == "git":
@@ -526,9 +538,10 @@ def write_sh(plan, path, dest):
                 gh = re.match(r"https://github\.com/([\w.-]+/[\w.-]+?)(?:\.git)?/?$", (d.get("repos") or [""])[0] or "")
                 rtag = d.get("tag") or v.get("latest_version") or ""
                 rtag = rtag if re.fullmatch(r"[\w.+-]{1,60}", rtag) else ""
-                todo = f'echo {q("TODO " + v["id"] + " – telepítők: " + c(d["release_url"]))} | tee -a "$LOG" "$RUNLOG"'
-                bi = v.get("binaries_item")
                 cap_mb = max(50, int(((v.get("bytes") or v.get("bytes_est") or 0) * 1.2) / 1e6))   # a tétel tervbe számolt méretén belül
+                todo_txt = "TODO " + v["id"] + " – telepítők: " + c(d["release_url"]) + " (keret ≈" + str(cap_mb) + " MB, platformok: linux-x64, win-x64, apk)"
+                todo = f'echo {q(todo_txt)} | tee -a "$LOG" "$RUNLOG"'
+                bi = v.get("binaries_item")
                 if bi and bi in plan_ids:
                     L.append(f'# telepítők: a(z) {c(bi)} tétel már letölti – itt nem ismételjük')
                 elif gh:    # GitHub: a kiadás telepítői automatikusan (GH_ASSET_RE / GH_ASSET_MAX_MB állítható); ha nem sikerül: AI-feladat

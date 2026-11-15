@@ -11,6 +11,7 @@ ellenőrzöd és rendszerezed a tudásanyagot egy meghajtóra, a felhasználó k
 FELHASZNÁLÓI KERETEK (töltsd ki / kérdezz rá, ha hiányzik):
 - Cél meghajtó / könyvtár: <<pl. /media/usb/archivum>>
 - Tárhely-keret: <<pl. 512GB>>  (ha nincs megadva: a `df -B1` szerinti szabad hely legyen a --budget; a szkript maga hagy 8% tartalékot, ne vonj le még egyszer)
+- Telepítő-platformok: <<linux,win,android>> (alap; macOS-hez futtatás előtt: export GH_ASSET_EXCL='(freebsd|openbsd|aarch64|arm64|armv[0-9]|riscv|i[3-6]86)')
 - Hardver az LLM-hez: <<T1 szerver (≥1 TB) | T2 munkaállomás 256–1000 GB | T3 gamer PC 24–32 GB VRAM + RAM | T4 laptop | T5 telefon | nincs>>  (ha "nincs": hagyd el a --hw és --mem kapcsolót)
 - LLM-re használható memória (RAM+VRAM vagy unified): <<pl. 160GB>>
 - Platform: <<mac | server | android – vesszővel; üresen hagyva = csak GGUF/Ollama, ekkor a --platform kapcsoló elmarad>>
@@ -27,13 +28,13 @@ MUNKAMENET:
    awk '/^## 2\. /,/^## 4\. /' ARCHIVUM.md ; awk '/^### 6\.2 /,/^### 6\.3 /' ARCHIVUM.md ; awk '/^## 9\. /,/^## 10\. /' ARCHIVUM.md
    A letöltés közben a 7. fejezet (letöltési receptek) is kell: awk '/^## 7\. /,/^## 8\. /' ARCHIVUM.md
    A többi fejezetet csak célzottan (grep) nézd meg. A szkripteket kibonthatod, vagy ha a ZIP-ből dolgozol, az eszkozok/ mappában vannak.
-2. Bontsd ki a 11. fejezetből a select_items.py-t, és futtasd a kerettel:
+2. Bontsd ki a 11. fejezetből a select_items.py-t (`sed -n '/^```python select_items.py$/,/^```$/p' ARCHIVUM.md | sed '1d;$d' > select_items.py`; ZIP-ből: eszkozok/select_items.py), és futtasd a kerettel:
    python3 select_items.py ARCHIVUM.md --budget <keret> --profile <p> --langs <l> --access <a> --hw <T> --mem <M> \
        --platform <pl> --uncensored <u> --llm-models <n> --focus <f> --emit-sh dl.sh --dest <cél>
 3. Mutasd meg a tervet az embernek: elemek, összméret, kimaradt fontos elemek, KÉZI TEENDŐK listája.
    Az „Ismeretlen méret miatt kihagyva” listát is tedd a KÉZI TEENDŐK közé.
    Kérj jóváhagyást. Módosíts, ha kéri (--include / --exclude / --focus).
-4. Előellenőrzés:
+4. Előellenőrzés (utána a futtatás: `DEST=<cél> nohup bash dl.sh > dl.out 2>&1 &` – újrafuttatás = folytatás; a FAIL/TODO sorok a `<cél>/_log_*.txt`-ben):
    a) szabad hely (`df -B1 <cél>`) ≥ terv + 5%;
    b) a fájlrendszer NEM FAT32 (`df -T` / `lsblk -f`). Ha az, állj meg és szólj;
    c) eszközök: curl, wget vagy aria2c (ajánlott), sha256sum, git; LLM-hez `hf` (pip install -U huggingface_hub) vagy ollama; archive.org-hoz `ia` (pip install internetarchive).
@@ -48,7 +49,7 @@ MUNKAMENET:
    LLM letöltése előtt ellenőrizd a repó fájllistáját (HF tree API), mert a --include mintának pontosan egyeznie kell.
 6. Minden elem után ellenőrizz:
    - sha256, ha van (.sha256 a Kiwixnél; LFS oid a Hugging Face-nél);
-   - méret ±2%;
+   - méret: ±10% normális (25% fölött jelezd);
    - ZIM-nél opcionálisan `zimcheck -A`;
    - PDF-nél `pdfinfo` vagy a fájl első bájtjai (%PDF).
    Hibánál 3 újrapróbálkozás, más tükörszerverről. Utána FAIL a naplóba, és menj tovább.

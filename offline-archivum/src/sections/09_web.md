@@ -58,7 +58,7 @@ Egyes forrásoldalak (pl. ECHO, Peace Corps, Sphere, RepRap-wiki) Cloudflare-rel
 |---|---|---|---|---|---|
 | **[cloudscraper](https://github.com/VeNoMouS/cloudscraper)** | PyPI 1.2.71 (2023-04-25); a repóban van '3.0.0'… | free: 0 | stale – utolsó commit 2025-06-10; a… | `pip install cloudscraper` | Régi, egyszerű oldalakon néha még működik. |
 | **[FlareSolverr](https://github.com/FlareSolverr/FlareSolverr)** | v3.5.2 (tag commit 2026-09-12) | free: 0 | yes – utolsó commit 2026-10-24 | `docker run -d --name=flaresolverr -p 127.0.0.1:8191:8191 -e LOG_LEVEL=info…` | Nyelvfüggetlen; kész Docker image (amd64/arm64/arm7); a *arr ökoszisztéma bevett eszköze. |
-| **[Byparr](https://github.com/ThePhaseless/Byparr)** | v3.1.1 (tag commit 2026-11-05) | free: 0 | yes – utolsó commit 2026-11-09 | `docker run -p 8191:8191 ghcr.io/thephaseless/byparr:latest` | Modernebb böngésző-alap; drop-in a FlareSolverr helyére; proxy per request (X-Proxy-Server header). |
+| **[Byparr](https://github.com/ThePhaseless/Byparr)** | v3.1.1 (tag commit 2026-11-05) | free: 0 | yes – utolsó commit 2026-11-09 | `docker run -p 127.0.0.1:8191:8191 ghcr.io/thephaseless/byparr:latest` | Modernebb böngésző-alap; drop-in a FlareSolverr helyére; proxy per request (X-Proxy-Server header). |
 
 #### Crawl / agent keretrendszer
 

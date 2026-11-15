@@ -616,7 +616,7 @@ def main():
     txt = txt.rstrip() + "\n\n" + device_section()   # 6.10 a 6.9 után
     open("sections/06_llm.md", "w", encoding="utf-8").write(txt)
     open("sections/08_manual.md", "w", encoding="utf-8").write(manual_section(items))
-    open("sections/09_web.md", "w", encoding="utf-8").write(web_section())
+    open("sections/09_web.md", "w", encoding="utf-8").write(web_section().replace("docker run -p 8191:8191", "docker run -p 127.0.0.1:8191:8191"))
     print("OK: 06_llm.md, 08_manual.md, 09_web.md")
 
 
