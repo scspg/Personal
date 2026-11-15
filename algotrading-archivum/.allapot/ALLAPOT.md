@@ -21,3 +21,4 @@ Független kiadás (nem az ARCHIVUM része). Forrás-spec: `.allapot/MESTERPROMP
 Futtatás: cd src && python3 -I build.py && python3 -I gen_html.py && python3 -I make_zip.py ; böngészőteszt: node $S/algo_check.js <html> <png>
 9 ágens fut (a1..a9) → research/. Utána: build, átnézők (6), javítás.
 - A9 KÉSZ: 118 tétel, a9_spec.md 873 sor (72 soros paritásmátrix, L0–L4 mozgatókar, F0–F6 ütemterv). Megj.: GitHub API nem érhető el (ecosyste.ms tükör), NautilusTrader/LEAN/ArcticDB duplikátum A5-tel (group mező).
+- A2 KÉSZ: 133 tétel (81 mért/24 becsült/28 nem ell.), a2_summary.md. Hiány: webkeresési keret elfogyott; tőzsdei AZ-k nem hivatalosak; magyar 2026-os hatályon kívül helyezés részletei.
