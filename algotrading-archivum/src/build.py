@@ -185,6 +185,25 @@ def collect():
             for k in [k for k, v in o.items() if v == ""]:   # minden üres szöveg → null (mesterprompt 2.1)
                 if o.get(k) == "":
                     o[k] = None
+            for k in ("pit", "survivorship_free", "vintages", "redistribution"):   # logikai mező: szöveg → _note, érték true/false/null
+                v = o.get(k)
+                if isinstance(v, str):
+                    o[k + "_note"] = v
+                    lv = v.strip().lower()
+                    o[k] = True if lv.startswith(("igen", "true", "yes")) else False if lv.startswith(("nem ", "nem,", "nem.", "false", "no ")) and "nem releváns" not in lv and "nem ellenőrzött" not in lv else None
+            hf_ = o.get("history_from")
+            if hf_ is not None and not re.fullmatch(r"\d{4}", str(hf_)):
+                m4 = re.search(r"\b(1[6-9]\d\d|20\d\d)\b", str(hf_))
+                o["history_from_note"] = str(hf_)
+                o["history_from"] = m4.group(1) if m4 else None
+            for k in ("bytes_est", "price_eur_month", "price_eur_once"):          # számmező: szöveg → _note, érték null
+                if isinstance(o.get(k), str):
+                    o[k + "_note"], o[k] = o[k], None
+            if o.get("github") is not None and not isinstance(o.get("github"), dict):
+                o["github_note"], o["github"] = str(o["github"]), None
+            g = o.get("github")
+            if isinstance(g, dict) and (g.get("stars") is None or g.get("last_commit") is None) and not g.get("note"):
+                g["note"] = "nem mérhető (archivált/törölt repó, vagy a mérőszolgáltatás nem adott adatot, 2026-11-15)"
             o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
             o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
             if not o.get("notes_hu"):
