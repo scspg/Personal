@@ -1,5 +1,5 @@
 {
- "items": 1634,
+ "items": 1619,
  "strategies": 119,
  "ideas": 165,
  "stats": {
@@ -42,7 +42,7 @@
   "a8_infra_legal": {
    "raw": 117,
    "bad_json": 0,
-   "dup": 20,
+   "dup": 26,
    "no_url": 0
   },
   "a9_platform": {
@@ -54,7 +54,7 @@
   "a11_platforms": {
    "raw": 73,
    "bad_json": 0,
-   "dup": 22,
+   "dup": 31,
    "no_url": 0
   },
   "a10_methods": {

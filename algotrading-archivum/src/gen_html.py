@@ -140,15 +140,17 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 <label>Egyenleg (USD)<input id="mb" type="number" value="1000"></label><label>Tőkeáttétel<input id="ml" type="number" value="500"></label>
 <label>Lot<input id="mlot" type="number" value="1" step="0.01"></label><label>Kontraktusméret<input id="mc" type="number" value="100000"></label>
 <label>Ár<input id="mp" type="number" value="1.08" step="0.0001"></label><label>Pipméret<input id="mpip" type="number" value="0.0001" step="0.0001"></label>
-<label>Stop-out % (brókerfüggő)<input id="mso" type="number" value="50"></label></div><p class="out" id="mo"></p>
-<p class="mut">Képlet: margin = lot × kontraktus × ár / áttétel (USD-kvótás párnál); stop-out, ha tőke / margin × 100 &lt; stop-out%. A számlát elvivő ellenirányú mozgás = (tőke − SO% × margin) / (lot × kontraktus). A stop-out szint brókerenként és jogalanyonként eltér (pl. EU/UK lakossági 50%, egyes offshore ECN-számlák 20%); a saját értéket a számlaszerződésből és a szimbólum-specifikációból kell venni.</p></div>
+<label>Stop-out % (brókerfüggő)<input id="mso" type="number" value="50"></label>
+<label>Jegyzett deviza → számladeviza árfolyam<input id="mfx" type="number" value="1" step="0.0001"></label></div><p class="out" id="mo"></p>
+<p class="mut">Képlet: margin = lot × kontraktus × ár × (jegyzett deviza → számladeviza) / áttétel; USD-számlán XXX/USD párnál az átváltás 1, USD/JPY-nál 1/árfolyam, EUR/GBP-nél a GBP/USD árfolyam; stop-out, ha tőke / margin × 100 &lt; stop-out%. A számlát elvivő ellenirányú mozgás = (tőke − SO% × margin) / (lot × kontraktus). A stop-out szint brókerenként és jogalanyonként eltér (pl. EU/UK lakossági 50%, egyes offshore ECN-számlák 20%); a saját értéket a számlaszerződésből és a szimbólum-specifikációból kell venni.</p></div>
 <div class="card"><h2>Grid-csőd Monte Carlo</h2><div class="row">
 <label>Egyenleg<input id="gb" type="number" value="1000"></label><label>Áttétel<input id="gl" type="number" value="500"></label>
 <label>Lot/szint<input id="glot" type="number" value="0.01" step="0.01"></label><label>Rács (pip)<input id="gs" type="number" value="20"></label>
 <label>Célprofit (pip)<input id="gt" type="number" value="20"></label><label>Max szint<input id="gn" type="number" value="30"></label>
 <label>Éves vol %<input id="gv" type="number" value="8"></label><label>Spread (pip)<input id="gsp" type="number" value="1"></label>
 <label>Nap<input id="gd" type="number" value="250"></label><label>Szimuláció<input id="gm" type="number" value="400"></label>
-<label>Stop-out %<input id="gso" type="number" value="50"></label><button class="go" id="grun">Futtatás</button></div><p class="out" id="go"></p>
+<label>Stop-out %<input id="gso" type="number" value="50"></label>
+<label>Negatívegyenleg-védelem<select id="gnbp"><option value="0">nincs (a veszteség túlléphet)</option><option value="1">van (nulla alá nem megy)</option></select></label><button class="go" id="grun">Futtatás</button></div><p class="out" id="go"></p>
 <p class="mut">Modell: csak long rács EURUSD-szerű párra (ár 1,08, 100 000-es kontraktus), óránkénti geometriai bolyongás, drift nélkül, swap nélkül. Minden szint külön zár +célprofitnál. Determinisztikus mag: ugyanaz a bemenet ugyanazt adja. Becslés, nem előrejelzés: a valódi piac vastagabb farkú, és rezsimeket vált.</p></div>
 <div class="card"><h2>Kelly-méretezés</h2><div class="row">
 <label>Nyerési valószínűség p<input id="kp" type="number" value="0.55" step="0.01"></label><label>Nettó szorzó b (nyereség/kockázat)<input id="kb" type="number" value="1" step="0.05"></label></div>
@@ -164,7 +166,7 @@ button.go{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7p
 </main>
 <script>
 const D=__DATA__;const $=s=>document.querySelector(s);const E=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmt=(x,d=2)=>Number(x).toLocaleString("hu-HU",{maximumFractionDigits:d,minimumFractionDigits:0});
+const fmt=(x,d=2)=>{let v=Number(x);if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;return v.toLocaleString("hu-HU",{maximumFractionDigits:d,minimumFractionDigits:0})};
 const AH={free:"ingyenes",registration:"regisztrációs",freemium:"freemium",paid:"fizetős",institutional:"intézményi"};
 const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 const SRC={a1_market_exec:"Piac, végrehajtás",a2_crypto:"Kripto",a3_predict_sports:"Predikció, sport",a4_macro_news_alt:"Makró, hírek, alt. adat",a5_oss:"Nyílt szoftver",a6_ai_research:"AI-kutatás, irodalom",a8_infra_legal:"Infra, adó, jog",a9_platform:"Platform",a10_methods:"Bevált módszerek, esettanulmányok",a11_platforms:"Platform- és bróker-összehasonlítás"};
@@ -180,26 +182,28 @@ $("#cnt").textContent=`${L.length} tétel a(z) ${D.items.length}-ból`;$("#tk tb
 function rs(){const q=norm($("#sq").value);$("#ts tbody").innerHTML=D.strat.filter(o=>!q||norm(o.n+o.f+o.w).includes(q)).sort((a,b)=>(b.m??0)-(a.m??0)).map(o=>`<tr><td>${o.u?`<a href="${E(o.u)}" target="_blank" rel="noopener">${E(o.n)}</a>`:E(o.n)}</td><td>${E(o.m??"?")}/10</td><td>${E(o.f)}</td><td>${E(o.w)}</td><td>${E(o.x)}</td></tr>`).join("")}
 function ri(){const q=norm($("#iq").value);$("#ti tbody").innerHTML=D.ideas.filter(o=>!q||norm(o.n+o.m+o.t).includes(q)).sort((a,b)=>((b.y??0)+(b.f??0))-((a.y??0)+(a.f??0))).map(o=>`<tr><td><b>${E(o.n)}</b></td><td>${E(o.y??"?")}</td><td>${E(o.f??"?")}</td><td>${E(o.m)}</td><td>${E(o.t)}</td><td>${E(o.r)}</td></tr>`).join("")}
 $("#sq").oninput=rs;$("#iq").oninput=ri;rs();ri();
-function mcalc(){const B=+$("#mb").value,Lv=+$("#ml").value,lot=+$("#mlot").value,C=+$("#mc").value,P=+$("#mp").value,pip=+$("#mpip").value,SO=+$("#mso").value/100;
-if(!(B>0&&Lv>0&&lot>0&&C>0&&P>0&&pip>0&&SO>=0&&SO<5)){$("#mo").innerHTML='<span class="neg">Minden mező pozitív szám legyen (stop-out 0–500%).</span>';return}
-const notional=lot*C*P,m=notional/Lv,ml=m>0?B/m*100:Infinity,mv=(B-SO*m)/(lot*C);
+function mcalc(){const B=+$("#mb").value,Lv=+$("#ml").value,lot=+$("#mlot").value,C=+$("#mc").value,P=+$("#mp").value,pip=+$("#mpip").value,SO=+$("#mso").value/100,FX=+$("#mfx").value;
+if(!(B>0&&Lv>0&&lot>0&&C>0&&P>0&&pip>0&&SO>=0&&SO<5&&FX>0)){$("#mo").innerHTML='<span class="neg">Minden mező pozitív szám legyen (stop-out 0–500%).</span>';return}
+const notional=lot*C*P*FX,m=notional/Lv,ml=m>0?B/m*100:Infinity,mv=(B-SO*m)/(lot*C*FX);
+if(m>B){$("#mo").innerHTML=`<span class="neg">A szükséges margin (${fmt(m,2)}) nagyobb az egyenlegnél (${fmt(B,2)}): ez a pozíció nem nyitható meg.</span>`;return}
 $("#mo").innerHTML=`Névérték: <b>${fmt(notional,0)} USD</b> · lekötött margin: <b>${fmt(m,2)} USD</b> · margin-szint: <b>${fmt(ml,0)}%</b><br>`+(mv<=0?`<span class="neg">Már nyitáskor stop-out alatt.</span>`:`Stop-out ennyi ellenirányú mozgásnál: <b class="neg">${fmt(mv,5)}</b> (${fmt(mv/P*100,3)}%, ${fmt(mv/pip,1)} pip). Tényleges áttétel: <b>${fmt(notional/B,1)}×</b>.`)}
-["#mb","#ml","#mlot","#mc","#mp","#mpip","#mso"].forEach(s=>$(s).addEventListener("input",mcalc));mcalc();
+["#mb","#ml","#mlot","#mc","#mp","#mpip","#mso","#mfx"].forEach(s=>$(s).addEventListener("input",mcalc));mcalc();
 function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function grid(){const B=+$("#gb").value,Lv=+$("#gl").value,lot=+$("#glot").value,S=+$("#gs").value*1e-4,T=+$("#gt").value*1e-4,N=+$("#gn").value,vol=+$("#gv").value/100,sp=+$("#gsp").value*1e-4,days=+$("#gd").value,M=Math.max(1,Math.min(3000,Math.round(+$("#gm").value)||1)),SO=+$("#gso").value/100,C=100000;
 if(!(B>0&&Lv>0&&lot>0&&S>0&&T>0&&N>=1&&vol>0&&days>0&&sp>=0)){$("#go").innerHTML='<span class="neg">Minden mező pozitív szám legyen.</span>';return}
-const r=rng(12345),steps=Math.round(days*24),sig=vol/Math.sqrt(252*24);let ruin=0,fin=[],trades=0,k=0;$("#grun").disabled=true;
+const r=rng(12345),steps=Math.round(days*24),sig=vol/Math.sqrt(252*24);let ruin=0,fin=[],trades=0,k=0,neg=0,surv=[];const NBP=$("#gnbp").value==="1";$("#grun").disabled=true;
 function chunk(){const end=Math.min(M,k+50);for(;k<end;k++){let P=1.08,bal=B,pos=[],dead=false;for(let i=0;i<steps&&!dead;i++){let u=r()||1e-12,v=r();P*=Math.exp(sig*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v));
 pos=pos.filter(e=>{if(P>=e+T){bal+=T*lot*C;trades++;return false}return true});
 if(pos.length===0||(pos.length<N&&P<=Math.min(...pos)-S)){pos.push(P+sp)}
-let fl=0;for(const e of pos)fl+=(P-e)*lot*C;const eq=bal+fl,mg=pos.length*lot*C*P/Lv;if(mg>0&&eq/mg<SO){dead=true;bal=Math.max(0,eq);ruin++}}
-if(!dead){let fl=0;for(const e of pos)fl+=(P-e)*lot*C;bal+=fl}fin.push(bal)}
+let fl=0;for(const e of pos)fl+=(P-e)*lot*C;const eq=bal+fl,mg=pos.length*lot*C*P/Lv;if(mg>0&&eq/mg<SO){dead=true;bal=NBP?Math.max(0,eq):eq;ruin++;if(eq<0)neg++}}
+if(!dead){let fl=0;for(const e of pos)fl+=(P-e)*lot*C;bal+=fl;surv.push(bal)}fin.push(bal)}
 if(k<M){$("#go").textContent=`Számolás… ${k}/${M}`;setTimeout(chunk,0);return}$("#grun").disabled=false;
 fin.sort((a,b)=>a-b);const q=p=>fin[Math.min(fin.length-1,Math.floor(p*fin.length))];
-$("#go").innerHTML=`Stop-out valószínűsége ${days} nap alatt: <b class="${ruin/M>0.05?"neg":"pos"}">${fmt(ruin/M*100,1)}%</b> (${ruin}/${M})<br>Végső tőke mediánja: <b>${fmt(q(.5),0)}</b> · 5%: ${fmt(q(.05),0)} · 95%: ${fmt(q(.95),0)} · átlagos lezárt ügylet/szimuláció: ${fmt(trades/M,0)}`}chunk()}
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN;
+$("#go").innerHTML=`<b>Átlagos végső tőke MINDEN pályán: <span class="${mean(fin)<B?"neg":"pos"}">${fmt(mean(fin),0)}</span></b> (kezdő ${fmt(B,0)}; ${fmt((mean(fin)/B-1)*100,1)}%) · csak a túlélők átlaga: ${fmt(mean(surv),0)} – a túlélők önmagukban túlélési torzítás<br>`+(NBP?"":`Nulla alá ment stop-outok: <b class="neg">${neg}</b> (${fmt(neg/M*100,1)}%) – negatívegyenleg-védelem nélkül tartozás keletkezik<br>`)+`Stop-out valószínűsége ${days} nap alatt: <b class="${ruin/M>0.05?"neg":"pos"}">${fmt(ruin/M*100,1)}%</b> (${ruin}/${M})<br>Végső tőke mediánja: <b>${fmt(q(.5),0)}</b> · 5%: ${fmt(q(.05),0)} · 95%: ${fmt(q(.95),0)} · átlagos lezárt ügylet/szimuláció: ${fmt(trades/M,0)}`}chunk()}
 $("#grun").onclick=grid;
 function kelly(){const p=+$("#kp").value,b=+$("#kb").value;if(!(p>0&&p<1&&b>0)){$("#ko").innerHTML='<span class="neg">0 &lt; p &lt; 1 és b &gt; 0 kell.</span>';return}const f=p-(1-p)/b,g=x=>x<=0?0:x>=1?-Infinity:p*Math.log(1+b*x)+(1-p)*Math.log(1-x);
-$("#ko").innerHTML=f<=0?`<span class="neg">Negatív várható érték: f* = ${fmt(f,3)} – ne kössön.</span>`:`f* = <b>${fmt(f*100,1)}%</b> tétenként · növekedés/tét: ½ Kelly ${fmt(g(f/2)*100,3)}% · Kelly ${fmt(g(f)*100,3)}% · 2× Kelly <span class="neg">${fmt(g(Math.min(.999,2*f))*100,3)}%</span>`}
+$("#ko").innerHTML=f<=0?`<span class="neg">Negatív várható érték: f* = ${fmt(f,3)} – ne kössön.</span>`:`f* = <b>${fmt(f*100,1)}%</b> tétenként · növekedés/tét: ½ Kelly ${fmt(g(f/2)*100,3)}% · Kelly ${fmt(g(f)*100,3)}% · 2× Kelly <span class="neg">${2*f>=1?"csőd (a teljes tőke kockán, egy vesztes tét nulláz)":fmt(g(2*f)*100,3)+"%"}</span>`}
 ["#kp","#kb"].forEach(s=>$(s).addEventListener("input",kelly));kelly();
 </script></body></html>"""
 

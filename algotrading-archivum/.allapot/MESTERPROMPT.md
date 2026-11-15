@@ -309,6 +309,67 @@ Minden modulhoz gyűjtendő: (a) adatforrás(ok), (b) nyílt forráskódú eszk�
 - 2 = bővítés;
 - 3 = luxus vagy intézményi.
 
+### 2.1. Mezőszabályok (gépileg ellenőrizhető)
+
+- **Kötelező, nem null:** `id` (kebab-case, egyedi), `name`, `cat`, `url` (http/https; websocket-végpont az `api_endpoint` mezőbe), `access`, `scores` (mind a 7 kulcs, egész 0–10), `tier` (0–3), `verified`, `checked` (ÉÉÉÉ-HH-NN).
+- **Opcionális, hiány esetén `null` (soha nem üres szöveg):** `docs_url`, `info_url`, `price`, `price_eur_month`, `provider`, `granularity`, `latency`, `license`, `history_from`, `bytes_est`, `download`, `github`.
+- **Felsorolt értékek:**
+  - `access`: free | registration | freemium | paid | institutional
+  - `assets`: fx, cfd, equity, options, futures, rates, commodities, energy, crypto, prediction, sports, macro, alt
+  - `regions`: global, us, eu, uk, hu, asia, other
+  - `granularity`: tick | l2 | l3 | 1s | 1m | 1h | 1d | event | text
+  - `latency`: realtime | delayed | eod | batch
+- **Csoport és származtatott mezők:**
+  - `group`: azonos forrás változatai.
+  - A build tölti ki, kézzel nem írandó: `src` (kutatási fájl), `prof` (profilpontok 0–100), `also_in` (duplikátumként összefésült források).
+- **Adattételeknél (M1–M4) kötelező:**
+  - `pit` (true/false/null): időponthelyes, look-ahead-mentes-e;
+  - `survivorship_free` (true/false/null);
+  - `vintages` (true/false/null);
+  - `revision_policy` (szöveg);
+  - `timestamp_semantics` (pl. „esemény ideje UTC”, „közzététel ideje”, „nap vége”).
+- **Esettanulmány (`cat: case_study`) és módszer (`cat: method`):** a forrástételektől eltérően ugyanarra a cikkre vagy oldalra hivatkozhat, mint egy katalógustétel. Ez nem duplikáció, mert nem forrás, hanem elemzés.
+  - Plusz mezők: `who`, `data_hu`, `method_hu`, `result_hu`, `result_verified`, `why_worked_hu`, `died_hu`, `improve_hu` (egy konkrét, tesztelhető változtatás), `platform_use_hu`, `code_urls`.
+- **Stratégia (`a7_strategies.jsonl`, `cat: strategy`) plusz mezői:**
+  - `sub` (család);
+  - `formula_hu`;
+  - `params`;
+  - `works_when_hu`, `dies_when_hu`, `decay_hu`;
+  - `evidence` (lista: `{ref, url, reported_hu, label}`);
+  - `impl_repos` (lista: `{repo, url, last_commit, stars, verified}`);
+  - `mt5_fit` (0–10, FX/CFD-alkalmasság).
+- **Ötlet (`a7_ideas.jsonl`) mezői:**
+  - `id`, `title_hu`, `mechanism_hu`, `data_sources`, `test_hu`;
+  - `prereg` objektum: metric, horizon, min_n, alpha, multiplicity, oos_start, cost_model, kill_rule;
+  - `prior_art` (lista: `{ref, doi_or_url}`) vagy üres lista + `prior_art_note`;
+  - `capacity_hu`, `risk_hu`;
+  - `novelty` (0–10), `mt5_fit` (0–10).
+
+### 2.2. Profilsúlyok (a `build.py` PROFILES táblájával azonos)
+
+| Profil | R | E | Q | C | L | F | Z |
+|---|---|---|---|---|---|---|---|
+| Gyors pénz – aktív automatizált kereskedés | 0,15 | 0,30 | 0,10 | 0,10 | 0,20 | 0,05 | 0,10 |
+| Aladdin-szerű kockázat | 0,25 | 0,05 | 0,30 | 0,10 | 0,05 | 0,15 | 0,10 |
+| Kutatás | 0,25 | 0,20 | 0,25 | 0,10 | 0,00 | 0,15 | 0,05 |
+| Predikciós piacok és sport | 0,15 | 0,30 | 0,15 | 0,10 | 0,10 | 0,00 | 0,20 |
+| Kiegyensúlyozott | 0,20 | 0,20 | 0,20 | 0,10 | 0,10 | 0,10 | 0,10 |
+
+A profilpont: Σ(súly × pont) / Σ(súly a nem null pontokra) × 10. Ez reprodukálható: egy tétel profilpontja a hét alappontból és a fenti súlyokból pontosan kijön.
+
+### 2.3. Pontozási rubrika (0–10 horgonyok)
+
+| Pont | R relevancia | E edge-potenciál | Q minőség | C költséghatékonyság | L késleltetés/frissesség | F karbantartottság | Z jogi/ÁSZF |
+|---|---|---|---|---|---|---|---|
+| 10 | a platform magja, nélküle nem működik | dokumentált, élő, kapacitásos előny | hivatalos, auditált, PIT | ingyenes, teljes | valós idejű, ms | heti commit, nagy közösség | HU-ból teljesen legális, ÁSZF-kockázat nincs |
+| 7 | fontos modulhoz kell | publikált, de lecsengő előny | megbízható gyártó, ismert hibákkal | ár arányos az értékkel | percen belül | havi frissítés | kisebb ÁSZF-feltétel |
+| 4 | kiegészítő | csak más jel feature-e | közösségi, ellenőrizetlen | drága a haszonhoz képest | napi | évente | geoblokk vagy szürke zóna |
+| 0–1 | nem kapcsolódik | nincs előny | megbízhatatlan | tiltóan drága | elavult | elhagyott | tilos vagy blokkolt HU-ból |
+
+### 2.4. Átnézői rubrika (a minőségkapuhoz)
+
+Minden átnéző területenként 0–100 pontot ad. Levonás: hibás tény −3; kitalált forrás −10 (azonnali kizáró ok); hiányzó, a szerepköréhez szükséges elem −2…−8; nem futtatható átvételi feltétel −2; belső ellentmondás −2. Minden levonáshoz hely (fájl, sor vagy id) és konkrét javítás tartozik. A kapu: minden terület ≥ 90, a hat átnéző átlaga ≥ 95. Ha forráskorlát miatt nem érhető el, azt a jelentésben külön meg kell nevezni.
+
 ---
 
 ## 3. Szabályok (nem alku tárgya)

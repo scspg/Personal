@@ -1,1660 +1,1645 @@
 # ALGOTRADING – chat-változat (LLM-kontextusba). Kutatás: 2026-11-15
 
-Formátum: id | név | hozzáférés | ár | profilpontok gyors/kockázat/kutatás/predikció | url
+Formátum: id | szint | név | kategória | hozzáférés | ár | profilpontok gyors/kockázat/kutatás/predikció | url | lényeg. A fejlesztői specifikáció külön: FEJLESZTOI-SPEC.md (12. fejezet: platformfüggetlenség). Gépi teljes adat: katalogus.jsonl, strategiak.jsonl, otletek.jsonl.
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
-method-vantage-spread-swap-logger | Módszer: Vantage spread-, swap- és rollover-napló (saját mérés MT5-ben | free | 0 | 90/89/88/89 | https://www.mql5.com/en/docs/marketinformation/symbolinfotick
-method-vantage-execution-audit | Módszer: Vantage végrehajtás-audit (slippage, requote, reject, latency | free | 0 | 87/88/86/86 | https://www.mql5.com/en/docs/trading/ordersendasync
-mt5-symbol-spec-export | Bróker-szimbólumspecifikáció és tick-export MT5-ből (SymbolInfo, CopyT | free | 0 | 84/87/85/83 | https://www.mql5.com/en/docs/python_metatrader5/mt5symbolinfo_py
-mql5-reference | MQL5 Reference (hivatalos nyelvi és API-dokumentáció) | free | 0 | 76/91/82/76 | https://www.mql5.com/en/docs
-mt5-ontradetransaction | OnTradeTransaction / trade események (végrehajtás-mérés MT5-ben) | free | 0 | 80/85/81/80 | https://www.mql5.com/en/docs/event_handlers/ontradetransaction
-mt5-strategy-tester | MT5 Strategy Tester (valós tickes mód, optimalizáló, forward teszt) | free | 0 | 76/85/80/76 | https://www.metatrader5.com/en/terminal/help/algotrading/testing
-metatrader5-python | MetaTrader5 Python csomag (hivatalos) | free | 0 | 76/84/79/76 | https://pypi.org/project/MetaTrader5/
-mql5-economic-calendar | MQL5 beépített gazdasági naptár (Calendar* függvények) | free | 0 | 76/82/76/76 | https://www.mql5.com/en/docs/calendar
-dukascopy-historical-data | Dukascopy Historical Data Feed (ingyenes FX/CFD tick) | free | ingyenes | 73/81/80/74 | https://www.dukascopy.com/swiss/english/marketwatch/historical/
-ibkr-tws-api | IBKR TWS API (C++/Java/Python/C#) és IB Gateway | registration | ? | 72/84/78/72 | https://interactivebrokers.github.io/
-gleif-api | GLEIF LEI API (jogalany-azonosítók, tulajdonosi lánc, ISIN/BIC leképez | free | ingyenes | 68/88/76/69 | https://www.gleif.org/en/lei-data/gleif-api
-cboe-vix-history | Cboe VIX napi történeti CSV (1990-től, ingyenes) | free | ingyenes | 68/83/76/72 | https://www.cboe.com/tradable_products/vix/vix_historical_data/
-openfigi | OpenFIGI API (Bloomberg nyílt instrumentum-azonosító leképezés) | free | ingyenes (API-kulccsal magasabb limit) | 66/86/73/68 | https://www.openfigi.com/api/overview
-nyfed-markets-api | New York Fed Markets Data API (SOFR, EFFR, OBFR, TGCR, BGCR, repo) | free | ingyenes | 65/86/75/68 | https://markets.newyorkfed.org/static/docs/markets-api.html
-ecb-estr-data-api | ECB Data Portal API – €STR és euróövezeti hozamgörbék | free | ingyenes | 65/86/75/68 | https://data.ecb.europa.eu/help/api/overview
-vantage-mt-servers-datacenter | Vantage MT4/MT5 szervernevek és adatközpont-helyek | free | 0 | 75/72/71/72 | https://apac.vantagehelpcenter.com/hc/en-us/articles/11622132210447-Where-are-Vantage-trading-servers-located
-ib-async | ib_async (az ib_insync utódja) – asyncio Python kliens az IBKR TWS API | free | 0 | 68/79/72/68 | https://github.com/ib-api-reloaded/ib_async
-dukascopy-node | dukascopy-node – CLI/Node.js letöltő Dukascopy tickekhez | free | 0 | 65/78/74/64 | https://github.com/Leo4815162342/dukascopy-node
-exchange-calendars | exchange_calendars – 50+ tőzsde kereskedési naptára (Python) | free | 0 | 60/79/68/62 | https://github.com/gerrymanoim/exchange_calendars
-mnb-intezmenykereso | MNB Intézménykereső + figyelmeztetések (magyar engedély-ellenőrzés) | free | 0 | 57/82/70/62 | https://intezmenykereso.mnb.hu/
-vantage-regulatory-warnings | Vantage – felügyeleti figyelmeztetések és eljárások (AFM, FCA, DFSA, M | free | 0 | 55/78/67/58 | https://www.financemagnates.com/forex/brokers/dutch-regulator-investigates-vantage-for-illegal-cfd-offering/
-vantage-margin-stop-out | Vantage margin call és stop-out szintek | free | 0 | 58/67/61/54 | https://global.vantagehelpcenter.com/hc/en-us/articles/10954321892367-What-is-the-margin-call-level-and-how-is-it-calculated
-vantage-global-limited-vfsc | Vantage Global Limited (VFSC, Vanuatu) – offshore jogalany | registration | ? | 56/64/61/52 | https://www.vantagemarkets.com/
-vantage-client-agreement-abusive | Vantage Global Limited Client Agreement – EA, scalping, arbitrázs, 'ab | free | 0 | 50/66/60/48 | https://www.vantagemarkets.com/company-profile/legal-documentation/vantageglobal-clientagreement
-vantage-payout-reputation | Vantage kifizetési reputáció (FPA, Trustpilot, Financial Commission) | free | 0 | 48/62/54/48 | https://www.forexpeacearmy.com/forex-reviews/6219/vantage-markets-review
-databento | Databento (CME/US equities/OPRA/ICE nyers piaci adat L1–L3) | freemium | Usage-based (CME történeti, $/GB) \| Sta | 80/86/82/79 | https://databento.com/
-mql5-custom-symbols | MT5 Custom Symbols + CustomTicksAdd (külső tickadat betöltése a tester | free | 0 | 70/80/76/73 | https://www.mql5.com/en/docs/customsymbols/customticksadd
-massive-polygon | Massive (korábban Polygon.io) – US részvény/opció/index/FX/kripto API | freemium | Stocks: Basic $0, Starter $29, Developer | 72/80/74/71 | https://massive.com/
-thetadata | Theta Data (olcsó US opciós és részvény tick-adat) | freemium | Options: Value $40/hó (6 év, 2 párhuzamo | 74/78/74/74 | https://www.thetadata.net/
-eia-open-data | EIA Open Data API (US olaj, gáz, áram statisztikák) | registration | ingyenes API-kulccsal | 70/81/76/74 | https://www.eia.gov/opendata/
-libzmq-pyzmq | ZeroMQ (libzmq) és pyzmq | free | 0 | 68/83/72/69 | https://github.com/zeromq/libzmq
-fix-protocol-standard | FIX Protocol szabvány (FIX Trading Community) | free | 0 | 68/84/72/69 | https://www.fixtrading.org/standards/
-us-treasury-yield-curve | US Treasury Daily Par Yield Curve Rates (CSV/XML) | free | ingyenes | 65/86/75/68 | https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv
-entsoe-transparency | ENTSO-E Transparency Platform (EU áram: day-ahead ár, terhelés, termel | registration | ingyenes, API-tokennel | 72/78/73/72 | https://transparency.entsoe.eu/
-norgate-data | Norgate Data (survivorship-mentes US/AU/CA részvény + futures, deliste | paid | US stocks: USD 433.13 / 6 hó, USD 787.50 | 65/80/74/68 | https://norgatedata.com/
-pepperstone | Pepperstone (SCB Bahamas 1:1000 Pro; CySEC/BaFin EU; FCA; ASIC) | registration | ? | 68/78/72/65 | https://pepperstone.com/en/
-mt5-market-depth-dom | MT5 Depth of Market (OnBookEvent, MarketBookGet) – bróker DOM rögzítés | free | 0 | 72/74/69/72 | https://www.mql5.com/en/docs/event_handlers/onbookevent
-ibkr-market-data | Interactive Brokers market data előfizetések | paid | non-pro: 'US Securities Snapshot and Fut | 66/79/71/66 | https://www.interactivebrokers.com/en/pricing/market-data-pricing.php
-darwinex | Darwinex (Tradeslide Trading Tech Ltd – FCA; Darwinex Zero; DARWIN-ind | registration | ? | 70/72/70/70 | https://www.darwinex.com/
-metaquotes-vps | MetaQuotes (MQL5) VPS – virtuális hosting a terminálból | paid | 15 USD/hó (1 hó); 13 USD/hó (3 hó); 10.8 | 68/74/68/68 | https://www.mql5.com/en/vps
-quickfix-engines | QuickFIX család (C++ / QuickFIX/J / QuickFIX/n / QuickFIX/Go) | free | 0 | 64/78/68/66 | https://quickfixengine.org/
-mnb-arfolyam-bubor | MNB hivatalos árfolyamok (SOAP webszolgáltatás) és BUBOR/statisztikák | free | ingyenes | 62/80/71/66 | https://www.mnb.hu/arfolyamok
-energy-charts-api | Energy-Charts API (Fraunhofer ISE) – EU áramárak és termelés, CC BY 4. | free | ingyenes | 68/74/68/70 | https://api.energy-charts.info/
-tickmill | Tickmill (FSA Seychelles SD008 1:1000; CySEC 278/15; FCA 717270) | registration | Raw: $3/lot/oldal; Classic: 0 jutalék, s | 66/74/70/64 | https://www.tickmill.com/
-ctrader-open-api | cTrader Open API (Spotware) – Protobuf/JSON trading API | registration | ? | 66/74/68/66 | https://help.ctrader.com/open-api/
-ecb-eurofxref | ECB euro referencia-árfolyamok (napi XML/CSV, 1999-től) | free | ingyenes | 58/82/70/63 | https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
-iso-10383-mic | ISO 10383 Market Identifier Codes (MIC) lista | free | ingyenes | 58/82/68/61 | https://www.iso20022.org/market-identifier-codes
-esma-firds | ESMA FIRDS (Financial Instruments Reference Data System) + ESMA regist | free | ingyenes | 58/80/69/63 | https://registers.esma.europa.eu/publication/searchRegister?core=esma_registers_firds
-pandas-market-calendars | pandas_market_calendars – tőzsdei és futures naptárak (CME, ICE, Eurex | free | 0 | 60/79/68/62 | https://github.com/rsheftel/pandas_market_calendars
-tcapy | tcapy (Cuemacro) – nyílt FX transaction cost analysis | free | 0 | 67/70/66/72 | https://github.com/cuemacro/tcapy
-fx-global-code | FX Global Code (GFXC) – last look, végrehajtási elvek | free | 0 | 57/81/70/62 | https://www.globalfxc.org/fx-global-code/
-mql4-reference | MQL4 Reference (MT4) | free | 0 | 66/72/62/66 | https://docs.mql4.com/
-tiingo | Tiingo (EOD 30+ év, IEX intraday, kripto, hírek, fundamentumok) | freemium | Starter $0; Power $30/hó vagy $300/év; B | 60/75/68/62 | https://www.tiingo.com/
-nasdaq-data-link | Nasdaq Data Link (ex-Quandl) + Sharadar | freemium | adatkészletenként (Sharadar SEP/SF1 stb. | 60/74/69/64 | https://data.nasdaq.com/
-ic-markets-global-raw-trading | IC Markets Global / 'IC' (Raw Trading Ltd, FSA Seychelles) | registration | ? | 66/71/68/60 | https://www.ic.com/en/
-mql-zmq | mql-zmq – ZeroMQ binding MQL4/MQL5-höz | free | 0 | 64/68/62/66 | https://github.com/dingmaotu/mql-zmq
-alpaca | Alpaca (US részvény/opció/kripto bróker API + market data) | freemium | Market data: Free $0 (IEX feed, 200 hívá | 62/71/65/57 | https://alpaca.markets/
-ic-markets-eu | IC Markets (EU) Ltd (CySEC) – EU-s, 1:30 | registration | ? | 61/72/62/61 | https://www.icmarkets.eu/en/
-mt5-metatester-agents | MetaTester ügynökök (helyi/hálózati Strategy Tester agentek) | free | 0 | 56/73/66/60 | https://www.metatrader5.com/en/terminal/help/algotrading/metatester
-eodhd | EODHD (EOD Historical Data) – globális EOD, intraday, fundamentumok | freemium | Free $0 (20 hívás/nap); EOD All-World $1 | 58/69/64/60 | https://eodhd.com/
-forexvps-net | ForexVPS.net – MT4/MT5 VPS 22 helyszínen | paid | Core $40/hó (2 CPU/4 GB), Edge $60, Prim | 61/68/60/62 | https://www.forexvps.net/
-mt5-linux-wine | MetaTrader 5 Linuxon (Wine) – hivatalos telepítési útmutató | free | 0 | 54/68/60/56 | https://www.metatrader5.com/en/terminal/help/start_advanced/install_linux
-myfxbook | Myfxbook (ellenőrzött track record, bróker spread- és swap-összehasonl | free | 0 | 57/64/60/57 | https://www.myfxbook.com/
-tickstory | Tickstory (Dukascopy tick → MT4/MT5 export, 99,9% modelling) | freemium | Lite ingyenes; Standard/Professional fiz | 52/64/61/54 | https://tickstory.com/
-vantage-international-group-cima | Vantage International Group Limited (CIMA, Kajmán-szigetek) | registration | ? | 54/60/56/50 | https://www.cima.ky/
-histdata | HistData.com (ingyenes FX tick és M1) | free | ingyenes; FTP/SFTP $27 egyszeri; automat | 52/60/57/55 | https://www.histdata.com/
-offshore-regulator-registers | Offshore felügyeletek registerei: VFSC (Vanuatu), CIMA (Kajmán), FSA ( | free | 0 | 48/65/56/50 | https://www.vfsc.vu/
-financial-commission | The Financial Commission – független FX-vitarendező testület | free | 0 | 46/62/54/47 | https://financialcommission.org/
-orats | ORATS Data API (US opciók: SMV IV-felület, greeks, 1-min intraday) | paid | Delayed $199/hó; Live $299/hó; Live Intr | 69/72/69/69 | https://orats.com/
-lmax-global | LMAX Global (LMAX Broker Ltd FCA / LMAX Broker Europe CySEC) – no last | registration | ? | 68/74/68/68 | https://www.lmax.com/global/
-iqfeed | IQFeed (DTN) – retail real-time tick feed US részvény/opció/futures/FX | paid | Core $108.15/hó + $50 indulási díj; Fore | 65/72/65/64 | https://www.iqfeed.net/
-dukascopy-jforex | Dukascopy Bank / Dukascopy Europe – JForex (Java API, FIX, ECN) | registration | ? | 64/72/66/64 | https://www.dukascopy.com/swiss/english/forex/jforex/
-ctrader-algo | cTrader Algo (cBots C#/Python-ban) | free | 0 | 63/72/64/62 | https://help.ctrader.com/ctrader-algo/
-saxo-openapi | Saxo OpenAPI (Saxo Bank – EU-s multi-asset bróker REST/streaming API) | registration | ? | 60/72/64/62 | https://www.developer.saxo/
-beeks-group | Beeks Group (BeeksFX) – pénzügyi felhő, Equinix-colocation VPS | paid | ? | 62/71/62/62 | https://www.beeksgroup.com/
-cboe-datashop | Cboe DataShop (opciós EOD, quote, trade, Open-Close, CFE) | paid | termékenként (nem nyilvános az oldalon) | 56/71/68/62 | https://datashop.cboe.com/
-mtapi | MtApi – .NET API MT4/MT5-höz | free | 0 | 59/70/62/60 | https://github.com/vdemydiuk/mtapi
-findatapy | findatapy (Cuemacro) – egységes piaci adat-letöltő (Dukascopy, FXCM, B | free | 0 | 59/68/63/60 | https://github.com/cuemacro/findatapy
-fp-markets | FP Markets (First Prudential Markets – ASIC, CySEC, FSA Seychelles) | registration | ? | 60/69/64/56 | https://www.fpmarkets.com/
-hupx | HUPX (Magyar Áramtőzsde) – day-ahead és intraday piaci adatok | freemium | nyilvános összesítők ingyenesek; részlet | 59/68/62/62 | https://hupx.hu/
-mavir | MAVIR (magyar átviteli rendszerirányító) – rendszerterhelés, termelés | free | 0 | 60/68/60/63 | https://www.mavir.hu/
-mt5-history-report | MT5 Trading Report (beépített számla-teljesítmény riport) | free | 0 | 55/70/63/58 | https://www.metatrader5.com/en/terminal/help/trading_advanced/history_report
-six-iso4217 | SIX – ISO 4217 devizakódok és adatszabványok | free | ingyenes lista | 50/76/64/56 | https://www.six-group.com/en/products-services/financial-information/market-reference-data/data-standards.html
-mql5-cloud-network | MQL5 Cloud Network (elosztott optimalizálás felhő-ügynökökkel) | paid | használatalapú, MQL5-számláról fizetve;  | 54/68/63/57 | https://cloud.mql5.com/
-ibind-ibeam | IBind és IBeam – IBKR Web API (Client Portal) Python kliens és headles | free | 0 | 57/68/60/57 | https://github.com/Voyz/ibind
-nasdaq-itch-samples | Nasdaq TotalView-ITCH mintafájlok (emi.nasdaq.com) | free | ingyenes minták | 52/70/64/60 | https://emi.nasdaq.com/ITCH/
-fusion-markets | Fusion Markets (VFSC, FSA Seychelles SD096, ASIC) | registration | általános jutalék $2.25/oldal (mért) | 59/66/60/56 | https://fusionmarkets.com/
-stocksharp | StockSharp (S#) – C# kereskedési platform sok connectorral (FIX, IB, M | free | 0 | 58/66/60/58 | https://github.com/StockSharp/StockSharp
-eex-transparency | EEX Transparency Platform (termelés/kapacitás, REMIT bennfentes inform | free | ingyenes megtekintés | 60/64/58/62 | https://www.eex-transparency.com/
-truefx | TrueFX (Integral OCX alapú FX top-of-book tick) | paid | Streaming: Professional $4 950/hó, Insti | 60/63/58/58 | https://www.truefx.com/
-oanda-v20-api | OANDA v20 REST API (FX/CFD árak, történeti gyertyák, kereskedés) | registration | ? | 58/64/58/56 | https://developer.oanda.com/rest-live-v20/introduction/
-firstrate-data | FirstRate Data (intraday részvény/ETF/futures/FX/index bundle-ök, deli | paid | bundle-áras, egyszeri vásárlás (ár az ol | 52/68/64/57 | https://firstratedata.com/
-exness | Exness (FSA Seychelles, CySEC, FSCA… – 'unlimited' leverage) | registration | ? | 58/65/60/52 | https://www.exness.com/
-dwxconnect | Darwinex DWX Connect (fájl-alapú MT4/MT5 ↔ Python híd) | free | 0 | 54/66/58/58 | https://github.com/darwinex/dwxconnect
-twelve-data | Twelve Data (részvény, FX, kripto REST/WS) | freemium | Basic $0 (8 kredit/perc, 800/nap); Grow  | 56/64/56/55 | https://twelvedata.com/
-lobster | LOBSTER (akadémiai Nasdaq limit order book rekonstrukció) | paid | akadémiai előfizetés (nem ellenőrzött) | 49/66/62/56 | https://lobsterdata.com/
-simplefix-pyfixmsg | simplefix és pyfixmsg – könnyű Python FIX üzenetkezelők | free | 0 | 56/64/54/58 | https://github.com/da4089/simplefix
-bse-market-data | BÉT (Budapesti Értéktőzsde) piaci adatok | freemium | ? | 52/64/58/58 | https://www.bse.hu/
-mql5-python-integration-joaopeuko | Mql5-Python-Integration (mqpy) – Python EA-keret a MetaTrader5 csomagr | free | 0 | 54/62/55/56 | https://github.com/Joaopeuko/Mql5-Python-Integration
-ea31337-framework | EA31337 – nyílt MQL4/MQL5 EA-keretrendszer és stratégiák | free | 0 | 54/61/56/56 | https://github.com/EA31337/EA31337
-cqg-data-factory | CQG Data Factory (történeti futures tick és bar) | paid | tételenként (nem ellenőrzött) | 50/64/60/56 | https://www.cqgdatafactory.com/
-intrinio | Intrinio (US részvény/opció/fundamentum adat) | paid | csomagonként (nem ellenőrzött) | 54/62/56/55 | https://intrinio.com/
-metatrader5-docker-gmag11 | MetaTrader5-Docker (MT5 + Wine + Python RPyC konténerben) | free | 0 | 52/63/55/53 | https://github.com/gmag11/MetaTrader5-Docker
-fxcm-marketdata | FXCM MarketData (ingyenes tick és candle archívum GitHubon) | free | 0 | 51/62/58/53 | https://github.com/fxcm/MarketData
-csi-data | CSI Data (Unfair Advantage) – futures és részvény EOD, folytonos kontr | paid | előfizetés (nem ellenőrzött) | 50/63/58/54 | https://www.csidata.com/
-ivolatility | IVolatility (opciós IV-adatok, IV-index, történeti felületek) | paid | ? | 51/61/58/55 | https://www.ivolatility.com/
-tick-data-suite | Tick Data Suite (eareview.net, Birt) – MT4/MT5 tick-backtest kiegészít | paid | előfizetés (SaaS és legacy licenc; ár ne | 50/61/57/52 | https://eareview.net/tick-data-suite
-financial-modeling-prep | Financial Modeling Prep (FMP) – fundamentumok, árak, naptárak API | freemium | Free 250 hívás/nap; Starter ~$22–29/hó ( | 51/61/54/52 | https://site.financialmodelingprep.com/
-fx-blue | FX Blue (MT4/MT5 statisztika, trade copier, publikus számla-elemzés) | free | 0 | 52/60/54/52 | https://www.fxblue.com/
-dwx-zeromq-connector | Darwinex DWX ZeroMQ Connector (Python ↔ MT4) | free | 0 | 54/56/49/58 | https://github.com/darwinex/dwx-zeromq-connector
-finnhub | Finnhub (freemium globális részvény, FX, fundamentum API) | freemium | ingyenes szint + fizetős csomagok (nem e | 51/60/52/50 | https://finnhub.io/
-vantage-global-prime-llp-fca | Vantage Global Prime LLP (FCA, UK) | registration | ? | 46/60/52/46 | https://www.fca.org.uk/news/warnings/vantagemarketscom
-alpha-vantage | Alpha Vantage (freemium részvény/FX/kripto/technikai indikátor API) | freemium | Free 25 kérés/nap; Premium 75/150/300/60 | 48/58/52/50 | https://www.alphavantage.co/
-mql5-signals | MQL5 Signals (copy trading és nyilvános track record) | freemium | ? | 50/54/50/48 | https://www.mql5.com/en/signals
-kibot | Kibot (intraday és tick történeti adat: részvény, ETF, futures, FX) | paid | $139–$4 800 tartomány (NexusFi listázás, | 43/56/50/48 | https://www.kibot.com/
-metaapi-cloud | MetaApi (metaapi.cloud) – felhős REST/WebSocket API MT4/MT5 számlákhoz | paid | használatalapú (nem ellenőrzött) | 44/54/50/42 | https://metaapi.cloud/
-yfinance | yfinance (nem hivatalos Yahoo Finance letöltő) | free | 0 | 42/52/48/38 | https://github.com/ranaroussi/yfinance
-mql5-market | MQL5 Market (EA- és indikátorpiac) | freemium | ? | 42/49/44/42 | https://www.mql5.com/en/market
-cme-datamine | CME DataMine (CME/CBOT/NYMEX/COMEX hivatalos történeti adat) | paid | adattípus és időtartam szerint; önkiszol | 56/74/71/63 | https://www.cmegroup.com/market-data/datamine-historical-data.html
-eurex-data | Eurex market data (EU futures/opciók: Bund, Euro Stoxx, Euribor) | paid | ? | 60/74/66/62 | https://www.eurex.com/ex-en/data
-lseg-tick-history | LSEG (Refinitiv) Tick History | institutional | egyedi szerződés | 55/74/71/60 | https://www.lseg.com/en/data-analytics/market-data/data-feeds/tick-history
-rithmic | Rithmic (R \| API, R \| Protocol – futures végrehajtás és market data) | paid | ? | 64/69/62/62 | https://www.rithmic.com/
-wrds | WRDS (Wharton Research Data Services) | institutional | intézményi előfizetés | 53/74/70/58 | https://wrds-www.wharton.upenn.edu/
-cqg-api | CQG (CQG Integrated Client, WebAPI, FIX) | paid | ? | 62/68/62/62 | https://www.cqg.com/
-optionmetrics-ivydb | OptionMetrics IvyDB (US és globális opciós adatbázis, IV-felület) | institutional | intézményi | 54/72/68/59 | https://optionmetrics.com/
-crsp-us-stock | CRSP US Stock Databases (Morningstar CRSP) | institutional | intézményi licenc (nem nyilvános) | 50/74/68/56 | https://www.crsp.org/research/crsp-us-stock-databases/
-oanda-eu | OANDA EU (OANDA TMS Brokers – EU-szabályozott) | registration | ? | 58/70/60/58 | https://www.oanda.com/eu-en/
-primexm-xcore | PrimeXM XCore (brókeroldali MT4/MT5 bridge és likviditás-aggregátor) | institutional | ? | 59/68/60/59 | https://www.primexm.com/
-ice-data-services | ICE Data Services (fixed income, pricing & analytics, ICE futures) | institutional | egyedi | 54/70/62/56 | https://www.ice.com/market-data
-tickdata-com | Tick Data, LLC (tickdata.com) – intézményi minőségű tisztított tick-tö | paid | nem nyilvános | 51/68/64/56 | https://www.tickdata.com/
-sec-rule-605 | SEC Rule 605/606 végrehajtás-minőségi riportok (2024-es módosítás) | free | 0 | 52/69/61/58 | https://www.sec.gov/
-new-change-fx | New Change FX (NCFX) – független FX mid-rate és benchmark tick-adat | paid | ? | 57/66/58/58 | https://www.newchangefx.com/
-onezero-centroid | oneZero Hub és Centroid Solutions (brókeroldali bridge/risk, A/B-book  | institutional | ? | 54/65/55/54 | https://www.onezero.com/
-lbma-prices | LBMA Precious Metal Prices (arany/ezüst/platina benchmark) | freemium | ? | 48/67/60/52 | https://www.lbma.org.uk/prices-and-data/precious-metal-prices
-algoseek | AlgoSeek (US részvény/opció/futures tick és bar, TAQ-szerű) | paid | nem nyilvános | 48/62/58/54 | https://www.algoseek.com/
-barchart-ondemand | Barchart OnDemand (futures/commodity/részvény API) | paid | egyedi | 52/60/54/52 | https://www.barchart.com/ondemand
-xm-trading-point | XM (Trading Point of Financial Instruments – CySEC; offshore entitások | registration | ? | 52/61/54/50 | https://www.xm.com/
-anna-dsb | ANNA DSB (OTC derivatív ISIN-ek) és ANNA ISIN-ügynökségek | freemium | alap keresés ingyenes, felhasználói díja | 46/67/55/50 | https://www.anna-dsb.com/
-nord-pool-data | Nord Pool Data Portal (északi és balti áramárak) | freemium | ? | 51/60/54/54 | https://data.nordpoolgroup.com/
-bestx | BestX (State Street) – intézményi FX TCA és best execution | institutional | intézményi | 48/63/56/52 | https://www.bestx.co.uk/
-tradefeedr | Tradefeedr – FX trading analytics és LP-teljesítmény API | institutional | ? | 50/62/54/53 | https://tradefeedr.com/
-eightcap | Eightcap (SCB Bahamas SIA-F220, FSA Seychelles SD100, FSC Mauritius) | registration | ? | 53/59/54/50 | https://www.eightcap.com/en/traders/
-emmi-euribor | EMMI – Euribor (és €STR-alapú benchmarkok) | freemium | ? | 45/66/58/50 | https://www.emmi-benchmarks.eu/
-ceegex | CEEGEX (közép-kelet-európai gáztőzsde, Budapest) | freemium | ? | 50/59/53/54 | https://ceegex.hu/
-tastytrade-api | tastytrade API + 'tastytrade' Python SDK (US opciók/futures) | free | 0 | 52/56/52/49 | https://github.com/tastyware/tastytrade
-axi | Axi (AxiTrader LLC – St Vincent & Grenadines; Financial Commission tag | registration | ? | 51/55/52/47 | https://www.axi.com/int
-blackbull | BlackBull Markets (1:500, MT4/MT5/cTrader) | registration | ? | 51/55/52/47 | https://blackbull.com/
-iex-hist | IEX Exchange historical PCAP (TOPS/DEEP) | registration | közvetlen letöltés jelenleg nem elérhető | 44/58/53/52 | https://iextrading.com/trading/market-data/
-tradovate-api | Tradovate API (futures bróker REST/WebSocket) | registration | ? | 50/54/50/47 | https://api.tradovate.com/
-historicaloptiondata | HistoricalOptionData.com (US opciós EOD láncok) | paid | egyszeri fájl-vásárlás (nem ellenőrzött) | 45/55/51/50 | https://www.historicaloptiondata.com/
-tradelocker | TradeLocker (új retail CFD platform API-val, MT4/MT5 alternatíva) | registration | ? | 49/54/47/48 | https://tradelocker.com/
-nycservers-vantage | NYCServers – Vantage-specifikus forex VPS oldal | paid | ? | 48/52/46/48 | https://newyorkcityservers.com/vantage-vps
-optionsdx | OptionsDX (ingyenes/olcsó EOD opciós adat SPX, SPY, QQQ…) | freemium | ? | 44/52/48/48 | https://www.optionsdx.com/
-vantage-global-prime-pty-asic | Vantage Global Prime Pty Ltd (ASIC, Ausztrália) | registration | ? | 42/55/48/38 | https://au.vantagehelpcenter.com/hc/en-au/articles/11715006659855-Who-regulates-Vantage
-pandas-datareader | pandas-datareader (Stooq, FRED, Fama-French stb. olvasó) | free | 0 | 42/52/46/44 | https://github.com/pydata/pandas-datareader
-roboforex | RoboForex (FSC Belize, 1:2000) | registration | ? | 44/47/44/37 | https://roboforex.com/
-vt-markets | VT Markets (a Vantage-csoport egykori testvérmárkája) | registration | ? | 44/46/42/39 | https://www.vtmarkets.com/
-vantage-markets-pty-fsca | Vantage Markets (Pty) Ltd (FSCA, Dél-Afrika) | registration | ? | 38/44/38/34 | https://www.vantagemarkets.com/contact-us/
-duka-giuse88 | duka – régi Python Dukascopy letöltő | free | 0 | 37/40/36/42 | https://github.com/giuse88/duka
+method-vantage-spread-swap-logger | 0 | Módszer: Vantage spread-, swap- és rollover-napló… | Végrehajtási minőség mérése | free | 0 | 90/89/88/89 | https://www.mql5.com/en/docs/marketinformation/symbolinfotick | Teendő (következtetett módszer): 1) OnTick-ben minden bid/ask/időbélyeg mentése…
+method-vantage-execution-audit | 0 | Módszer: Vantage végrehajtás-audit… | Végrehajtási minőség mérése | free | 0 | 87/88/86/86 | https://www.mql5.com/en/docs/trading/ordersendasync | Mérendő (következtetett módszer): kért ár vs deal ár (pip és $)…
+mt5-symbol-spec-export | 0 | Bróker-szimbólumspecifikáció és tick-export MT5-ből… | Piaci adatforrások | free | 0 | 84/87/85/83 | https://www.mql5.com/en/docs/python_metatrader5/mt5symbolinfo_py | A Vantage-specifikus adatok elsődleges forrása: SYMBOL_TRADE_CONTRACT_SIZE…
+mql5-reference | 0 | MQL5 Reference (hivatalos nyelvi és API-dokumentáció) | Végrehajtás, MetaTrader, API-k | free | 0 | 76/91/82/76 | https://www.mql5.com/en/docs | A teljes MQL5 nyelv, trade-függvények (OrderSend, CTrade), események…
+mt5-ontradetransaction | 0 | OnTradeTransaction / trade események (végrehajtás-mérés MT5-ben) | Végrehajtási minőség mérése | free | 0 | 80/85/81/80 | https://www.mql5.com/en/docs/event_handlers/ontradetransaction | Ezzel mérhető saját slippage (kért ár vs deal ár), order→fill késleltetés…
+mt5-strategy-tester | 0 | MT5 Strategy Tester (valós tickes mód, optimalizáló, forward teszt) | Kutatási források | free | 0 | 76/85/80/76 | https://www.metatrader5.com/en/terminal/help/algotrading/testing | Módok (mért, hivatalos súgó): Every tick (generált), Every tick based on real…
+metatrader5-python | 0 | MetaTrader5 Python csomag (hivatalos) | Végrehajtás, MetaTrader, API-k | free | ingyenes | 76/84/79/76 | https://pypi.org/project/MetaTrader5/ | Verzió 5.0.6231, kiadva 2026.09.27 (mért, PyPI JSON). Funkciók…
+mql5-economic-calendar | 0 | MQL5 beépített gazdasági naptár (Calendar* függvények) | Piaci adatforrások | free | 0 | 76/82/76/76 | https://www.mql5.com/en/docs/calendar | CalendarValueHistory/CalendarValueLast: tényleges/előző/előrejelzés érték…
+dukascopy-historical-data | 0 | Dukascopy Historical Data Feed (ingyenes FX/CFD tick) | Piaci adatforrások | free | ingyenes | 73/81/80/74 | https://www.dukascopy.com/swiss/english/marketwatch/historical/ | A legjobb ingyenes, hosszú FX tick-forrás: bid/ask tickek tick-szinttől havi…
+ibkr-tws-api | 0 | IBKR TWS API (C++/Java/Python/C#) és IB Gateway | Végrehajtás, MetaTrader, API-k | registration | ? | 72/84/78/72 | https://interactivebrokers.github.io/ | A legfontosabb tier-1 alternatív végrehajtás: 150+ piac, FX ECN (IdealPro)…
+gleif-api | 0 | GLEIF LEI API… | Referenciaadat | free | ingyenes | 68/88/76/69 | https://www.gleif.org/en/lei-data/gleif-api | Mért próbák: Vantage Global Prime LLP LEI 213800EXN2WUODF1C670 (GB), Vantage…
+cboe-vix-history | 0 | Cboe VIX napi történeti CSV (1990-től, ingyenes) | Piaci adatforrások | free | ingyenes | 68/83/76/72 | https://www.cboe.com/tradable_products/vix/vix_historical_data/ | Mért próba: VIX_History.csv első sor 1990-01-02 (17.24), utolsó 2026-11-13…
+openfigi | 0 | OpenFIGI API (Bloomberg nyílt instrumentum-azonosító leképezés) | Referenciaadat | free | ingyenes (API-kulccsal magasabb limit) | 66/86/73/68 | https://www.openfigi.com/api/overview | Mért próba (2026.11.15): POST https://api.openfigi.com/v3/mapping, TICKER=OTP…
+nyfed-markets-api | 0 | New York Fed Markets Data API (SOFR, EFFR, OBFR, TGCR, BGCR, repo) | Piaci adatforrások | free | ingyenes | 65/86/75/68 | https://markets.newyorkfed.org/static/docs/markets-api.html | Mért próba: SOFR 2026-11-12 = 3,90% (1. percentilis 3,84, 99. 3,98), volumen $3…
+ecb-estr-data-api | 0 | ECB Data Portal API – €STR és euróövezeti hozamgörbék | Piaci adatforrások | free | ingyenes | 65/86/75/68 | https://data.ecb.europa.eu/help/api/overview | Mért próba: €STR (EST.B.EU000A2X2A25.WT) 2026-11-12 = 2,443%. SDMX REST…
+vantage-mt-servers-datacenter | 0 | Vantage MT4/MT5 szervernevek és adatközpont-helyek | Brókerek | free | 0 | 75/72/71/72 | https://apac.vantagehelpcenter.com/hc/en-us/articles/11622132210447-Where-are-Vantage-trading-servers-located | Hivatalos: kereskedési szerverek Londonban és New Yorkban…
+ib-async | 0 | ib_async (az ib_insync utódja) – asyncio Python kliens az IBKR TWS… | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 68/79/72/68 | https://github.com/ib-api-reloaded/ib_async | Az eredeti erdewit/ib_insync…
+dukascopy-node | 0 | dukascopy-node – CLI/Node.js letöltő Dukascopy tickekhez | Piaci adatforrások | free | ingyenes (nyílt forrás) | 65/78/74/64 | https://github.com/Leo4815162342/dukascopy-node | A legkarbantartottabb Dukascopy-letöltő (utolsó push 2026.10.28, mért).…
+exchange-calendars | 0 | exchange_calendars – 50+ tőzsde kereskedési naptára (Python) | Referenciaadat | free | ingyenes (nyílt forrás) | 60/79/68/62 | https://github.com/gerrymanoim/exchange_calendars | 4.13.3 (PyPI 2026.11.14, mért). Ünnepnapok, korai zárás, szünetek tőzsdénként…
+mnb-intezmenykereso | 0 | MNB Intézménykereső + figyelmeztetések (magyar engedély-ellenőrzés) | Brókerek | free | 0 | 57/82/70/62 | https://intezmenykereso.mnb.hu/ | Ellenőrizhető, hogy egy bróker (vagy EU-s útlevéllel működő cég) jogosult-e…
+vantage-regulatory-warnings | 0 | Vantage – felügyeleti figyelmeztetések és eljárások… | Brókerek | free | 0 | 55/78/67/58 | https://www.financemagnates.com/forex/brokers/dutch-regulator-investigates-vantage-for-illegal-cfd-offering/ | Mért: AFM penalty payment order a Vantage Global Limited ellen 2024.10.24…
+vantage-margin-stop-out | 0 | Vantage margin call és stop-out szintek | Brókerek | free | 0 | 58/67/61/54 | https://global.vantagehelpcenter.com/hc/en-us/articles/10954321892367-What-is-the-margin-call-level-and-how-is-it-calculated | Globális help center: margin call 50%, stop-out 20% margin levelnél…
+vantage-global-limited-vfsc | 0 | Vantage Global Limited (VFSC, Vanuatu) – offshore jogalany | Brókerek | registration | Standard STP: 0 jutalék, spread ~1.0… | 56/64/61/52 | https://www.vantagemarkets.com/ | Bázis a jelenlegi számlához. Magyar lakost jellemzően a Vantage Global Limited…
+vantage-client-agreement-abusive | 0 | Vantage Global Limited Client Agreement – EA, scalping, arbitrázs… | Brókerek | free | 0 | 50/66/60/48 | https://www.vantagemarkets.com/company-profile/legal-documentation/vantageglobal-clientagreement | A 2025.08-as és 2023.05-ös Vantage Global Limited Client Agreement…
+vantage-payout-reputation | 0 | Vantage kifizetési reputáció (FPA, Trustpilot, Financial Commission) | Brókerek | free | 0 | 48/62/54/48 | https://www.forexpeacearmy.com/forex-reviews/6219/vantage-markets-review | Trustpilot TrustScore ~4.3 (keresési kivonat, becsült). FPA-n 2026-ban több…
+databento | 1 | Databento (CME/US equities/OPRA/ICE nyers piaci adat L1–L3) | Piaci adatforrások | freemium | Usage-based (CME történeti, $/GB) \\|… | 80/86/82/79 | https://databento.com/ | Intézményi minőségű, nanomásodperces időbélyegű nyers feed…
+mql5-custom-symbols | 1 | MT5 Custom Symbols + CustomTicksAdd… | Kutatási források | free | 0 | 70/80/76/73 | https://www.mql5.com/en/docs/customsymbols/customticksadd | Dukascopy/TrueFX/Tickstory tickeket egyedi szimbólumként betöltve a tester…
+massive-polygon | 1 | Massive (korábban Polygon.io) – US részvény/opció/index/FX/kripto API | Piaci adatforrások | freemium | Stocks: Basic $0, Starter $29… | 72/80/74/71 | https://massive.com/ | 2025 októberében rebrandelt Polygon.io…
+thetadata | 1 | Theta Data (olcsó US opciós és részvény tick-adat) | Piaci adatforrások | freemium | Options: Value $40/hó… | 74/78/74/74 | https://www.thetadata.net/ | Az OPRA tick-szintű opciós adat legolcsóbb forrása retailnek; helyi 'Terminal'…
+eia-open-data | 1 | EIA Open Data API (US olaj, gáz, áram statisztikák) | Piaci adatforrások | registration | ingyenes API-kulccsal | 70/81/76/74 | https://www.eia.gov/opendata/ | Egységes REST API: heti kőolaj- és termékkészletek (WPSR, szerda 10:30 ET)…
+libzmq-pyzmq | 1 | ZeroMQ (libzmq) és pyzmq | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 68/83/72/69 | https://github.com/zeromq/libzmq | Az EA-hidak alap-üzenetkezelője; pyzmq: 4 184 csillag, utolsó push 2026.11.03…
+fix-protocol-standard | 1 | FIX Protocol szabvány (FIX Trading Community) | Végrehajtás, MetaTrader, API-k | free | 0 | 68/84/72/69 | https://www.fixtrading.org/standards/ | FIX 4.2/4.4/5.0SP2 üzenetspecifikációk, FIXT, SBE (Simple Binary Encoding)…
+us-treasury-yield-curve | 1 | US Treasury Daily Par Yield Curve Rates (CSV/XML) | Piaci adatforrások | free | ingyenes | 65/86/75/68 | https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page&_format=csv | Napi par hozamgörbe (1 hó–30 év), éves CSV-letöltés…
+entsoe-transparency | 1 | ENTSO-E Transparency Platform… | Piaci adatforrások | registration | ingyenes, API-tokennel | 72/78/73/72 | https://transparency.entsoe.eu/ | Európai áram: terhelés és előrejelzés, termelés forrásonként, határkeresztező…
+norgate-data | 1 | Norgate Data… | Piaci adatforrások | paid | US stocks: USD 433.13 / 6 hó, USD… | 65/80/74/68 | https://norgatedata.com/ | Delisted értékpapírok és történeti indextagság (S&P 500, Russell) 1950-ig…
+pepperstone | 1 | Pepperstone (SCB Bahamas 1:1000 Pro; CySEC/BaFin EU; FCA; ASIC) | Brókerek | registration | ? | 68/78/72/65 | https://pepperstone.com/en/ | Pepperstone Markets Limited, Securities Commission of The Bahamas SIA-F217…
+mt5-market-depth-dom | 1 | MT5 Depth of Market (OnBookEvent, MarketBookGet) – bróker DOM… | Végrehajtási minőség mérése | free | 0 | 72/74/69/72 | https://www.mql5.com/en/docs/event_handlers/onbookevent | Ha a Vantage MT5 szerver ad DOM-ot (likviditás-szintek volumennel), az…
+ibkr-market-data | 1 | Interactive Brokers market data előfizetések | Piaci adatforrások | paid | non-pro: 'US Securities Snapshot and… | 66/79/71/66 | https://www.interactivebrokers.com/en/pricing/market-data-pricing.php | A legszélesebb retail-elérésű tőzsdei adat (US, Eurex, LSE, BÉT nem). Hungary…
+darwinex | 1 | Darwinex… | Brókerek | registration | pro: 1,5 USD/lot/megbízás (mért) | 70/72/70/70 | https://www.darwinex.com/ | A Darwinex márka és domain üzemeltetője a Tradeslide Trading Tech Ltd, FCA FRN…
+metaquotes-vps | 1 | MetaQuotes (MQL5) VPS – virtuális hosting a terminálból | Infrastruktúra | paid | 15 USD/hó (1 hó); 13 USD/hó (3 hó)… | 68/74/68/68 | https://www.mql5.com/en/vps | Mért (az oldalon): Mini 15 USD/hó (1 hó), Optimal 13 USD/hó (3 hó), Long 10,83…
+quickfix-engines | 1 | QuickFIX család (C++ / QuickFIX/J / QuickFIX/n / QuickFIX/Go) | Végrehajtás, MetaTrader, API-k | free | 0 | 64/78/68/66 | https://quickfixengine.org/ | C++: 2 013 csillag, push 2026.05.20; QuickFIX/J: 1 162 csillag, push…
+mnb-arfolyam-bubor | 1 | MNB hivatalos árfolyamok (SOAP webszolgáltatás) és BUBOR/statisztikák | Piaci adatforrások | free | ingyenes | 62/80/71/66 | https://www.mnb.hu/arfolyamok | SOAP WSDL mérve: műveletek GetCurrencies, GetCurrencyUnits…
+energy-charts-api | 1 | Energy-Charts API (Fraunhofer ISE) – EU áramárak és termelés, CC BY… | Piaci adatforrások | free | ingyenes | 68/74/68/70 | https://api.energy-charts.info/ | Mért próba: /price?bzn=HU 2026-11-10 → 15 perces unix_seconds idősor…
+tickmill | 1 | Tickmill (FSA Seychelles SD008 1:1000; CySEC 278/15; FCA 717270) | Brókerek | registration | Raw: $3/lot/oldal; Classic: 0 jutalék… | 66/74/70/64 | https://www.tickmill.com/ | Lábléc (mért): Tickmill UK Ltd FCA 717270 (+DFSA F007663), Tickmill Europe Ltd…
+ctrader-open-api | 1 | cTrader Open API (Spotware) – Protobuf/JSON trading API | Végrehajtás, MetaTrader, API-k | registration | ingyenes (bróker-díjak) | 66/74/68/66 | https://help.ctrader.com/open-api/ | API: két út. (1) cBot a terminálban vagy a felhőben, C# (.NET) vagy Python…
+ecb-eurofxref | 1 | ECB euro referencia-árfolyamok (napi XML/CSV, 1999-től) | Piaci adatforrások | free | ingyenes | 58/82/70/63 | https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html | Mért próba: 2026-11-13 EUR/USD 1.1052, EUR/HUF 365.60. Napi 14:15 CET körüli…
+iso-10383-mic | 1 | ISO 10383 Market Identifier Codes (MIC) lista | Referenciaadat | free | ingyenes | 58/82/68/61 | https://www.iso20022.org/market-identifier-codes | Tőzsdék és MTF-ek szabványos kódjai (pl. XBUD = BÉT, XCME, XEUR) havi…
+esma-firds | 1 | ESMA FIRDS (Financial Instruments Reference Data System) + ESMA… | Referenciaadat | free | ingyenes | 58/80/69/63 | https://registers.esma.europa.eu/publication/searchRegister?core=esma_registers_firds | Minden EU-ban kereskedett instrumentum MiFIR referenciaadata…
+pandas-market-calendars | 1 | pandas_market_calendars – tőzsdei és futures naptárak… | Referenciaadat | free | ingyenes (nyílt forrás) | 60/79/68/62 | https://github.com/rsheftel/pandas_market_calendars | 5.6.1 (PyPI 2026.11.14, mért). Futures-specifikus (CME Globex termékcsoportok)…
+tcapy | 1 | tcapy (Cuemacro) – nyílt FX transaction cost analysis | Végrehajtási minőség mérése | free | 0 | 67/70/66/72 | https://github.com/cuemacro/tcapy | A saját Vantage-fill-eket Dukascopy (ingyenes adapter) vagy New Change FX…
+fx-global-code | 1 | FX Global Code (GFXC) – last look, végrehajtási elvek | Végrehajtási minőség mérése | free | 0 | 57/81/70/62 | https://www.globalfxc.org/fx-global-code/ | A bankközi FX magatartási kódex, utolsó frissítés 2024. december (mért). A last…
+mql4-reference | 1 | MQL4 Reference (MT4) | Végrehajtás, MetaTrader, API-k | free | 0 | 66/72/62/66 | https://docs.mql4.com/ | MT4 EA-k (sok örökölt grid EA) dokumentációja. A Vantage MT4-et is kínál.
+tiingo | 1 | Tiingo (EOD 30+ év, IEX intraday, kripto, hírek, fundamentumok) | Piaci adatforrások | freemium | Starter $0; Power $30/hó vagy $300/év… | 60/75/68/62 | https://www.tiingo.com/ | Power: 110 531 értékpapír, 10 000 kérés/óra, 100 000/nap, 40 GB/hó; 30+ év…
+nasdaq-data-link | 1 | Nasdaq Data Link (ex-Quandl) + Sharadar | Piaci adatforrások | freemium | adatkészletenként… | 60/74/69/64 | https://data.nasdaq.com/ | Sharadar: survivorship-mentes US részvényár és fundamentum (SEP, SF1) – olcsóbb…
+ic-markets-global-raw-trading | 1 | IC Markets Global / 'IC' (Raw Trading Ltd, FSA Seychelles) | Brókerek | registration | Raw: nem ellenőrzött… | 66/71/68/60 | https://www.ic.com/en/ | Raw Trading Ltd, Seychelles reg. 8419879-1, FSA Securities Dealer licenc SD018…
+mql-zmq | 1 | mql-zmq – ZeroMQ binding MQL4/MQL5-höz | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 64/68/62/66 | https://github.com/dingmaotu/mql-zmq | ZeroMQ binding MQL-hez (32 bites MT4 és 64 bites MT5); az 'EA mint vékony…
+alpaca | 1 | Alpaca (US részvény/opció/kripto bróker API + market data) | Végrehajtás, MetaTrader, API-k | freemium | Market data: Free $0… | 62/71/65/57 | https://alpaca.markets/ | Modern REST + WebSocket API, ingyenes paper trading, alpaca-py 0.45.0…
+ic-markets-eu | 1 | IC Markets (EU) Ltd (CySEC) – EU-s, 1:30 | Brókerek | registration | Raw: 3,50 USD/lot/oldal; cTrader 3… | 61/72/62/61 | https://www.icmarkets.eu/en/ | Jogalany: IC Markets (EU) Ltd, HE 356877, CySEC 362/18 (mért, lábléc). Az…
+mt5-metatester-agents | 1 | MetaTester ügynökök (helyi/hálózati Strategy Tester agentek) | Kutatási források | free | 0 | 56/73/66/60 | https://www.metatrader5.com/en/terminal/help/algotrading/metatester | Saját gépeken futó tesztelő-ügynökök a helyi hálózatban – a felhő helyett…
+eodhd | 1 | EODHD (EOD Historical Data) – globális EOD, intraday, fundamentumok | Piaci adatforrások | freemium | Free $0 (20 hívás/nap); EOD All-World… | 58/69/64/60 | https://eodhd.com/ | 150 000+ ticker világszerte, 30+ év EOD, US 1-min 2004-től, egyéb intraday…
+forexvps-net | 1 | ForexVPS.net – MT4/MT5 VPS 22 helyszínen | Infrastruktúra | paid | Core $40/hó (2 CPU/4 GB), Edge $60… | 61/68/60/62 | https://www.forexvps.net/ | Mért (az oldalon, 2026-11-15, novemberi akció): Core 2 vCPU/4 GB/100 GB – 36…
+mt5-linux-wine | 1 | MetaTrader 5 Linuxon (Wine) – hivatalos telepítési útmutató | Infrastruktúra | free | ingyenes (OSS) | 54/68/60/56 | https://www.metatrader5.com/en/terminal/help/start_advanced/install_linux | A MetaQuotes hivatalos mt5linux.sh szkriptje Ubuntu/Debian/Mint/Fedora alatt…
+myfxbook | 1 | Myfxbook… | Végrehajtási minőség mérése | free | 0 | 57/64/60/57 | https://www.myfxbook.com/ | Investor-jelszóval összekötött MT számla 'verified' track recordja…
+tickstory | 1 | Tickstory (Dukascopy tick → MT4/MT5 export, 99,9% modelling) | Piaci adatforrások | freemium | Lite ingyenes; Standard/Professional… | 52/64/61/54 | https://tickstory.com/ | Windows-alkalmazás, amely Dukascopy tickeket tölt le és MT4 FXT/HST vagy MT5…
+vantage-international-group-cima | 1 | Vantage International Group Limited (CIMA, Kajmán-szigetek) | Brókerek | registration | ? | 54/60/56/50 | https://www.cima.ky/ | CIMA Securities Investment Business Law (SIBL) szám: 1383491 a Vantage help…
+histdata | 1 | HistData.com (ingyenes FX tick és M1) | Piaci adatforrások | free | ingyenes; FTP/SFTP $27 egyszeri… | 52/60/57/55 | https://www.histdata.com/ | ~66 FX pár + néhány fém/olaj/index, tick és M1, Generic ASCII / MetaTrader /…
+offshore-regulator-registers | 1 | Offshore felügyeletek registerei: VFSC (Vanuatu), CIMA (Kajmán), FSA… | Brókerek | free | 0 | 48/65/56/50 | https://www.vfsc.vu/ | A brókeroldalakon közölt licencszámok…
+financial-commission | 1 | The Financial Commission – független FX-vitarendező testület | Brókerek | free | 0 | 46/62/54/47 | https://financialcommission.org/ | Offshore brókerek tagsága esetén panasz-fórum és Compensation Fund; az FPA-n…
+orats | 2 | ORATS Data API (US opciók: SMV IV-felület, greeks, 1-min intraday) | Piaci adatforrások | paid | Delayed $199/hó; Live $299/hó; Live… | 69/72/69/69 | https://orats.com/
+lmax-global | 2 | LMAX Global (LMAX Broker Ltd FCA / LMAX Broker Europe CySEC) – no… | Végrehajtás, MetaTrader, API-k | registration | nem ellenőrzött | 68/74/68/68 | https://www.lmax.com/global/
+iqfeed | 2 | IQFeed (DTN) – retail real-time tick feed US részvény/opció/futures/FX | Piaci adatforrások | paid | Core $108.15/hó + $50 indulási díj… | 65/72/65/64 | https://www.iqfeed.net/
+dukascopy-jforex | 2 | Dukascopy Bank / Dukascopy Europe – JForex (Java API, FIX, ECN) | Végrehajtás, MetaTrader, API-k | registration | ? | 64/72/66/64 | https://www.dukascopy.com/swiss/english/forex/jforex/
+ctrader-algo | 2 | cTrader Algo (cBots C#/Python-ban) | Végrehajtás, MetaTrader, API-k | free | 0 | 63/72/64/62 | https://help.ctrader.com/ctrader-algo/
+saxo-openapi | 2 | Saxo OpenAPI (Saxo Bank – EU-s multi-asset bróker REST/streaming API) | Végrehajtás, MetaTrader, API-k | registration | ? | 60/72/64/62 | https://www.developer.saxo/
+beeks-group | 2 | Beeks Group (BeeksFX) – pénzügyi felhő, Equinix-colocation VPS | Infrastruktúra | paid | ? | 62/71/62/62 | https://www.beeksgroup.com/
+cboe-datashop | 2 | Cboe DataShop (opciós EOD, quote, trade, Open-Close, CFE) | Piaci adatforrások | paid | termékenként (nem nyilvános az oldalon) | 56/71/68/62 | https://datashop.cboe.com/
+mtapi | 2 | MtApi – .NET API MT4/MT5-höz | Végrehajtás, MetaTrader, API-k | free | 0 | 59/70/62/60 | https://github.com/vdemydiuk/mtapi
+findatapy | 2 | findatapy (Cuemacro) – egységes piaci adat-letöltő… | Piaci adatforrások | free | 0 | 59/68/63/60 | https://github.com/cuemacro/findatapy
+fp-markets | 2 | FP Markets (First Prudential Markets – ASIC, CySEC, FSA Seychelles) | Brókerek | registration | ? | 60/69/64/56 | https://www.fpmarkets.com/
+hupx | 2 | HUPX (Magyar Áramtőzsde) – day-ahead és intraday piaci adatok | Piaci adatforrások | freemium | nyilvános összesítők ingyenesek… | 59/68/62/62 | https://hupx.hu/
+mavir | 2 | MAVIR (magyar átviteli rendszerirányító) – rendszerterhelés, termelés | Piaci adatforrások | free | 0 | 60/68/60/63 | https://www.mavir.hu/
+mt5-history-report | 2 | MT5 Trading Report (beépített számla-teljesítmény riport) | Végrehajtási minőség mérése | free | 0 | 55/70/63/58 | https://www.metatrader5.com/en/terminal/help/trading_advanced/history_report
+six-iso4217 | 2 | SIX – ISO 4217 devizakódok és adatszabványok | Referenciaadat | free | ingyenes lista | 50/76/64/56 | https://www.six-group.com/en/products-services/financial-information/market-reference-data/data-standards.html
+mql5-cloud-network | 2 | MQL5 Cloud Network (elosztott optimalizálás felhő-ügynökökkel) | Kutatási források | paid | használatalapú, MQL5-számláról fizetve… | 54/68/63/57 | https://cloud.mql5.com/
+ibind-ibeam | 2 | IBind és IBeam – IBKR Web API (Client Portal) Python kliens és… | Végrehajtás, MetaTrader, API-k | free | 0 | 57/68/60/57 | https://github.com/Voyz/ibind
+nasdaq-itch-samples | 2 | Nasdaq TotalView-ITCH mintafájlok (emi.nasdaq.com) | Piaci adatforrások | free | ingyenes minták | 52/70/64/60 | https://emi.nasdaq.com/ITCH/
+fusion-markets | 2 | Fusion Markets (VFSC, FSA Seychelles SD096, ASIC) | Brókerek | registration | általános jutalék $2.25/oldal (mért) | 59/66/60/56 | https://fusionmarkets.com/
+stocksharp | 2 | StockSharp (S#) – C# kereskedési platform sok connectorral… | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 58/66/60/58 | https://github.com/StockSharp/StockSharp
+eex-transparency | 2 | EEX Transparency Platform… | Piaci adatforrások | free | ingyenes megtekintés | 60/64/58/62 | https://www.eex-transparency.com/
+truefx | 2 | TrueFX (Integral OCX alapú FX top-of-book tick) | Piaci adatforrások | paid | Streaming: Professional $4 950/hó… | 60/63/58/58 | https://www.truefx.com/
+oanda-v20-api | 2 | OANDA v20 REST API (FX/CFD árak, történeti gyertyák, kereskedés) | Végrehajtás, MetaTrader, API-k | registration | ingyenes (bróker-díjak) | 58/64/58/56 | https://developer.oanda.com/rest-live-v20/introduction/
+firstrate-data | 2 | FirstRate Data… | Piaci adatforrások | paid | bundle-áras, egyszeri vásárlás… | 52/68/64/57 | https://firstratedata.com/
+exness | 2 | Exness (FSA Seychelles, CySEC, FSCA… – 'unlimited' leverage) | Brókerek | registration | ? | 58/65/60/52 | https://www.exness.com/
+dwxconnect | 2 | Darwinex DWX Connect (fájl-alapú MT4/MT5 ↔ Python híd) | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/66/58/58 | https://github.com/darwinex/dwxconnect
+twelve-data | 2 | Twelve Data (részvény, FX, kripto REST/WS) | Piaci adatforrások | freemium | Basic $0 (8 kredit/perc, 800/nap); Grow… | 56/64/56/55 | https://twelvedata.com/
+lobster | 2 | LOBSTER (akadémiai Nasdaq limit order book rekonstrukció) | Piaci adatforrások | paid | akadémiai előfizetés (nem ellenőrzött) | 49/66/62/56 | https://lobsterdata.com/
+simplefix-pyfixmsg | 2 | simplefix és pyfixmsg – könnyű Python FIX üzenetkezelők | Végrehajtás, MetaTrader, API-k | free | 0 | 56/64/54/58 | https://github.com/da4089/simplefix
+bse-market-data | 2 | BÉT (Budapesti Értéktőzsde) piaci adatok | Piaci adatforrások | freemium | ? | 52/64/58/58 | https://www.bse.hu/
+mql5-python-integration-joaopeuko | 2 | Mql5-Python-Integration (mqpy) – Python EA-keret a MetaTrader5… | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://github.com/Joaopeuko/Mql5-Python-Integration
+ea31337-framework | 2 | EA31337 – nyílt MQL4/MQL5 EA-keretrendszer és stratégiák | Kutatási források | free | ingyenes (nyílt forrás) | 54/61/56/56 | https://github.com/EA31337/EA31337
+cqg-data-factory | 2 | CQG Data Factory (történeti futures tick és bar) | Piaci adatforrások | paid | tételenként (nem ellenőrzött) | 50/64/60/56 | https://www.cqgdatafactory.com/
+intrinio | 2 | Intrinio (US részvény/opció/fundamentum adat) | Piaci adatforrások | paid | csomagonként (nem ellenőrzött) | 54/62/56/55 | https://intrinio.com/
+metatrader5-docker-gmag11 | 2 | MetaTrader5-Docker (MT5 + Wine + Python RPyC konténerben) | Infrastruktúra | free | ingyenes (OSS) | 52/63/55/53 | https://github.com/gmag11/MetaTrader5-Docker
+fxcm-marketdata | 2 | FXCM MarketData (ingyenes tick és candle archívum GitHubon) | Piaci adatforrások | free | 0 | 51/62/58/53 | https://github.com/fxcm/MarketData
+csi-data | 2 | CSI Data (Unfair Advantage) – futures és részvény EOD, folytonos… | Piaci adatforrások | paid | előfizetés (nem ellenőrzött) | 50/63/58/54 | https://www.csidata.com/
+ivolatility | 2 | IVolatility (opciós IV-adatok, IV-index, történeti felületek) | Piaci adatforrások | paid | ? | 51/61/58/55 | https://www.ivolatility.com/
+tick-data-suite | 2 | Tick Data Suite (eareview.net, Birt) – MT4/MT5 tick-backtest… | Piaci adatforrások | paid | előfizetés… | 50/61/57/52 | https://eareview.net/tick-data-suite
+financial-modeling-prep | 2 | Financial Modeling Prep (FMP) – fundamentumok, árak, naptárak API | Piaci adatforrások | freemium | Free 250 hívás/nap; Starter ~$22–29/hó… | 51/61/54/52 | https://site.financialmodelingprep.com/
+fx-blue | 2 | FX Blue (MT4/MT5 statisztika, trade copier, publikus számla-elemzés) | Végrehajtási minőség mérése | free | 0 | 52/60/54/52 | https://www.fxblue.com/
+dwx-zeromq-connector | 2 | Darwinex DWX ZeroMQ Connector (Python ↔ MT4) | Végrehajtás, MetaTrader, API-k | free | ingyenes (nyílt forrás) | 54/56/49/58 | https://github.com/darwinex/dwx-zeromq-connector
+finnhub | 2 | Finnhub (freemium globális részvény, FX, fundamentum API) | Piaci adatforrások | freemium | ingyenes szint + fizetős csomagok… | 51/60/52/50 | https://finnhub.io/
+vantage-global-prime-llp-fca | 2 | Vantage Global Prime LLP (FCA, UK) | Brókerek | registration | ? | 46/60/52/46 | https://www.fca.org.uk/news/warnings/vantagemarketscom
+alpha-vantage | 2 | Alpha Vantage (freemium részvény/FX/kripto/technikai indikátor API) | Piaci adatforrások | freemium | Free 25 kérés/nap; Premium… | 48/58/52/50 | https://www.alphavantage.co/
+mql5-signals | 2 | MQL5 Signals (copy trading és nyilvános track record) | Közösségek | freemium | ? | 50/54/50/48 | https://www.mql5.com/en/signals
+kibot | 2 | Kibot (intraday és tick történeti adat: részvény, ETF, futures, FX) | Piaci adatforrások | paid | $139–$4 800 tartomány… | 43/56/50/48 | https://www.kibot.com/
+metaapi-cloud | 2 | MetaApi (metaapi.cloud) – felhős REST/WebSocket API MT4/MT5 számlákhoz | Végrehajtás, MetaTrader, API-k | paid | használatalapú (nem ellenőrzött) | 44/54/50/42 | https://metaapi.cloud/
+yfinance | 2 | yfinance (nem hivatalos Yahoo Finance letöltő) | Piaci adatforrások | free | ingyenes (nyílt forrás) | 42/52/48/38 | https://github.com/ranaroussi/yfinance
+mql5-market | 2 | MQL5 Market (EA- és indikátorpiac) | Közösségek | freemium | ? | 42/49/44/42 | https://www.mql5.com/en/market
+cme-datamine | 3 | CME DataMine (CME/CBOT/NYMEX/COMEX hivatalos történeti adat) | Piaci adatforrások | paid | adattípus és időtartam szerint… | 56/74/71/63 | https://www.cmegroup.com/market-data/datamine-historical-data.html
+eurex-data | 3 | Eurex market data (EU futures/opciók: Bund, Euro Stoxx, Euribor) | Piaci adatforrások | paid | ? | 60/74/66/62 | https://www.eurex.com/ex-en/data
+lseg-tick-history | 3 | LSEG (Refinitiv) Tick History | Piaci adatforrások | institutional | egyedi szerződés | 55/74/71/60 | https://www.lseg.com/en/data-analytics/market-data/data-feeds/tick-history
+rithmic | 3 | Rithmic (R \| API, R \| Protocol – futures végrehajtás és market data) | Végrehajtás, MetaTrader, API-k | paid | ? | 64/69/62/62 | https://www.rithmic.com/
+wrds | 3 | WRDS (Wharton Research Data Services) | Piaci adatforrások | institutional | intézményi előfizetés | 53/74/70/58 | https://wrds-www.wharton.upenn.edu/
+cqg-api | 3 | CQG (CQG Integrated Client, WebAPI, FIX) | Végrehajtás, MetaTrader, API-k | paid | nem ellenőrzött | 62/68/62/62 | https://www.cqg.com/
+optionmetrics-ivydb | 3 | OptionMetrics IvyDB (US és globális opciós adatbázis, IV-felület) | Piaci adatforrások | institutional | intézményi | 54/72/68/59 | https://optionmetrics.com/
+crsp-us-stock | 3 | CRSP US Stock Databases (Morningstar CRSP) | Piaci adatforrások | institutional | intézményi licenc (nem nyilvános) | 50/74/68/56 | https://www.crsp.org/research/crsp-us-stock-databases/
+oanda-eu | 3 | OANDA EU (OANDA TMS Brokers – EU-szabályozott) | Brókerek | registration | ? | 58/70/60/58 | https://www.oanda.com/eu-en/
+primexm-xcore | 3 | PrimeXM XCore (brókeroldali MT4/MT5 bridge és likviditás-aggregátor) | Végrehajtás, MetaTrader, API-k | institutional | ? | 59/68/60/59 | https://www.primexm.com/
+ice-data-services | 3 | ICE Data Services (fixed income, pricing & analytics, ICE futures) | Piaci adatforrások | institutional | egyedi | 54/70/62/56 | https://www.ice.com/market-data
+tickdata-com | 3 | Tick Data, LLC (tickdata.com) – intézményi minőségű tisztított… | Piaci adatforrások | paid | nem nyilvános | 51/68/64/56 | https://www.tickdata.com/
+sec-rule-605 | 3 | SEC Rule 605/606 végrehajtás-minőségi riportok (2024-es módosítás) | Végrehajtási minőség mérése | free | 0 | 52/69/61/58 | https://www.sec.gov/
+new-change-fx | 3 | New Change FX (NCFX) – független FX mid-rate és benchmark tick-adat | Piaci adatforrások | paid | ? | 57/66/58/58 | https://www.newchangefx.com/
+onezero-centroid | 3 | oneZero Hub és Centroid Solutions… | Végrehajtás, MetaTrader, API-k | institutional | ? | 54/65/55/54 | https://www.onezero.com/
+lbma-prices | 3 | LBMA Precious Metal Prices (arany/ezüst/platina benchmark) | Piaci adatforrások | freemium | ingyenes | 48/67/60/52 | https://www.lbma.org.uk/prices-and-data/precious-metal-prices
+algoseek | 3 | AlgoSeek (US részvény/opció/futures tick és bar, TAQ-szerű) | Piaci adatforrások | paid | nem nyilvános | 48/62/58/54 | https://www.algoseek.com/
+barchart-ondemand | 3 | Barchart OnDemand (futures/commodity/részvény API) | Piaci adatforrások | paid | egyedi | 52/60/54/52 | https://www.barchart.com/ondemand
+xm-trading-point | 3 | XM… | Brókerek | registration | ? | 52/61/54/50 | https://www.xm.com/
+anna-dsb | 3 | ANNA DSB (OTC derivatív ISIN-ek) és ANNA ISIN-ügynökségek | Referenciaadat | freemium | alap keresés ingyenes, felhasználói… | 46/67/55/50 | https://www.anna-dsb.com/
+nord-pool-data | 3 | Nord Pool Data Portal (északi és balti áramárak) | Piaci adatforrások | freemium | API előfizetés; ár nem ellenőrzött | 51/60/54/54 | https://data.nordpoolgroup.com/
+bestx | 3 | BestX (State Street) – intézményi FX TCA és best execution | Végrehajtási minőség mérése | institutional | intézményi | 48/63/56/52 | https://www.bestx.co.uk/
+tradefeedr | 3 | Tradefeedr – FX trading analytics és LP-teljesítmény API | Végrehajtási minőség mérése | institutional | ? | 50/62/54/53 | https://tradefeedr.com/
+eightcap | 3 | Eightcap (SCB Bahamas SIA-F220, FSA Seychelles SD100, FSC Mauritius) | Brókerek | registration | ? | 53/59/54/50 | https://www.eightcap.com/en/traders/
+emmi-euribor | 3 | EMMI – Euribor (és €STR-alapú benchmarkok) | Piaci adatforrások | freemium | késleltetett ingyenes; valós idejű… | 45/66/58/50 | https://www.emmi-benchmarks.eu/
+ceegex | 3 | CEEGEX (közép-kelet-európai gáztőzsde, Budapest) | Piaci adatforrások | freemium | ? | 50/59/53/54 | https://ceegex.hu/
+tastytrade-api | 3 | tastytrade API + 'tastytrade' Python SDK (US opciók/futures) | Végrehajtás, MetaTrader, API-k | free | 0 | 52/56/52/49 | https://github.com/tastyware/tastytrade
+axi | 3 | Axi… | Brókerek | registration | ? | 51/55/52/47 | https://www.axi.com/int
+blackbull | 3 | BlackBull Markets (1:500, MT4/MT5/cTrader) | Brókerek | registration | ? | 51/55/52/47 | https://blackbull.com/
+iex-hist | 3 | IEX Exchange historical PCAP (TOPS/DEEP) | Piaci adatforrások | registration | közvetlen letöltés jelenleg nem elérhető | 44/58/53/52 | https://iextrading.com/trading/market-data/
+tradovate-api | 3 | Tradovate API (futures bróker REST/WebSocket) | Végrehajtás, MetaTrader, API-k | registration | ? | 50/54/50/47 | https://api.tradovate.com/
+historicaloptiondata | 3 | HistoricalOptionData.com (US opciós EOD láncok) | Piaci adatforrások | paid | egyszeri fájl-vásárlás (nem ellenőrzött) | 45/55/51/50 | https://www.historicaloptiondata.com/
+tradelocker | 3 | TradeLocker (új retail CFD platform API-val, MT4/MT5 alternatíva) | Végrehajtás, MetaTrader, API-k | registration | ? | 49/54/47/48 | https://tradelocker.com/
+nycservers-vantage | 3 | NYCServers – Vantage-specifikus forex VPS oldal | Infrastruktúra | paid | ? | 48/52/46/48 | https://newyorkcityservers.com/vantage-vps
+optionsdx | 3 | OptionsDX (ingyenes/olcsó EOD opciós adat SPX, SPY, QQQ…) | Piaci adatforrások | freemium | ? | 44/52/48/48 | https://www.optionsdx.com/
+vantage-global-prime-pty-asic | 3 | Vantage Global Prime Pty Ltd (ASIC, Ausztrália) | Brókerek | registration | ? | 42/55/48/38 | https://au.vantagehelpcenter.com/hc/en-au/articles/11715006659855-Who-regulates-Vantage
+pandas-datareader | 3 | pandas-datareader (Stooq, FRED, Fama-French stb. olvasó) | Piaci adatforrások | free | ingyenes | 42/52/46/44 | https://github.com/pydata/pandas-datareader
+roboforex | 3 | RoboForex (FSC Belize, 1:2000) | Brókerek | registration | ? | 44/47/44/37 | https://roboforex.com/
+vt-markets | 3 | VT Markets (a Vantage-csoport egykori testvérmárkája) | Brókerek | registration | ? | 44/46/42/39 | https://www.vtmarkets.com/
+vantage-markets-pty-fsca | 3 | Vantage Markets (Pty) Ltd (FSCA, Dél-Afrika) | Brókerek | registration | ? | 38/44/38/34 | https://www.vantagemarkets.com/contact-us/
+duka-giuse88 | 3 | duka – régi Python Dukascopy letöltő | Piaci adatforrások | free | ingyenes (nyílt forrás) | 37/40/36/42 | https://github.com/giuse88/duka
 
 ## Kripto: tőzsdék, adatok, on-chain, DeFi
-nautilus-crypto-adapters | NautilusTrader kripto adapterek (Binance, Bybit, OKX, Coinbase, Kraken | free | ingyenes | 87/94/91/86 | https://nautilustrader.io/docs/latest/integrations/
-tardis-dev | Tardis.dev – historikus tick, L2 incremental, L3, opció, funding, likv | paid | Havi (mért): Solo 700–1200 USD, Professi | 80/90/90/84 | https://tardis.dev/
-ccxt | CCXT – egységes kripto-tőzsdei API (JS/TS/Python/C#/PHP/Go/Java/Rust) | free | ingyenes (CCXT Pro WS is a fő csomagban) | 76/89/84/77 | https://github.com/ccxt/ccxt
-strat-perp-funding-cash-and-carry | Perp funding cash-and-carry (long spot, short perp) | free | 0 | 80/84/85/79 | https://arxiv.org/abs/2212.06888
-binance-public-data | Binance public data (data.binance.vision) – ingyenes tömeges historiku | free | ingyenes | 74/85/86/76 | https://data.binance.vision/
-strat-dated-futures-basis-crypto-carry | Dated futures basis / crypto carry (Schmeling–Schrimpf–Todorov) | free | 0 | 74/84/84/76 | https://www.bis.org/publ/work1087.htm
-defillama-free-api | DefiLlama ingyenes API (TVL, árak, DEX/perp-volumen, díjak, yield) | free | ingyenes, kulcs nélkül; Pro API 300 USD/ | 70/82/78/74 | https://api-docs.defillama.com/
-hu-kripto-szja-15 | Magyar kriptoadó: 15% szja (Szja tv. 67/C. §, 2022-01-01-től) | free | ingyenes | 62/92/80/68 | https://nav.gov.hu/ado/szja/a-kriptougyletek-jovedelmenek-adozasa
-eu-mica-regulation | MiCA – (EU) 2023/1114 rendelet a kriptoeszköz-piacokról | free | ingyenes | 60/90/82/68 | https://eur-lex.europa.eu/eli/reg/2023/1114/oj
-esma-perpetuals-cfd-statement-2026 | ESMA nyilatkozat (2026-02-24): a 'perpetual futures' CFD lehet (ESMA35 | free | ingyenes | 64/89/78/68 | https://www.esma.europa.eu/node/228326
-binance-aws-tokyo-region | Binance matching engine helye: AWS Tokió (ap-northeast-1) | free | AWS EC2 Tokió díjszabás szerint | 78/70/70/74 | https://cloud.zenlayer.com/blog/crypto-trading-latency-tokyo
-eu-dac8 | DAC8 – (EU) 2023/2226 irányelv (kripto-adatszolgáltatás, CARF) | free | ingyenes | 58/88/77/64 | https://taxation-customs.ec.europa.eu/taxation/tax-transparency-cooperation/administrative-co-operation-and-mutual-assistance/directive-administrative-cooperation-dac/dac8_en
-eu-mica-transition-end-2026 | MiCA átmeneti időszak vége (2026-07-01) és az ESMA interim CASP-regisz | free | ingyenes | 61/84/73/64 | https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica
-hu-kripto-validalas-2025-hatalyon-kivul-2026 | Magyar kripto-validálási kötelezettség (2025) és eltörlése (2026) | free | ingyenes | 60/77/68/63 | https://www.portfolio.hu/uzlet/20260618/fordulat-a-magyar-kriptoszabalyozasban-megszunhet-a-validacios-kotelezettseg-843876
-mica-engedelyes-tozsdek-hu | MiCA-engedélyes tőzsdék listája (Magyarországról elérhetőség) | free | ingyenes | 56/70/62/58 | https://micawatch.com/article/mica-licensed-crypto-exchanges-list-2026
-strat-crypto-market-making-as | Kripto market making (Avellaneda–Stoikov / GLFT, maker-rebate) | free | 0 | 82/82/80/78 | https://doi.org/10.1080/14697680701381228
-binance-usdm-futures-api | Binance USDⓈ-M Futures API (perpetual + negyedéves) | registration | API ingyenes | 80/81/83/73 | https://developers.binance.com/docs/derivatives/usds-margined-futures/general-info
-hyperliquid-api | Hyperliquid API (on-chain perp DEX, CLOB) | free | API ingyenes; nincs KYC | 80/80/82/76 | https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api
-hftbacktest-crypto | hftbacktest – tick/L2 HFT backtest kripto adatgyűjtőkkel | free | ingyenes | 80/80/80/83 | https://github.com/nkaz001/hftbacktest
-bybit-v5-api | Bybit V5 API (spot, linear, inverse, opció) | registration | API ingyenes | 78/80/80/74 | https://bybit-exchange.github.io/docs/v5/intro
-okx-v5-api | OKX V5 API | registration | API ingyenes | 78/79/78/75 | https://www.okx.com/docs-v5/en/
-deribit-api | Deribit API (opció, perp, futures) | registration | API ingyenes | 77/80/80/72 | https://docs.deribit.com/
-tardis-machine | tardis-machine (lokális replay szerver) | freemium | szoftver ingyenes, adat Tardis-előfizeté | 72/84/80/76 | https://github.com/tardis-dev/tardis-machine
-cryptofeed | cryptofeed (bmoscon) – több tőzsdés WS feed handler | free | ingyenes | 78/80/76/78 | https://github.com/bmoscon/cryptofeed
-binance-spot-api | Binance Spot REST/WebSocket API | registration | API ingyenes; kereskedési díjak külön | 74/81/80/69 | https://developers.binance.com/docs/binance-spot-api-docs
-hummingbot | Hummingbot – nyílt market making és arbitrázs bot | free | ingyenes | 74/80/78/75 | https://github.com/hummingbot/hummingbot
-strat-cross-exchange-spot-arbitrage | Tőzsdék közötti spot-arbitrázs (Makarov–Schoar, JFE 2020) | free | 0 | 74/82/77/72 | https://dspace.mit.edu/handle/1721.1/130495
-strat-liquidation-cascade | Likvidációs kaszkád kereskedése (2025-10-10 esettanulmány) | free | 0 | 80/74/76/78 | https://cointelegraph.com/news/19b-crypto-market-crash-leverage-china-tariffs
-coinglass-api | CoinGlass API (funding, OI, likvidáció, heatmap) | paid | Éves díj (mért, 2026-11-15, Black Friday | 76/76/76/76 | https://www.coinglass.com/
-defillama-stablecoins | DefiLlama Stablecoins API (kibocsátás és lánconkénti eloszlás) | free | ingyenes | 72/80/78/76 | https://stablecoins.llama.fi/stablecoins
-flashbots-mempool-dumpster | Mempool Dumpster (Flashbots) – ETH mempool-archívum | free | ingyenes | 72/79/78/78 | https://mempool-dumpster.flashbots.net/
-strat-cross-venue-funding-spread | Tőzsdék közti funding-különbözet (pl. Hyperliquid óránkénti vs. CEX 8  | free | 0 | 77/75/78/73 | https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding
-dune | Dune (SQL on-chain adattárház, API) | freemium | Free (dashboard-nézés), Analyst, Plus, E | 68/79/77/72 | https://dune.com/
-mempool-space | mempool.space (BTC mempool, díjbecslés, REST/WS API, self-host) | free | publikus API ingyenes; saját példány tel | 72/79/72/72 | https://mempool.space/
-freqtrade | freqtrade – kripto trading bot (backtest, hyperopt, FreqAI) | free | ingyenes | 68/80/77/70 | https://github.com/freqtrade/freqtrade
-strat-crypto-factor-momentum | Kripto keresztmetszeti faktorok (piac, méret, momentum) | free | 0 | 68/79/78/73 | https://www.nber.org/papers/w25882
-paper-perpetual-futures-pricing-ahj | Perpetual Futures Pricing (Ackerer, Hugonnier, Jermann, 2023) | free | ingyenes (preprint/working paper) | 64/82/80/72 | https://arxiv.org/abs/2310.11771
-hyperliquid-tokyo-validators | Hyperliquid validátorok: AWS Tokió (ap-northeast-1) | free | 0 | 76/71/71/71 | https://www.dwellir.com/docs/hyperliquid/architecture.md
-cryo-paradigm | cryo (Paradigm) – EVM-adat kinyerése parquetbe | free | ingyenes | 68/78/74/72 | https://github.com/paradigmxyz/cryo
-cryptoquant | CryptoQuant (on-chain + piaci adat, API) | freemium | Basic ingyenes (10K API-kredit/hó, napi) | 69/75/73/72 | https://cryptoquant.com/
-coin-metrics-community | Coin Metrics Community API + nyílt CSV (Talos-csoport) | free | Community API ingyenes | 64/79/76/68 | https://docs.coinmetrics.io/
-uniswap-v3-subgraph | Uniswap v3 subgraph (pool, swap, tick, pozíció) | free | a The Graph lekérdezési díjai szerint | 70/74/72/72 | https://github.com/Uniswap/v3-subgraph
-paper-flash-boys-2 | Flash Boys 2.0: Frontrunning, Transaction Reordering, and Consensus In | free | ingyenes (preprint/working paper) | 62/78/76/71 | https://arxiv.org/abs/1904.05234
-bybit-public-data | Bybit public data (public.bybit.com) | free | ingyenes | 66/74/74/68 | https://public.bybit.com/
-hu-mica-vegrehajtasi-tv-2024-vii | 2024. évi VII. törvény a kriptoeszközök piacáról (magyar MiCA-végrehaj | free | ingyenes | 57/84/74/64 | https://njt.jog.gov.hu/jogszabaly/2024-7-00-00
-the-graph | The Graph (subgraph-indexelés, decentralizált hálózat) | freemium | lekérdezésenkénti díj a hálózaton (nem e | 66/73/70/68 | https://thegraph.com/
-paper-liu-tsyvinski-risks-returns | Risks and Returns of Cryptocurrency (Liu, Tsyvinski; NBER w24877; RFS  | free | ingyenes (preprint/working paper) | 61/76/73/70 | https://www.nber.org/papers/w24877
-bybit-eu | Bybit EU (bybit.eu, osztrák MiCA-engedély) | registration | kereskedési díjak | 64/72/66/66 | https://www.bybit.eu/
-mnb-felugyelet | MNB – kriptoeszköz-szolgáltatók magyar felügyelete | free | ingyenes | 55/80/70/61 | https://www.mnb.hu/
-paper-crypto-wash-trading | Crypto Wash Trading (Cong, Li, Tang, Yang; NBER w30783) | free | ingyenes (preprint/working paper) | 55/74/69/64 | https://www.nber.org/papers/w30783
-hu-revolut-coincash-szolgaltatok | Magyarországot kiszolgáló kriptoszolgáltatók 2025–26 (Revolut, CoinCas | free | ingyenes | 54/66/58/56 | https://www.vg.hu/vilaggazdasag-magyar-gazdasag/2025/12/kripto-szolgaltatas-revolut-coincash-sztfh-szabalyozas
-go-ethereum-node | go-ethereum (Geth) végrehajtási kliens | free | ingyenes | 78/85/78/77 | https://github.com/ethereum/go-ethereum
-bitcoin-core-node | Bitcoin Core full node | free | ingyenes (hardver/VPS költség) | 74/85/76/74 | https://bitcoincore.org/
-reth-node | reth (Rust Ethereum végrehajtási kliens, Paradigm) | free | ingyenes | 76/80/74/76 | https://reth.rs/
-strat-cex-dex-arbitrage-lvr | CEX–DEX arbitrázs és LVR (loss-versus-rebalancing) | free | 0 | 76/78/77/74 | https://arxiv.org/abs/2208.06046
-jito-solana | Jito-Solana (MEV-képes validátorkliens) és Block Engine/bundles | free | bundle-tip a validátornak; szoftver ingy | 80/74/74/76 | https://github.com/jito-foundation/jito-solana
-flashbots-docs-protect | Flashbots docs (Protect RPC, MEV-Share, bundle API) | free | ingyenes | 76/78/74/76 | https://docs.flashbots.net/
-flashbots-mev-boost | MEV-Boost (Flashbots) – proposer–builder szétválasztás | free | ingyenes | 74/78/73/73 | https://github.com/flashbots/mev-boost
-hyperliquid-non-validating-node | Hyperliquid non-validating node (hyperliquid-dex/node) | free | 0 | 74/73/72/72 | https://github.com/hyperliquid-dex/node
-erigon-node | Erigon (archív Ethereum-kliens) | free | ingyenes | 70/77/70/70 | https://github.com/erigontech/erigon
-coinbase-advanced-trade-api | Coinbase Advanced Trade API | registration | API ingyenes | 68/76/72/68 | https://docs.cdp.coinbase.com/advanced-trade/docs/welcome
-kraken-spot-api | Kraken Spot REST/WebSocket API | registration | API ingyenes | 68/76/72/68 | https://docs.kraken.com/
-glassnode-latency-monitor | Glassnode Latency Monitor (tőzsde- és lánc-latenciamérő) | free | 0 | 70/74/68/70 | https://latency.glassnode.com/
-flashbots-mev-boost-relay | mev-boost-relay (Flashbots relay, Data API) | free | ingyenes | 70/74/69/70 | https://github.com/flashbots/mev-boost-relay
-tardis-python-client | tardis-client / tardis-dev Python kliens | freemium | ? | 64/76/72/68 | https://github.com/tardis-dev/tardis-python
-coinapi | CoinAPI Market Data API (REST/WS/FIX, flat files) | freemium | Startup 79 USD/hó (éves: 69), Streamer 2 | 68/73/68/69 | https://www.coinapi.io/
-glassnode | Glassnode (on-chain metrikák, Studio + API) | paid | Advanced 49 USD/hó (éves számlázás, API  | 65/74/72/69 | https://glassnode.com/
-lighthouse-consensus | Lighthouse (Ethereum konszenzuskliens) | free | ingyenes | 66/77/68/67 | https://github.com/sigp/lighthouse
-helius-rpc | Helius (Solana RPC, webhookok, LaserStream) | freemium | nem ellenőrzött | 69/73/68/69 | https://www.helius.dev/
-tardis-node-client | tardis-dev (Node.js kliens, normalizálás) | freemium | ? | 65/74/70/68 | https://github.com/tardis-dev/tardis-node
-laevitas | Laevitas (opció, perp, futures analitika és API) | freemium | Free 0 USD; Premium 50 USD/hó/seat (1 év | 68/70/68/70 | https://www.laevitas.ch/
-paper-cartea-predictable-loss | DeFi and Automated Market Making: Predictable Loss and Optimal Liquidi | free | ingyenes (preprint/working paper) | 60/76/73/70 | https://arxiv.org/abs/2309.08431
-nansen | Nansen (wallet-címkék, smart money, API) | freemium | Pro 49 USD/hó éves / 69 USD/hó havi; ext | 64/71/70/68 | https://www.nansen.ai/
-coinbase-aws-us-east-1 | Coinbase Exchange matching engine: AWS us-east-1 (placement group) | free | 0 | 66/70/64/66 | https://blog.pragmaticengineer.com/coinbase-fail/
-okx-historical-data | OKX historical data letöltőoldal | free | ingyenes | 61/70/69/64 | https://www.okx.com/en-eu/historical-data
-velo-data | Velo (velo.xyz) – perp/funding/OI/likvidáció terminál és API | freemium | nem ellenőrzött (a pricing oldal tartalm | 68/66/64/68 | https://velo.xyz/
-etherscan-api | Etherscan API (V2, multichain) | freemium | ingyenes kulccsal; fizetős csomagok (nem | 61/73/66/63 | https://docs.etherscan.io/
-hummingbot-gateway | Hummingbot Gateway (DEX/AMM connector-middleware) | free | ingyenes | 64/68/65/67 | https://github.com/hummingbot/gateway
-paper-liquidations-defi-knife-edge | Liquidations: DeFi on a Knife-edge (Perez, Werner, Xu, Livshits, 2020) | free | ingyenes (preprint/working paper) | 59/72/69/68 | https://arxiv.org/abs/2009.13235
-paper-hautsch-limits-to-arbitrage | Building Trust Takes Time: Limits to Arbitrage for Blockchain-Based As | free | ingyenes (preprint/working paper) | 58/74/70/66 | https://arxiv.org/abs/1812.00595
-paper-terra-luna-run | Anatomy of a Run: The Terra Luna Crash (Liu, Makarov, Schoar; NBER w31 | free | ingyenes (preprint/working paper) | 57/74/70/66 | https://www.nber.org/papers/w31160
-bitget-api | Bitget API (Classic és UTA) | registration | API ingyenes | 66/66/66/60 | https://www.bitget.com/api-doc/common/intro
-dydx-v4-api | dYdX v4 (Cosmos app-chain perp DEX) Indexer + node API | free | API ingyenes | 64/66/66/62 | https://docs.dydx.xyz/
-jesse | Jesse – Python kripto-backtest és élő kereskedés | freemium | keretrendszer ingyenes; élő kereskedési  | 60/70/66/64 | https://github.com/jesse-ai/jesse
-bitquery | Bitquery (GraphQL blokklánc-API, DEX-trade-ek, mempool-stream) | freemium | nem ellenőrzött | 64/65/61/65 | https://bitquery.io/
-alchemy | Alchemy (EVM/Solana RPC, Enhanced API-k) | freemium | az oldalon (nem rögzítve) | 60/70/62/62 | https://www.alchemy.com/pricing
-paper-barbon-ranaldo-cex-dex | On the Quality of Cryptocurrency Markets: Centralized versus Decentral | free | ingyenes (preprint/working paper) | 56/71/67/65 | https://arxiv.org/abs/2112.07386
-paper-griffin-shams-tether | Is Bitcoin Really Untethered? (Griffin, Shams; Journal of Finance 2020 | free | ingyenes (preprint/working paper) | 56/71/67/65 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3195066
-crypto-lake | Crypto Lake (lakeapi) – L2/trade parquet adat | paid | nem ellenőrzött | 62/64/62/66 | https://www.crypto-lake.com/
-token-terminal | Token Terminal (protokoll-fundamentumok: díjbevétel, P/F) | freemium | Free 0 USD; Pro 350 USD/hó (éves számláz | 56/69/66/62 | https://tokenterminal.com/
-strat-onchain-flow-signals | On-chain jelek (tőzsdei netflow, stablecoin-kibocsátás, bálna-mozgás) | free | 0 | 59/66/64/64 | https://www.nber.org/papers/w29396
-bybit-okx-region-latency | Bybit (Szingapúr) és OKX (Hongkong) régió – mért latencia | free | 0 | 66/58/55/66 | https://github.com/ChainBrainOfficial/crypto-exchange-latency
-arkham-intel | Arkham Intel (entitás-attribúció, API jelentkezéssel) | registration | platform ingyenes regisztrációval; API e | 60/62/60/60 | https://intel.arkm.com/
-quicknode | QuickNode (multichain RPC, Streams) | freemium | az oldalon (nem rögzítve) | 58/66/58/59 | https://www.quicknode.com/pricing
-ethereum-etl | ethereum-etl (blockchain-etl) | free | ingyenes | 57/65/60/64 | https://github.com/blockchain-etl/ethereum-etl
-coingecko-api | CoinGecko API (Demo és fizetős) | freemium | Demo ingyenes; fizetős csomagok ára nem  | 48/62/56/52 | https://docs.coingecko.com/
-strat-mev-atomic-arbitrage | MEV: atomikus DEX-arbitrázs, backrun, likvidáció (searcher) | free | 0 | 75/74/73/70 | https://arxiv.org/abs/2101.05511
-kaiko | Kaiko (intézményi kripto piaci adat; 2026-tól Amberdata is) | institutional | egyedi árajánlat (nincs nyilvános árlist | 69/78/74/72 | https://www.kaiko.com/
-agave-solana-validator | Agave (Anza Solana validátor/RPC kliens) | free | ingyenes szoftver; nagy hardverigény | 70/74/68/70 | https://github.com/anza-xyz/agave
-triton-yellowstone | Triton One (Solana RPC, Yellowstone gRPC Geyser) | paid | nem ellenőrzött | 70/72/66/69 | https://www.triton.one/
-deribit-starbase-ld4 | Deribit Starbase (alacsony késleltetésű matching engine, LD4) | institutional | egyedi (colocation/cross-connect díj) | 68/67/66/63 | https://docs.deribit.com/starbase
-amberdata | Amberdata (derivatíva-analitika, GVOL, on-chain) – Kaiko-csoport | institutional | egyedi; az amberdata.io/pricing a Kaiko  | 64/65/62/67 | https://www.amberdata.io/
-paper-angeris-chitra-cfmm | Improved Price Oracles: Constant Function Market Makers (Angeris, Chit | free | ingyenes (preprint/working paper) | 56/72/67/65 | https://arxiv.org/abs/2003.10001
-paper-flashbot-in-the-pan | A Flash(bot) in the Pan: Measuring MEV in Private Pools (Weintraub et  | free | ingyenes (preprint/working paper) | 54/68/64/64 | https://arxiv.org/abs/2206.04185
-paper-pbs-promises-realities | Ethereum's Proposer-Builder Separation: Promises and Realities (Heimba | free | ingyenes (preprint/working paper) | 54/68/64/64 | https://arxiv.org/abs/2305.19037
-relayscan | relayscan.io (MEV-Boost relay- és builder-statisztika) | free | ingyenes | 58/66/59/62 | https://www.relayscan.io/
-paper-lehar-parlour-uniswap | Decentralized Exchange: The Uniswap Automated Market Maker (Lehar, Par | free | ingyenes (preprint/working paper) | 52/68/62/60 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3905316
-bitstamp-api | Bitstamp API | registration | API ingyenes | 54/66/60/54 | https://www.bitstamp.net/
-libmev | libMEV (MEV-tranzakció és bundle explorer) | freemium | nem ellenőrzött | 58/60/57/61 | https://libmev.com/
-octobot | OctoBot – nyílt kripto bot (grid, DCA, AI, TradingView) | freemium | nyílt verzió ingyenes; felhős csomagok ( | 54/64/59/58 | https://github.com/Drakkar-Software/OctoBot
-python-binance | python-binance (közösségi Binance-kliens) | free | ingyenes | 58/62/56/58 | https://github.com/sammchardy/python-binance
-paper-frontrunner-jones | Frontrunner Jones and the Raiders of the Dark Forest (Ferreira Torres, | free | ingyenes (preprint/working paper) | 51/66/61/60 | https://arxiv.org/abs/2102.03347
-allium | Allium (intézményi blokklánc-adattárház) | institutional | egyedi (nem ellenőrzött) | 53/64/58/58 | https://www.allium.so/
-artemis | Artemis (lánc- és protokollmetrikák, stablecoin-adat) | freemium | nem ellenőrzött | 51/62/59/57 | https://www.artemis.xyz/
-ultrasound-money | ultrasound.money (ETH kibocsátás és égetés) | free | ingyenes | 56/62/52/57 | https://ultrasound.money/
-eigenphi | EigenPhi (MEV- és DeFi-tranzakcióelemzés) | freemium | nem ellenőrzött | 57/58/54/60 | https://eigenphi.io/
-one-trading-perps | One Trading (MiFID II-szabályozott perp/futures EU-ban) | registration | nem ellenőrzött | 54/58/54/56 | https://one.trading/
-coindesk-data-ccdata | CoinDesk Data (korábban CCData/CryptoCompare) | paid | értékesítésen keresztül; az ingyenes API | 54/60/54/56 | https://data.coindesk.com/
-infura | Infura (Consensys RPC) | freemium | az oldalon (nem rögzítve) | 52/62/54/54 | https://www.infura.io/pricing
-blocknative | Blocknative (mempool-adat, gas-platform) | freemium | nem ellenőrzött | 58/56/51/59 | https://www.blocknative.com/
-chainlist | Chainlist (EVM chainID-k és publikus RPC-k) | free | ingyenes | 49/63/54/53 | https://chainlist.org/
-mevboost-pics | mevboost.pics (MEV-Boost elterjedtség, cenzúra) | free | ingyenes | 50/61/53/56 | https://mevboost.pics/
-messari | Messari (kutatás, token-fundamentumok, API) | freemium | nem ellenőrzött | 47/61/56/53 | https://messari.io/
-chainalysis | Chainalysis (compliance és intézményi on-chain analitika) | institutional | egyedi | 46/62/52/51 | https://www.chainalysis.com/
-bitpanda | Bitpanda (osztrák kriptobróker, EU-s fókusz) | registration | díjak a díjjegyzék szerint (nem rögzítve | 48/60/52/52 | https://www.bitpanda.com/
-flipside-snowflake | Flipside (Studio/API megszűnt 2025-07-31; ingyenes Snowflake data shar | free | core data share ingyenes; Snowflake-szám | 48/56/52/55 | https://flipsidecrypto.xyz/
-checkonchain | Checkonchain (ingyenes on-chain grafikonok) | free | ingyenes | 46/56/52/52 | https://checkonchain.com/
-freqtrade-strategies | freqtrade-strategies (közösségi stratégiagyűjtemény) | free | ingyenes | 46/56/52/50 | https://github.com/freqtrade/freqtrade-strategies
-cryptodatadownload | CryptoDataDownload (ingyenes OHLCV CSV-k) | freemium | alap CSV ingyenes | 44/53/48/48 | https://www.cryptodatadownload.com/
-bitcoin-magazine-pro | Bitcoin Magazine Pro (korábban LookIntoBitcoin) – BTC ciklusindikátoro | freemium | nem ellenőrzött | 44/52/48/50 | https://www.bitcoinmagazinepro.com/
-theblock-data | The Block Data (aggregált piaci és on-chain grafikonok) | freemium | nem ellenőrzött | 41/54/48/46 | https://www.theblock.co/data
-mev-inspect-py | mev-inspect-py (Flashbots, MEV-osztályozó) | free | ingyenes | 46/48/44/54 | https://github.com/flashbots/mev-inspect-py
-coinmarketcap-api | CoinMarketCap API | freemium | Basic ingyenes; fizetős csomagok az olda | 40/52/44/44 | https://coinmarketcap.com/api/pricing/
+nautilus-crypto-adapters | 0 | NautilusTrader kripto adapterek… | Nyílt forráskódú eszközök | free | ingyenes | 87/94/91/86 | https://nautilustrader.io/docs/latest/integrations/ | Mért (integrations oldal): stable státuszú Binance, Bybit, Coinbase, Kraken…
+tardis-dev | 0 | Tardis.dev – historikus tick, L2 incremental, L3, opció, funding… | Piaci adat (tick, L2) | paid | Havi (mért): Solo 700–1200 USD… | 80/90/90/84 | https://tardis.dev/ | Az iparági standard kripto-tickadat. 50+ spot- és derivatíva-tőzsde: Binance…
+ccxt | 0 | CCXT – egységes kripto-tőzsdei API (JS/TS/Python/C#/PHP/Go/Java/Rust) | Nyílt forráskódú eszközök | free | ingyenes (CCXT Pro WS is a fő csomagban) | 76/89/84/77 | https://github.com/ccxt/ccxt | ccxt 4.5.92 (PyPI 2026-11-04), ccxt/ccxt 44 884 csillag, utolsó push 2026-11-13…
+strat-perp-funding-cash-and-carry | 0 | Perp funding cash-and-carry (long spot, short perp) | Stratégiák | free | 0 | 80/84/85/79 | https://arxiv.org/abs/2212.06888 | Képlet: PnL ≈ N·Σ f_t − díjak − kölcsön-/finanszírozási költség ±…
+binance-public-data | 0 | Binance public data (data.binance.vision) – ingyenes tömeges… | Piaci adat (tick, L2) | free | ingyenes | 74/85/86/76 | https://data.binance.vision/ | Mért mappaszerkezet (S3-listázás, 2026-11-15): spot: aggTrades, klines, trades.…
+strat-dated-futures-basis-crypto-carry | 0 | Dated futures basis / crypto carry (Schmeling–Schrimpf–Todorov) | Stratégiák | free | 0 | 74/84/84/76 | https://www.bis.org/publ/work1087.htm | Képlet: évesített basis = (F/S − 1)·365/T. A cikk szerint a carry akár 60%…
+defillama-free-api | 0 | DefiLlama ingyenes API (TVL, árak, DEX/perp-volumen, díjak, yield) | On-chain adat | free | ingyenes, kulcs nélkül; Pro API 300… | 70/82/78/74 | https://api-docs.defillama.com/ | Mért: az api.llama.fi/protocols, stablecoins.llama.fi és yields.llama.fi kulcs…
+hu-kripto-szja-15 | 0 | Magyar kriptoadó: 15% szja (Szja tv. 67/C. §, 2022-01-01-től) | Jog és adó (HU/EU) | free | ingyenes | 62/92/80/68 | https://nav.gov.hu/ado/szja/a-kriptougyletek-jovedelmenek-adozasa | NAV (mért): 15% szja az ügyleti nyereség után (Szja tv. 67/C. §), külön adózó…
+eu-mica-regulation | 0 | MiCA – (EU) 2023/1114 rendelet a kriptoeszköz-piacokról | Jog és adó (HU/EU) | free | ingyenes | 60/90/82/68 | https://eur-lex.europa.eu/eli/reg/2023/1114/oj | Nem ellenőrzött részletek: CASP-engedély és EU-útlevél, stablecoin (ART/EMT)…
+esma-perpetuals-cfd-statement-2026 | 0 | ESMA nyilatkozat (2026-02-24): a 'perpetual futures' CFD lehet… | Jog és adó (HU/EU) | free | ingyenes | 64/89/78/68 | https://www.esma.europa.eu/node/228326 | Az ESMA szerint a kereskedelmi elnevezés közömbös: a perp a nemzeti…
+binance-aws-tokyo-region | 0 | Binance matching engine helye: AWS Tokió (ap-northeast-1) | Infrastruktúra, node, colocation | free | AWS EC2 Tokió díjszabás szerint | 78/70/70/74 | https://cloud.zenlayer.com/blog/crypto-trading-latency-tokyo | Több másodlagos forrás és latenciamérés szerint a Binance matching engine az…
+eu-dac8 | 0 | DAC8 – (EU) 2023/2226 irányelv (kripto-adatszolgáltatás, CARF) | Jog és adó (HU/EU) | free | ingyenes | 58/88/77/64 | https://taxation-customs.ec.europa.eu/taxation/tax-transparency-cooperation/administrative-co-operation-and-mutual-assistance/directive-administrative-cooperation-dac/dac8_en | Átültetés 2025-12-31-ig, alkalmazás 2026-01-01-től (Bizottság). Az első tárgyév…
+eu-mica-transition-end-2026 | 0 | MiCA átmeneti időszak vége (2026-07-01) és az ESMA interim… | Jog és adó (HU/EU) | free | ingyenes | 61/84/73/64 | https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica | Az MiCA 143. cikk (3) szerinti grandfathering legkésőbb 2026-07-01-én lejárt…
+hu-kripto-validalas-2025-hatalyon-kivul-2026 | 0 | Magyar kripto-validálási kötelezettség (2025) és eltörlése (2026) | Jog és adó (HU/EU) | free | ingyenes | 60/77/68/63 | https://www.portfolio.hu/uzlet/20260618/fordulat-a-magyar-kriptoszabalyozasban-megszunhet-a-validacios-kotelezettseg-843876 | 2025: a parlament júniusban módosította a szabályokat, hatály 2025-07-01…
+mica-engedelyes-tozsdek-hu | 0 | MiCA-engedélyes tőzsdék listája (Magyarországról elérhetőség) | Jog és adó (HU/EU) | free | ingyenes | 56/70/62/58 | https://micawatch.com/article/mica-licensed-crypto-exchanges-list-2026 | Másodlagos források szerint: Bybit EU GmbH (FMA, AT, 2025-05-28), OKX Europe…
+strat-crypto-market-making-as | 1 | Kripto market making (Avellaneda–Stoikov / GLFT, maker-rebate) | Stratégiák | free | 0 | 82/82/80/78 | https://doi.org/10.1080/14697680701381228 | Képlet: reservation price r = s − q·γ·σ²·(T−t); optimális spread δ = γσ²(T−t) +…
+binance-usdm-futures-api | 1 | Binance USDⓈ-M Futures API (perpetual + negyedéves) | Központosított tőzsdék API-i | registration | API ingyenes | 80/81/83/73 | https://developers.binance.com/docs/derivatives/usds-margined-futures/general-info | A legnagyobb perp-likviditás: funding-, OI-, mark-price- és likvidációs…
+hyperliquid-api | 1 | Hyperliquid API (on-chain perp DEX, CLOB) | Központosított tőzsdék API-i | free | API ingyenes; nincs KYC | 80/80/82/76 | https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api | Mért (doksi): REST-súly 1200/perc/IP; l2Book, allMids és hasonló info-kérések…
+hftbacktest-crypto | 1 | hftbacktest – tick/L2 HFT backtest kripto adatgyűjtőkkel | Nyílt forráskódú eszközök | free | ingyenes | 80/80/80/83 | https://github.com/nkaz001/hftbacktest | Sorbanállási pozíciót és latenciát modellező, L2/L3-alapú backtest…
+bybit-v5-api | 1 | Bybit V5 API (spot, linear, inverse, opció) | Központosított tőzsdék API-i | registration | API ingyenes | 78/80/80/74 | https://bybit-exchange.github.io/docs/v5/intro | Mért (doksi): HTTP IP-limit 600 kérés/5 s, túllépéskor 403, és legalább 10 perc…
+okx-v5-api | 1 | OKX V5 API | Központosított tőzsdék API-i | registration | API ingyenes | 78/79/78/75 | https://www.okx.com/docs-v5/en/ | Mért (doksi): WS kapcsolódás 3 kérés/s/IP; subscribe/login 480/óra/kapcsolat…
+deribit-api | 1 | Deribit API (opció, perp, futures) | Központosított tőzsdék API-i | registration | API ingyenes | 77/80/80/72 | https://docs.deribit.com/ | A BTC/ETH opciós likviditás fő helyszíne (IV-felület, DVOL). Kreditalapú limit…
+tardis-machine | 1 | tardis-machine (lokális replay szerver) | Nyílt forráskódú eszközök | freemium | szoftver ingyenes, adat… | 72/84/80/76 | https://github.com/tardis-dev/tardis-machine | Historikus adat visszajátszása a tőzsdei WebSocket-formátumban, így ugyanaz a…
+cryptofeed | 1 | cryptofeed (bmoscon) – több tőzsdés WS feed handler | Nyílt forráskódú eszközök | free | ingyenes | 78/80/76/78 | https://github.com/bmoscon/cryptofeed | Normalizált valós idejű L2/L3 book, trade, funding, OI és likvidáció sok…
+binance-spot-api | 1 | Binance Spot REST/WebSocket API | Központosított tőzsdék API-i | registration | API ingyenes; kereskedési díjak külön | 74/81/80/69 | https://developers.binance.com/docs/binance-spot-api-docs | Mért limitek (exchangeInfo, data-api.binance.vision, 2026-11-15)…
+hummingbot | 1 | Hummingbot – nyílt market making és arbitrázs bot | Nyílt forráskódú eszközök | free | ingyenes | 74/80/78/75 | https://github.com/hummingbot/hummingbot | V1 sablonok: Avellaneda–Stoikov alapú market making, továbbra is támogatott. V2…
+strat-cross-exchange-spot-arbitrage | 1 | Tőzsdék közötti spot-arbitrázs (Makarov–Schoar, JFE 2020) | Stratégiák | free | 0 | 74/82/77/72 | https://dspace.mit.edu/handle/1721.1/130495 | A cikk 34 tőzsde (19 ország) tickadatán mutatja ki, hogy az országok közti…
+strat-liquidation-cascade | 1 | Likvidációs kaszkád kereskedése (2025-10-10 esettanulmány) | Stratégiák | free | 0 | 80/74/76/78 | https://cointelegraph.com/news/19b-crypto-market-crash-leverage-china-tariffs | 2025-10-10/11-én kb. 19 Mrd USD likvidáció…
+coinglass-api | 1 | CoinGlass API (funding, OI, likvidáció, heatmap) | Derivatív adat (funding, OI, likvidáció) | paid | Éves díj… | 76/76/76/76 | https://www.coinglass.com/ | Tőzsdék közti aggregált funding, OI, likvidáció, long/short arány, likvidációs…
+defillama-stablecoins | 1 | DefiLlama Stablecoins API (kibocsátás és lánconkénti eloszlás) | On-chain adat | free | ingyenes | 72/80/78/76 | https://stablecoins.llama.fi/stablecoins | Stablecoin market cap és lánconkénti eloszlás idősora. Az USDT/USDC nettó…
+flashbots-mempool-dumpster | 1 | Mempool Dumpster (Flashbots) – ETH mempool-archívum | MEV és mempool | free | ingyenes | 72/79/78/78 | https://mempool-dumpster.flashbots.net/ | Mért: havi archívumok 2023-08-tól 2026-11-ig, CC-0 licenccel. Több forrásból…
+strat-cross-venue-funding-spread | 1 | Tőzsdék közti funding-különbözet… | Stratégiák | free | 0 | 77/75/78/73 | https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding | Mért mechanizmus: Hyperliquid funding óránként, az 8 órás ráta 1/8-a; F =…
+dune | 1 | Dune (SQL on-chain adattárház, API) | On-chain adat | freemium | Free (dashboard-nézés), Analyst, Plus… | 68/79/77/72 | https://dune.com/ | Dekódolt EVM-, Solana- és egyéb láncadat SQL-ből: DEX-trade-ek (dex.trades)…
+mempool-space | 1 | mempool.space (BTC mempool, díjbecslés, REST/WS API, self-host) | MEV és mempool | free | publikus API ingyenes; saját példány… | 72/79/72/72 | https://mempool.space/ | BTC mempool-méret, díjsávok, blokkprojekció, címekhez és tranzakciókhoz…
+freqtrade | 1 | freqtrade – kripto trading bot (backtest, hyperopt, FreqAI) | Nyílt forráskódú eszközök | free | ingyenes | 68/80/77/70 | https://github.com/freqtrade/freqtrade | A legnépszerűbb nyílt kripto-bot (56 889 csillag, mért). Gyertyaalapú…
+strat-crypto-factor-momentum | 1 | Kripto keresztmetszeti faktorok (piac, méret, momentum) | Stratégiák | free | 0 | 68/79/78/73 | https://www.nber.org/papers/w25882 | A tanulmány a kripto-hozam keresztmetszetében három faktort talál: piac, méret…
+paper-perpetual-futures-pricing-ahj | 1 | Perpetual Futures Pricing (Ackerer, Hugonnier, Jermann, 2023) | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 64/82/80/72 | https://arxiv.org/abs/2310.11771 | Zárt formájú perp-árazás a funding-mechanizmus függvényében: a…
+hyperliquid-tokyo-validators | 1 | Hyperliquid validátorok: AWS Tokió (ap-northeast-1) | Infrastruktúra, node, colocation | free | 0 | 76/71/71/71 | https://www.dwellir.com/docs/hyperliquid/architecture.md | Másodlagos források (Glassnode-latenciamérés) szerint a validátorok az AWS…
+cryo-paradigm | 1 | cryo (Paradigm) – EVM-adat kinyerése parquetbe | Infrastruktúra, node, colocation | free | ingyenes | 68/78/74/72 | https://github.com/paradigmxyz/cryo | RPC-ből blokkokat, tranzakciókat, logokat, trace-eket és storage diffeket húz…
+cryptoquant | 1 | CryptoQuant (on-chain + piaci adat, API) | On-chain adat | freemium | Basic ingyenes… | 69/75/73/72 | https://cryptoquant.com/ | Tőzsdei be- és kiáramlás, miner-flow, stablecoin-tartalékok, Coinbase-prémium…
+coin-metrics-community | 1 | Coin Metrics Community API + nyílt CSV (Talos-csoport) | On-chain adat | free | Community API ingyenes | 64/79/76/68 | https://docs.coinmetrics.io/ | Mért: a community-api.coinmetrics.io kulcs nélkül válaszolt, például BTC…
+uniswap-v3-subgraph | 1 | Uniswap v3 subgraph (pool, swap, tick, pozíció) | DEX-adat | free | a The Graph lekérdezési díjai szerint | 70/74/72/72 | https://github.com/Uniswap/v3-subgraph | Swap-ok, tick-likviditás, LP-pozíciók: DEX–CEX arbitrázs, LVR-mérés és…
+paper-flash-boys-2 | 1 | Flash Boys 2.0: Frontrunning, Transaction Reordering, and Consensus… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 62/78/76/71 | https://arxiv.org/abs/1904.05234 | Bevezeti a MEV (miner extractable value) fogalmát és a priority gas auctionöket…
+bybit-public-data | 1 | Bybit public data (public.bybit.com) | Piaci adat (tick, L2) | free | ingyenes | 66/74/74/68 | https://public.bybit.com/ | Mért mappák: trading/ (napi trade CSV.gz), spot/, premium_index/, spot_index/…
+hu-mica-vegrehajtasi-tv-2024-vii | 1 | 2024. évi VII. törvény a kriptoeszközök piacáról… | Jog és adó (HU/EU) | free | ingyenes | 57/84/74/64 | https://njt.jog.gov.hu/jogszabaly/2024-7-00-00 | Mért (NJT-cím): '2024. évi VII. törvény ... a kriptoeszközök piacáról'.…
+the-graph | 1 | The Graph (subgraph-indexelés, decentralizált hálózat) | DEX-adat | freemium | lekérdezésenkénti díj a hálózaton… | 66/73/70/68 | https://thegraph.com/ | GraphQL-alapú subgraphok DEX-, lending- és perp-protokollokra. Saját graph-node…
+paper-liu-tsyvinski-risks-returns | 1 | Risks and Returns of Cryptocurrency… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 61/76/73/70 | https://www.nber.org/papers/w24877 | A kripto-hozamok nem kötődnek a hagyományos faktorokhoz; idősoros momentum és…
+bybit-eu | 1 | Bybit EU (bybit.eu, osztrák MiCA-engedély) | Jog és adó (HU/EU) | registration | kereskedési díjak | 64/72/66/66 | https://www.bybit.eu/ | Az EU-s lakosok jogilag tiszta Bybit-belépője (FMA, másodlagos forrás). Spot és…
+mnb-felugyelet | 1 | MNB – kriptoeszköz-szolgáltatók magyar felügyelete | Jog és adó (HU/EU) | free | ingyenes | 55/80/70/61 | https://www.mnb.hu/ | A MiCA szerinti illetékes hatóság (CASP-engedély, például CoinCash 2026-07-20).…
+paper-crypto-wash-trading | 1 | Crypto Wash Trading (Cong, Li, Tang, Yang; NBER w30783) | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 55/74/69/64 | https://www.nber.org/papers/w30783 | Szabályozatlan tőzsdéken a jelentett volumen jelentős része wash trading…
+hu-revolut-coincash-szolgaltatok | 1 | Magyarországot kiszolgáló kriptoszolgáltatók 2025–26… | Jog és adó (HU/EU) | free | ingyenes | 54/66/58/56 | https://www.vg.hu/vilaggazdasag-magyar-gazdasag/2025/12/kripto-szolgaltatas-revolut-coincash-sztfh-szabalyozas | Financial Investor 24: az MNB 2026-07-20-án MiCA-engedélyt adott a CoinCash…
+go-ethereum-node | 2 | go-ethereum (Geth) végrehajtási kliens | Infrastruktúra, node, colocation | free | ingyenes | 78/85/78/77 | https://github.com/ethereum/go-ethereum
+bitcoin-core-node | 2 | Bitcoin Core full node | Infrastruktúra, node, colocation | free | ingyenes (hardver/VPS költség) | 74/85/76/74 | https://bitcoincore.org/
+reth-node | 2 | reth (Rust Ethereum végrehajtási kliens, Paradigm) | Infrastruktúra, node, colocation | free | ingyenes | 76/80/74/76 | https://reth.rs/
+strat-cex-dex-arbitrage-lvr | 2 | CEX–DEX arbitrázs és LVR (loss-versus-rebalancing) | Stratégiák | free | 0 | 76/78/77/74 | https://arxiv.org/abs/2208.06046
+jito-solana | 2 | Jito-Solana (MEV-képes validátorkliens) és Block Engine/bundles | MEV és mempool | free | bundle-tip a validátornak; szoftver… | 80/74/74/76 | https://github.com/jito-foundation/jito-solana
+flashbots-docs-protect | 2 | Flashbots docs (Protect RPC, MEV-Share, bundle API) | MEV és mempool | free | ingyenes | 76/78/74/76 | https://docs.flashbots.net/
+flashbots-mev-boost | 2 | MEV-Boost (Flashbots) – proposer–builder szétválasztás | MEV és mempool | free | ingyenes | 74/78/73/73 | https://github.com/flashbots/mev-boost
+hyperliquid-non-validating-node | 2 | Hyperliquid non-validating node (hyperliquid-dex/node) | Infrastruktúra, node, colocation | free | 0 | 74/73/72/72 | https://github.com/hyperliquid-dex/node
+erigon-node | 2 | Erigon (archív Ethereum-kliens) | Infrastruktúra, node, colocation | free | ingyenes | 70/77/70/70 | https://github.com/erigontech/erigon
+coinbase-advanced-trade-api | 2 | Coinbase Advanced Trade API | Központosított tőzsdék API-i | registration | API ingyenes | 68/76/72/68 | https://docs.cdp.coinbase.com/advanced-trade/docs/welcome
+kraken-spot-api | 2 | Kraken Spot REST/WebSocket API | Központosított tőzsdék API-i | registration | API ingyenes | 68/76/72/68 | https://docs.kraken.com/
+glassnode-latency-monitor | 2 | Glassnode Latency Monitor (tőzsde- és lánc-latenciamérő) | Infrastruktúra, node, colocation | free | 0 | 70/74/68/70 | https://latency.glassnode.com/
+flashbots-mev-boost-relay | 2 | mev-boost-relay (Flashbots relay, Data API) | MEV és mempool | free | ingyenes | 70/74/69/70 | https://github.com/flashbots/mev-boost-relay
+tardis-python-client | 2 | tardis-client / tardis-dev Python kliens | Nyílt forráskódú eszközök | freemium | ? | 64/76/72/68 | https://github.com/tardis-dev/tardis-python
+coinapi | 2 | CoinAPI Market Data API (REST/WS/FIX, flat files) | Piaci adat (tick, L2) | freemium | Startup 79 USD/hó (éves: 69), Streamer… | 68/73/68/69 | https://www.coinapi.io/
+glassnode | 2 | Glassnode (on-chain metrikák, Studio + API) | On-chain adat | paid | Advanced 49 USD/hó… | 65/74/72/69 | https://glassnode.com/
+lighthouse-consensus | 2 | Lighthouse (Ethereum konszenzuskliens) | Infrastruktúra, node, colocation | free | ingyenes | 66/77/68/67 | https://github.com/sigp/lighthouse
+helius-rpc | 2 | Helius (Solana RPC, webhookok, LaserStream) | Infrastruktúra, node, colocation | freemium | nem ellenőrzött | 69/73/68/69 | https://www.helius.dev/
+tardis-node-client | 2 | tardis-dev (Node.js kliens, normalizálás) | Nyílt forráskódú eszközök | freemium | ? | 65/74/70/68 | https://github.com/tardis-dev/tardis-node
+laevitas | 2 | Laevitas (opció, perp, futures analitika és API) | Derivatív adat (funding, OI, likvidáció) | freemium | Free 0 USD; Premium 50 USD/hó/seat… | 68/70/68/70 | https://www.laevitas.ch/
+paper-cartea-predictable-loss | 2 | DeFi and Automated Market Making: Predictable Loss and Optimal… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 60/76/73/70 | https://arxiv.org/abs/2309.08431
+nansen | 2 | Nansen (wallet-címkék, smart money, API) | On-chain adat | freemium | Pro 49 USD/hó éves / 69 USD/hó havi… | 64/71/70/68 | https://www.nansen.ai/
+coinbase-aws-us-east-1 | 2 | Coinbase Exchange matching engine: AWS us-east-1 (placement group) | Infrastruktúra, node, colocation | free | 0 | 66/70/64/66 | https://blog.pragmaticengineer.com/coinbase-fail/
+okx-historical-data | 2 | OKX historical data letöltőoldal | Piaci adat (tick, L2) | free | ingyenes | 61/70/69/64 | https://www.okx.com/en-eu/historical-data
+velo-data | 2 | Velo (velo.xyz) – perp/funding/OI/likvidáció terminál és API | Derivatív adat (funding, OI, likvidáció) | freemium | nem ellenőrzött… | 68/66/64/68 | https://velo.xyz/
+etherscan-api | 2 | Etherscan API (V2, multichain) | On-chain adat | freemium | ingyenes kulccsal; fizetős csomagok… | 61/73/66/63 | https://docs.etherscan.io/
+hummingbot-gateway | 2 | Hummingbot Gateway (DEX/AMM connector-middleware) | Nyílt forráskódú eszközök | free | ingyenes | 64/68/65/67 | https://github.com/hummingbot/gateway
+paper-liquidations-defi-knife-edge | 2 | Liquidations: DeFi on a Knife-edge (Perez, Werner, Xu, Livshits, 2020) | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 59/72/69/68 | https://arxiv.org/abs/2009.13235
+paper-hautsch-limits-to-arbitrage | 2 | Building Trust Takes Time: Limits to Arbitrage for Blockchain-Based… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 58/74/70/66 | https://arxiv.org/abs/1812.00595
+paper-terra-luna-run | 2 | Anatomy of a Run: The Terra Luna Crash… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 57/74/70/66 | https://www.nber.org/papers/w31160
+bitget-api | 2 | Bitget API (Classic és UTA) | Központosított tőzsdék API-i | registration | API ingyenes | 66/66/66/60 | https://www.bitget.com/api-doc/common/intro
+dydx-v4-api | 2 | dYdX v4 (Cosmos app-chain perp DEX) Indexer + node API | Központosított tőzsdék API-i | free | API ingyenes | 64/66/66/62 | https://docs.dydx.xyz/
+jesse | 2 | Jesse – Python kripto-backtest és élő kereskedés | Nyílt forráskódú eszközök | freemium | keretrendszer ingyenes; élő kereskedési… | 60/70/66/64 | https://github.com/jesse-ai/jesse
+bitquery | 2 | Bitquery (GraphQL blokklánc-API, DEX-trade-ek, mempool-stream) | On-chain adat | freemium | nem ellenőrzött | 64/65/61/65 | https://bitquery.io/
+alchemy | 2 | Alchemy (EVM/Solana RPC, Enhanced API-k) | Infrastruktúra, node, colocation | freemium | az oldalon (nem rögzítve) | 60/70/62/62 | https://www.alchemy.com/pricing
+paper-barbon-ranaldo-cex-dex | 2 | On the Quality of Cryptocurrency Markets: Centralized versus… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 56/71/67/65 | https://arxiv.org/abs/2112.07386
+paper-griffin-shams-tether | 2 | Is Bitcoin Really Untethered?… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 56/71/67/65 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3195066
+crypto-lake | 2 | Crypto Lake (lakeapi) – L2/trade parquet adat | Piaci adat (tick, L2) | paid | nem ellenőrzött | 62/64/62/66 | https://www.crypto-lake.com/
+token-terminal | 2 | Token Terminal (protokoll-fundamentumok: díjbevétel, P/F) | On-chain adat | freemium | Free 0 USD; Pro 350 USD/hó… | 56/69/66/62 | https://tokenterminal.com/
+strat-onchain-flow-signals | 2 | On-chain jelek (tőzsdei netflow, stablecoin-kibocsátás, bálna-mozgás) | Stratégiák | free | 0 | 59/66/64/64 | https://www.nber.org/papers/w29396
+bybit-okx-region-latency | 2 | Bybit (Szingapúr) és OKX (Hongkong) régió – mért latencia | Infrastruktúra, node, colocation | free | 0 | 66/58/55/66 | https://github.com/ChainBrainOfficial/crypto-exchange-latency
+arkham-intel | 2 | Arkham Intel (entitás-attribúció, API jelentkezéssel) | On-chain adat | registration | platform ingyenes regisztrációval; API… | 60/62/60/60 | https://intel.arkm.com/
+quicknode | 2 | QuickNode (multichain RPC, Streams) | Infrastruktúra, node, colocation | freemium | az oldalon (nem rögzítve) | 58/66/58/59 | https://www.quicknode.com/pricing
+ethereum-etl | 2 | ethereum-etl (blockchain-etl) | Infrastruktúra, node, colocation | free | ingyenes | 57/65/60/64 | https://github.com/blockchain-etl/ethereum-etl
+coingecko-api | 2 | CoinGecko API (Demo és fizetős) | Piaci adat (tick, L2) | freemium | Demo ingyenes; fizetős csomagok ára nem… | 48/62/56/52 | https://docs.coingecko.com/
+strat-mev-atomic-arbitrage | 3 | MEV: atomikus DEX-arbitrázs, backrun, likvidáció (searcher) | Stratégiák | free | 0 | 75/74/73/70 | https://arxiv.org/abs/2101.05511
+kaiko | 3 | Kaiko (intézményi kripto piaci adat; 2026-tól Amberdata is) | Piaci adat (tick, L2) | institutional | egyedi árajánlat… | 69/78/74/72 | https://www.kaiko.com/
+agave-solana-validator | 3 | Agave (Anza Solana validátor/RPC kliens) | Infrastruktúra, node, colocation | free | ingyenes szoftver; nagy hardverigény | 70/74/68/70 | https://github.com/anza-xyz/agave
+triton-yellowstone | 3 | Triton One (Solana RPC, Yellowstone gRPC Geyser) | Infrastruktúra, node, colocation | paid | nem ellenőrzött | 70/72/66/69 | https://www.triton.one/
+deribit-starbase-ld4 | 3 | Deribit Starbase (alacsony késleltetésű matching engine, LD4) | Infrastruktúra, node, colocation | institutional | egyedi (colocation/cross-connect díj) | 68/67/66/63 | https://docs.deribit.com/starbase
+amberdata | 3 | Amberdata (derivatíva-analitika, GVOL, on-chain) – Kaiko-csoport | Piaci adat (tick, L2) | institutional | egyedi; az amberdata.io/pricing a Kaiko… | 64/65/62/67 | https://www.amberdata.io/
+paper-angeris-chitra-cfmm | 3 | Improved Price Oracles: Constant Function Market Makers… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 56/72/67/65 | https://arxiv.org/abs/2003.10001
+paper-flashbot-in-the-pan | 3 | A Flash(bot) in the Pan: Measuring MEV in Private Pools… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 54/68/64/64 | https://arxiv.org/abs/2206.04185
+paper-pbs-promises-realities | 3 | Ethereum's Proposer-Builder Separation: Promises and Realities… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 54/68/64/64 | https://arxiv.org/abs/2305.19037
+relayscan | 3 | relayscan.io (MEV-Boost relay- és builder-statisztika) | MEV és mempool | free | ingyenes | 58/66/59/62 | https://www.relayscan.io/
+paper-lehar-parlour-uniswap | 3 | Decentralized Exchange: The Uniswap Automated Market Maker… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 52/68/62/60 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3905316
+bitstamp-api | 3 | Bitstamp API | Központosított tőzsdék API-i | registration | API ingyenes | 54/66/60/54 | https://www.bitstamp.net/
+libmev | 3 | libMEV (MEV-tranzakció és bundle explorer) | MEV és mempool | freemium | nem ellenőrzött | 58/60/57/61 | https://libmev.com/
+octobot | 3 | OctoBot – nyílt kripto bot (grid, DCA, AI, TradingView) | Nyílt forráskódú eszközök | freemium | nyílt verzió ingyenes; felhős csomagok… | 54/64/59/58 | https://github.com/Drakkar-Software/OctoBot
+python-binance | 3 | python-binance (közösségi Binance-kliens) | Nyílt forráskódú eszközök | free | ingyenes | 58/62/56/58 | https://github.com/sammchardy/python-binance
+paper-frontrunner-jones | 3 | Frontrunner Jones and the Raiders of the Dark Forest… | Kutatás és irodalom | free | ingyenes (preprint/working paper) | 51/66/61/60 | https://arxiv.org/abs/2102.03347
+allium | 3 | Allium (intézményi blokklánc-adattárház) | On-chain adat | institutional | egyedi (nem ellenőrzött) | 53/64/58/58 | https://www.allium.so/
+artemis | 3 | Artemis (lánc- és protokollmetrikák, stablecoin-adat) | On-chain adat | freemium | nem ellenőrzött | 51/62/59/57 | https://www.artemis.xyz/
+ultrasound-money | 3 | ultrasound.money (ETH kibocsátás és égetés) | On-chain adat | free | ingyenes | 56/62/52/57 | https://ultrasound.money/
+eigenphi | 3 | EigenPhi (MEV- és DeFi-tranzakcióelemzés) | MEV és mempool | freemium | nem ellenőrzött | 57/58/54/60 | https://eigenphi.io/
+one-trading-perps | 3 | One Trading (MiFID II-szabályozott perp/futures EU-ban) | Központosított tőzsdék API-i | registration | nem ellenőrzött | 54/58/54/56 | https://one.trading/
+coindesk-data-ccdata | 3 | CoinDesk Data (korábban CCData/CryptoCompare) | Piaci adat (tick, L2) | paid | értékesítésen keresztül; az ingyenes… | 54/60/54/56 | https://data.coindesk.com/
+infura | 3 | Infura (Consensys RPC) | Infrastruktúra, node, colocation | freemium | az oldalon (nem rögzítve) | 52/62/54/54 | https://www.infura.io/pricing
+blocknative | 3 | Blocknative (mempool-adat, gas-platform) | MEV és mempool | freemium | nem ellenőrzött | 58/56/51/59 | https://www.blocknative.com/
+chainlist | 3 | Chainlist (EVM chainID-k és publikus RPC-k) | Infrastruktúra, node, colocation | free | ingyenes | 49/63/54/53 | https://chainlist.org/
+mevboost-pics | 3 | mevboost.pics (MEV-Boost elterjedtség, cenzúra) | MEV és mempool | free | ingyenes | 50/61/53/56 | https://mevboost.pics/
+messari | 3 | Messari (kutatás, token-fundamentumok, API) | On-chain adat | freemium | nem ellenőrzött | 47/61/56/53 | https://messari.io/
+chainalysis | 3 | Chainalysis (compliance és intézményi on-chain analitika) | On-chain adat | institutional | egyedi | 46/62/52/51 | https://www.chainalysis.com/
+bitpanda | 3 | Bitpanda (osztrák kriptobróker, EU-s fókusz) | Jog és adó (HU/EU) | registration | díjak a díjjegyzék szerint… | 48/60/52/52 | https://www.bitpanda.com/
+flipside-snowflake | 3 | Flipside… | On-chain adat | free | core data share ingyenes… | 48/56/52/55 | https://flipsidecrypto.xyz/
+checkonchain | 3 | Checkonchain (ingyenes on-chain grafikonok) | On-chain adat | free | ingyenes | 46/56/52/52 | https://checkonchain.com/
+freqtrade-strategies | 3 | freqtrade-strategies (közösségi stratégiagyűjtemény) | Nyílt forráskódú eszközök | free | ingyenes | 46/56/52/50 | https://github.com/freqtrade/freqtrade-strategies
+cryptodatadownload | 3 | CryptoDataDownload (ingyenes OHLCV CSV-k) | Piaci adat (tick, L2) | freemium | alap CSV ingyenes | 44/53/48/48 | https://www.cryptodatadownload.com/
+bitcoin-magazine-pro | 3 | Bitcoin Magazine Pro (korábban LookIntoBitcoin) – BTC… | On-chain adat | freemium | nem ellenőrzött | 44/52/48/50 | https://www.bitcoinmagazinepro.com/
+theblock-data | 3 | The Block Data (aggregált piaci és on-chain grafikonok) | On-chain adat | freemium | nem ellenőrzött | 41/54/48/46 | https://www.theblock.co/data
+mev-inspect-py | 3 | mev-inspect-py (Flashbots, MEV-osztályozó) | MEV és mempool | free | ingyenes | 46/48/44/54 | https://github.com/flashbots/mev-inspect-py
+coinmarketcap-api | 3 | CoinMarketCap API | Piaci adat (tick, L2) | freemium | Basic ingyenes; fizetős csomagok az… | 40/52/44/44 | https://coinmarketcap.com/api/pricing/
 
 ## Predikciós piacok és sportfogadás
-polymarket-clob-api | Polymarket CLOB API | free | API ingyenes; taker díj kategóriánként ( | 82/82/84/76 | https://clob.polymarket.com
-polymarket-data-api-v2 | Polymarket Data API v2 (pozíciók, trade-ek, OI, ártörténet) | free | ingyenes, auth nélkül | 80/82/83/78 | https://data-api.polymarket.com/v2
-polymarket-websocket | Polymarket WebSocket (market / user / sports csatorna) | free | ingyenes | 83/80/81/78 | wss://ws-subscriptions-clob.polymarket.com/ws/market
-football-data-co-uk | football-data.co.uk (ingyenes foci eredmény + szorzó CSV-k, nyitó és z | free | ingyenes | 76/85/84/82 | https://www.football-data.co.uk/
-paper-burgi-deng-whelan-kalshi-makers-takers | Bürgi, Deng & Whelan (2025–2026): Makers and Takers – The Economics of | free | ingyenes WP | 71/85/88/81 | https://www.ucd.ie/economics/t4media/WP2025_19.pdf
-betfair-exchange-api | Betfair Exchange API-NG + Stream API | paid | Delayed App Key ingyenes (fejlesztés); L | 79/80/82/70 | https://betfair-developer-docs.atlassian.net/wiki/x/ESMp
-paper-diercks-katz-wright-2026-kalshi-macro | Diercks, Katz & Wright (2026): Kalshi and the Rise of Macro Markets, F | free | ingyenes | 68/86/88/78 | https://www.federalreserve.gov/econres/feds/kalshi-and-the-rise-of-macro-markets.htm
-polymarket-gamma-api | Polymarket Gamma API (piac- és eseménymetaadat) | free | ingyenes, kulcs nélkül | 74/80/79/72 | https://gamma-api.polymarket.com
-paper-saguillo-2025-polymarket-arbitrage | Saguillo, Ghafouri, Kiffer & Suarez-Tangil (2025): Unravelling the Pro | free | ingyenes | 70/80/84/80 | https://arxiv.org/abs/2508.03474
-the-odds-api | The Odds API (élő és történeti szorzók, 2020-tól) | freemium | Starter ingyenes 500 kredit/hó; 20K: 30  | 74/79/77/74 | https://the-odds-api.com/
-method-kelly-1956 | Kelly-kritérium: Kelly (1956) A New Interpretation of Information Rate | paid | IEEE/Bell System Technical Journal | 62/88/86/72 | https://doi.org/10.1002/j.1538-7305.1956.tb03809.x
-polymarket-fees | Polymarket díjstruktúra (taker díj kategóriánként, maker rebate) | free | taker díj = C × feeRate × p × (1−p); fee | 68/82/81/68 | https://docs.polymarket.com/trading/fees
-jon-becker-prediction-market-analysis | prediction-market-analysis (Jon Becker) – 36 GiB Polymarket + Kalshi a | free | ingyenes (MIT) | 68/79/80/75 | https://github.com/Jon-Becker/prediction-market-analysis
-method-closing-line-value | Closing Line Value (CLV) – a no-vig záró ár verése mint edge-mérő | free | n/a | 64/82/83/74 | https://datagolf.com/analyzing-betting-odds
-polymarket-py-sdk | Polymarket py-sdk (polymarket-client, hivatalos Python SDK) | free | ingyenes (MIT) | 71/78/76/67 | https://github.com/Polymarket/py-sdk
-pinnacle-sportsbook | Pinnacle (alacsony marzsú 'sharp' fogadóiroda, a hatékony ár referenci | institutional | API nyilvánosan nem elérhető (2025-07-23 | 74/75/77/68 | https://www.pinnacle.com/
-hu-szjtv-1991-xxxiv | Magyarország: 1991. évi XXXIV. törvény a szerencsejáték szervezéséről  | free | ingyenes | 61/90/77/66 | https://njt.jog.gov.hu/jogszabaly/1991-34-00-00
-polymarket-geoblock | Polymarket geoblokk-lista és /api/geoblock végpont | free | ingyenes | 63/87/74/64 | https://docs.polymarket.com/developers/CLOB/geoblock
-paper-snowberg-wolfers-2010-flb | Snowberg & Wolfers (2010): Explaining the Favorite–Long Shot Bias, JPE | paid | folyóirat (fizetős), working paper ingye | 62/82/81/72 | https://doi.org/10.1086/655844
-paper-snowberg-wolfers-zitzewitz-partisan-impacts | Snowberg, Wolfers & Zitzewitz (2006/2007): Partisan Impacts on the Eco | free | NBER WP | 64/78/80/74 | https://doi.org/10.3386/w12073
-paper-kaunitz-2017-beating-bookies | Kaunitz, Zhong & Kreiner (2017): Beating the bookies with their own nu | free | ingyenes | 64/76/78/75 | https://arxiv.org/abs/1710.02824
-polymarket-tos | Polymarket Terms of Service (Adventure One QSS Inc., panamai jog, VPN- | free | n/a | 60/86/73/64 | https://polymarket.com/tos
-paper-page-clemen-2013-calibration | Page & Clemen (2013): Do Prediction Markets Produce Well-Calibrated Pr | paid | folyóirat | 60/77/77/70 | https://doi.org/10.1111/j.1468-0297.2012.02561.x
-method-thorp-kelly-sports | Thorp: The Kelly Criterion in Blackjack, Sports Betting, and the Stock | paid | könyvfejezet (Handbook of Asset and Liab | 56/82/78/66 | https://doi.org/10.1016/b978-044453248-0.50015-0
-polymarket-hu-sztfh-block-2026 | SZTFH ideiglenes blokkolás: polymarket.com Magyarországon (2026-01-16) | free | n/a | 58/82/70/63 | https://cms.law/en/hun/legal-updates/hungary-temporarily-blocks-access-to-polymarket-over-alleged-illegal-gambling
-paper-dixon-coles-1997 | Dixon & Coles (1997): Modelling Association Football Scores and Ineffi | paid | folyóirat | 56/77/75/68 | https://doi.org/10.1111/1467-9876.00065
-kalshi-international-access | Kalshi nemzetközi hozzáférés és korlátozott joghatóságok (55, köztük H | free | n/a | 58/80/68/62 | https://help.kalshi.com/en/articles/14026044-international-access-eligibility
-hu-tax-betting-winnings | Magyarország: fogadási nyeremények adózása (Szja tv. 76. § (4), egyéb  | free | n/a | 54/80/69/61 | https://nav.gov.hu/ado/szja/Hogyan_adozik_az_onli20210430
-hu-sztfh-blocking-regime | SZTFH honlapblokkolás, tiltólista és banki fizetési blokk (illegális s | free | n/a | 54/76/65/60 | https://sztfh.hu/
-eu-national-blocks-prediction-markets-2026 | EU-s hatósági fellépések predikciós piacok ellen 2026 (PT, HU, CZ, FR, | free | n/a | 56/76/64/60 | https://anj.fr/promotion-illegal-gambling-services-blocking-polymarket-website
-bookmaker-limiting-ukgc-2025 | Fogadóirodai limitálás (stake factoring, 'gubbing') – UK Gambling Comm | free | n/a | 49/74/65/55 | https://www.gamblingcommission.gov.uk/blog/post/commercial-restrictions-by-betting-operators
-hu-betfair-block-2023 | Betfair blokkolása Magyarországon (SZTFH, 2023 szeptember) | free | n/a | 50/70/60/56 | https://www.vg.hu/kozelet/2024/05/tobbet-nem-erheto-el-magyarorszagon-a-betfair-online-zugkaszinoja
-polymarket-onchain-contracts | Polymarket on-chain szerződések (CTF, CTF Exchange V2, NegRisk) – Poly | free | ingyenes (saját node vagy RPC költség) | 82/84/84/80 | https://docs.polymarket.com/resources/contract-addresses
-kalshi-trade-api | Kalshi Trade API v2 (REST) | registration | API ingyenes; díjak a díjtábla szerint | 76/81/82/68 | https://external-api.kalshi.com/trade-api/v2
-kalshi-websocket | Kalshi WebSocket API | registration | ingyenes | 76/79/80/68 | wss://external-api-ws.kalshi.com/trade-api/ws/v2
-nautilustrader-polymarket-betfair | NautilusTrader Polymarket- és Betfair-adapter | free | ingyenes (LGPL-3.0, a NautilusTrader lic | 73/81/78/68 | https://nautilustrader.io/docs/latest/integrations/polymarket/
-kalshi-historical-data | Kalshi historical végpontok (markets, candlesticks, trades) | registration | ingyenes | 70/78/80/70 | https://docs.kalshi.com/getting_started/historical_data.md
-hf-polymarket-v1-timeseventeen | TimeSeventeen/Polymarket-v1 (HF, 1.2 Mrd trade, 1.3 M piac, CC-BY-4.0) | free | ingyenes | 71/78/78/76 | https://huggingface.co/datasets/TimeSeventeen/Polymarket-v1
-flumine | flumine (eseményvezérelt sportfogadási kereskedési keretrendszer) | free | ingyenes (MIT) | 72/78/76/66 | https://github.com/betcode-org/flumine
-nflverse-data | nflverse-data (NFL play-by-play, EPA, roster, Vegas line – automatizál | free | ingyenes | 66/80/76/70 | https://github.com/nflverse/nflverse-data
-polymarket-rtds-polybolt | Polymarket RTDS / PolyBolt (valós idejű referenciaár-stream) | registration | ingyenes | 76/70/70/70 | https://docs.polymarket.com/developers/RTDS/RTDS-overview
-pmxt-unified-api | pmxt – 'CCXT a predikciós piacokra' (egységes API) | free | ingyenes (MIT); hosztolt szolgáltatás is | 70/74/74/68 | https://github.com/pmxt-dev/pmxt
-betfairlightweight | betfairlightweight (Betfair API-NG Python wrapper, streaminggel) | free | ingyenes (MIT) | 68/78/74/63 | https://github.com/betcode-org/betfair
-penaltyblog | penaltyblog (foci modellek: Poisson, Dixon–Coles, bivariate Poisson; m | free | ingyenes (MIT) | 67/77/74/70 | https://github.com/martineastwood/penaltyblog
-betfair-historic-data | Betfair Historical Data Service (BASIC / ADVANCED / PRO) | freemium | BASIC ingyenes (1 perces árak, volumen n | 64/76/80/65 | https://historicdata.betfair.com/
-hf-sii-wangzj-polymarket-data | SII-WANGZJ/Polymarket_data (Hugging Face, ~1.1 Mrd trade, parquet) | free | ingyenes | 66/74/76/70 | https://huggingface.co/datasets/SII-WANGZJ/Polymarket_data
-metaculus-api | Metaculus API (közösségi előrejelzések, tokennel) | registration | ingyenes, API-token szükséges | 62/78/72/68 | https://www.metaculus.com/api/posts/
-polymarket-subgraphs | Polymarket subgraphok (Goldsky / The Graph): orderbook, positions, PnL | freemium | The Graph gateway: saját API-kulcs, leké | 68/69/70/68 | https://docs.polymarket.com/developers/subgraph/overview
-statsbomb-open-data | StatsBomb Open Data (ingyenes esemény- és 360-adat) | free | ingyenes (forrásmegjelöléssel) | 56/78/74/65 | https://github.com/statsbomb/open-data
-paper-wolfers-zitzewitz-2004-prediction-markets | Wolfers & Zitzewitz (2004): Prediction Markets, Journal of Economic Pe | free | ingyenes (AEA) | 54/80/76/64 | https://doi.org/10.1257/0895330041371321
-paper-columbia-2025-wash-trading-polymarket | Network-Based Detection of Wash-Trading (Columbia, 2025, SSRN preprint | free | ingyenes preprint | 58/74/73/68 | https://fortune.com/2025/11/07/polymarket-wash-trading-inflated-prediction-markets-columbia-research/
-paper-hubacek-2019-ml-betting | Hubáček, Šourek & Železný (2019): Exploiting sports-betting market usi | paid | folyóirat | 58/73/73/69 | https://doi.org/10.1016/j.ijforecast.2019.01.001
-kalshi-fees | Kalshi díjtábla (taker 0.07 × C × P × (1−P), maker 0.0175 egyes soroza | free | taker: roundup(M × 0.07 × C × P × (1−P)) | 60/72/70/60 | https://kalshi.com/docs/kalshi-fee-schedule.pdf
-smarkets-exchange-api | Smarkets Exchange + API | registration | jutalék 2% a nettó nyereségre (másodlago | 66/67/67/61 | https://api.smarkets.com/v3/events/
-betfair-datascientists | Betfair Data Scientists portál (oktatóanyagok, adatforrások, modellek) | free | ingyenes | 60/71/70/65 | https://betfair-datascientists.github.io/
-paper-shin-1993-insider-trading-odds | Shin (1993): Measuring the Incidence of Insider Trading in a Market fo | paid | folyóirat | 56/74/72/66 | https://doi.org/10.2307/2234240
-paper-wolfers-zitzewitz-2006-interpreting-prices | Wolfers & Zitzewitz (2006): Interpreting Prediction Market Prices as P | free | NBER (részben fizetős) | 54/74/72/64 | https://doi.org/10.3386/w12200
-paper-rothschild-sethi-2016-microstructure | Rothschild & Sethi: Trading Strategies and Market Microstructure – Evi | free | SSRN ingyenes | 56/70/69/66 | https://doi.org/10.2139/ssrn.2322420
-paper-croxson-reade-2014-goal-arrival | Croxson & Reade (2014): Information and Efficiency – Goal Arrival in S | paid | folyóirat | 54/70/68/64 | https://doi.org/10.1111/ecoj.12033
-soccerdata | soccerdata (Club Elo, ESPN, FBref, Football-Data, Sofascore, Understat | free | ingyenes (Apache-2.0) | 56/66/64/54 | https://github.com/probberechts/soccerdata
-paper-strumbelj-2014-probabilities-from-odds | Štrumbelj (2014): On determining probability forecasts from betting od | paid | folyóirat | 50/70/66/62 | https://doi.org/10.1016/j.ijforecast.2014.02.008
-paper-levitt-2004-gambling-markets | Levitt (2004): Why are Gambling Markets Organised so Differently from  | paid | folyóirat | 50/70/66/62 | https://doi.org/10.1111/j.1468-0297.2004.00207.x
-hu-szerencsejatek-zrt-tippmixpro | Szerencsejáték Zrt. / TippmixPro (állami monopolhelyzetű sportfogadás) | registration | marzs a szorzókba építve (nem mért) | 53/62/56/57 | https://www.tippmixpro.hu/
-dune-prediction-markets-curated | Dune curated prediction_markets táblák (Polymarket, Kalshi, Hyperliqui | institutional | a gated táblák Enterprise jogosultsághoz | 64/74/72/67 | https://docs.dune.com/data-catalog/curated/prediction-markets/overview
-hyperliquid-hip4-outcome-markets | Hyperliquid HIP-4 outcome markets (on-chain bináris piacok) | free | források szerint díjmentes (zero-fee) in | 72/66/66/64 | https://www.theblock.co/post/402511/hyperliquid-validator-prediction-markets
-kalshi-rate-limits | Kalshi API rate-limit szintek (Basic → Prestige) | free | ingyenes | 58/72/67/54 | https://docs.kalshi.com/getting_started/rate_limits.md
-manifold-api | Manifold Markets API (play-money predikciós piac) | free | ingyenes; írás API-kulccsal (Authorizati | 62/68/61/63 | https://api.manifold.markets/v0/markets
-sportsdataio | SportsDataIO (sportadat + odds API, US ligák) | paid | ligánként korlátozott ingyenes próba; ár | 61/69/63/61 | https://sportsdata.io/developers
-bitquery-polymarket-api | Bitquery Polymarket API (GraphQL, Polygon) + Data Store parquet | freemium | API-kulcs kell; árazás külön oldalon, ne | 62/65/62/62 | https://docs.bitquery.io/docs/examples/polymarket-api/polymarket-ctf-exchange
-kalshi-python-sdk | Kalshi hivatalos Python SDK (kalshi_python_sync / kalshi_python_async) | free | ingyenes | 58/68/64/52 | https://docs.kalshi.com/python-sdk
-retrosheet | Retrosheet (MLB play-by-play eseményfájlok, ingyenes, kereskedelmi has | free | ingyenes | 53/70/66/62 | https://www.retrosheet.org/game.htm
-paper-thaler-ziemba-1988-parimutuel | Thaler & Ziemba (1988): Anomalies – Parimutuel Betting Markets: Racetr | free | ingyenes (AEA) | 52/70/67/63 | https://doi.org/10.1257/jep.2.2.161
-poly-maker-warproxxx | poly-maker (Polymarket market-making bot) | free | ingyenes (MIT) | 63/60/60/59 | https://github.com/warproxxx/poly-maker
-matchbook-exchange-api | Matchbook Exchange API | registration | jutalék források szerint 1.5–2% (UK/IE), | 63/60/60/58 | https://api.matchbook.com/edge/rest/events
-sharpapi | SharpAPI (odds API arbitrázs/+EV detektálással) | freemium | Free 0 USD (60 s késleltetés), Hobby 79  | 64/59/58/62 | https://sharpapi.io/pricing
-nba-api | nba_api (NBA.com statisztikai API-k Python-kliense) | free | ingyenes (MIT) | 58/66/62/56 | https://github.com/swar/nba_api
-polymarket-us-qcx | Polymarket US (QCX LLC, CFTC DCM) | registration | taker díj kategóriánként (River Markets  | 60/60/62/54 | https://www.theblock.co/post/381253/polymarket-begins-opening-us-app-to-users-on-waitlist
-oddsportal | OddsPortal (szorzó-összehasonlító, történeti odds – scraping ÁSZF-tila | free | ingyenes webes megtekintés | 56/62/65/55 | https://www.oddsportal.com/
-betfair-historical-free-basic | Betfair BASIC ingyenes 1 perces historikus csomag (CLV-referencia) | registration | ingyenes (Betfair-fiók kell) | 53/66/67/54 | https://betfair-datascientists.github.io/data/usingHistoricDataSite
-paper-clarke-kovalchik-ingram-2017-overround | Clarke, Kovalchik & Ingram (2017): Adjusting Bookmaker's Odds to Allow | free | open access | 52/66/64/62 | https://doi.org/10.11648/j.ajss.20170506.12
-clubelo | Club Elo (foci klub-Elo értékek és meccsvalószínűségek API-val) | free | ingyenes | 54/62/58/58 | http://clubelo.com/
-paper-ottaviani-sorensen-2008-flb-overview | Ottaviani & Sørensen (2008): The Favorite-Longshot Bias – An Overview  | paid | könyvfejezet (Handbook of Sports and Lot | 48/66/63/59 | https://doi.org/10.1016/b978-044450744-0.50009-3
-good-judgment-open | Good Judgment Open (szuperelőrejelzők nyilvános versenye) | registration | ingyenes (GJOpen); Good Judgment Inc. Fu | 50/64/58/58 | https://www.gjopen.com/
-betsapi | BetsAPI (Bet365, Betfair, 1xBet stb. szorzók és események API-ja) | paid | Bet365 API 150 USD/hó, Betfair/BWin/1xBe | 58/57/56/56 | https://betsapi.com/mm/pricing_table
-sports-reference-family | Sports Reference oldalak (basketball-, baseball-, pro-football-, hocke | free | ingyenes web; Stathead fizetős | 48/64/60/50 | https://www.basketball-reference.com/
-pybaseball | pybaseball (Statcast, Baseball-Reference, FanGraphs Pythonból) | free | ingyenes (MIT) | 52/61/56/54 | https://github.com/jldbc/pybaseball
-paper-forrest-goddard-simmons-2005 | Forrest, Goddard & Simmons (2005): Odds-setters as forecasters – The c | paid | folyóirat | 46/65/60/57 | https://doi.org/10.1016/j.ijforecast.2005.03.003
-betdaq-api | Betdaq Exchange API | paid | egyszeri 250 GBP API-hozzáférési díj (Be | 57/54/54/52 | https://betdaq.zendesk.com/hc/en-gb/articles/360020067139-API-access
-kaggle-beat-the-bookie | Kaggle: Beat the Bookie worldwide football dataset (Kaunitz et al.) | registration | ingyenes | 51/57/57/60 | https://www.kaggle.com/austro/beat-the-bookie-worldwide-football-dataset
-understat | Understat (ingyenes xG-adat top-ligákra) | free | ingyenes web | 52/58/58/52 | https://understat.com/
-limitless-exchange | Limitless Exchange (Base, on-chain predikciós piac) + API | free | API ingyenes; kereskedési díjak nem elle | 56/51/50/52 | https://api.limitless.exchange/markets/active
-iowa-electronic-markets | Iowa Electronic Markets (IEM) – történeti árak 1988-tól | free | ingyenes | 44/61/55/55 | https://iemweb.biz.uiowa.edu/
-carlosibcu-btc-arb-bot | polymarket-kalshi-btc-arbitrage-bot (BTC 1 órás piacok) | free | ingyenes (MIT) | 54/53/52/50 | https://github.com/CarlosIbCu/polymarket-kalshi-btc-arbitrage-bot
-manifold-data-dumps | Manifold adatdump (bets, markets, comments) | free | ingyenes nem kereskedelmi célra; kereske | 46/58/54/52 | https://docs.manifold.markets/data
-predictit-api | PredictIt (CFTC no-action, politikai piacok) + publikus market data AP | free | adat ingyenes; kereskedésnél 10% díj a n | 49/54/53/46 | https://www.predictit.org/api/marketdata/all/
-fbref-opta | FBref (Sports Reference) – foci statisztikák; Opta haladó adatok 2026  | free | ingyenes web; Stathead előfizetés fizető | 46/54/52/49 | https://fbref.com/en/
-kaggle-european-soccer-database | Kaggle: European Soccer Database (hugomathien/soccer) | registration | ingyenes (Kaggle-fiók) | 44/54/50/52 | https://www.kaggle.com/datasets/hugomathien/soccer
-realfishsam-arb-bot | prediction-market-arbitrage-bot (Polymarket ↔ Kalshi, pmxt-alapú, okta | free | ingyenes (MIT) | 49/50/48/46 | https://github.com/realfishsam/prediction-market-arbitrage-bot
-polymarket-agents | Polymarket/agents (LLM-ágens keretrendszer, ARCHIVÁLT) | free | ingyenes (MIT) | 46/46/46/48 | https://github.com/Polymarket/agents
-opticodds-oddsjam | OpticOdds (az OddsJam mögötti vállalati odds-API) | institutional | nem publikus; versenytárs-blogok szerint | 72/71/69/70 | https://opticodds.com/
-sportradar-api | Sportradar API-k (sportadat, odds, live) | institutional | nem publikus; becslések 1500 USD/hó (öná | 68/75/68/66 | https://marketplace.sportradar.com/
-kalshi-fix-api | Kalshi FIX API | institutional | nem publikus | 60/62/60/52 | https://docs.kalshi.com/fix/connectivity.md
-oddpool-prediction-data | Oddpool (cross-venue predikciós piaci adat és díjkutatás) | freemium | nem ellenőrzött | 54/54/50/54 | https://www.oddpool.com/research/prediction-market-fees-explained
-paper-arrow-et-al-2008-promise | Arrow et al. (2008): The Promise of Prediction Markets, Science | paid | folyóirat | 38/62/54/50 | https://doi.org/10.1126/science.1157679
-octobot-prediction-market | OctoBot-Prediction-Market (Polymarket copy trading és arbitrázs) | free | ingyenes (GPL-3.0) | 49/52/50/46 | https://github.com/Drakkar-Software/OctoBot-Prediction-Market
-drift-bet | Drift BET (Solana, perp-margin alapú predikciós piac) | free | források szerint a standard Drift taker  | 43/39/36/40 | https://madeonsol.com/blog/solana-prediction-markets-guide
-polymarket-py-clob-client | Polymarket py-clob-client (ARCHIVÁLT) | free | ingyenes (MIT) | 34/36/34/38 | https://github.com/Polymarket/py-clob-client
+polymarket-clob-api | 0 | Polymarket CLOB API | M5 Predikciós piacok és sportfogadás | free | API ingyenes; taker díj kategóriánként… | 82/82/84/76 | https://clob.polymarket.com | Hibrid off-chain orderbook, on-chain (Polygon) settlement. Publikus végpontok…
+polymarket-data-api-v2 | 0 | Polymarket Data API v2 (pozíciók, trade-ek, OI, ártörténet) | M5 Predikciós piacok és sportfogadás | free | ingyenes, auth nélkül | 80/82/83/78 | https://data-api.polymarket.com/v2 | Végpontok: /v2/positions, /v2/value, /v2/user-pnl, /v2/trades, /v2/activity…
+polymarket-websocket | 0 | Polymarket WebSocket (market / user / sports csatorna) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 83/80/81/78 | wss://ws-subscriptions-clob.polymarket.com/ws/market | market csatorna (auth nélkül): book, price_change, tick_size_change…
+football-data-co-uk | 0 | football-data.co.uk… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 76/85/84/82 | https://www.football-data.co.uk/ | Mért (2026-11-15): a 2025/26-os Premier League CSV 380 meccs, 203 KB; oszlopok…
+paper-burgi-deng-whelan-kalshi-makers-takers | 0 | Bürgi, Deng & Whelan (2025–2026): Makers and Takers – The Economics… | M5 Predikciós piacok és sportfogadás | free | ingyenes WP | 71/85/88/81 | https://www.ucd.ie/economics/t4media/WP2025_19.pdf | 300 000+ Kalshi-kontraktus: az olcsó (longshot) kontraktusok mindkét csoportnál…
+betfair-exchange-api | 0 | Betfair Exchange API-NG + Stream API | M5 Predikciós piacok és sportfogadás | paid | Delayed App Key ingyenes (fejlesztés)… | 79/80/82/70 | https://betfair-developer-docs.atlassian.net/wiki/x/ESMp | A sportfogadás 'hatékony ár' referenciája Pinnacle mellett: back/lay könyv…
+paper-diercks-katz-wright-2026-kalshi-macro | 0 | Diercks, Katz & Wright (2026): Kalshi and the Rise of Macro Markets… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 68/86/88/78 | https://www.federalreserve.gov/econres/feds/kalshi-and-the-rise-of-macro-markets.htm | Lépések: (1) piacválasztás – Kalshi KXFED/CPI/NFP/GDP, Polymarket Fed…
+polymarket-gamma-api | 0 | Polymarket Gamma API (piac- és eseménymetaadat) | M5 Predikciós piacok és sportfogadás | free | ingyenes, kulcs nélkül | 74/80/79/72 | https://gamma-api.polymarket.com | Események, piacok, tagek, kategóriák, conditionId, tokenId-k, likviditás…
+paper-saguillo-2025-polymarket-arbitrage | 0 | Saguillo, Ghafouri, Kiffer & Suarez-Tangil (2025): Unravelling the… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 70/80/84/80 | https://arxiv.org/abs/2508.03474 | arXiv API-val ellenőrizve. Két arbitrázstípus: market rebalancing…
+the-odds-api | 0 | The Odds API (élő és történeti szorzók, 2020-tól) | M5 Predikciós piacok és sportfogadás | freemium | Starter ingyenes 500 kredit/hó; 20K: 30… | 74/79/77/74 | https://the-odds-api.com/ | Mért (honlap, 2026-11-15): historikus snapshotok csak fizetős csomagban…
+method-kelly-1956 | 0 | Kelly-kritérium: Kelly (1956) A New Interpretation of Information Rate | M5 Predikciós piacok és sportfogadás | paid | IEEE/Bell System Technical Journal | 62/88/86/72 | https://doi.org/10.1002/j.1538-7305.1956.tb03809.x | Crossref-fel ellenőrizve. Bináris fogadásnál f* = (b·p − q)/b…
+polymarket-fees | 0 | Polymarket díjstruktúra (taker díj kategóriánként, maker rebate) | M5 Predikciós piacok és sportfogadás | free | taker díj = C × feeRate × p × (1−p)… | 68/82/81/68 | https://docs.polymarket.com/trading/fees | Feltétel: YES_A·(1+díj_A) + NO_B·(1+díj_B) < 1 a lejáratig tartó tőkeköltséggel…
+jon-becker-prediction-market-analysis | 0 | prediction-market-analysis (Jon Becker) – 36 GiB Polymarket + Kalshi… | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 68/79/80/75 | https://github.com/Jon-Becker/prediction-market-analysis | Mért: kb. 3.9k csillag, 544 fork, utolsó commit 2026-10-29. 'A legnagyobb…
+method-closing-line-value | 0 | Closing Line Value (CLV) – a no-vig záró ár verése mint edge-mérő | M5 Predikciós piacok és sportfogadás | free | n/a | 64/82/83/74 | https://datagolf.com/analyzing-betting-odds | CLV = ln(fogadási odds / no-vig záró odds) vagy p_close − p_bet. Ha tartósan…
+polymarket-py-sdk | 0 | Polymarket py-sdk (polymarket-client, hivatalos Python SDK) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 71/78/76/67 | https://github.com/Polymarket/py-sdk | A py-clob-client utódja ('Unified Python SDK for Polymarket DeFi'), telepítés…
+pinnacle-sportsbook | 0 | Pinnacle… | M5 Predikciós piacok és sportfogadás | institutional | API nyilvánosan nem elérhető… | 74/75/77/68 | https://www.pinnacle.com/ | A Pinnacle záró ára (no-vig closing line) a sportfogadás de facto 'fair'…
+hu-szjtv-1991-xxxiv | 0 | Magyarország: 1991. évi XXXIV. törvény a szerencsejáték szervezéséről… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 61/90/77/66 | https://njt.jog.gov.hu/jogszabaly/1991-34-00-00 | Az oldal élesben elérhető (HTTP 200). A szerencsejáték-szervezés…
+polymarket-geoblock | 0 | Polymarket geoblokk-lista és /api/geoblock végpont | M5 Predikciós piacok és sportfogadás | free | ingyenes | 63/87/74/64 | https://docs.polymarket.com/developers/CLOB/geoblock | Mért (2026-11-15): teljes tiltás IR, SY, CU, KP, Krím/Donyeck/Luhanszk.…
+paper-snowberg-wolfers-2010-flb | 0 | Snowberg & Wolfers (2010): Explaining the Favorite–Long Shot Bias, JPE | M5 Predikciós piacok és sportfogadás | paid | folyóirat (fizetős), working paper… | 62/82/81/72 | https://doi.org/10.1086/655844 | Crossref-fel ellenőrizve. Lóverseny-adatokon (exotic fogadások) a…
+paper-snowberg-wolfers-zitzewitz-partisan-impacts | 0 | Snowberg, Wolfers & Zitzewitz (2006/2007): Partisan Impacts on the… | M5 Predikciós piacok és sportfogadás | free | NBER WP | 64/78/80/74 | https://doi.org/10.3386/w12073 | Crossref-fel ellenőrizve (NBER w12073). Választási éjszaka intraday predikciós…
+paper-kaunitz-2017-beating-bookies | 0 | Kaunitz, Zhong & Kreiner (2017): Beating the bookies with their own… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 64/76/78/75 | https://arxiv.org/abs/1710.02824 | Value betting: soft irodánál a sharp konszenzusnál (Pinnacle/Betfair no-vig)…
+polymarket-tos | 0 | Polymarket Terms of Service… | M5 Predikciós piacok és sportfogadás | free | n/a | 60/86/73/64 | https://polymarket.com/tos | Mért (2026-11-15, hatályos 2026-08-11-től): az üzemeltető Adventure One QSS…
+paper-page-clemen-2013-calibration | 0 | Page & Clemen (2013): Do Prediction Markets Produce Well-Calibrated… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 60/77/77/70 | https://doi.org/10.1111/j.1468-0297.2012.02561.x | Crossref-fel ellenőrizve. Intrade-adatokon: a távoli lejáratú piacok FLB-t…
+method-thorp-kelly-sports | 0 | Thorp: The Kelly Criterion in Blackjack, Sports Betting, and the… | M5 Predikciós piacok és sportfogadás | paid | könyvfejezet… | 56/82/78/66 | https://doi.org/10.1016/b978-044453248-0.50015-0 | Crossref-fel ellenőrizve (mindkét DOI). A frakcionális Kelly kockázat-hozam…
+polymarket-hu-sztfh-block-2026 | 0 | SZTFH ideiglenes blokkolás: polymarket.com Magyarországon (2026-01-16) | M5 Predikciós piacok és sportfogadás | free | n/a | 58/82/70/63 | https://cms.law/en/hun/legal-updates/hungary-temporarily-blocks-access-to-polymarket-over-alleged-illegal-gambling | Mért (CMS, 2026-01-20): a Szabályozott Tevékenységek Felügyeleti Hatósága…
+paper-dixon-coles-1997 | 0 | Dixon & Coles (1997): Modelling Association Football Scores and… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 56/77/75/68 | https://doi.org/10.1111/1467-9876.00065 | Crossref-fel ellenőrizve. Kettős Poisson alacsony gólszám-korrekcióval és…
+kalshi-international-access | 0 | Kalshi nemzetközi hozzáférés és korlátozott joghatóságok… | M5 Predikciós piacok és sportfogadás | free | n/a | 58/80/68/62 | https://help.kalshi.com/en/articles/14026044-international-access-eligibility | 2025 októberében a Kalshi 140+ országra nyitott. Nemzetközi befizetés…
+hu-tax-betting-winnings | 0 | Magyarország: fogadási nyeremények adózása (Szja tv. 76. §… | M5 Predikciós piacok és sportfogadás | free | n/a | 54/80/69/61 | https://nav.gov.hu/ado/szja/Hogyan_adozik_az_onli20210430 | Mért (NAV oldal, 2023-09-05, archiváltként jelölve 2026-05-02 óta): (a)…
+hu-sztfh-blocking-regime | 0 | SZTFH honlapblokkolás, tiltólista és banki fizetési blokk… | M5 Predikciós piacok és sportfogadás | free | n/a | 54/76/65/60 | https://sztfh.hu/ | Ideiglenes és határozatlan idejű hozzáférhetetlenné tétel…
+eu-national-blocks-prediction-markets-2026 | 0 | EU-s hatósági fellépések predikciós piacok ellen 2026… | M5 Predikciós piacok és sportfogadás | free | n/a | 56/76/64/60 | https://anj.fr/promotion-illegal-gambling-services-blocking-polymarket-website | 2026-01: Portugália és Magyarország blokkolja a Polymarketet…
+bookmaker-limiting-ukgc-2025 | 0 | Fogadóirodai limitálás (stake factoring, 'gubbing') – UK Gambling… | M5 Predikciós piacok és sportfogadás | free | n/a | 49/74/65/55 | https://www.gamblingcommission.gov.uk/blog/post/commercial-restrictions-by-betting-operators | A UKGC 2025-ös blogja és sajtóösszefoglalói szerint 2024-ben a nagy online…
+hu-betfair-block-2023 | 0 | Betfair blokkolása Magyarországon (SZTFH, 2023 szeptember) | M5 Predikciós piacok és sportfogadás | free | n/a | 50/70/60/56 | https://www.vg.hu/kozelet/2024/05/tobbet-nem-erheto-el-magyarorszagon-a-betfair-online-zugkaszinoja | A Világgazdaság 2024. májusi cikke szerint az SZTFH az előző szeptemberben…
+polymarket-onchain-contracts | 1 | Polymarket on-chain szerződések (CTF, CTF Exchange V2, NegRisk)… | M5 Predikciós piacok és sportfogadás | free | ingyenes (saját node vagy RPC költség) | 82/84/84/80 | https://docs.polymarket.com/resources/contract-addresses | Conditional Tokens: 0x4D97DCd97eC945f40cF65F87097ACe5EA0476045…
+kalshi-trade-api | 1 | Kalshi Trade API v2 (REST) | M5 Predikciós piacok és sportfogadás | registration | API ingyenes; díjak a díjtábla szerint | 76/81/82/68 | https://external-api.kalshi.com/trade-api/v2 | Éles: https://external-api.kalshi.com/trade-api/v2, demó…
+kalshi-websocket | 1 | Kalshi WebSocket API | M5 Predikciós piacok és sportfogadás | registration | ingyenes | 76/79/80/68 | wss://external-api-ws.kalshi.com/trade-api/ws/v2 | Orderbook-delta, ticker, trade, fill csatornák; a hitelesítés a handshake-ben…
+nautilustrader-polymarket-betfair | 1 | NautilusTrader Polymarket- és Betfair-adapter | M5 Predikciós piacok és sportfogadás | free | ingyenes… | 73/81/78/68 | https://nautilustrader.io/docs/latest/integrations/polymarket/ | Mért (docs, 2026-11-15): Polymarket L2 delta, quote, trade, feloldási…
+kalshi-historical-data | 1 | Kalshi historical végpontok (markets, candlesticks, trades) | M5 Predikciós piacok és sportfogadás | registration | ingyenes | 70/78/80/70 | https://docs.kalshi.com/getting_started/historical_data.md | Külön historical végpontcsalád: cutoff timestamps, markets, market…
+hf-polymarket-v1-timeseventeen | 1 | TimeSeventeen/Polymarket-v1 (HF, 1.2 Mrd trade, 1.3 M piac, CC-BY-4.0) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 71/78/78/76 | https://huggingface.co/datasets/TimeSeventeen/Polymarket-v1 | Mért (HF API): CC-BY-4.0, lastModified 2026-11-14, 12 438 letöltés. A kísérő…
+flumine | 1 | flumine (eseményvezérelt sportfogadási kereskedési keretrendszer) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 72/78/76/66 | https://github.com/betcode-org/flumine | Mért: 252 csillag, 1898 commit, utolsó commit 2026-11-14 (release 3.4.1).…
+nflverse-data | 1 | nflverse-data… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 66/80/76/70 | https://github.com/nflverse/nflverse-data | Mért: 447 csillag, utolsó commit 2026-11-01; a play_by_play_2025.parquet…
+polymarket-rtds-polybolt | 1 | Polymarket RTDS / PolyBolt (valós idejű referenciaár-stream) | M5 Predikciós piacok és sportfogadás | registration | ingyenes | 76/70/70/70 | https://docs.polymarket.com/developers/RTDS/RTDS-overview | A régi RTDS: wss://ws-live-data.polymarket.com (kripto-árak, kommentek). Az…
+pmxt-unified-api | 1 | pmxt – 'CCXT a predikciós piacokra' (egységes API) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT); hosztolt szolgáltatás is | 70/74/74/68 | https://github.com/pmxt-dev/pmxt | Mért: kb. 2.2k csillag, 1687 commit, utolsó commit 2026-07-18 (v2.54.0). 15…
+betfairlightweight | 1 | betfairlightweight (Betfair API-NG Python wrapper, streaminggel) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 68/78/74/63 | https://github.com/betcode-org/betfair | Mért: 515 csillag, 1241 commit, utolsó commit 2026-09-04 (release 2.24.0).…
+penaltyblog | 1 | penaltyblog… | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 67/77/74/70 | https://github.com/martineastwood/penaltyblog | Mért: 250 csillag, 846 commit, utolsó commit 2026-10-19. Dixon–Coles és társai…
+betfair-historic-data | 1 | Betfair Historical Data Service (BASIC / ADVANCED / PRO) | M5 Predikciós piacok és sportfogadás | freemium | BASIC ingyenes… | 64/76/80/65 | https://historicdata.betfair.com/ | A Stream API formátumú (JSON-sorok, tar/bz2) piaci üzenetek visszajátszhatók; a…
+hf-sii-wangzj-polymarket-data | 1 | SII-WANGZJ/Polymarket_data (Hugging Face, ~1.1 Mrd trade, parquet) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 66/74/76/70 | https://huggingface.co/datasets/SII-WANGZJ/Polymarket_data | Mért (HF API, 2026-11-15): lastModified 2026-10-05, 36 748 letöltés, 97 like…
+metaculus-api | 1 | Metaculus API (közösségi előrejelzések, tokennel) | M5 Predikciós piacok és sportfogadás | registration | ingyenes, API-token szükséges | 62/78/72/68 | https://www.metaculus.com/api/posts/ | Mért: hitelesítés nélkül 403 'The API is only available to authenticated users'…
+polymarket-subgraphs | 1 | Polymarket subgraphok (Goldsky / The Graph): orderbook, positions… | M5 Predikciós piacok és sportfogadás | freemium | The Graph gateway: saját API-kulcs… | 68/69/70/68 | https://docs.polymarket.com/developers/subgraph/overview | GraphQL-lekérdezés pozíciókra, átlagos belépőárra, realizált PnL-re…
+statsbomb-open-data | 1 | StatsBomb Open Data (ingyenes esemény- és 360-adat) | M5 Predikciós piacok és sportfogadás | free | ingyenes (forrásmegjelöléssel) | 56/78/74/65 | https://github.com/statsbomb/open-data | Mért: 3.8k csillag, utolsó commit 2026-09-07; a competitions.json 80…
+paper-wolfers-zitzewitz-2004-prediction-markets | 1 | Wolfers & Zitzewitz (2004): Prediction Markets, Journal of Economic… | M5 Predikciós piacok és sportfogadás | free | ingyenes (AEA) | 54/80/76/64 | https://doi.org/10.1257/0895330041371321 | Crossref-fel ellenőrizve (DOI, cím, szerzők, 2004). A predikciós piaci ár mint…
+paper-columbia-2025-wash-trading-polymarket | 1 | Network-Based Detection of Wash-Trading… | M5 Predikciós piacok és sportfogadás | free | ingyenes preprint | 58/74/73/68 | https://fortune.com/2025/11/07/polymarket-wash-trading-inflated-prediction-markets-columbia-research/ | 80 oldalas, nem lektorált preprint: a Polymarket háromévi volumenének átlagosan…
+paper-hubacek-2019-ml-betting | 1 | Hubáček, Šourek & Železný (2019): Exploiting sports-betting market… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 58/73/73/69 | https://doi.org/10.1016/j.ijforecast.2019.01.001 | Crossref-fel ellenőrizve. NBA: a modell tanításánál a bukméker-odds-szal való…
+kalshi-fees | 1 | Kalshi díjtábla (taker 0.07 × C × P ×… | M5 Predikciós piacok és sportfogadás | free | taker: roundup… | 60/72/70/60 | https://kalshi.com/docs/kalshi-fee-schedule.pdf | 50 centnél 1 kontraktusra a képlet 1.75 centet ad, a táblázat felfelé kerekítve…
+smarkets-exchange-api | 1 | Smarkets Exchange + API | M5 Predikciós piacok és sportfogadás | registration | jutalék 2% a nettó nyereségre… | 66/67/67/61 | https://api.smarkets.com/v3/events/ | Mért: a publikus /v3/events/ végpont auth nélkül JSON-t adott (2026-11-15).…
+betfair-datascientists | 1 | Betfair Data Scientists portál (oktatóanyagok, adatforrások, modellek) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 60/71/70/65 | https://betfair-datascientists.github.io/ | Ingyenes oktatóanyagok: historikus JSON → CSV, lóverseny- és sportmodellek…
+paper-shin-1993-insider-trading-odds | 1 | Shin (1993): Measuring the Incidence of Insider Trading in a Market… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 56/74/72/66 | https://doi.org/10.2307/2234240 | Crossref-fel ellenőrizve. A bennfentes kereskedők arányából levezetett…
+paper-wolfers-zitzewitz-2006-interpreting-prices | 1 | Wolfers & Zitzewitz (2006): Interpreting Prediction Market Prices as… | M5 Predikciós piacok és sportfogadás | free | NBER (részben fizetős) | 54/74/72/64 | https://doi.org/10.3386/w12200 | Crossref-fel ellenőrizve. Mikor egyezik az ár a kereskedők átlagos hiedelmével…
+paper-rothschild-sethi-2016-microstructure | 1 | Rothschild & Sethi: Trading Strategies and Market Microstructure… | M5 Predikciós piacok és sportfogadás | free | SSRN ingyenes | 56/70/69/66 | https://doi.org/10.2139/ssrn.2322420 | Crossref-fel ellenőrizve (SSRN 2013). Intrade 2012-es elnökválasztási piac…
+paper-croxson-reade-2014-goal-arrival | 1 | Croxson & Reade (2014): Information and Efficiency – Goal Arrival in… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 54/70/68/64 | https://doi.org/10.1111/ecoj.12033 | Crossref-fel ellenőrizve. A Betfair-árak a gól után gyorsan és teljesen…
+soccerdata | 1 | soccerdata… | M5 Predikciós piacok és sportfogadás | free | ingyenes (Apache-2.0) | 56/66/64/54 | https://github.com/probberechts/soccerdata | Mért: kb. 2.1k csillag, utolsó commit 2026-10-18 (heti CalVer kiadások). Egy…
+paper-strumbelj-2014-probabilities-from-odds | 1 | Štrumbelj (2014): On determining probability forecasts from betting… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 50/70/66/62 | https://doi.org/10.1016/j.ijforecast.2014.02.008 | Crossref-fel ellenőrizve. Empirikusan a Shin-módszer és a regressziós korrekció…
+paper-levitt-2004-gambling-markets | 1 | Levitt (2004): Why are Gambling Markets Organised so Differently from… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 50/70/66/62 | https://doi.org/10.1111/j.1468-0297.2004.00207.x | Crossref-fel ellenőrizve. A bukmékerek nem kiegyensúlyozzák a könyvet, hanem a…
+hu-szerencsejatek-zrt-tippmixpro | 1 | Szerencsejáték Zrt. / TippmixPro (állami monopolhelyzetű sportfogadás) | M5 Predikciós piacok és sportfogadás | registration | marzs a szorzókba építve (nem mért) | 53/62/56/57 | https://www.tippmixpro.hu/ | Az oldalak élesben elérhetők (HTTP 200). Az egyetlen jogilag tiszta…
+dune-prediction-markets-curated | 2 | Dune curated prediction_markets táblák… | M5 Predikciós piacok és sportfogadás | institutional | a gated táblák Enterprise… | 64/74/72/67 | https://docs.dune.com/data-catalog/curated/prediction-markets/overview
+hyperliquid-hip4-outcome-markets | 2 | Hyperliquid HIP-4 outcome markets (on-chain bináris piacok) | M5 Predikciós piacok és sportfogadás | free | források szerint díjmentes (zero-fee)… | 72/66/66/64 | https://www.theblock.co/post/402511/hyperliquid-validator-prediction-markets
+kalshi-rate-limits | 2 | Kalshi API rate-limit szintek (Basic → Prestige) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 58/72/67/54 | https://docs.kalshi.com/getting_started/rate_limits.md
+manifold-api | 2 | Manifold Markets API (play-money predikciós piac) | M5 Predikciós piacok és sportfogadás | free | ingyenes; írás API-kulccsal… | 62/68/61/63 | https://api.manifold.markets/v0/markets
+sportsdataio | 2 | SportsDataIO (sportadat + odds API, US ligák) | M5 Predikciós piacok és sportfogadás | paid | ligánként korlátozott ingyenes próba… | 61/69/63/61 | https://sportsdata.io/developers
+bitquery-polymarket-api | 2 | Bitquery Polymarket API (GraphQL, Polygon) + Data Store parquet | M5 Predikciós piacok és sportfogadás | freemium | API-kulcs kell; árazás külön oldalon… | 62/65/62/62 | https://docs.bitquery.io/docs/examples/polymarket-api/polymarket-ctf-exchange
+kalshi-python-sdk | 2 | Kalshi hivatalos Python SDK (kalshi_python_sync / kalshi_python_async) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 58/68/64/52 | https://docs.kalshi.com/python-sdk
+retrosheet | 2 | Retrosheet… | M5 Predikciós piacok és sportfogadás | free | ingyenes | 53/70/66/62 | https://www.retrosheet.org/game.htm
+paper-thaler-ziemba-1988-parimutuel | 2 | Thaler & Ziemba (1988): Anomalies – Parimutuel Betting Markets… | M5 Predikciós piacok és sportfogadás | free | ingyenes (AEA) | 52/70/67/63 | https://doi.org/10.1257/jep.2.2.161
+poly-maker-warproxxx | 2 | poly-maker (Polymarket market-making bot) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 63/60/60/59 | https://github.com/warproxxx/poly-maker
+matchbook-exchange-api | 2 | Matchbook Exchange API | M5 Predikciós piacok és sportfogadás | registration | jutalék források szerint 1.5–2%… | 63/60/60/58 | https://api.matchbook.com/edge/rest/events
+sharpapi | 2 | SharpAPI (odds API arbitrázs/+EV detektálással) | M5 Predikciós piacok és sportfogadás | freemium | Free 0 USD (60 s késleltetés), Hobby 79… | 64/59/58/62 | https://sharpapi.io/pricing
+nba-api | 2 | nba_api (NBA.com statisztikai API-k Python-kliense) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 58/66/62/56 | https://github.com/swar/nba_api
+polymarket-us-qcx | 2 | Polymarket US (QCX LLC, CFTC DCM) | M5 Predikciós piacok és sportfogadás | registration | taker díj kategóriánként… | 60/60/62/54 | https://www.theblock.co/post/381253/polymarket-begins-opening-us-app-to-users-on-waitlist
+oddsportal | 2 | OddsPortal… | M5 Predikciós piacok és sportfogadás | free | ingyenes webes megtekintés | 56/62/65/55 | https://www.oddsportal.com/
+betfair-historical-free-basic | 2 | Betfair BASIC ingyenes 1 perces historikus csomag (CLV-referencia) | M5 Predikciós piacok és sportfogadás | registration | ingyenes (Betfair-fiók kell) | 53/66/67/54 | https://betfair-datascientists.github.io/data/usingHistoricDataSite
+paper-clarke-kovalchik-ingram-2017-overround | 2 | Clarke, Kovalchik & Ingram (2017): Adjusting Bookmaker's Odds to… | M5 Predikciós piacok és sportfogadás | free | open access | 52/66/64/62 | https://doi.org/10.11648/j.ajss.20170506.12
+clubelo | 2 | Club Elo (foci klub-Elo értékek és meccsvalószínűségek API-val) | M5 Predikciós piacok és sportfogadás | free | ingyenes | 54/62/58/58 | http://clubelo.com/
+paper-ottaviani-sorensen-2008-flb-overview | 2 | Ottaviani & Sørensen (2008): The Favorite-Longshot Bias – An Overview… | M5 Predikciós piacok és sportfogadás | paid | könyvfejezet… | 48/66/63/59 | https://doi.org/10.1016/b978-044450744-0.50009-3
+good-judgment-open | 2 | Good Judgment Open (szuperelőrejelzők nyilvános versenye) | M5 Predikciós piacok és sportfogadás | registration | ingyenes (GJOpen); Good Judgment Inc.… | 50/64/58/58 | https://www.gjopen.com/
+betsapi | 2 | BetsAPI (Bet365, Betfair, 1xBet stb. szorzók és események API-ja) | M5 Predikciós piacok és sportfogadás | paid | Bet365 API 150 USD/hó… | 58/57/56/56 | https://betsapi.com/mm/pricing_table
+sports-reference-family | 2 | Sports Reference oldalak… | M5 Predikciós piacok és sportfogadás | free | ingyenes web; Stathead fizetős | 48/64/60/50 | https://www.basketball-reference.com/
+pybaseball | 2 | pybaseball (Statcast, Baseball-Reference, FanGraphs Pythonból) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 52/61/56/54 | https://github.com/jldbc/pybaseball
+paper-forrest-goddard-simmons-2005 | 2 | Forrest, Goddard & Simmons (2005): Odds-setters as forecasters – The… | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 46/65/60/57 | https://doi.org/10.1016/j.ijforecast.2005.03.003
+betdaq-api | 2 | Betdaq Exchange API | M5 Predikciós piacok és sportfogadás | paid | egyszeri 250 GBP API-hozzáférési díj… | 57/54/54/52 | https://betdaq.zendesk.com/hc/en-gb/articles/360020067139-API-access
+kaggle-beat-the-bookie | 2 | Kaggle: Beat the Bookie worldwide football dataset (Kaunitz et al.) | M5 Predikciós piacok és sportfogadás | registration | ingyenes | 51/57/57/60 | https://www.kaggle.com/austro/beat-the-bookie-worldwide-football-dataset
+understat | 2 | Understat (ingyenes xG-adat top-ligákra) | M5 Predikciós piacok és sportfogadás | free | ingyenes web | 52/58/58/52 | https://understat.com/
+limitless-exchange | 2 | Limitless Exchange (Base, on-chain predikciós piac) + API | M5 Predikciós piacok és sportfogadás | free | API ingyenes; kereskedési díjak nem… | 56/51/50/52 | https://api.limitless.exchange/markets/active
+iowa-electronic-markets | 2 | Iowa Electronic Markets (IEM) – történeti árak 1988-tól | M5 Predikciós piacok és sportfogadás | free | ingyenes | 44/61/55/55 | https://iemweb.biz.uiowa.edu/
+carlosibcu-btc-arb-bot | 2 | polymarket-kalshi-btc-arbitrage-bot (BTC 1 órás piacok) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 54/53/52/50 | https://github.com/CarlosIbCu/polymarket-kalshi-btc-arbitrage-bot
+manifold-data-dumps | 2 | Manifold adatdump (bets, markets, comments) | M5 Predikciós piacok és sportfogadás | free | ingyenes nem kereskedelmi célra… | 46/58/54/52 | https://docs.manifold.markets/data
+predictit-api | 2 | PredictIt (CFTC no-action, politikai piacok) + publikus market data… | M5 Predikciós piacok és sportfogadás | free | adat ingyenes; kereskedésnél 10% díj a… | 49/54/53/46 | https://www.predictit.org/api/marketdata/all/
+fbref-opta | 2 | FBref (Sports Reference) – foci statisztikák; Opta haladó adatok 2026… | M5 Predikciós piacok és sportfogadás | free | ingyenes web; Stathead előfizetés… | 46/54/52/49 | https://fbref.com/en/
+kaggle-european-soccer-database | 2 | Kaggle: European Soccer Database (hugomathien/soccer) | M5 Predikciós piacok és sportfogadás | registration | ingyenes (Kaggle-fiók) | 44/54/50/52 | https://www.kaggle.com/datasets/hugomathien/soccer
+realfishsam-arb-bot | 2 | prediction-market-arbitrage-bot… | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 49/50/48/46 | https://github.com/realfishsam/prediction-market-arbitrage-bot
+polymarket-agents | 2 | Polymarket/agents (LLM-ágens keretrendszer, ARCHIVÁLT) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 46/46/46/48 | https://github.com/Polymarket/agents
+opticodds-oddsjam | 3 | OpticOdds (az OddsJam mögötti vállalati odds-API) | M5 Predikciós piacok és sportfogadás | institutional | nem publikus; versenytárs-blogok… | 72/71/69/70 | https://opticodds.com/
+sportradar-api | 3 | Sportradar API-k (sportadat, odds, live) | M5 Predikciós piacok és sportfogadás | institutional | nem publikus; becslések 1500 USD/hó… | 68/75/68/66 | https://marketplace.sportradar.com/
+kalshi-fix-api | 3 | Kalshi FIX API | M5 Predikciós piacok és sportfogadás | institutional | nem publikus | 60/62/60/52 | https://docs.kalshi.com/fix/connectivity.md
+oddpool-prediction-data | 3 | Oddpool (cross-venue predikciós piaci adat és díjkutatás) | M5 Predikciós piacok és sportfogadás | freemium | nem ellenőrzött | 54/54/50/54 | https://www.oddpool.com/research/prediction-market-fees-explained
+paper-arrow-et-al-2008-promise | 3 | Arrow et al. (2008): The Promise of Prediction Markets, Science | M5 Predikciós piacok és sportfogadás | paid | folyóirat | 38/62/54/50 | https://doi.org/10.1126/science.1157679
+octobot-prediction-market | 3 | OctoBot-Prediction-Market (Polymarket copy trading és arbitrázs) | M5 Predikciós piacok és sportfogadás | free | ingyenes (GPL-3.0) | 49/52/50/46 | https://github.com/Drakkar-Software/OctoBot-Prediction-Market
+drift-bet | 3 | Drift BET (Solana, perp-margin alapú predikciós piac) | M5 Predikciós piacok és sportfogadás | free | források szerint a standard Drift taker… | 43/39/36/40 | https://madeonsol.com/blog/solana-prediction-markets-guide
+polymarket-py-clob-client | 3 | Polymarket py-clob-client (ARCHIVÁLT) | M5 Predikciós piacok és sportfogadás | free | ingyenes (MIT) | 34/36/34/38 | https://github.com/Polymarket/py-clob-client
 
 ## Makró, statisztika, fundamentumok, hírek, alternatív adat, magyar források
-fed-speeches-fomc | Fed beszédek, FOMC-anyagok (statement, minutes, átiratok), Beige Book | free | ingyenes | 85/94/90/88 | https://www.federalreserve.gov/newsevents/speeches.htm
-sec-edgar-data-api | SEC EDGAR data.sec.gov API (submissions, companyfacts, companyconcept) | free | ingyenes | 82/92/88/84 | https://www.sec.gov/edgar/sec-api-documentation
-alfred-vintages | ALFRED (archivált FRED vintage-ek, valós idejű periódusok) | registration | ingyenes, API-kulcs | 82/92/90/86 | https://alfred.stlouisfed.org/
-bls-api | BLS Public Data API v2 | registration | ingyenes; v2 regisztrációval | 81/90/86/83 | https://www.bls.gov/developers/
-ecmwf-open-data | ECMWF Open Data (IFS és AIFS valós idejű előrejelzések) | free | ingyenes | 82/88/85/84 | https://www.ecmwf.int/en/forecasts/datasets/open-data
-fred-api | FRED API (St. Louis Fed) | registration | ingyenes, API-kulcs | 78/92/86/80 | https://fred.stlouisfed.org/docs/api/fred/
-ecb-data-portal | ECB Data Portal + SDMX API | free | ingyenes | 76/89/84/79 | https://data.ecb.europa.eu/
-sec-xbrl-frames | SEC XBRL Frames API (keresztmetszeti tények) | free | ingyenes | 76/86/83/80 | https://data.sec.gov/api/xbrl/frames/us-gaap/AccountsPayableCurrent/USD/CY2019Q1I.json
-sec-insider-transactions-data-sets | SEC Insider Transactions (Form 3/4/5) adatkészletek | free | ingyenes | 78/84/82/81 | https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets
-bis-cb-speeches | BIS Central Bankers' Speeches (jegybanki beszédek korpusza) | free | ingyenes | 79/83/81/82 | https://www.bis.org/cbspeeches/index.htm
-cftc-cot | CFTC Commitments of Traders (COT) + Public Reporting Environment | free | ingyenes | 73/88/86/79 | https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm
-mnb-monetaris-politika | MNB monetáris politika: kamatdöntések, közlemények, Monetáris Tanács r | free | ingyenes | 78/84/80/82 | https://www.mnb.hu/web/monetaris-politika
-fed-h41 | Fed H.4.1 (jegybanki mérleg, tartalékok) | free | ingyenes | 72/88/84/77 | https://www.federalreserve.gov/releases/h41/
-gie-agsi-alsi | GIE AGSI+ / ALSI (gáztárolói és LNG-terminál töltöttség) | free | ingyenes | 76/82/79/79 | https://agsi.gie.eu/
-copernicus-cds-era5 | Copernicus Climate Data Store – ERA5 reanalízis (+ cdsapi) | free | ingyenes | 70/88/84/76 | https://cds.climate.copernicus.eu/
-fed-data-download | Fed Data Download Program (H.15, H.10, G.17, G.19, Z.1, SLOOS) | free | ingyenes | 68/88/82/74 | https://www.federalreserve.gov/datadownload/
-akk-statisztika | ÁKK statisztikák: referenciahozamok, aukciós eredmények, zéró-kupon ho | free | ingyenes | 74/84/78/78 | https://www.akk.hu/hu/statisztika
-edgartools | edgartools (Python EDGAR könyvtár) | free | ingyenes (MIT) | 74/81/76/76 | https://github.com/dgunning/edgartools
-bis-data-portal | BIS Data Portal + SDMX API (v2) | free | ingyenes | 68/85/81/74 | https://data.bis.org/
-ken-french-data-library | Kenneth R. French Data Library | free | ingyenes | 65/86/82/72 | https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html
-jkp-global-factor-data | JKP Global Factor Data (Jensen–Kelly–Pedersen) | free | ingyenes (CC BY-NC 4.0); a karakteriszti | 66/85/82/71 | https://jkpfactors.com/
-open-source-asset-pricing | Open Source Asset Pricing (Chen–Zimmermann) | free | ingyenes | 66/83/80/72 | https://www.openassetpricing.com/
-mnb-arfolyam-soap | MNB hivatalos devizaárfolyamok – SOAP webszolgáltatás (arfolyamok.asmx | free | ingyenes | 66/85/76/72 | http://www.mnb.hu/arfolyamok.asmx
-ksh-stadat | KSH STADAT táblák | free | ingyenes | 68/82/76/74 | https://www.ksh.hu/stadat
-eurostat-api | Eurostat API (SDMX 2.1/3.0, JSON-stat) | free | ingyenes | 66/82/76/71 | https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-introduction
-gdelt | GDELT Project (GKG, Events, DOC 2.0 API) | free | ingyenes | 74/74/72/76 | https://www.gdeltproject.org/
-mnb-statisztika-portal | MNB statisztikai portál (statisztika.mnb.hu) és idősorok | free | ingyenes | 66/82/76/72 | https://statisztika.mnb.hu/
-aqr-datasets | AQR Data Sets (QMJ, BAB, Value Devil, Time-Series Momentum, Century of | free | ingyenes (regisztráció egyes letöltésekh | 64/79/76/70 | https://www.aqr.com/Insights/Datasets
-forex-factory-calendar | Forex Factory gazdasági naptár (+ faireconomy JSON feed) | free | ingyenes | 70/71/70/68 | https://www.forexfactory.com/calendar
-sec-company-tickers | SEC company_tickers.json (CIK–ticker leképezés) | free | ingyenes | 62/76/68/64 | https://www.sec.gov/files/company_tickers.json
-sec-edgar-full-text-search | SEC EDGAR Full-Text Search (efts) | free | ingyenes | 81/84/81/83 | https://www.sec.gov/edgar/search/
-ecb-speeches-accounts | ECB beszédek, sajtótájékoztatók és monetáris politikai 'accounts' | free | ingyenes | 79/86/82/82 | https://www.ecb.europa.eu/press/key/html/index.en.html
-eia-natural-gas-storage | EIA Weekly Natural Gas Storage Report | free | ingyenes | 78/87/83/80 | https://www.eia.gov/naturalgas/storage/
-noaa-gfs-nomads | NOAA GFS/GEFS modell-futások (NOMADS, AWS Open Data) | free | ingyenes | 80/82/80/82 | https://nomads.ncep.noaa.gov/
-cleveland-fed-inflation | Cleveland Fed inflációs nowcasting és inflációs várakozások | free | ingyenes | 78/83/79/80 | https://www.clevelandfed.org/indicators-and-data/inflation-nowcasting
-bea-api | BEA API (GDP, PCE, nemzeti számlák) | registration | ingyenes, API-kulcs | 74/85/80/78 | https://apps.bea.gov/API/signup/
-census-api | US Census Bureau API (kiskereskedelem, lakásépítés, tartós cikkek, kül | registration | ingyenes, API-kulcs | 74/85/80/78 | https://www.census.gov/data/developers.html
-philly-fed-rtdsm | Philadelphia Fed Real-Time Data Set for Macroeconomists | free | ingyenes | 71/84/82/78 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/real-time-data-set-for-macroeconomists
-treasury-fiscaldata | US Treasury FiscalData API (+ hozamgörbe, aukciók) | free | ingyenes | 71/86/79/74 | https://fiscaldata.treasury.gov/api-documentation/
-usda-wasde | USDA WASDE (World Agricultural Supply and Demand Estimates) | free | ingyenes | 74/82/79/78 | https://www.usda.gov/oce/commodity/wasde
-ecb-estr | €STR (euro short-term rate) | free | ingyenes | 70/86/77/72 | https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
-nyfed-reference-rates | NY Fed referenciakamatok (SOFR, EFFR, OBFR, TGCR) + API | free | ingyenes | 70/86/77/72 | https://www.newyorkfed.org/markets/reference-rates/sofr
-dol-unemployment-claims | US DOL heti munkanélküli segélykérelmek | free | ingyenes | 72/82/77/76 | https://oui.doleta.gov/unemploy/claims.asp
-entsog-transparency | ENTSOG Transparency Platform (gázáramlások) | free | ingyenes | 74/80/76/78 | https://transparency.entsog.eu/
-fred-md-qd | FRED-MD / FRED-QD (McCracken–Ng nagy makró-panelek) | free | ingyenes | 68/84/80/74 | https://www.stlouisfed.org/research/economists/mccracken/fred-databases
-noaa-cpc-degree-days | NOAA CPC degree day-ek és ENSO/előrejelzések | free | ingyenes | 72/80/76/76 | https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/cdus/degree_days/
-newsquawk | Newsquawk (audio squawk + headline-ok) | paid | Basic 199 EUR/hó, Pro 399 EUR/hó (becsül | 76/76/74/76 | https://www.newsquawk.com/
-philly-fed-ads | Aruoba–Diebold–Scotti üzleti kondíciók index (napi) | free | ingyenes | 73/78/73/76 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/ads
-atlanta-fed-gdpnow | Atlanta Fed GDPNow (+ Business Inflation Expectations) | free | ingyenes | 72/80/74/74 | https://www.atlantafed.org/cqer/research/gdpnow
-ofr-financial-stress | OFR Financial Stress Index, MMF Monitor, Short-term Funding Monitor | free | ingyenes | 72/80/74/74 | https://www.financialresearch.gov/financial-stress-index/
-sec-form-13f-data-sets | SEC Form 13F adatkészletek (intézményi portfóliók) | free | ingyenes | 68/79/78/74 | https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets
-fed-yield-curve-gsw | Fed Gürkaynak–Sack–Wright hozamgörbe és TIPS-görbe | free | ingyenes | 68/82/75/72 | https://www.federalreserve.gov/data/yield-curve-models.htm
-nyfed-nowcast-wei | NY Fed Staff Nowcast és Weekly Economic Index | free | ingyenes | 71/78/73/74 | https://www.newyorkfed.org/research/policy/nowcast
-usda-nass-quickstats | USDA NASS Quick Stats API (termés, Crop Progress) | free | ingyenes | 69/80/74/74 | https://quickstats.nass.usda.gov/api
-sec-financial-statement-data-sets | SEC Financial Statement (és Notes) Data Sets | free | ingyenes | 66/79/76/72 | https://www.sec.gov/data-research/sec-markets-data/financial-statement-data-sets
-sec-edgar-full-index | SEC EDGAR full-index / daily-index (bejelentés-indexek) | free | ingyenes | 67/80/74/70 | https://www.sec.gov/Archives/edgar/full-index/
-finra-equity-short-interest | FINRA Equity Short Interest | free | ingyenes | 66/78/76/74 | https://www.finra.org/finra-data/browse-catalog/equity-short-interest/data
-philly-fed-spf | Survey of Professional Forecasters (Philadelphia Fed) | free | ingyenes | 64/80/77/72 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/survey-of-professional-forecasters
-chicago-fed-nfci-cfnai | Chicago Fed NFCI és CFNAI | free | ingyenes | 68/78/74/72 | https://www.chicagofed.org/research/data/nfci/current-data
-imf-portwatch | IMF PortWatch (kikötői forgalom és szorosok AIS-ből) | free | ingyenes | 71/75/72/75 | https://portwatch.imf.org/
-noaa-cdo-api | NOAA NCEI Climate Data Online API v2 + Access Data Service | free | ingyenes | 68/78/74/72 | https://www.ncei.noaa.gov/cdo-web/webservices/v2
-mnb-kozzetetelek | MNB tőkepiaci közzétételi rendszer (kozzetetelek.mnb.hu) | free | ingyenes | 70/76/72/74 | https://kozzetetelek.mnb.hu/
-eu-net-short-positions | EU nemzeti nettó short pozíció nyilvántartások (BaFin/Bundesanzeiger,  | free | ingyenes | 70/74/72/74 | https://www.esma.europa.eu/esmas-activities/markets-and-infrastructure/short-selling
-oecd-data-explorer | OECD Data Explorer + SDMX API (.Stat Suite) | free | ingyenes | 66/78/74/72 | https://data-explorer.oecd.org/
-ec-business-consumer-surveys | Európai Bizottság üzleti és fogyasztói felmérések (ESI) | free | ingyenes | 68/76/72/72 | https://economy-finance.ec.europa.eu/economic-forecasts-and-surveys/business-and-consumer-surveys_en
-fed-h8 | Fed H.8 (kereskedelmi bankok mérlege) | free | ingyenes | 64/80/74/70 | https://www.federalreserve.gov/releases/h8/
-copernicus-dataspace | Copernicus Data Space Ecosystem (Sentinel-1/2/3/5P) | registration | ingyenes (kvótákkal) | 66/76/74/72 | https://dataspace.copernicus.eu/
-benzinga-pro-api | Benzinga Pro és Benzinga News API | paid | Pro Essential ~197 USD/hó (becsült); New | 74/71/70/73 | https://www.benzinga.com/pro/pricing
-trading-economics-api | Trading Economics API (naptár konszenzussal, 20M+ indikátor) | paid | ~149–199 USD/hó-tól (becsült, harmadik f | 70/74/72/72 | https://tradingeconomics.com/api/
-mavir-data | MAVIR rendszerterhelési és termelési adatok | free | ingyenes | 70/76/70/73 | https://www.mavir.hu/web/mavir/rendszerterheles
-esma-registers | ESMA Registers (FIRDS, FITRS, short selling, MiFID) | free | ingyenes | 66/78/70/68 | https://registers.esma.europa.eu/publication/
-imf-data-portal | IMF Data Portal + SDMX 2.1/3.0 API | free | ingyenes | 62/80/75/69 | https://data.imf.org/
-energy-charts | Fraunhofer ISE Energy-Charts (+ nyílt API) | free | ingyenes | 69/74/70/72 | https://www.energy-charts.info/
-wikimedia-pageviews | Wikimedia Pageviews API és pageview dumpok | free | ingyenes | 69/74/70/72 | https://wikimedia.org/api/rest_v1/
-ksh-hvd-api | KSH High-Value Datasets API (data.ksh.hu) | free | ingyenes | 64/78/72/70 | https://data.ksh.hu/
-hupx-market-data | HUPX piaci adatok (DAM, IDC, IDA) – HUPX Labs, sFTP, API | paid | adatcsomag-árak a HUPX Labs-on; összeg n | 67/76/70/71 | https://hupx.hu/data-reporting
-finra-reg-sho-daily | FINRA Reg SHO Daily Short Sale Volume | free | ingyenes | 70/72/67/71 | https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data
-umich-sentiment | University of Michigan Surveys of Consumers | free | ingyenes | 68/73/69/70 | https://www.sca.isr.umich.edu/
-ism-pmi | ISM Report On Business (US PMI) | freemium | historikus adat fizetős; ár nem ellenőrz | 66/74/70/68 | https://www.ism.org/
-usda-psd-online | USDA FAS PSD Online | free | ingyenes | 64/76/72/70 | https://apps.fas.usda.gov/psdonline/app/index.html
-wgc-goldhub | World Gold Council Goldhub | registration | ingyenes | 64/76/72/70 | https://www.gold.org/goldhub/data
-earningscall-biz | EarningsCall (átiratok, audió, API) | paid | ár a honlapon nem látható (nem ellenőrzö | 69/70/68/69 | https://www.earningscall.biz/
-global-q-factors | Hou–Xue–Zhang q-faktorok (global-q.org) | free | ingyenes | 60/77/72/68 | https://global-q.org/factors.html
-epu-index | Economic Policy Uncertainty Index (Baker–Bloom–Davis) | free | ingyenes | 66/72/68/70 | https://www.policyuncertainty.com/
-gpr-index | Geopolitical Risk Index (Caldara–Iacoviello) | free | ingyenes | 66/72/68/70 | https://www.matteoiacoviello.com/gpr.htm
-indeed-hiring-lab | Indeed Hiring Lab álláshirdetés-indexek | free | ingyenes | 68/72/68/70 | https://www.hiringlab.org/data/
-ici-fund-flows | ICI fund flows és pénzpiaci alap statisztikák | free | ingyenes | 62/73/70/68 | https://www.ici.org/research/stats
-massive-polygon-news | Massive (korábban Polygon.io) – News végpont és Benzinga partneradat | paid | Stocks Advanced 199 USD/hó; Benzinga new | 66/70/66/66 | https://polygon.io/docs/rest/stocks/news
-ishares-holdings | iShares ETF napi portfólió-letöltések | free | ingyenes | 62/72/67/63 | https://www.ishares.com/us/products/etf-investments
-sdmx1-python | sdmx1 (Python SDMX-kliens: ECB, IMF, OECD, BIS, Eurostat, ILO stb.) | free | ingyenes | 58/76/68/62 | https://github.com/khaeru/sdmx
-bet-kibocsatoi-kozzetetelek | BÉT honlap: árfolyamok, kibocsátói közlemények, statisztikák | free | ingyenes | 61/72/66/66 | https://bet.hu/
-portfolio-hu | Portfolio.hu (magyar pénzügyi hírek) | freemium | alap ingyenes; előfizetés ára nem ellenő | 66/68/64/64 | https://www.portfolio.hu/
-fmp-api | Financial Modeling Prep (fundamentumok, átiratok, naptárak) | freemium | Starter ~22, Premium ~59, Ultimate ~149  | 63/68/65/64 | https://site.financialmodelingprep.com/pricing-plans
-world-bank-api | World Bank Indicators API (WDI) + wbgapi | free | ingyenes | 54/75/70/62 | https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation
-macrohistory-jst | Jordà–Schularick–Taylor Macrohistory Database | free | ingyenes | 53/76/71/62 | https://www.macrohistory.net/database/
-open-meteo | Open-Meteo (időjárás-API, historikus és ensemble) | freemium | Free (nem kereskedelmi); Standard/Profes | 63/69/64/62 | https://open-meteo.com/
-dbnomics | DBnomics (makró-aggregátor, 80+ szolgáltató egy API-n) | free | ingyenes | 57/72/66/62 | https://db.nomics.world/
-hf-fomc-communication | FOMC Communication (gtfintechlab) – hawkish/dovish címkézett korpusz | free | ingyenes | 56/70/68/65 | https://huggingface.co/datasets/gtfintechlab/fomc_communication
-filings-xbrl-org | filings.xbrl.org (ESEF éves jelentések indexe) | free | ingyenes | 58/68/64/64 | https://filings.xbrl.org/
-nber-business-cycles | NBER üzleti ciklus dátumok | free | ingyenes | 50/76/68/60 | https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions
-aisstream-io | aisstream.io (ingyenes AIS WebSocket stream) | free | ingyenes | 66/62/58/64 | https://aisstream.io/
-google-trends | Google Trends (web) + Google Trends API (alpha) | free | ingyenes (API alpha jelentkezéssel) | 64/63/60/64 | https://trends.google.com/
-tiingo-news | Tiingo News API | freemium | Power 30 USD/hó; kereskedelmi belső 50 U | 62/64/62/62 | https://www.tiingo.com/documentation/news
-common-crawl-news | Common Crawl News (CC-NEWS) | free | ingyenes | 58/67/66/62 | https://data.commoncrawl.org/crawl-data/CC-NEWS/index.html
-shiller-data | Robert Shiller online adatok (CAPE, S&P 1871-től) | free | ingyenes | 54/70/65/62 | http://www.econ.yale.edu/~shiller/data.htm
-global-macro-database | Global Macro Database (Müller et al.) | free | ingyenes | 52/70/65/58 | https://www.globalmacrodata.com/
-fnspid | FNSPID – Financial News and Stock Price Integration Dataset | free | ingyenes | 53/63/64/60 | https://huggingface.co/datasets/Zihan1004/FNSPID
-noaa-nhc-hurricanes | NOAA National Hurricane Center adatok (HURDAT2, előrejelzési pályák) | free | ingyenes | 73/80/74/76 | https://www.nhc.noaa.gov/data/
-destatis-genesis | Destatis GENESIS-Online | free | ingyenes | 69/80/74/74 | https://www-genesis.destatis.de/
-sec-api-io | sec-api.io (fizetős EDGAR API) | paid | Free: 100 hívás; Personal & Startups 49  | 73/74/71/72 | https://sec-api.io/pricing
-nyfed-empire-survey | NY Fed Empire State Manufacturing Survey (+ regionális Fed felmérések) | free | ingyenes | 70/77/72/73 | https://www.newyorkfed.org/survey/empire/empiresurvey_overview
-tsa-bts-eurocontrol | TSA checkpoint-forgalom, BTS TranStats, Eurocontrol napi forgalom | free | ingyenes | 68/74/70/72 | https://www.transtats.bts.gov/
-snb-data-portal | SNB Data Portal | free | ingyenes | 62/78/72/68 | https://data.snb.ch/en
-boj-statistics | Bank of Japan statisztikák | free | ingyenes | 62/78/72/68 | https://www.boj.or.jp/en/statistics/index.htm
-nws-api | US National Weather Service API | free | ingyenes | 68/74/68/70 | https://www.weather.gov/documentation/services-web-api
-sec-form-n-port | SEC Form N-PORT adatkészletek (alapportfóliók) | free | ingyenes | 62/74/72/69 | https://www.sec.gov/data-research/sec-markets-data/form-n-port-data-sets
-nyfed-acm-term-premia | NY Fed ACM Treasury term premium | free | ingyenes | 63/76/70/68 | https://www.newyorkfed.org/research/data_indicators/term-premia-tabs
-boe-database | Bank of England Interactive Statistical Database | free | ingyenes | 61/78/70/66 | https://www.bankofengland.co.uk/boeapps/database/
-ifo-business-climate | ifo üzleti klíma (Németország) | free | ingyenes | 64/75/69/68 | https://www.ifo.de/en/survey/ifo-business-climate-germany
-eex-market-data | EEX Market Data (áram-, gáz-, CO2-futures, aukciók) | freemium | alapadat ingyenes; DataSource-előfizetés | 64/75/70/67 | https://www.eex.com/en/market-data
-bet-vendor-data | BÉT adatszolgáltatás (vendor adatfolyam, valós idejű és historikus ada | paid | BÉT díjtáblázat szerint; összeg nem elle | 66/74/66/68 | https://bet.hu/Vendorok/vendor-tudastar
-nyfed-gscpi | NY Fed Global Supply Chain Pressure Index | free | ingyenes | 61/75/70/67 | https://www.newyorkfed.org/research/policy/gscpi
-nyfed-sce | NY Fed Survey of Consumer Expectations | free | ingyenes | 61/75/70/67 | https://www.newyorkfed.org/microeconomics/sce
-frbsf-news-sentiment | San Francisco Fed Daily News Sentiment Index | free | ingyenes | 64/72/68/70 | https://www.frbsf.org/research-and-insights/data-and-indicators/daily-news-sentiment-index/
-usda-ams-market-news | USDA AMS Market News (MyMarketNews) | free | ingyenes | 65/72/66/68 | https://www.ams.usda.gov/market-news
-smard | SMARD (Bundesnetzagentur áram-piaci adatok) | free | ingyenes | 64/74/68/68 | https://www.smard.de/en
-baker-hughes-rig-count | Baker Hughes Rig Count | free | ingyenes | 62/74/68/68 | https://rigcount.bakerhughes.com/
-ecb-spf | ECB Survey of Professional Forecasters | free | ingyenes | 59/74/70/66 | https://www.ecb.europa.eu/stats/ecb_surveys/survey_of_professional_forecasters/html/index.en.html
-sp-global-pmi | S&P Global (HCOB) PMI | institutional | egyedi licenc | 64/72/67/66 | https://www.spglobal.com/marketintelligence/en/mi/products/pmi.html
-epex-spot-results | EPEX SPOT piaci eredmények | freemium | adatfeed fizetős; ár nem ellenőrzött | 63/72/68/64 | https://www.epexspot.com/en/market-results
-opec-momr | OPEC Monthly Oil Market Report | free | ingyenes | 62/71/68/68 | https://www.opec.org/opec_web/en/publications/202.htm
-marinetraffic-kpler | MarineTraffic API (Kpler) | paid | kreditcsomagok, ár nem publikus (becsült | 66/69/66/66 | https://www.marinetraffic.com/en/p/api-services
-planetary-computer-aws-opendata | Microsoft Planetary Computer és AWS Open Data (Sentinel, Landsat, NOAA | free | adat ingyenes; számítás/egress fizetős | 62/72/68/68 | https://planetarycomputer.microsoft.com/
-imf-weo | IMF World Economic Outlook adatbázis | free | ingyenes | 57/74/70/65 | https://www.imf.org/en/Publications/WEO/weo-database/2025/april
-world-bank-pink-sheet | World Bank Commodity Price Data (Pink Sheet) | free | ingyenes | 58/74/68/64 | https://www.worldbank.org/en/research/commodity-markets
-dtcc-repository | DTCC Public Price Dissemination (swap-tranzakciók) | free | ingyenes | 64/68/65/67 | https://www.dtcc.com/repository-otc-data
-adp-employment | ADP National Employment Report | free | ingyenes | 64/69/64/67 | https://www.adpemploymentreport.com/
-iea-data | IEA Data and Statistics (Oil Market Report) | freemium | részletes adatbázisok fizetősek; ár nem  | 59/72/69/64 | https://www.iea.org/data-and-statistics
-baltic-exchange | Baltic Exchange (BDI, fuvardíj-indexek) | paid | előfizetés; ár nem ellenőrzött | 61/72/67/64 | https://www.balticexchange.com/en/data-services/market-information0/dry-services.html
-viirs-night-lights | VIIRS éjszakai fények (EOG VNL) és NASA Black Marble (+ blackmarblepy) | registration | ingyenes | 62/70/67/67 | https://eogdata.mines.edu/products/vnl/
-patentsview-uspto-odp | PatentsView és USPTO Open Data Portal | free | ingyenes | 60/71/68/68 | https://patentsview.org/
-financialjuice | FinancialJuice (hír-headline-ok és squawk) | freemium | ingyenes alap; fizetős csomag ára nem el | 68/65/63/68 | https://www.financialjuice.com/home
-econoday | Econoday (intézményi gazdasági naptár és konszenzus) | paid | ár nem ellenőrzött | 64/70/65/66 | https://www.econoday.com/
-hungaromet-odp | HungaroMet Open Data Portal (odp.met.hu) | free | ingyenes | 61/72/66/66 | https://odp.met.hu/
-sec-fails-to-deliver | SEC Fails-to-Deliver adatok | free | ingyenes | 60/69/67/66 | https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data
-sec-edgar-downloader | sec-edgar-downloader (Python) | free | ingyenes | 60/71/64/64 | https://github.com/jadchaar/sec-edgar-downloader
-ortex | ORTEX (short interest becslés, securities lending) | paid | Basic ~39 USD/hó, Advanced ~129 USD/hó ( | 66/64/62/66 | https://public.ortex.com/
-ecb-bank-lending-survey | ECB Bank Lending Survey | free | ingyenes | 58/72/68/64 | https://www.ecb.europa.eu/stats/ecb_surveys/bank_lending_survey/html/index.en.html
-py-xbrl | py-xbrl (XBRL/iXBRL parser) | free | ingyenes (GPL) | 58/71/65/62 | https://github.com/manusimidt/py-xbrl
-finra-otc-transparency | FINRA OTC (ATS és nem-ATS) Transparency | free | ingyenes | 59/68/66/66 | https://otctransparency.finra.org/
-ssga-spdr-holdings | State Street SPDR fund finder (napi holdings) | free | ingyenes | 60/69/64/62 | https://www.ssga.com/us/en/intermediary/etfs/fund-finder
-ecb-consumer-expectations | ECB Consumer Expectations Survey | free | ingyenes | 58/70/65/64 | https://www.ecb.europa.eu/stats/ecb_surveys/consumer_exp_survey/html/index.en.html
-bank-of-canada-valet | Bank of Canada Valet API | free | ingyenes | 56/72/66/62 | https://www.bankofcanada.ca/valet/docs
-rba-statistics | Reserve Bank of Australia statisztikák | free | ingyenes | 56/72/66/62 | https://www.rba.gov.au/statistics/
-ons-api | ONS (UK statisztikai hivatal) + API | free | ingyenes | 56/72/66/62 | https://www.ons.gov.uk/
-insee | INSEE (Franciaország) | free | ingyenes | 56/72/66/62 | https://www.insee.fr/en/accueil
-abs-australia | Australian Bureau of Statistics | free | ingyenes | 56/72/66/62 | https://www.abs.gov.au/
-nbs-china | Kínai Nemzeti Statisztikai Hivatal | free | ingyenes | 56/72/66/62 | https://data.stats.gov.cn/english/
-faostat | FAOSTAT + FAO Food Price Index | free | ingyenes | 56/72/66/62 | https://www.fao.org/faostat/en/
-fhfa-hpi | FHFA House Price Index (+ Case-Shiller, Zillow, Redfin, Realtor.com) | free | ingyenes | 56/72/66/62 | https://www.fhfa.gov/data/hpi
-opensky-network | OpenSky Network (ADS-B repülési adatok, REST + Trino) | registration | kutatásra ingyenes; kereskedelmi ár egye | 64/66/63/61 | https://opensky-network.org/
-mekh-fgsz-ceegex | MEKH, FGSZ és CEEGEX (magyar energia-szabályozó, gázszállító, gáztőzsd | free | ingyenes | 62/68/62/66 | https://www.mekh.hu/
-nasdaq-short-interest | Nasdaq Trader short interest fájlok | free | ingyenes | 58/67/65/64 | https://www.nasdaqtrader.com/Trader.aspx?id=ShortInterest
-goyal-welch-predictors | Goyal–Welch prediktor-adatok (equity premium) | free | ingyenes | 54/72/66/62 | https://www.hec.unil.ch/agoyal/
-zew-sentix | ZEW Economic Sentiment és Sentix | free | ingyenes | 60/67/62/64 | https://www.zew.de/en/
-google-earth-engine | Google Earth Engine | freemium | kutatásra ingyenes; kereskedelmi: Google | 58/68/66/62 | https://earthengine.google.com/
-bamosz | BAMOSZ (befektetési alapok napi árfolyamai, vagyon, áramlások) | free | ingyenes | 60/67/62/65 | https://bamosz.hu/
-damodaran-data | Damodaran Online adatkészletek | free | ingyenes | 53/70/66/60 | https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html
-ember-energy | Ember (globális áramtermelési és árképzési adatok) | free | ingyenes | 56/69/63/61 | https://www.ember-energy.org/data/
-drewry-wci | Drewry World Container Index | free | ingyenes | 58/66/62/63 | https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/world-container-index-assessed-by-drewry
-freightos-fbx | Freightos Baltic Index (FBX) | freemium | fejléc ingyenes; teljes adat ár nem elle | 59/66/60/63 | https://fbx.freightos.com/
-bofa-institute-tracker | Bank of America Institute és Opportunity Insights Economic Tracker (ny | free | ingyenes | 60/64/60/64 | https://www.bankofamerica.com/institute/
-ksh-statinfo | KSH Tájékoztatási adatbázis (STATINFO) | free | ingyenes | 56/69/62/62 | https://statinfo.ksh.hu/
-aishub | AISHub (közösségi AIS-adatcsere) | free | ingyenes, saját AIS-vevő adatmegosztása  | 64/60/57/63 | https://www.aishub.net/
-vesselfinder-api | VesselFinder Vessel Positions API | paid | 10 000 kredit = 330 EUR (12 hó) – becsül | 62/62/58/62 | https://www.vesselfinder.com/vessel-positions-api
-newsapi-ai-event-registry | NewsAPI.ai (Event Registry) | freemium | 5K csomag 90 USD/hó (mért) (~81 €/hó) | 61/62/59/62 | https://newsapi.ai/plans
-perigon-webz | Perigon és Webz.io (hír-API-k mély archívummal) | paid | Perigon 25 / 225 / 875 USD/hó-tól (mért) | 62/62/58/62 | https://perigon.io/pricing
-estimize | Estimize (crowdsourced EPS-becslések) | freemium | ár nem ellenőrzött | 62/58/57/64 | https://www.estimize.com/
-un-comtrade | UN Comtrade (külkereskedelem) | freemium | ingyenes alapszint; prémium ár nem ellen | 52/66/63/60 | https://comtradeplus.un.org/
-jodi-oil-gas | JODI Oil és JODI Gas World Database | free | ingyenes | 55/64/61/62 | https://www.jodidata.org/
-common-crawl | Common Crawl (webarchívum) | free | ingyenes (AWS-számítás fizetős) | 54/66/62/58 | https://commoncrawl.org/
-aws-data-exchange | AWS Data Exchange | freemium | adatkészletenként | 56/65/60/59 | https://aws.amazon.com/data-exchange/
-cryptopanic-api | CryptoPanic API (kripto-hírek és szavazott szentiment) | freemium | ingyenes alap; Pro/Enterprise ára nem el | 62/59/56/62 | https://cryptopanic.com/developers/api/
-central-bank-speeches-datasets | Jegybanki beszéd-adatkészletek (Kaggle BIS-tükör, cbspeeches.com) | free | ingyenes | 56/63/62/63 | https://cbspeeches.com/
-keler | KELER (központi értéktár) – értékpapír-adatok, ISIN, díjszabás | free | ingyenes | 52/70/61/59 | https://www.keler.hu/
-sec-edgar-log-files | SEC EDGAR Log File adatkészletek (ki mit töltött le) | free | ingyenes | 57/59/60/65 | https://www.sec.gov/data-research/sec-markets-data/edgar-log-file-data-sets
-hf-edgar-corpus | EDGAR-CORPUS (Hugging Face, 10-K szekciók) | free | ingyenes | 52/65/62/60 | https://huggingface.co/datasets/eloukas/edgar-corpus
-iborrowdesk | IBorrowDesk (IBKR kölcsönzési díjak és elérhetőség) | free | ingyenes | 62/56/56/63 | https://www.iborrowdesk.com/
-openinsider | OpenInsider (Form 4 szűrő) | free | ingyenes | 60/59/57/60 | https://www.openinsider.com/
-truflation | Truflation (napi alternatív inflációs index) | freemium | ingyenes webes; adatfeed ára nem ellenőr | 62/58/55/61 | https://www.truflation.com/
-e-beszamolo-cegjegyzek | e-beszámoló és e-cégjegyzék (magyar cégek éves beszámolói és cégadatai | free | ingyenes | 51/66/62/59 | https://e-beszamolo.im.gov.hu/oldal/kezdolap
-x-api | X (Twitter) API – pay-per-use | paid | 0,005 USD/post-olvasás; 3M post/hó plafo | 62/56/54/58 | https://docs.x.com/x-api/getting-started/pricing
-quiver-quant | Quiver Quantitative (kongresszusi kereskedés, lobbi, alt-adat API) | paid | Hobbyist 30 USD/hó, Trader 75 USD/hó (sz | 58/57/56/58 | https://api.quiverquant.com/
-unctadstat | UNCTADstat | free | ingyenes | 50/64/59/58 | https://unctadstat.unctad.org/
-conference-board-lei | Conference Board LEI és Consumer Confidence | freemium | részletes adat előfizetéssel; ár nem ell | 52/63/57/56 | https://www.conference-board.org/topics/us-leading-indicators
-coresignal | Coresignal (álláshirdetések, cég- és munkavállalói adatok) | paid | Free; 49 / 199 / 499 / 1000 / 1500 / 300 | 56/58/57/56 | https://www.coresignal.com/pricing/
-alpha-vantage-news-sentiment | Alpha Vantage NEWS_SENTIMENT | freemium | Free 25/nap; 49,99–249,99 USD/hó (mért)  | 56/59/56/57 | https://www.alphavantage.co/documentation/#news-sentiment
-marketaux | Marketaux (pénzügyi hír-API entitás-címkézéssel) | freemium | Free; 29–199 USD/hó (mért) (~44 €/hó) | 58/58/54/58 | https://www.marketaux.com/pricing
-similarweb | Similarweb (webforgalom-becslés) | paid | Starter ~149 USD/hó havi, ~125 USD/hó év | 56/56/54/57 | https://www.similarweb.com/corp/pricing/
-boe-millennium | Bank of England 'A millennium of macroeconomic data' | free | ingyenes | 46/64/58/56 | https://www.bankofengland.co.uk/statistics/research-datasets
-maddison-project | Maddison Project Database | free | ingyenes | 44/63/57/54 | https://www.rug.nl/ggdc/historicaldevelopment/maddison/
-hf-financial-phrasebank | Financial PhraseBank (Malo et al.) – Hugging Face | free | ingyenes | 44/63/58/53 | https://huggingface.co/datasets/takala/financial_phrasebank
-reddit-data-api | Reddit Data API (+ PRAW) | freemium | free 100 QPM (nem kereskedelmi); kereske | 57/52/51/54 | https://www.reddit.com/wiki/api/
-ilostat | ILOSTAT | free | ingyenes | 45/61/54/53 | https://www.ilo.org/ilostat
-reinhart-rogoff | Reinhart–Rogoff válságadatbázis | free | ingyenes | 44/61/55/55 | https://carmenreinhart.com/data/
-hf-financial-news-misc | További HF pénzügyi hírkorpuszok (ashraq/financial-news-articles, Bria | free | ingyenes | 43/54/52/49 | https://huggingface.co/datasets/ashraq/financial-news-articles
-lseg-news-mrn | LSEG (Reuters) News és Machine Readable News (MRN) | institutional | egyedi ajánlat (nem publikus) | 82/84/81/81 | https://www.lseg.com/en/data-analytics/products/workspace
-bloomberg-terminal-news | Bloomberg Terminal (hírek, ECO-naptár, BN/First Word) | institutional | ~31 980 USD/év/terminál (becsült) (~2 41 | 80/82/80/80 | https://www.bloomberg.com/professional/products/bloomberg-terminal/
-dow-jones-newswires | Dow Jones Newswires (+ Factiva archívum, DJ Developer API) | paid | ~110 USD/felhasználó/hó vendoron át (bec | 76/78/74/76 | https://www.dowjones.com/professional/newswires/
-ravenpack | RavenPack (hír-analitika, esemény-taxonómia) | institutional | egyedi ajánlat | 76/76/72/75 | https://www.ravenpack.com/
-kpler-vortexa | Kpler és Vortexa (nyersanyag-áramlások, tanker-tracking) | institutional | egyedi ajánlat | 70/72/70/72 | https://www.kpler.com/
-bloomberg-eco-surprise | Bloomberg ECO naptár és ECO SURP meglepetés-indexek | institutional | terminál-előfizetés része | 68/75/72/68 | https://www.bloomberg.com/markets/economic-calendar
-sp-global-transcripts | S&P Global Market Intelligence Transcripts | institutional | egyedi ajánlat | 68/72/68/68 | https://www.spglobal.com/marketintelligence/en/solutions/transcripts
-usgs-earthquakes | USGS Earthquake API (FDSN) | free | ingyenes | 64/72/63/66 | https://earthquake.usgs.gov/fdsnws/event/1/
-drought-gov | U.S. Drought Monitor / drought.gov | free | ingyenes | 60/70/65/65 | https://www.drought.gov/
-nasa-firms-tropomi | NASA FIRMS (aktív tüzek) és Sentinel-5P TROPOMI (NO2) | registration | ingyenes | 63/68/62/66 | https://firms.modaps.eosdis.nasa.gov/
-citi-surprise-index | Citi Economic Surprise Index (Citi Velocity) | institutional | Citi-ügyfeleknek / Bloomberg-en | 62/68/66/64 | https://www.citivelocity.com/
-epfr | EPFR (globális alap-áramlások) | institutional | egyedi ajánlat | 62/66/64/64 | https://www.epfr.com/
-marketpsych-brain-accern | MarketPsych (LSEG), Brain, Accern (szentiment-adatok) | institutional | egyedi ajánlat | 64/65/62/66 | https://www.marketpsych.com/
-copernicus-ads-cams | Copernicus Atmosphere Data Store (CAMS) és EWDS | free | ingyenes | 57/70/63/62 | https://ads.atmosphere.copernicus.eu/
-spire-maritime | Spire Maritime (műholdas AIS) | institutional | egyedi ajánlat | 62/66/60/64 | https://www.spire.com/maritime/
-planet-labs | Planet (napi 3 m-es műholdképek, Sentinel Hub) | institutional | egyedi ajánlat | 60/66/63/64 | https://www.planet.com/pricing/
-s3-partners | S3 Partners (short interest, financing) | institutional | egyedi ajánlat (nem publikus) | 63/62/60/63 | https://www.s3partners.com/
-epo-ops | EPO Open Patent Services (OPS) | registration | kvótáig ingyenes | 55/68/64/62 | https://www.epo.org/en/searching-for-patents/data/web-services/ops
-card-spending-panels | Kártyás költés panelek (Consumer Edge, Bloomberg Second Measure, Earne | institutional | egyedi ajánlat (nem publikus) | 61/62/63/62 | https://secondmeasure.com/
-bluesky-firehose | Bluesky (AT Protocol) firehose | free | ingyenes | 64/61/56/62 | https://docs.bsky.app/docs/advanced-guides/firehose
-sec-form-d | SEC Form D adatkészletek (magánkibocsátások) | free | ingyenes | 56/64/60/61 | https://www.sec.gov/data-research/sec-markets-data/form-d-data-sets
-global-fishing-watch | Global Fishing Watch API és adatletöltés | registration | ingyenes, nem kereskedelmi | 56/64/60/58 | https://globalfishingwatch.org/our-apis/
-google-patents-lens | Google Patents Public Datasets (BigQuery) és Lens.org | freemium | BigQuery díjszabás; Lens API ár nem elle | 53/66/62/59 | https://console.cloud.google.com/marketplace/product/google_patents_public_datasets/google-patents-public-data
-other-squawk-services | LiveSquawk, RANsquawk, TradeTheNews, The Fly, Briefing.com | paid | ár nem ellenőrzött | 62/60/56/62 | https://www.livesquawk.com/
-acled | ACLED (fegyveres konfliktus- és tüntetés-események) | registration | kutatásra ingyenes; kereskedelmi ár nem  | 54/66/62/58 | https://www.acleddata.com/
-lseg-lipper | LSEG Lipper (alapadatok, flows) | institutional | egyedi ajánlat | 56/62/59/58 | https://www.lipperalpha.com/
-lightcast-revelio-linkup | Lightcast, Revelio Labs, LinkUp (intézményi munkaerőpiaci alt-adat) | institutional | egyedi ajánlat | 58/60/58/60 | https://www.lightcast.io/
-cftc-swaps-report | CFTC Weekly Swaps Report | free | ingyenes | 52/64/59/58 | https://www.cftc.gov/MarketReports/SwapsReports/index.htm
-pricestats-bpp | PriceStats / Billion Prices Project | free | ingyenes | 60/58/54/60 | https://thebillionpricesproject.com/
-flightaware-aeroapi | FlightAware AeroAPI | paid | lekérdezésenkénti díj; ár nem ellenőrzöt | 56/63/55/56 | https://www.flightaware.com/commercial/aeroapi/
-amis-igc | AMIS Market Monitor és IGC gabonapiaci jelentések | free | ingyenes | 50/64/58/58 | https://www.amis-outlook.org/
-electricity-maps | Electricity Maps (szén-intenzitás, áram-mix API) | paid | Sustainability: 2500 EUR/év/ország-tól ( | 56/61/54/56 | https://www.electricitymaps.com/pricing
-energy-institute-statistical-review | Energy Institute Statistical Review of World Energy | free | ingyenes | 46/68/61/55 | https://www.energyinstitute.org/statistical-review
-sensor-tower-dataai | Sensor Tower (benne a data.ai / App Annie) | institutional | egyedi ajánlat | 57/57/56/58 | https://sensortower.com/
-snowflake-marketplace | Snowflake Marketplace | freemium | adatkészletenként + Snowflake-díj | 53/62/57/56 | https://www.snowflake.com/en/data-cloud/marketplace/
-xbrl-us-api | XBRL US API (normalizált XBRL-adat) | freemium | tagoknak/nem kereskedelmi célra ingyenes | 50/62/58/54 | https://www.xbrl.us/data/
-ourworldindata | Our World in Data | free | ingyenes | 47/65/58/54 | https://ourworldindata.org/
-penn-world-table | Penn World Table | free | ingyenes | 46/66/60/55 | https://www.rug.nl/ggdc/productivity/pwt/
-challenger-layoffs | Challenger, Gray & Christmas elbocsátási jelentés | free | ingyenes | 55/58/52/58 | https://www.challengergray.com/
-spaceknow-orbital | SpaceKnow és Orbital Insight (műholdas gazdasági indexek) | institutional | egyedi ajánlat | 56/56/55/60 | https://www.spaceknow.com/
-thinknum | Thinknum Alternative Data | institutional | egyedi ajánlat | 56/56/56/56 | https://www.thinknum.com/
-foot-traffic-placer-advan-safegraph | Lábforgalom: Placer.ai, Advan, SafeGraph | institutional | egyedi ajánlat (mért: nincs publikus ár) | 56/56/56/56 | https://www.placer.ai/pricing
-mediacloud | Media Cloud (nyílt hírkereső) | registration | ingyenes | 53/60/54/57 | https://www.mediacloud.org/
-investing-com-calendar | Investing.com gazdasági naptár | free | ingyenes webes | 56/58/56/52 | https://www.investing.com/economic-calendar/
-nav-adatok | NAV (Nemzeti Adó- és Vámhivatal) – adóinformációk, árfolyamok, statisz | free | ingyenes | 46/66/58/54 | https://nav.gov.hu/
-un-wpp | UN World Population Prospects | free | ingyenes | 44/65/58/54 | https://population.un.org/wpp/
-myshiptracking-datalastic | MyShipTracking és Datalastic AIS API-k | paid | 90–199 EUR/hó-tól (becsült) (~90 €/hó) | 57/55/50/56 | https://datalastic.com/pricing/
-adsb-community-feeds | ADS-B Exchange, adsb.lol, airplanes.live (közösségi ADS-B) | freemium | ár nem ellenőrzött | 58/54/52/56 | https://www.adsbexchange.com/data/
-stocknewsapi | StockNewsAPI | paid | 19,99 / 49,99 USD/hó (mért) (~18 €/hó) | 56/56/52/56 | https://stocknewsapi.com/pricing
-westmetall-lme | Westmetall LME-árak (nem hivatalos) | free | ingyenes | 51/58/54/53 | https://www.westmetall.com/en/markdaten.php
-xeneta | Xeneta (tengeri és légi fuvardíj-adat) | institutional | egyedi ajánlat | 52/58/52/54 | https://www.xeneta.com/
-stocktwits | StockTwits (cashtag-alapú befektetői közösség) | registration | ár nem ellenőrzött | 58/52/50/56 | https://api.stocktwits.com/developers
-aaii-naaim-sentiment | AAII Sentiment Survey, NAAIM Exposure, Investors Intelligence | free | ingyenes | 51/56/51/54 | https://www.naaim.org/programs/naaim-exposure-index/
-commercial-weather-apis | Kereskedelmi időjárás-API-k (Meteoblue, Visual Crossing, OpenWeather,  | paid | ár nem ellenőrzött | 51/58/49/52 | https://www.meteoblue.com/en/weather-api
-general-news-apis | Általános hír-API-k: GNews, TheNewsAPI, Newsdata.io, Mediastack | freemium | GNews 49,99 EUR/hó-tól; TheNewsAPI 19 US | 53/55/50/54 | https://gnews.io/pricing
-telegram-api | Telegram API (MTProto) – kripto/FX csatornák | free | ingyenes | 58/50/48/54 | https://core.telegram.org/api
-chartexchange | ChartExchange (FTD, short volume, borrow aggregátor) | freemium | freemium, ár nem ellenőrzött | 52/53/50/52 | https://chartexchange.com/
-seeking-alpha-transcripts | Seeking Alpha (átiratok, elemzések) | paid | Premium előfizetés; ár nem ellenőrzött | 52/54/51/49 | https://seekingalpha.com/
-earnings-whispers | Earnings Whispers (whisper number, naptár) | freemium | ár nem ellenőrzött | 53/52/50/52 | https://www.earningswhispers.com/
-zacks-earnings-calendar | Zacks earnings naptár | free | ingyenes webes | 50/56/51/50 | https://www.zacks.com/earnings/earnings-calendar
-climate-trace | Climate TRACE (létesítményszintű kibocsátás) | free | ingyenes | 48/56/52/54 | https://www.climatetrace.org/
-appfigures | Appfigures (app-intelligencia API) | freemium | ár nem ellenőrzött | 52/53/50/54 | https://www.appfigures.com/pricing
-datarade | Datarade (adat-piactér, összehasonlító) | free | böngészés ingyenes; termékárak szolgálta | 48/56/52/52 | https://datarade.ai/
-earnings-event-calendars-free | Nasdaq earnings naptár (nyílt webes) | free | ingyenes | 50/56/52/49 | https://www.nasdaq.com/market-activity/earnings
-global-financial-data | Global Financial Data (fizetős hosszú pénzügyi idősorok) | paid | egyedi ajánlat | 43/58/54/50 | https://www.globalfinancialdata.com/
-eagle-alpha | Eagle Alpha (alt-adat piactér és tanácsadás) | institutional | egyedi ajánlat | 48/54/51/52 | https://www.eaglealpha.com/
-newsapi-org | NewsAPI.org | freemium | Free (csak fejlesztés); Business 449 USD | 50/54/49/49 | https://newsapi.org/pricing
-arctic-shift | Arctic Shift (Reddit-archívum, Pushshift-utód) | free | ingyenes | 50/52/53/51 | https://arctic-shift.photon-reddit.com/
-wsb-aggregators | WSB-említés aggregátorok (ApeWisdom, SwaggyStocks, Tradestie) | free | ingyenes | 54/50/47/53 | https://apewisdom.io/
-fintel | Fintel (13F, insider, short squeeze score) | freemium | ár nem ellenőrzött | 49/52/49/50 | https://www.fintel.io/
-whalewisdom | WhaleWisdom (13F-elemző) | freemium | ár nem ellenőrzött | 46/54/52/50 | https://www.whalewisdom.com/
-other-fx-calendars | FXStreet, Myfxbook, DailyFX, MarketWatch naptárak | free | ingyenes webes | 50/52/48/46 | https://www.fxstreet.com/economic-calendar
-hf-twitter-financial-news-sentiment | Twitter Financial News Sentiment (zeroshot) – Hugging Face | free | ingyenes | 42/56/51/50 | https://huggingface.co/datasets/zeroshot/twitter-financial-news-sentiment
-capitol-trades | Capitol Trades (kongresszusi kereskedések) | free | ingyenes | 44/50/47/46 | https://www.capitoltrades.com/
-semrush-ahrefs | Semrush és Ahrefs (SEO/forgalom-becslés) | paid | ár nem ellenőrzött | 47/48/44/48 | https://www.semrush.com/prices/
-neudata-battlefin | Neudata és BattleFin (alt-adat felderítés, scoring) | institutional | egyedi ajánlat | 43/52/46/48 | https://www.neudata.co/
-etfdb | ETF Database (VettaFi) | freemium | ár nem ellenőrzött | 44/48/44/44 | https://www.etfdb.com/
-dataroma | Dataroma (superinvestor 13F-portfóliók) | free | ingyenes | 42/48/46/45 | https://www.dataroma.com/m/home.php
-clio-infra | Clio Infra | free | ingyenes | 38/52/46/48 | https://www.clio-infra.eu/
-measuringworth | MeasuringWorth | free | ingyenes | 37/53/46/46 | https://www.measuringworth.com/
-motley-fool-transcripts | The Motley Fool earnings call átiratok | free | ingyenes olvasás | 43/46/44/42 | https://www.fool.com/earnings-call-transcripts/
+fed-speeches-fomc | 0 | Fed beszédek, FOMC-anyagok (statement, minutes, átiratok), Beige Book | M3 Makró és statisztika | free | ingyenes | 85/94/90/88 | https://www.federalreserve.gov/newsevents/speeches.htm | Beszédek, FOMC statement/minutes (3 hét késés), teljes átiratok (5 év késés)…
+sec-edgar-data-api | 0 | SEC EDGAR data.sec.gov API (submissions, companyfacts, companyconcept) | M2 Fundamentális és szabályozói adat | free | ingyenes | 82/92/88/84 | https://www.sec.gov/edgar/sec-api-documentation | JSON végpontok: cégenkénti bejelentés-történet (submissions/CIK##########.json)…
+alfred-vintages | 0 | ALFRED (archivált FRED vintage-ek, valós idejű periódusok) | M3 Makró és statisztika | registration | ingyenes, API-kulcs | 82/92/90/86 | https://alfred.stlouisfed.org/ | Minden FRED-sor minden korábbi kiadott állapota…
+bls-api | 0 | BLS Public Data API v2 | M3 Makró és statisztika | registration | ingyenes; v2 regisztrációval | 81/90/86/83 | https://www.bls.gov/developers/ | CPI, PPI, NFP (CES), JOLTS, munkanélküliség, ECI – a legnagyobb piacmozgató US…
+ecmwf-open-data | 0 | ECMWF Open Data (IFS és AIFS valós idejű előrejelzések) | M3 Makró és statisztika | free | ingyenes | 82/88/85/84 | https://www.ecmwf.int/en/forecasts/datasets/open-data | A legjobb globális modell (IFS) és az ML-alapú AIFS nyílt, valós idejű…
+fred-api | 0 | FRED API (St. Louis Fed) | M3 Makró és statisztika | registration | ingyenes, API-kulcs | 78/92/86/80 | https://fred.stlouisfed.org/docs/api/fred/ | 800 000+ idősor (US és nemzetközi), egységes REST/JSON. A makrojel-réteg…
+ecb-data-portal | 0 | ECB Data Portal + SDMX API | M3 Makró és statisztika | free | ingyenes | 76/89/84/79 | https://data.ecb.europa.eu/ | Az egykori SDW utódja: referencia-árfolyamok, €STR, hozamgörbék, monetáris…
+sec-xbrl-frames | 0 | SEC XBRL Frames API (keresztmetszeti tények) | M2 Fundamentális és szabályozói adat | free | ingyenes | 76/86/83/80 | https://data.sec.gov/api/xbrl/frames/us-gaap/AccountsPayableCurrent/USD/CY2019Q1I.json | Egy XBRL-koncepció egy naptári periódusra az összes cégnél egy hívásban…
+sec-insider-transactions-data-sets | 0 | SEC Insider Transactions (Form 3/4/5) adatkészletek | M2 Fundamentális és szabályozói adat | free | ingyenes | 78/84/82/81 | https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets | Negyedéves strukturált Form 4 kivonat; valós időben a Form 4 az EDGAR-ban 2…
+bis-cb-speeches | 0 | BIS Central Bankers' Speeches (jegybanki beszédek korpusza) | M3 Makró és statisztika | free | ingyenes | 79/83/81/82 | https://www.bis.org/cbspeeches/index.htm | A világ jegybankjainak beszédei 1996-tól egy helyen (MNB is). Hawkish/dovish…
+cftc-cot | 0 | CFTC Commitments of Traders (COT) + Public Reporting Environment | M3 Makró és statisztika | free | ingyenes | 73/88/86/79 | https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm | Heti (keddi állapot, pénteki publikálás) határidős pozíciók…
+mnb-monetaris-politika | 0 | MNB monetáris politika: kamatdöntések, közlemények, Monetáris Tanács… | M4 Hírek, szentiment, esemény | free | ingyenes | 78/84/80/82 | https://www.mnb.hu/web/monetaris-politika | Kamatdöntési közlemények (havi), a Monetáris Tanács üléseiről szóló…
+fed-h41 | 0 | Fed H.4.1 (jegybanki mérleg, tartalékok) | M3 Makró és statisztika | free | ingyenes | 72/88/84/77 | https://www.federalreserve.gov/releases/h41/ | Heti (csütörtök) Fed-mérleg: QT, tartalékok, TGA, RRP – a nettó likviditás…
+gie-agsi-alsi | 0 | GIE AGSI+ / ALSI (gáztárolói és LNG-terminál töltöttség) | M3 Makró és statisztika | free | ingyenes | 76/82/79/79 | https://agsi.gie.eu/ | Napi tárolói töltöttség országonként/tárolónként (magyar tárolók is)…
+copernicus-cds-era5 | 0 | Copernicus Climate Data Store – ERA5 reanalízis (+ cdsapi) | M3 Makró és statisztika | free | ingyenes | 70/88/84/76 | https://cds.climate.copernicus.eu/ | Órás, 0,25°-os globális reanalízis 1940-től (hőmérséklet, szél, sugárzás)…
+fed-data-download | 0 | Fed Data Download Program (H.15, H.10, G.17, G.19, Z.1, SLOOS) | M3 Makró és statisztika | free | ingyenes | 68/88/82/74 | https://www.federalreserve.gov/datadownload/ | Kamatok (H.15), árfolyamok (H.10), ipari termelés és kapacitáskihasználás…
+akk-statisztika | 0 | ÁKK statisztikák: referenciahozamok, aukciós eredmények, zéró-kupon… | M3 Makró és statisztika | free | ingyenes | 74/84/78/78 | https://www.akk.hu/hu/statisztika | Napi referenciahozamok (3, 6, 12 hó; 3, 5, 10, 15, 20 év), zéró-kupon görbe…
+edgartools | 0 | edgartools (Python EDGAR könyvtár) | M2 Fundamentális és szabályozói adat | free | ingyenes (MIT) | 74/81/76/76 | https://github.com/dgunning/edgartools | Pythonos EDGAR-kliens: bejelentések, XBRL pénzügyi kimutatások, 13F, Form 4…
+bis-data-portal | 0 | BIS Data Portal + SDMX API (v2) | M3 Makró és statisztika | free | ingyenes | 68/85/81/74 | https://data.bis.org/ | Nemzetközi bankstatisztika, hitel/GDP rés, lakásárak, effektív árfolyamok…
+ken-french-data-library | 0 | Kenneth R. French Data Library | M2 Fundamentális és szabályozói adat | free | ingyenes | 65/86/82/72 | https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html | A Fama–French 3/5 faktor, momentum, iparági és sorba rendezett portfóliók…
+jkp-global-factor-data | 0 | JKP Global Factor Data (Jensen–Kelly–Pedersen) | M2 Fundamentális és szabályozói adat | free | ingyenes (CC BY-NC 4.0); a… | 66/85/82/71 | https://jkpfactors.com/ | 153 faktor, 13 témába sorolva, 93 országra (mért); legutóbbi frissítés 2026…
+open-source-asset-pricing | 0 | Open Source Asset Pricing (Chen–Zimmermann) | M2 Fundamentális és szabályozói adat | free | ingyenes | 66/83/80/72 | https://www.openassetpricing.com/ | ~200+ publikált keresztmetszeti előrejelző (anomália) reprodukálva…
+mnb-arfolyam-soap | 0 | MNB hivatalos devizaárfolyamok – SOAP webszolgáltatás… | M3 Makró és statisztika | free | ingyenes | 66/85/76/72 | http://www.mnb.hu/arfolyamok.asmx | Ingyenes, kulcs nélküli SOAP API: GetCurrentExchangeRates, GetExchangeRates…
+ksh-stadat | 0 | KSH STADAT táblák | M3 Makró és statisztika | free | ingyenes | 68/82/76/74 | https://www.ksh.hu/stadat | Ingyenes összefoglaló táblák…
+eurostat-api | 0 | Eurostat API (SDMX 2.1/3.0, JSON-stat) | M3 Makró és statisztika | free | ingyenes | 66/82/76/71 | https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-introduction | HICP, ipari termelés, munkaerőpiac, külkereskedelem, nemzeti számlák minden…
+gdelt | 0 | GDELT Project (GKG, Events, DOC 2.0 API) | M4 Hírek, szentiment, esemény | free | ingyenes | 74/74/72/76 | https://www.gdeltproject.org/ | Globális hírmédia-monitorozás 15 percenként: események (CAMEO), Global…
+mnb-statisztika-portal | 0 | MNB statisztikai portál (statisztika.mnb.hu) és idősorok | M3 Makró és statisztika | free | ingyenes | 66/82/76/72 | https://statisztika.mnb.hu/ | Monetáris, fizetési mérleg, pénzügyi számlák, hitelintézeti, kamat- és…
+aqr-datasets | 0 | AQR Data Sets… | M2 Fundamentális és szabályozói adat | free | ingyenes… | 64/79/76/70 | https://www.aqr.com/Insights/Datasets | Faktorhozamok több eszközosztályra: Betting Against Beta, Quality Minus Junk…
+forex-factory-calendar | 0 | Forex Factory gazdasági naptár (+ faireconomy JSON feed) | M4 Hírek, szentiment, esemény | free | ingyenes | 70/71/70/68 | https://www.forexfactory.com/calendar | Az FX-kereskedők alapnaptára: esemény, hatás (Low/Medium/High), forecast…
+sec-company-tickers | 0 | SEC company_tickers.json (CIK–ticker leképezés) | M2 Fundamentális és szabályozói adat | free | ingyenes | 62/76/68/64 | https://www.sec.gov/files/company_tickers.json | Aktuális CIK↔ticker↔név leképezés JSON-ben (mért: 200).
+sec-edgar-full-text-search | 1 | SEC EDGAR Full-Text Search (efts) | M2 Fundamentális és szabályozói adat | free | ingyenes | 81/84/81/83 | https://www.sec.gov/edgar/search/ | Teljes szöveges keresés a 2001 óta beadott bejelentésekben; a nem dokumentált…
+ecb-speeches-accounts | 1 | ECB beszédek, sajtótájékoztatók és monetáris politikai 'accounts' | M3 Makró és statisztika | free | ingyenes | 79/86/82/82 | https://www.ecb.europa.eu/press/key/html/index.en.html | Beszédek, sajtótájékoztató-átiratok és a döntések után ~4 héttel közzétett…
+eia-natural-gas-storage | 1 | EIA Weekly Natural Gas Storage Report | M3 Makró és statisztika | free | ingyenes | 78/87/83/80 | https://www.eia.gov/naturalgas/storage/ | Heti tárolói változás (Bcf) régiónként – a NG-futures legnagyobb heti eseménye.
+noaa-gfs-nomads | 1 | NOAA GFS/GEFS modell-futások (NOMADS, AWS Open Data) | M3 Makró és statisztika | free | ingyenes | 80/82/80/82 | https://nomads.ncep.noaa.gov/ | Globális determinisztikus és ensemble numerikus előrejelzés 6 óránként…
+cleveland-fed-inflation | 1 | Cleveland Fed inflációs nowcasting és inflációs várakozások | M3 Makró és statisztika | free | ingyenes | 78/83/79/80 | https://www.clevelandfed.org/indicators-and-data/inflation-nowcasting | Napi CPI/PCE nowcast (olaj- és benzinár alapján) – a CPI-meglepetés…
+bea-api | 1 | BEA API (GDP, PCE, nemzeti számlák) | M3 Makró és statisztika | registration | ingyenes, API-kulcs | 74/85/80/78 | https://apps.bea.gov/API/signup/ | GDP, PCE-deflátor (a Fed célváltozója), személyi jövedelem, folyó fizetési…
+census-api | 1 | US Census Bureau API… | M3 Makró és statisztika | registration | ingyenes, API-kulcs | 74/85/80/78 | https://www.census.gov/data/developers.html | Economic Indicators (retail sales, durable goods, housing starts, construction)…
+philly-fed-rtdsm | 1 | Philadelphia Fed Real-Time Data Set for Macroeconomists | M3 Makró és statisztika | free | ingyenes | 71/84/82/78 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/real-time-data-set-for-macroeconomists | Negyedéves vintage-mátrixok 1965-től (GDP, fogyasztás, foglalkoztatás stb.): a…
+treasury-fiscaldata | 1 | US Treasury FiscalData API (+ hozamgörbe, aukciók) | M3 Makró és statisztika | free | ingyenes | 71/86/79/74 | https://fiscaldata.treasury.gov/api-documentation/ | Daily Treasury Statement (TGA), adósság, aukciós eredmények…
+usda-wasde | 1 | USDA WASDE (World Agricultural Supply and Demand Estimates) | M3 Makró és statisztika | free | ingyenes | 74/82/79/78 | https://www.usda.gov/oce/commodity/wasde | Havi globális kínálat/kereslet-mérleg gabonára, olajos magvakra, gyapotra…
+ecb-estr | 1 | €STR (euro short-term rate) | M3 Makró és statisztika | free | ingyenes | 70/86/77/72 | https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html | Napi euró overnight referenciakamat, T+1 08:00 CET publikálás; carry- és…
+nyfed-reference-rates | 1 | NY Fed referenciakamatok (SOFR, EFFR, OBFR, TGCR) + API | M3 Makró és statisztika | free | ingyenes | 70/86/77/72 | https://www.newyorkfed.org/markets/reference-rates/sofr | Napi SOFR, percentilisek, volumen; repo-stressz jel (pl. 2019 szeptember). A NY…
+dol-unemployment-claims | 1 | US DOL heti munkanélküli segélykérelmek | M3 Makró és statisztika | free | ingyenes | 72/82/77/76 | https://oui.doleta.gov/unemploy/claims.asp | Heti initial/continuing claims, államonként is – a leggyakoribb kemény adat.
+entsog-transparency | 1 | ENTSOG Transparency Platform (gázáramlások) | M3 Makró és statisztika | free | ingyenes | 74/80/76/78 | https://transparency.entsog.eu/ | Napi/órás gázáramlások határpontonként (pl. Ukrajna, TurkStream, Baumgarten)…
+fred-md-qd | 1 | FRED-MD / FRED-QD (McCracken–Ng nagy makró-panelek) | M3 Makró és statisztika | free | ingyenes | 68/84/80/74 | https://www.stlouisfed.org/research/economists/mccracken/fred-databases | ~130 havi (MD) és ~250 negyedéves (QD) makrosor stacionáriussá tevő…
+noaa-cpc-degree-days | 1 | NOAA CPC degree day-ek és ENSO/előrejelzések | M3 Makró és statisztika | free | ingyenes | 72/80/76/76 | https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/cdus/degree_days/ | Heti/havi népességsúlyozott HDD/CDD, 6–10 és 8–14 napos kilátások, ENSO-állapot…
+newsquawk | 1 | Newsquawk (audio squawk + headline-ok) | M4 Hírek, szentiment, esemény | paid | Basic 199 EUR/hó, Pro 399 EUR/hó… | 76/76/74/76 | https://www.newsquawk.com/ | Élő audio squawk és headline-folyam makró/FX/kötvény/részvény fókusszal…
+philly-fed-ads | 1 | Aruoba–Diebold–Scotti üzleti kondíciók index (napi) | M3 Makró és statisztika | free | ingyenes | 73/78/73/76 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/ads | Napi frekvenciájú reálgazdasági aktivitás-index vintage-ekkel.
+atlanta-fed-gdpnow | 1 | Atlanta Fed GDPNow (+ Business Inflation Expectations) | M3 Makró és statisztika | free | ingyenes | 72/80/74/74 | https://www.atlantafed.org/cqer/research/gdpnow | Valós idejű negyedéves GDP-nowcast, minden fontos adatkiadás után frissül; a…
+ofr-financial-stress | 1 | OFR Financial Stress Index, MMF Monitor, Short-term Funding Monitor | M3 Makró és statisztika | free | ingyenes | 72/80/74/74 | https://www.financialresearch.gov/financial-stress-index/ | Napi globális pénzügyi stresszindex (33 piaci változó), pénzpiaci alapok…
+sec-form-13f-data-sets | 1 | SEC Form 13F adatkészletek (intézményi portfóliók) | M2 Fundamentális és szabályozói adat | free | ingyenes | 68/79/78/74 | https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets | Negyedéves, strukturált 13F-HR tartalom…
+fed-yield-curve-gsw | 1 | Fed Gürkaynak–Sack–Wright hozamgörbe és TIPS-görbe | M3 Makró és statisztika | free | ingyenes | 68/82/75/72 | https://www.federalreserve.gov/data/yield-curve-models.htm | Napi illesztett zéró-kupon, par és forward hozamok 1961-től…
+nyfed-nowcast-wei | 1 | NY Fed Staff Nowcast és Weekly Economic Index | M3 Makró és statisztika | free | ingyenes | 71/78/73/74 | https://www.newyorkfed.org/research/policy/nowcast | Heti GDP-nowcast és a heti gazdasági aktivitási index (WEI).
+usda-nass-quickstats | 1 | USDA NASS Quick Stats API (termés, Crop Progress) | M3 Makró és statisztika | free | ingyenes | 69/80/74/74 | https://quickstats.nass.usda.gov/api | Heti Crop Progress (vetés/állapot), termésbecslés, állatállomány – API kulccsal.
+sec-financial-statement-data-sets | 1 | SEC Financial Statement (és Notes) Data Sets | M2 Fundamentális és szabályozói adat | free | ingyenes | 66/79/76/72 | https://www.sec.gov/data-research/sec-markets-data/financial-statement-data-sets | Negyedéves ZIP-ek (sub/num/tag/pre táblák) minden XBRL-es 10-K/10-Q-ból; az…
+sec-edgar-full-index | 1 | SEC EDGAR full-index / daily-index (bejelentés-indexek) | M2 Fundamentális és szabályozói adat | free | ingyenes | 67/80/74/70 | https://www.sec.gov/Archives/edgar/full-index/ | Negyedéves és napi master/form/company indexfájlok 1993-tól: minden bejelentés…
+finra-equity-short-interest | 1 | FINRA Equity Short Interest | M2 Fundamentális és szabályozói adat | free | ingyenes | 66/78/76/74 | https://www.finra.org/finra-data/browse-catalog/equity-short-interest/data | Havonta kétszer közzétett short interest minden tőzsdei és OTC részvényre. A…
+philly-fed-spf | 1 | Survey of Professional Forecasters (Philadelphia Fed) | M3 Makró és statisztika | free | ingyenes | 64/80/77/72 | https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/survey-of-professional-forecasters | Negyedéves szakmai előrejelzések egyéni és aggregált szinten…
+chicago-fed-nfci-cfnai | 1 | Chicago Fed NFCI és CFNAI | M3 Makró és statisztika | free | ingyenes | 68/78/74/72 | https://www.chicagofed.org/research/data/nfci/current-data | Heti pénzügyi kondíciós index (105 mutató) és a havi országos aktivitási index…
+imf-portwatch | 1 | IMF PortWatch (kikötői forgalom és szorosok AIS-ből) | M3 Makró és statisztika | free | ingyenes | 71/75/72/75 | https://portwatch.imf.org/ | Napi kikötői hívások és szoros-áthaladások (Szuez, Hormuz, Panama) AIS-ből…
+noaa-cdo-api | 1 | NOAA NCEI Climate Data Online API v2 + Access Data Service | M3 Makró és statisztika | free | ingyenes | 68/78/74/72 | https://www.ncei.noaa.gov/cdo-web/webservices/v2 | Napi/havi állomásadatok (GHCN-Daily, GSOM), hőmérséklet, csapadék. A degree-day…
+mnb-kozzetetelek | 1 | MNB tőkepiaci közzétételi rendszer (kozzetetelek.mnb.hu) | M2 Fundamentális és szabályozói adat | free | ingyenes | 70/76/72/74 | https://kozzetetelek.mnb.hu/ | Hivatalos tárolási rendszer (OAM): a magyar kibocsátók rendkívüli…
+eu-net-short-positions | 1 | EU nemzeti nettó short pozíció nyilvántartások… | M2 Fundamentális és szabályozói adat | free | ingyenes | 70/74/72/74 | https://www.esma.europa.eu/esmas-activities/markets-and-infrastructure/short-selling | SSR szerint a ≥0,5%-os nettó short pozíciók nyilvánosak, alap-nevekkel.…
+oecd-data-explorer | 1 | OECD Data Explorer + SDMX API (.Stat Suite) | M3 Makró és statisztika | free | ingyenes | 66/78/74/72 | https://data-explorer.oecd.org/ | Kompozit vezető indikátorok (CLI), üzleti/fogyasztói bizalom, kamatok…
+ec-business-consumer-surveys | 1 | Európai Bizottság üzleti és fogyasztói felmérések (ESI) | M3 Makró és statisztika | free | ingyenes | 68/76/72/72 | https://economy-finance.ec.europa.eu/economic-forecasts-and-surveys/business-and-consumer-surveys_en | Havi Economic Sentiment Indicator és ágazati bizalmi indexek tagállamonként…
+fed-h8 | 1 | Fed H.8 (kereskedelmi bankok mérlege) | M3 Makró és statisztika | free | ingyenes | 64/80/74/70 | https://www.federalreserve.gov/releases/h8/ | Heti banki hitelek és betétek: hitelkínálat, betétkiáramlás…
+copernicus-dataspace | 1 | Copernicus Data Space Ecosystem (Sentinel-1/2/3/5P) | M3 Alternatív adat | registration | ingyenes (kvótákkal) | 66/76/74/72 | https://dataspace.copernicus.eu/ | Ingyenes Sentinel-1 radar (felhőn át: olajtartály-árnyék, hajók), Sentinel-2…
+benzinga-pro-api | 1 | Benzinga Pro és Benzinga News API | M4 Hírek, szentiment, esemény | paid | Pro Essential ~197 USD/hó (becsült)… | 74/71/70/73 | https://www.benzinga.com/pro/pricing | Gyors US részvényhírek, analyst ratings, audio squawk (Pro). Pro: Basic ~37…
+trading-economics-api | 1 | Trading Economics API (naptár konszenzussal, 20M+ indikátor) | M4 Hírek, szentiment, esemény | paid | ~149–199 USD/hó-tól… | 70/74/72/72 | https://tradingeconomics.com/api/ | Valós idejű gazdasági naptár…
+mavir-data | 1 | MAVIR rendszerterhelési és termelési adatok | M3 Makró és statisztika | free | ingyenes | 70/76/70/73 | https://www.mavir.hu/web/mavir/rendszerterheles | Magyar villamosenergia-rendszer terhelése, termelés forrásonként…
+esma-registers | 1 | ESMA Registers (FIRDS, FITRS, short selling, MiFID) | M2 Fundamentális és szabályozói adat | free | ingyenes | 66/78/70/68 | https://registers.esma.europa.eu/publication/ | FIRDS: minden EU-ban kereskedett pénzügyi eszköz referenciaadata…
+imf-data-portal | 1 | IMF Data Portal + SDMX 2.1/3.0 API | M3 Makró és statisztika | free | ingyenes | 62/80/75/69 | https://data.imf.org/ | IFS, BOP, DOTS, WEO, COFER, Fiscal Monitor. A régi adatportált 2025-11-05-én…
+energy-charts | 1 | Fraunhofer ISE Energy-Charts (+ nyílt API) | M3 Makró és statisztika | free | ingyenes | 69/74/70/72 | https://www.energy-charts.info/ | Európai termelés, árak, import/export, megújulók nyílt REST API-val…
+wikimedia-pageviews | 1 | Wikimedia Pageviews API és pageview dumpok | M3 Alternatív adat | free | ingyenes | 69/74/70/72 | https://wikimedia.org/api/rest_v1/ | Cikkenkénti napi/órás oldalmegtekintések REST API-n és tömeges dumpban…
+ksh-hvd-api | 1 | KSH High-Value Datasets API (data.ksh.hu) | M3 Makró és statisztika | free | ingyenes | 64/78/72/70 | https://data.ksh.hu/ | Hitelesítés nélküli REST API (OpenAPI 3.1 leírás: data.ksh.hu/openapi.yaml) az…
+hupx-market-data | 1 | HUPX piaci adatok (DAM, IDC, IDA) – HUPX Labs, sFTP, API | M3 Makró és statisztika | paid | adatcsomag-árak a HUPX Labs-on; összeg… | 67/76/70/71 | https://hupx.hu/data-reporting | Day-ahead aggregált görbék, blokkok, ár-volumen, intraday folyamatos és aukciós…
+finra-reg-sho-daily | 1 | FINRA Reg SHO Daily Short Sale Volume | M2 Fundamentális és szabályozói adat | free | ingyenes | 70/72/67/71 | https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data | Napi short-eladási volumen a FINRA TRF/ADF jelentésekből (off-exchange).
+umich-sentiment | 1 | University of Michigan Surveys of Consumers | M3 Makró és statisztika | free | ingyenes | 68/73/69/70 | https://www.sca.isr.umich.edu/ | Havi fogyasztói bizalom és 1/5-éves inflációs várakozás (előzetes és végleges).
+ism-pmi | 1 | ISM Report On Business (US PMI) | M3 Makró és statisztika | freemium | historikus adat fizetős; ár nem… | 66/74/70/68 | https://www.ism.org/ | Feldolgozóipari és szolgáltatói PMI, alindexek (árak, új rendelések).
+usda-psd-online | 1 | USDA FAS PSD Online | M3 Makró és statisztika | free | ingyenes | 64/76/72/70 | https://apps.fas.usda.gov/psdonline/app/index.html | Termelés–fogyasztás–készlet adatbázis országonként, a WASDE alapja; letölthető…
+wgc-goldhub | 1 | World Gold Council Goldhub | M3 Makró és statisztika | registration | ingyenes | 64/76/72/70 | https://www.gold.org/goldhub/data | Arany-ETF áramlások, jegybanki vásárlások, kereslet-kínálat negyedévente.
+earningscall-biz | 1 | EarningsCall (átiratok, audió, API) | M2 Fundamentális és szabályozói adat | paid | ár a honlapon nem látható… | 69/70/68/69 | https://www.earningscall.biz/ | JSON átiratok, szóelőadó-címkés és szószintű időbélyeges 'enhanced' változat…
+global-q-factors | 1 | Hou–Xue–Zhang q-faktorok (global-q.org) | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/77/72/68 | https://global-q.org/factors.html | q-faktor és q5 modell (befektetés, profitabilitás, várható növekedés)…
+epu-index | 1 | Economic Policy Uncertainty Index (Baker–Bloom–Davis) | M3 Makró és statisztika | free | ingyenes | 66/72/68/70 | https://www.policyuncertainty.com/ | Újság-alapú politikai bizonytalansági indexek…
+gpr-index | 1 | Geopolitical Risk Index (Caldara–Iacoviello) | M3 Makró és statisztika | free | ingyenes | 66/72/68/70 | https://www.matteoiacoviello.com/gpr.htm | Napi és havi geopolitikai kockázati index sajtóelemzésből, országos…
+indeed-hiring-lab | 1 | Indeed Hiring Lab álláshirdetés-indexek | M3 Alternatív adat | free | ingyenes | 68/72/68/70 | https://www.hiringlab.org/data/ | Napi/heti álláshirdetési indexek országonként és szakmánként (GitHub CSV) – a…
+ici-fund-flows | 1 | ICI fund flows és pénzpiaci alap statisztikák | M2 Fundamentális és szabályozói adat | free | ingyenes | 62/73/70/68 | https://www.ici.org/research/stats | Heti becsült hosszú távú alap- és ETF-áramlások, heti pénzpiaci alap vagyon – a…
+massive-polygon-news | 1 | Massive (korábban Polygon.io) – News végpont és Benzinga partneradat | M4 Hírek, szentiment, esemény | paid | Stocks Advanced 199 USD/hó; Benzinga… | 66/70/66/66 | https://polygon.io/docs/rest/stocks/news | A Polygon.io 2025-10-30-tól Massive.com néven fut (mért, saját blog); a régi…
+ishares-holdings | 1 | iShares ETF napi portfólió-letöltések | M2 Fundamentális és szabályozói adat | free | ingyenes | 62/72/67/63 | https://www.ishares.com/us/products/etf-investments | Alaponként napi teljes holdings CSV: indexösszetétel-közelítés, rebalanszolás…
+sdmx1-python | 1 | sdmx1 (Python SDMX-kliens: ECB, IMF, OECD, BIS, Eurostat, ILO stb.) | M3 Makró és statisztika | free | ingyenes | 58/76/68/62 | https://github.com/khaeru/sdmx | Egységes SDMX 2.1/3.0 kliens pandas-kimenettel; PyPI 2.28.0, 2026-10-18 (mért).…
+bet-kibocsatoi-kozzetetelek | 1 | BÉT honlap: árfolyamok, kibocsátói közlemények, statisztikák | M2 Fundamentális és szabályozói adat | free | ingyenes | 61/72/66/66 | https://bet.hu/ | Napi záróárak és historikus letöltés, kibocsátói hírek, havi/éves forgalmi…
+portfolio-hu | 1 | Portfolio.hu (magyar pénzügyi hírek) | M4 Hírek, szentiment, esemény | freemium | alap ingyenes; előfizetés ára nem… | 66/68/64/64 | https://www.portfolio.hu/ | A legfontosabb magyar pénzügyi hírportál (makró, BÉT, MNB, forint); elemzői…
+fmp-api | 1 | Financial Modeling Prep (fundamentumok, átiratok, naptárak) | M2 Fundamentális és szabályozói adat | freemium | Starter ~22, Premium ~59, Ultimate ~149… | 63/68/65/64 | https://site.financialmodelingprep.com/pricing-plans | Olcsó, széles fundamentális API: kimutatások, becslések, earnings és gazdasági…
+world-bank-api | 1 | World Bank Indicators API (WDI) + wbgapi | M3 Makró és statisztika | free | ingyenes | 54/75/70/62 | https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation | 1400+ fejlesztési indikátor ~217 országra; mért: a minta-hívás működik. Python…
+macrohistory-jst | 1 | Jordà–Schularick–Taylor Macrohistory Database | M3 Makró és statisztika | free | ingyenes | 53/76/71/62 | https://www.macrohistory.net/database/ | 18 fejlett ország éves makró-pénzügyi adatai 1870-től…
+open-meteo | 1 | Open-Meteo (időjárás-API, historikus és ensemble) | M3 Makró és statisztika | freemium | Free (nem kereskedelmi)… | 63/69/64/62 | https://open-meteo.com/ | Egyszerű JSON API: előrejelzés több modellből (ECMWF, GFS, ICON), historikus…
+dbnomics | 1 | DBnomics (makró-aggregátor, 80+ szolgáltató egy API-n) | M3 Makró és statisztika | free | ingyenes | 57/72/66/62 | https://db.nomics.world/ | IMF, OECD, Eurostat, ECB, BIS, nemzeti statisztikai hivatalok egységes API-n…
+hf-fomc-communication | 1 | FOMC Communication (gtfintechlab) – hawkish/dovish címkézett korpusz | M4 Hírek, szentiment, esemény | free | ingyenes | 56/70/68/65 | https://huggingface.co/datasets/gtfintechlab/fomc_communication | FOMC statement-, minutes- és beszédmondatok hawkish/dovish címkével – a…
+filings-xbrl-org | 1 | filings.xbrl.org (ESEF éves jelentések indexe) | M2 Fundamentális és szabályozói adat | free | ingyenes | 58/68/64/64 | https://filings.xbrl.org/ | Az EU-s tőzsdei cégek ESEF (iXBRL) éves jelentéseinek gyűjteménye JSON API-val…
+nber-business-cycles | 1 | NBER üzleti ciklus dátumok | M3 Makró és statisztika | free | ingyenes | 50/76/68/60 | https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions | A hivatalos US recessziók csúcs/mélypont dátumai – rezsimcímkék.
+aisstream-io | 1 | aisstream.io (ingyenes AIS WebSocket stream) | M3 Alternatív adat | free | ingyenes | 66/62/58/64 | https://aisstream.io/ | Ingyenes, valós idejű globális (terresztriális) AIS-üzenetek WebSocketen…
+google-trends | 1 | Google Trends (web) + Google Trends API (alpha) | M3 Alternatív adat | free | ingyenes (API alpha jelentkezéssel) | 64/63/60/64 | https://trends.google.com/ | Relatív keresési érdeklődés; 2025-07-24-től hivatalos API alpha…
+tiingo-news | 1 | Tiingo News API | M4 Hírek, szentiment, esemény | freemium | Power 30 USD/hó; kereskedelmi belső 50… | 62/64/62/62 | https://www.tiingo.com/documentation/news | Kurált pénzügyi hírek tickerekre címkézve; a lekérdezhető múlt 3 hónap…
+common-crawl-news | 1 | Common Crawl News (CC-NEWS) | M4 Hírek, szentiment, esemény | free | ingyenes | 58/67/66/62 | https://data.commoncrawl.org/crawl-data/CC-NEWS/index.html | Napi hírcikk-crawl WARC-fájlokban 2016-tól (StormCrawler-alapú news-crawl)…
+shiller-data | 1 | Robert Shiller online adatok (CAPE, S&P 1871-től) | M2 Fundamentális és szabályozói adat | free | ingyenes | 54/70/65/62 | http://www.econ.yale.edu/~shiller/data.htm | Havi S&P kompozit ár, osztalék, nyereség, CPI, hosszú kamat és CAPE 1871-től.…
+global-macro-database | 1 | Global Macro Database (Müller et al.) | M3 Makró és statisztika | free | ingyenes | 52/70/65/58 | https://www.globalmacrodata.com/ | ~240 ország, 46+ változó, több tucat forrás harmonizálva; Python/Stata/R…
+fnspid | 1 | FNSPID – Financial News and Stock Price Integration Dataset | M4 Hírek, szentiment, esemény | free | ingyenes | 53/63/64/60 | https://huggingface.co/datasets/Zihan1004/FNSPID | 15,7 millió pénzügyi hírcikk (1999–2023) S&P 500 részvényekhez és árakhoz…
+noaa-nhc-hurricanes | 2 | NOAA National Hurricane Center adatok (HURDAT2, előrejelzési pályák) | M3 Makró és statisztika | free | ingyenes | 73/80/74/76 | https://www.nhc.noaa.gov/data/
+destatis-genesis | 2 | Destatis GENESIS-Online | M3 Makró és statisztika | free | ingyenes | 69/80/74/74 | https://www-genesis.destatis.de/
+sec-api-io | 2 | sec-api.io (fizetős EDGAR API) | M2 Fundamentális és szabályozói adat | paid | Free: 100 hívás; Personal & Startups 49… | 73/74/71/72 | https://sec-api.io/pricing
+nyfed-empire-survey | 2 | NY Fed Empire State Manufacturing Survey (+ regionális Fed felmérések) | M3 Makró és statisztika | free | ingyenes | 70/77/72/73 | https://www.newyorkfed.org/survey/empire/empiresurvey_overview
+tsa-bts-eurocontrol | 2 | TSA checkpoint-forgalom, BTS TranStats, Eurocontrol napi forgalom | M3 Alternatív adat | free | ingyenes | 68/74/70/72 | https://www.transtats.bts.gov/
+snb-data-portal | 2 | SNB Data Portal | M3 Makró és statisztika | free | ingyenes | 62/78/72/68 | https://data.snb.ch/en
+boj-statistics | 2 | Bank of Japan statisztikák | M3 Makró és statisztika | free | ingyenes | 62/78/72/68 | https://www.boj.or.jp/en/statistics/index.htm
+nws-api | 2 | US National Weather Service API | M3 Makró és statisztika | free | ingyenes | 68/74/68/70 | https://www.weather.gov/documentation/services-web-api
+sec-form-n-port | 2 | SEC Form N-PORT adatkészletek (alapportfóliók) | M2 Fundamentális és szabályozói adat | free | ingyenes | 62/74/72/69 | https://www.sec.gov/data-research/sec-markets-data/form-n-port-data-sets
+nyfed-acm-term-premia | 2 | NY Fed ACM Treasury term premium | M3 Makró és statisztika | free | ingyenes | 63/76/70/68 | https://www.newyorkfed.org/research/data_indicators/term-premia-tabs
+boe-database | 2 | Bank of England Interactive Statistical Database | M3 Makró és statisztika | free | ingyenes | 61/78/70/66 | https://www.bankofengland.co.uk/boeapps/database/
+ifo-business-climate | 2 | ifo üzleti klíma (Németország) | M3 Makró és statisztika | free | ingyenes | 64/75/69/68 | https://www.ifo.de/en/survey/ifo-business-climate-germany
+eex-market-data | 2 | EEX Market Data (áram-, gáz-, CO2-futures, aukciók) | M3 Makró és statisztika | freemium | alapadat ingyenes… | 64/75/70/67 | https://www.eex.com/en/market-data
+bet-vendor-data | 2 | BÉT adatszolgáltatás… | M2 Fundamentális és szabályozói adat | paid | BÉT díjtáblázat szerint; összeg nem… | 66/74/66/68 | https://bet.hu/Vendorok/vendor-tudastar
+nyfed-gscpi | 2 | NY Fed Global Supply Chain Pressure Index | M3 Makró és statisztika | free | ingyenes | 61/75/70/67 | https://www.newyorkfed.org/research/policy/gscpi
+nyfed-sce | 2 | NY Fed Survey of Consumer Expectations | M3 Makró és statisztika | free | ingyenes | 61/75/70/67 | https://www.newyorkfed.org/microeconomics/sce
+frbsf-news-sentiment | 2 | San Francisco Fed Daily News Sentiment Index | M3 Makró és statisztika | free | ingyenes | 64/72/68/70 | https://www.frbsf.org/research-and-insights/data-and-indicators/daily-news-sentiment-index/
+usda-ams-market-news | 2 | USDA AMS Market News (MyMarketNews) | M3 Makró és statisztika | free | ingyenes | 65/72/66/68 | https://www.ams.usda.gov/market-news
+smard | 2 | SMARD (Bundesnetzagentur áram-piaci adatok) | M3 Makró és statisztika | free | ingyenes | 64/74/68/68 | https://www.smard.de/en
+baker-hughes-rig-count | 2 | Baker Hughes Rig Count | M3 Makró és statisztika | free | ingyenes | 62/74/68/68 | https://rigcount.bakerhughes.com/
+ecb-spf | 2 | ECB Survey of Professional Forecasters | M3 Makró és statisztika | free | ingyenes | 59/74/70/66 | https://www.ecb.europa.eu/stats/ecb_surveys/survey_of_professional_forecasters/html/index.en.html
+sp-global-pmi | 2 | S&P Global (HCOB) PMI | M3 Makró és statisztika | institutional | egyedi licenc | 64/72/67/66 | https://www.spglobal.com/marketintelligence/en/mi/products/pmi.html
+epex-spot-results | 2 | EPEX SPOT piaci eredmények | M3 Makró és statisztika | freemium | adatfeed fizetős; ár nem ellenőrzött | 63/72/68/64 | https://www.epexspot.com/en/market-results
+opec-momr | 2 | OPEC Monthly Oil Market Report | M3 Makró és statisztika | free | ingyenes | 62/71/68/68 | https://www.opec.org/opec_web/en/publications/202.htm
+marinetraffic-kpler | 2 | MarineTraffic API (Kpler) | M3 Alternatív adat | paid | kreditcsomagok, ár nem publikus… | 66/69/66/66 | https://www.marinetraffic.com/en/p/api-services
+planetary-computer-aws-opendata | 2 | Microsoft Planetary Computer és AWS Open Data… | M3 Alternatív adat | free | adat ingyenes; számítás/egress fizetős | 62/72/68/68 | https://planetarycomputer.microsoft.com/
+imf-weo | 2 | IMF World Economic Outlook adatbázis | M3 Makró és statisztika | free | ingyenes | 57/74/70/65 | https://www.imf.org/en/Publications/WEO/weo-database/2025/april
+world-bank-pink-sheet | 2 | World Bank Commodity Price Data (Pink Sheet) | M3 Makró és statisztika | free | ingyenes | 58/74/68/64 | https://www.worldbank.org/en/research/commodity-markets
+dtcc-repository | 2 | DTCC Public Price Dissemination (swap-tranzakciók) | M3 Makró és statisztika | free | ingyenes | 64/68/65/67 | https://www.dtcc.com/repository-otc-data
+adp-employment | 2 | ADP National Employment Report | M3 Makró és statisztika | free | ingyenes | 64/69/64/67 | https://www.adpemploymentreport.com/
+iea-data | 2 | IEA Data and Statistics (Oil Market Report) | M3 Makró és statisztika | freemium | részletes adatbázisok fizetősek; ár nem… | 59/72/69/64 | https://www.iea.org/data-and-statistics
+baltic-exchange | 2 | Baltic Exchange (BDI, fuvardíj-indexek) | M3 Makró és statisztika | paid | előfizetés; ár nem ellenőrzött | 61/72/67/64 | https://www.balticexchange.com/en/data-services/market-information0/dry-services.html
+viirs-night-lights | 2 | VIIRS éjszakai fények (EOG VNL) és NASA Black Marble (+ blackmarblepy) | M3 Alternatív adat | registration | ingyenes | 62/70/67/67 | https://eogdata.mines.edu/products/vnl/
+patentsview-uspto-odp | 2 | PatentsView és USPTO Open Data Portal | M3 Alternatív adat | free | ingyenes | 60/71/68/68 | https://patentsview.org/
+financialjuice | 2 | FinancialJuice (hír-headline-ok és squawk) | M4 Hírek, szentiment, esemény | freemium | ingyenes alap; fizetős csomag ára nem… | 68/65/63/68 | https://www.financialjuice.com/home
+econoday | 2 | Econoday (intézményi gazdasági naptár és konszenzus) | M4 Hírek, szentiment, esemény | paid | ár nem ellenőrzött | 64/70/65/66 | https://www.econoday.com/
+hungaromet-odp | 2 | HungaroMet Open Data Portal (odp.met.hu) | M3 Makró és statisztika | free | ingyenes | 61/72/66/66 | https://odp.met.hu/
+sec-fails-to-deliver | 2 | SEC Fails-to-Deliver adatok | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/69/67/66 | https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data
+sec-edgar-downloader | 2 | sec-edgar-downloader (Python) | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/71/64/64 | https://github.com/jadchaar/sec-edgar-downloader
+ortex | 2 | ORTEX (short interest becslés, securities lending) | M2 Fundamentális és szabályozói adat | paid | Basic ~39 USD/hó, Advanced ~129 USD/hó… | 66/64/62/66 | https://public.ortex.com/
+ecb-bank-lending-survey | 2 | ECB Bank Lending Survey | M3 Makró és statisztika | free | ingyenes | 58/72/68/64 | https://www.ecb.europa.eu/stats/ecb_surveys/bank_lending_survey/html/index.en.html
+py-xbrl | 2 | py-xbrl (XBRL/iXBRL parser) | M2 Fundamentális és szabályozói adat | free | ingyenes (GPL) | 58/71/65/62 | https://github.com/manusimidt/py-xbrl
+finra-otc-transparency | 2 | FINRA OTC (ATS és nem-ATS) Transparency | M2 Fundamentális és szabályozói adat | free | ingyenes | 59/68/66/66 | https://otctransparency.finra.org/
+ssga-spdr-holdings | 2 | State Street SPDR fund finder (napi holdings) | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/69/64/62 | https://www.ssga.com/us/en/intermediary/etfs/fund-finder
+ecb-consumer-expectations | 2 | ECB Consumer Expectations Survey | M3 Makró és statisztika | free | ingyenes | 58/70/65/64 | https://www.ecb.europa.eu/stats/ecb_surveys/consumer_exp_survey/html/index.en.html
+bank-of-canada-valet | 2 | Bank of Canada Valet API | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.bankofcanada.ca/valet/docs
+rba-statistics | 2 | Reserve Bank of Australia statisztikák | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.rba.gov.au/statistics/
+ons-api | 2 | ONS (UK statisztikai hivatal) + API | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.ons.gov.uk/
+insee | 2 | INSEE (Franciaország) | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.insee.fr/en/accueil
+abs-australia | 2 | Australian Bureau of Statistics | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.abs.gov.au/
+nbs-china | 2 | Kínai Nemzeti Statisztikai Hivatal | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://data.stats.gov.cn/english/
+faostat | 2 | FAOSTAT + FAO Food Price Index | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.fao.org/faostat/en/
+fhfa-hpi | 2 | FHFA House Price Index (+ Case-Shiller, Zillow, Redfin, Realtor.com) | M3 Makró és statisztika | free | ingyenes | 56/72/66/62 | https://www.fhfa.gov/data/hpi
+opensky-network | 2 | OpenSky Network (ADS-B repülési adatok, REST + Trino) | M3 Alternatív adat | registration | kutatásra ingyenes; kereskedelmi ár… | 64/66/63/61 | https://opensky-network.org/
+mekh-fgsz-ceegex | 2 | MEKH, FGSZ és CEEGEX… | M3 Makró és statisztika | free | ingyenes | 62/68/62/66 | https://www.mekh.hu/
+nasdaq-short-interest | 2 | Nasdaq Trader short interest fájlok | M2 Fundamentális és szabályozói adat | free | ingyenes | 58/67/65/64 | https://www.nasdaqtrader.com/Trader.aspx?id=ShortInterest
+goyal-welch-predictors | 2 | Goyal–Welch prediktor-adatok (equity premium) | M2 Fundamentális és szabályozói adat | free | ingyenes | 54/72/66/62 | https://www.hec.unil.ch/agoyal/
+zew-sentix | 2 | ZEW Economic Sentiment és Sentix | M3 Makró és statisztika | free | ingyenes | 60/67/62/64 | https://www.zew.de/en/
+google-earth-engine | 2 | Google Earth Engine | M3 Alternatív adat | freemium | kutatásra ingyenes; kereskedelmi… | 58/68/66/62 | https://earthengine.google.com/
+bamosz | 2 | BAMOSZ (befektetési alapok napi árfolyamai, vagyon, áramlások) | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/67/62/65 | https://bamosz.hu/
+damodaran-data | 2 | Damodaran Online adatkészletek | M2 Fundamentális és szabályozói adat | free | ingyenes | 53/70/66/60 | https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html
+ember-energy | 2 | Ember (globális áramtermelési és árképzési adatok) | M3 Makró és statisztika | free | ingyenes | 56/69/63/61 | https://www.ember-energy.org/data/
+drewry-wci | 2 | Drewry World Container Index | M3 Makró és statisztika | free | ingyenes | 58/66/62/63 | https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/world-container-index-assessed-by-drewry
+freightos-fbx | 2 | Freightos Baltic Index (FBX) | M3 Makró és statisztika | freemium | fejléc ingyenes; teljes adat ár nem… | 59/66/60/63 | https://fbx.freightos.com/
+bofa-institute-tracker | 2 | Bank of America Institute és Opportunity Insights Economic Tracker… | M3 Alternatív adat | free | ingyenes | 60/64/60/64 | https://www.bankofamerica.com/institute/
+ksh-statinfo | 2 | KSH Tájékoztatási adatbázis (STATINFO) | M3 Makró és statisztika | free | ingyenes | 56/69/62/62 | https://statinfo.ksh.hu/
+aishub | 2 | AISHub (közösségi AIS-adatcsere) | M3 Alternatív adat | free | ingyenes, saját AIS-vevő adatmegosztása… | 64/60/57/63 | https://www.aishub.net/
+vesselfinder-api | 2 | VesselFinder Vessel Positions API | M3 Alternatív adat | paid | 10 000 kredit = 330 EUR (12 hó)… | 62/62/58/62 | https://www.vesselfinder.com/vessel-positions-api
+newsapi-ai-event-registry | 2 | NewsAPI.ai (Event Registry) | M4 Hírek, szentiment, esemény | freemium | 5K csomag 90 USD/hó (mért) (~81 €/hó) | 61/62/59/62 | https://newsapi.ai/plans
+perigon-webz | 2 | Perigon és Webz.io (hír-API-k mély archívummal) | M4 Hírek, szentiment, esemény | paid | Perigon 25 / 225 / 875 USD/hó-tól… | 62/62/58/62 | https://perigon.io/pricing
+estimize | 2 | Estimize (crowdsourced EPS-becslések) | M2 Fundamentális és szabályozói adat | freemium | ár nem ellenőrzött | 62/58/57/64 | https://www.estimize.com/
+un-comtrade | 2 | UN Comtrade (külkereskedelem) | M3 Makró és statisztika | freemium | ingyenes alapszint; prémium ár nem… | 52/66/63/60 | https://comtradeplus.un.org/
+jodi-oil-gas | 2 | JODI Oil és JODI Gas World Database | M3 Makró és statisztika | free | ingyenes | 55/64/61/62 | https://www.jodidata.org/
+common-crawl | 2 | Common Crawl (webarchívum) | M3 Alternatív adat | free | ingyenes (AWS-számítás fizetős) | 54/66/62/58 | https://commoncrawl.org/
+aws-data-exchange | 2 | AWS Data Exchange | M3 Alternatív adat | freemium | adatkészletenként | 56/65/60/59 | https://aws.amazon.com/data-exchange/
+cryptopanic-api | 2 | CryptoPanic API (kripto-hírek és szavazott szentiment) | M4 Hírek, szentiment, esemény | freemium | ingyenes alap; Pro/Enterprise ára nem… | 62/59/56/62 | https://cryptopanic.com/developers/api/
+central-bank-speeches-datasets | 2 | Jegybanki beszéd-adatkészletek (Kaggle BIS-tükör, cbspeeches.com) | M4 Hírek, szentiment, esemény | free | ingyenes | 56/63/62/63 | https://cbspeeches.com/
+keler | 2 | KELER (központi értéktár) – értékpapír-adatok, ISIN, díjszabás | M2 Fundamentális és szabályozói adat | free | ingyenes | 52/70/61/59 | https://www.keler.hu/
+sec-edgar-log-files | 2 | SEC EDGAR Log File adatkészletek (ki mit töltött le) | M2 Fundamentális és szabályozói adat | free | ingyenes | 57/59/60/65 | https://www.sec.gov/data-research/sec-markets-data/edgar-log-file-data-sets
+hf-edgar-corpus | 2 | EDGAR-CORPUS (Hugging Face, 10-K szekciók) | M2 Fundamentális és szabályozói adat | free | ingyenes | 52/65/62/60 | https://huggingface.co/datasets/eloukas/edgar-corpus
+iborrowdesk | 2 | IBorrowDesk (IBKR kölcsönzési díjak és elérhetőség) | M2 Fundamentális és szabályozói adat | free | ingyenes | 62/56/56/63 | https://www.iborrowdesk.com/
+openinsider | 2 | OpenInsider (Form 4 szűrő) | M2 Fundamentális és szabályozói adat | free | ingyenes | 60/59/57/60 | https://www.openinsider.com/
+truflation | 2 | Truflation (napi alternatív inflációs index) | M3 Makró és statisztika | freemium | ingyenes webes; adatfeed ára nem… | 62/58/55/61 | https://www.truflation.com/
+e-beszamolo-cegjegyzek | 2 | e-beszámoló és e-cégjegyzék… | M2 Fundamentális és szabályozói adat | free | ingyenes | 51/66/62/59 | https://e-beszamolo.im.gov.hu/oldal/kezdolap
+x-api | 2 | X (Twitter) API – pay-per-use | M4 Hírek, szentiment, esemény | paid | 0,005 USD/post-olvasás; 3M post/hó… | 62/56/54/58 | https://docs.x.com/x-api/getting-started/pricing
+quiver-quant | 2 | Quiver Quantitative (kongresszusi kereskedés, lobbi, alt-adat API) | M2 Fundamentális és szabályozói adat | paid | Hobbyist 30 USD/hó, Trader 75 USD/hó… | 58/57/56/58 | https://api.quiverquant.com/
+unctadstat | 2 | UNCTADstat | M3 Makró és statisztika | free | ingyenes | 50/64/59/58 | https://unctadstat.unctad.org/
+conference-board-lei | 2 | Conference Board LEI és Consumer Confidence | M3 Makró és statisztika | freemium | részletes adat előfizetéssel; ár nem… | 52/63/57/56 | https://www.conference-board.org/topics/us-leading-indicators
+coresignal | 2 | Coresignal (álláshirdetések, cég- és munkavállalói adatok) | M3 Alternatív adat | paid | Free; 49 / 199 / 499 / 1000 / 1500 /… | 56/58/57/56 | https://www.coresignal.com/pricing/
+alpha-vantage-news-sentiment | 2 | Alpha Vantage NEWS_SENTIMENT | M4 Hírek, szentiment, esemény | freemium | Free 25/nap; 49,99–249,99 USD/hó (mért)… | 56/59/56/57 | https://www.alphavantage.co/documentation/#news-sentiment
+marketaux | 2 | Marketaux (pénzügyi hír-API entitás-címkézéssel) | M4 Hírek, szentiment, esemény | freemium | Free; 29–199 USD/hó (mért) (~44 €/hó) | 58/58/54/58 | https://www.marketaux.com/pricing
+similarweb | 2 | Similarweb (webforgalom-becslés) | M3 Alternatív adat | paid | Starter ~149 USD/hó havi, ~125 USD/hó… | 56/56/54/57 | https://www.similarweb.com/corp/pricing/
+boe-millennium | 2 | Bank of England 'A millennium of macroeconomic data' | M3 Makró és statisztika | free | ingyenes | 46/64/58/56 | https://www.bankofengland.co.uk/statistics/research-datasets
+maddison-project | 2 | Maddison Project Database | M3 Makró és statisztika | free | ingyenes | 44/63/57/54 | https://www.rug.nl/ggdc/historicaldevelopment/maddison/
+hf-financial-phrasebank | 2 | Financial PhraseBank (Malo et al.) – Hugging Face | M4 Hírek, szentiment, esemény | free | ingyenes | 44/63/58/53 | https://huggingface.co/datasets/takala/financial_phrasebank
+reddit-data-api | 2 | Reddit Data API (+ PRAW) | M4 Hírek, szentiment, esemény | freemium | free 100 QPM (nem kereskedelmi)… | 57/52/51/54 | https://www.reddit.com/wiki/api/
+ilostat | 2 | ILOSTAT | M3 Makró és statisztika | free | ingyenes | 45/61/54/53 | https://www.ilo.org/ilostat
+reinhart-rogoff | 2 | Reinhart–Rogoff válságadatbázis | M3 Makró és statisztika | free | ingyenes | 44/61/55/55 | https://carmenreinhart.com/data/
+hf-financial-news-misc | 2 | További HF pénzügyi hírkorpuszok… | M4 Hírek, szentiment, esemény | free | ingyenes | 43/54/52/49 | https://huggingface.co/datasets/ashraq/financial-news-articles
+lseg-news-mrn | 3 | LSEG (Reuters) News és Machine Readable News (MRN) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat (nem publikus)… | 82/84/81/81 | https://www.lseg.com/en/data-analytics/products/workspace
+bloomberg-terminal-news | 3 | Bloomberg Terminal (hírek, ECO-naptár, BN/First Word) | M4 Hírek, szentiment, esemény | institutional | ~31 980 USD/év/terminál (becsült)… | 80/82/80/80 | https://www.bloomberg.com/professional/products/bloomberg-terminal/
+dow-jones-newswires | 3 | Dow Jones Newswires (+ Factiva archívum, DJ Developer API) | M4 Hírek, szentiment, esemény | paid | ~110 USD/felhasználó/hó vendoron át… | 76/78/74/76 | https://www.dowjones.com/professional/newswires/
+ravenpack | 3 | RavenPack (hír-analitika, esemény-taxonómia) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat | 76/76/72/75 | https://www.ravenpack.com/
+kpler-vortexa | 3 | Kpler és Vortexa (nyersanyag-áramlások, tanker-tracking) | M3 Alternatív adat | institutional | egyedi ajánlat | 70/72/70/72 | https://www.kpler.com/
+bloomberg-eco-surprise | 3 | Bloomberg ECO naptár és ECO SURP meglepetés-indexek | M4 Hírek, szentiment, esemény | institutional | terminál-előfizetés része | 68/75/72/68 | https://www.bloomberg.com/markets/economic-calendar
+sp-global-transcripts | 3 | S&P Global Market Intelligence Transcripts | M2 Fundamentális és szabályozói adat | institutional | egyedi ajánlat | 68/72/68/68 | https://www.spglobal.com/marketintelligence/en/solutions/transcripts
+usgs-earthquakes | 3 | USGS Earthquake API (FDSN) | M3 Makró és statisztika | free | ingyenes | 64/72/63/66 | https://earthquake.usgs.gov/fdsnws/event/1/
+drought-gov | 3 | U.S. Drought Monitor / drought.gov | M3 Makró és statisztika | free | ingyenes | 60/70/65/65 | https://www.drought.gov/
+nasa-firms-tropomi | 3 | NASA FIRMS (aktív tüzek) és Sentinel-5P TROPOMI (NO2) | M3 Alternatív adat | registration | ingyenes | 63/68/62/66 | https://firms.modaps.eosdis.nasa.gov/
+citi-surprise-index | 3 | Citi Economic Surprise Index (Citi Velocity) | M4 Hírek, szentiment, esemény | institutional | Citi-ügyfeleknek / Bloomberg-en | 62/68/66/64 | https://www.citivelocity.com/
+epfr | 3 | EPFR (globális alap-áramlások) | M2 Fundamentális és szabályozói adat | institutional | egyedi ajánlat | 62/66/64/64 | https://www.epfr.com/
+marketpsych-brain-accern | 3 | MarketPsych (LSEG), Brain, Accern (szentiment-adatok) | M4 Hírek, szentiment, esemény | institutional | egyedi ajánlat | 64/65/62/66 | https://www.marketpsych.com/
+copernicus-ads-cams | 3 | Copernicus Atmosphere Data Store (CAMS) és EWDS | M3 Makró és statisztika | free | ingyenes | 57/70/63/62 | https://ads.atmosphere.copernicus.eu/
+spire-maritime | 3 | Spire Maritime (műholdas AIS) | M3 Alternatív adat | institutional | egyedi ajánlat | 62/66/60/64 | https://www.spire.com/maritime/
+planet-labs | 3 | Planet (napi 3 m-es műholdképek, Sentinel Hub) | M3 Alternatív adat | institutional | egyedi ajánlat | 60/66/63/64 | https://www.planet.com/pricing/
+s3-partners | 3 | S3 Partners (short interest, financing) | M2 Fundamentális és szabályozói adat | institutional | egyedi ajánlat (nem publikus) | 63/62/60/63 | https://www.s3partners.com/
+epo-ops | 3 | EPO Open Patent Services (OPS) | M3 Alternatív adat | registration | kvótáig ingyenes | 55/68/64/62 | https://www.epo.org/en/searching-for-patents/data/web-services/ops
+card-spending-panels | 3 | Kártyás költés panelek… | M3 Alternatív adat | institutional | egyedi ajánlat (nem publikus) | 61/62/63/62 | https://secondmeasure.com/
+bluesky-firehose | 3 | Bluesky (AT Protocol) firehose | M4 Hírek, szentiment, esemény | free | ingyenes | 64/61/56/62 | https://docs.bsky.app/docs/advanced-guides/firehose
+sec-form-d | 3 | SEC Form D adatkészletek (magánkibocsátások) | M2 Fundamentális és szabályozói adat | free | ingyenes | 56/64/60/61 | https://www.sec.gov/data-research/sec-markets-data/form-d-data-sets
+global-fishing-watch | 3 | Global Fishing Watch API és adatletöltés | M3 Alternatív adat | registration | ingyenes, nem kereskedelmi | 56/64/60/58 | https://globalfishingwatch.org/our-apis/
+google-patents-lens | 3 | Google Patents Public Datasets (BigQuery) és Lens.org | M3 Alternatív adat | freemium | BigQuery díjszabás; Lens API ár nem… | 53/66/62/59 | https://console.cloud.google.com/marketplace/product/google_patents_public_datasets/google-patents-public-data
+other-squawk-services | 3 | LiveSquawk, RANsquawk, TradeTheNews, The Fly, Briefing.com | M4 Hírek, szentiment, esemény | paid | ár nem ellenőrzött | 62/60/56/62 | https://www.livesquawk.com/
+acled | 3 | ACLED (fegyveres konfliktus- és tüntetés-események) | M4 Hírek, szentiment, esemény | registration | kutatásra ingyenes; kereskedelmi ár nem… | 54/66/62/58 | https://www.acleddata.com/
+lseg-lipper | 3 | LSEG Lipper (alapadatok, flows) | M2 Fundamentális és szabályozói adat | institutional | egyedi ajánlat | 56/62/59/58 | https://www.lipperalpha.com/
+lightcast-revelio-linkup | 3 | Lightcast, Revelio Labs, LinkUp (intézményi munkaerőpiaci alt-adat) | M3 Alternatív adat | institutional | egyedi ajánlat | 58/60/58/60 | https://www.lightcast.io/
+cftc-swaps-report | 3 | CFTC Weekly Swaps Report | M3 Makró és statisztika | free | ingyenes | 52/64/59/58 | https://www.cftc.gov/MarketReports/SwapsReports/index.htm
+pricestats-bpp | 3 | PriceStats / Billion Prices Project | M3 Makró és statisztika | free | ingyenes | 60/58/54/60 | https://thebillionpricesproject.com/
+flightaware-aeroapi | 3 | FlightAware AeroAPI | M3 Alternatív adat | paid | lekérdezésenkénti díj; ár nem… | 56/63/55/56 | https://www.flightaware.com/commercial/aeroapi/
+amis-igc | 3 | AMIS Market Monitor és IGC gabonapiaci jelentések | M3 Makró és statisztika | free | ingyenes | 50/64/58/58 | https://www.amis-outlook.org/
+electricity-maps | 3 | Electricity Maps (szén-intenzitás, áram-mix API) | M3 Makró és statisztika | paid | Sustainability: 2500 EUR/év/ország-tól… | 56/61/54/56 | https://www.electricitymaps.com/pricing
+energy-institute-statistical-review | 3 | Energy Institute Statistical Review of World Energy | M3 Makró és statisztika | free | ingyenes | 46/68/61/55 | https://www.energyinstitute.org/statistical-review
+sensor-tower-dataai | 3 | Sensor Tower (benne a data.ai / App Annie) | M3 Alternatív adat | institutional | egyedi ajánlat | 57/57/56/58 | https://sensortower.com/
+snowflake-marketplace | 3 | Snowflake Marketplace | M3 Alternatív adat | freemium | adatkészletenként + Snowflake-díj | 53/62/57/56 | https://www.snowflake.com/en/data-cloud/marketplace/
+xbrl-us-api | 3 | XBRL US API (normalizált XBRL-adat) | M2 Fundamentális és szabályozói adat | freemium | tagoknak/nem kereskedelmi célra… | 50/62/58/54 | https://www.xbrl.us/data/
+ourworldindata | 3 | Our World in Data | M3 Makró és statisztika | free | ingyenes | 47/65/58/54 | https://ourworldindata.org/
+penn-world-table | 3 | Penn World Table | M3 Makró és statisztika | free | ingyenes | 46/66/60/55 | https://www.rug.nl/ggdc/productivity/pwt/
+challenger-layoffs | 3 | Challenger, Gray & Christmas elbocsátási jelentés | M3 Makró és statisztika | free | ingyenes | 55/58/52/58 | https://www.challengergray.com/
+spaceknow-orbital | 3 | SpaceKnow és Orbital Insight (műholdas gazdasági indexek) | M3 Alternatív adat | institutional | egyedi ajánlat | 56/56/55/60 | https://www.spaceknow.com/
+thinknum | 3 | Thinknum Alternative Data | M3 Alternatív adat | institutional | egyedi ajánlat | 56/56/56/56 | https://www.thinknum.com/
+foot-traffic-placer-advan-safegraph | 3 | Lábforgalom: Placer.ai, Advan, SafeGraph | M3 Alternatív adat | institutional | egyedi ajánlat (mért: nincs publikus ár) | 56/56/56/56 | https://www.placer.ai/pricing
+mediacloud | 3 | Media Cloud (nyílt hírkereső) | M4 Hírek, szentiment, esemény | registration | ingyenes | 53/60/54/57 | https://www.mediacloud.org/
+investing-com-calendar | 3 | Investing.com gazdasági naptár | M4 Hírek, szentiment, esemény | free | ingyenes webes | 56/58/56/52 | https://www.investing.com/economic-calendar/
+nav-adatok | 3 | NAV (Nemzeti Adó- és Vámhivatal) – adóinformációk, árfolyamok… | M3 Makró és statisztika | free | ingyenes | 46/66/58/54 | https://nav.gov.hu/
+un-wpp | 3 | UN World Population Prospects | M3 Makró és statisztika | free | ingyenes | 44/65/58/54 | https://population.un.org/wpp/
+myshiptracking-datalastic | 3 | MyShipTracking és Datalastic AIS API-k | M3 Alternatív adat | paid | 90–199 EUR/hó-tól (becsült) (~90 €/hó) | 57/55/50/56 | https://datalastic.com/pricing/
+adsb-community-feeds | 3 | ADS-B Exchange, adsb.lol, airplanes.live (közösségi ADS-B) | M3 Alternatív adat | freemium | ár nem ellenőrzött | 58/54/52/56 | https://www.adsbexchange.com/data/
+stocknewsapi | 3 | StockNewsAPI | M4 Hírek, szentiment, esemény | paid | 19,99 / 49,99 USD/hó (mért) (~18 €/hó) | 56/56/52/56 | https://stocknewsapi.com/pricing
+westmetall-lme | 3 | Westmetall LME-árak (nem hivatalos) | M3 Makró és statisztika | free | ingyenes | 51/58/54/53 | https://www.westmetall.com/en/markdaten.php
+xeneta | 3 | Xeneta (tengeri és légi fuvardíj-adat) | M3 Makró és statisztika | institutional | egyedi ajánlat | 52/58/52/54 | https://www.xeneta.com/
+stocktwits | 3 | StockTwits (cashtag-alapú befektetői közösség) | M4 Hírek, szentiment, esemény | registration | ár nem ellenőrzött | 58/52/50/56 | https://api.stocktwits.com/developers
+aaii-naaim-sentiment | 3 | AAII Sentiment Survey, NAAIM Exposure, Investors Intelligence | M3 Makró és statisztika | free | ingyenes | 51/56/51/54 | https://www.naaim.org/programs/naaim-exposure-index/
+commercial-weather-apis | 3 | Kereskedelmi időjárás-API-k… | M3 Makró és statisztika | paid | ár nem ellenőrzött | 51/58/49/52 | https://www.meteoblue.com/en/weather-api
+general-news-apis | 3 | Általános hír-API-k: GNews, TheNewsAPI, Newsdata.io, Mediastack | M4 Hírek, szentiment, esemény | freemium | GNews 49,99 EUR/hó-tól; TheNewsAPI 19… | 53/55/50/54 | https://gnews.io/pricing
+telegram-api | 3 | Telegram API (MTProto) – kripto/FX csatornák | M4 Hírek, szentiment, esemény | free | ingyenes | 58/50/48/54 | https://core.telegram.org/api
+chartexchange | 3 | ChartExchange (FTD, short volume, borrow aggregátor) | M2 Fundamentális és szabályozói adat | freemium | freemium, ár nem ellenőrzött | 52/53/50/52 | https://chartexchange.com/
+seeking-alpha-transcripts | 3 | Seeking Alpha (átiratok, elemzések) | M2 Fundamentális és szabályozói adat | paid | Premium előfizetés; ár nem ellenőrzött | 52/54/51/49 | https://seekingalpha.com/
+earnings-whispers | 3 | Earnings Whispers (whisper number, naptár) | M2 Fundamentális és szabályozói adat | freemium | ár nem ellenőrzött | 53/52/50/52 | https://www.earningswhispers.com/
+zacks-earnings-calendar | 3 | Zacks earnings naptár | M2 Fundamentális és szabályozói adat | free | ingyenes webes | 50/56/51/50 | https://www.zacks.com/earnings/earnings-calendar
+climate-trace | 3 | Climate TRACE (létesítményszintű kibocsátás) | M3 Alternatív adat | free | ingyenes | 48/56/52/54 | https://www.climatetrace.org/
+appfigures | 3 | Appfigures (app-intelligencia API) | M3 Alternatív adat | freemium | ár nem ellenőrzött | 52/53/50/54 | https://www.appfigures.com/pricing
+datarade | 3 | Datarade (adat-piactér, összehasonlító) | M3 Alternatív adat | free | böngészés ingyenes; termékárak… | 48/56/52/52 | https://datarade.ai/
+earnings-event-calendars-free | 3 | Nasdaq earnings naptár (nyílt webes) | M4 Hírek, szentiment, esemény | free | ingyenes | 50/56/52/49 | https://www.nasdaq.com/market-activity/earnings
+global-financial-data | 3 | Global Financial Data (fizetős hosszú pénzügyi idősorok) | M3 Makró és statisztika | paid | egyedi ajánlat | 43/58/54/50 | https://www.globalfinancialdata.com/
+eagle-alpha | 3 | Eagle Alpha (alt-adat piactér és tanácsadás) | M3 Alternatív adat | institutional | egyedi ajánlat | 48/54/51/52 | https://www.eaglealpha.com/
+newsapi-org | 3 | NewsAPI.org | M4 Hírek, szentiment, esemény | freemium | Free (csak fejlesztés); Business 449… | 50/54/49/49 | https://newsapi.org/pricing
+arctic-shift | 3 | Arctic Shift (Reddit-archívum, Pushshift-utód) | M4 Hírek, szentiment, esemény | free | ingyenes | 50/52/53/51 | https://arctic-shift.photon-reddit.com/
+wsb-aggregators | 3 | WSB-említés aggregátorok (ApeWisdom, SwaggyStocks, Tradestie) | M4 Hírek, szentiment, esemény | free | ingyenes | 54/50/47/53 | https://apewisdom.io/
+fintel | 3 | Fintel (13F, insider, short squeeze score) | M2 Fundamentális és szabályozói adat | freemium | ár nem ellenőrzött | 49/52/49/50 | https://www.fintel.io/
+whalewisdom | 3 | WhaleWisdom (13F-elemző) | M2 Fundamentális és szabályozói adat | freemium | ár nem ellenőrzött | 46/54/52/50 | https://www.whalewisdom.com/
+other-fx-calendars | 3 | FXStreet, Myfxbook, DailyFX, MarketWatch naptárak | M4 Hírek, szentiment, esemény | free | ingyenes webes | 50/52/48/46 | https://www.fxstreet.com/economic-calendar
+hf-twitter-financial-news-sentiment | 3 | Twitter Financial News Sentiment (zeroshot) – Hugging Face | M4 Hírek, szentiment, esemény | free | ingyenes | 42/56/51/50 | https://huggingface.co/datasets/zeroshot/twitter-financial-news-sentiment
+capitol-trades | 3 | Capitol Trades (kongresszusi kereskedések) | M2 Fundamentális és szabályozói adat | free | ingyenes | 44/50/47/46 | https://www.capitoltrades.com/
+semrush-ahrefs | 3 | Semrush és Ahrefs (SEO/forgalom-becslés) | M3 Alternatív adat | paid | ár nem ellenőrzött | 47/48/44/48 | https://www.semrush.com/prices/
+neudata-battlefin | 3 | Neudata és BattleFin (alt-adat felderítés, scoring) | M3 Alternatív adat | institutional | egyedi ajánlat | 43/52/46/48 | https://www.neudata.co/
+etfdb | 3 | ETF Database (VettaFi) | M2 Fundamentális és szabályozói adat | freemium | ár nem ellenőrzött | 44/48/44/44 | https://www.etfdb.com/
+dataroma | 3 | Dataroma (superinvestor 13F-portfóliók) | M2 Fundamentális és szabályozói adat | free | ingyenes | 42/48/46/45 | https://www.dataroma.com/m/home.php
+clio-infra | 3 | Clio Infra | M3 Makró és statisztika | free | ingyenes | 38/52/46/48 | https://www.clio-infra.eu/
+measuringworth | 3 | MeasuringWorth | M3 Makró és statisztika | free | ingyenes | 37/53/46/46 | https://www.measuringworth.com/
+motley-fool-transcripts | 3 | The Motley Fool earnings call átiratok | M2 Fundamentális és szabályozói adat | free | ingyenes olvasás | 43/46/44/42 | https://www.fool.com/earnings-call-transcripts/
 
 ## Nyílt forráskódú szoftverek: backtest, végrehajtás, adatbázis, ML, idősor-alapmodellek
-oss-nautilus-trader | NautilusTrader | free | ingyenes (nyílt forrás) | 77/92/84/76 | https://github.com/nautechsystems/nautilus_trader
-oss-lean | QuantConnect LEAN | free | ingyenes (nyílt forrás) | 72/88/82/73 | https://github.com/QuantConnect/Lean
-oss-clickhouse | ClickHouse | free | ingyenes (nyílt forrás) | 70/92/81/70 | https://github.com/ClickHouse/ClickHouse
-oss-polars | Polars | free | ingyenes (nyílt forrás) | 70/91/81/70 | https://github.com/pola-rs/polars
-oss-lightgbm | LightGBM | free | ingyenes (nyílt forrás) | 71/86/80/72 | https://github.com/microsoft/LightGBM
-oss-questdb | QuestDB | free | ingyenes (nyílt forrás) | 72/88/78/70 | https://github.com/questdb/questdb
-oss-duckdb | DuckDB | free | ingyenes (nyílt forrás) | 68/90/81/70 | https://github.com/duckdb/duckdb
-oss-statsmodels | statsmodels | free | ingyenes (nyílt forrás) | 64/90/83/70 | https://github.com/statsmodels/statsmodels
-oss-prometheus | Prometheus | free | ingyenes (nyílt forrás) | 67/90/79/68 | https://github.com/prometheus/prometheus
-oss-arch | arch | free | ingyenes (nyílt forrás) | 66/86/81/71 | https://github.com/bashtage/arch
-oss-ta-lib-python | TA-Lib (Python wrapper) | free | ingyenes (nyílt forrás) | 70/85/76/70 | https://github.com/TA-Lib/ta-lib-python
-oss-arrow | Apache Arrow | free | ingyenes (nyílt forrás) | 67/89/76/67 | https://github.com/apache/arrow
-oss-grafana | Grafana | free | ingyenes (nyílt forrás) | 66/90/78/66 | https://github.com/grafana/grafana
-oss-nats-server | NATS | free | ingyenes (nyílt forrás) | 68/88/76/67 | https://github.com/nats-io/nats-server
-oss-mt5-strategy-tester | MT5 Strategy Tester (beépített) | free | ingyenes (MQL5 Cloud Network ügynökök fi | 70/84/78/72 | https://www.metatrader5.com/en/automated-trading/strategy-tester
-oss-vectorbt | vectorbt (nyílt) | free | ingyenes (nyílt forrás) | 72/81/75/70 | https://github.com/polakowo/vectorbt
-oss-arcticdb | ArcticDB | free | ingyenes (nyílt forrás) | 66/86/77/66 | https://github.com/man-group/ArcticDB
-oss-lightweight-charts | TradingView Lightweight Charts | free | ingyenes (nyílt forrás) | 66/88/76/65 | https://github.com/tradingview/lightweight-charts
-oss-cvxpy | CVXPY | free | ingyenes (nyílt forrás) | 62/88/78/66 | https://github.com/cvxpy/cvxpy
-oss-statsforecast | StatsForecast | free | ingyenes (nyílt forrás) | 66/84/76/68 | https://github.com/Nixtla/statsforecast
-oss-pyzmq | pyzmq | free | ingyenes (nyílt forrás) | 68/85/72/66 | https://github.com/zeromq/pyzmq
-oss-mlflow | MLflow | free | ingyenes (nyílt forrás) | 61/89/79/64 | https://github.com/mlflow/mlflow
-oss-uv | uv | free | ingyenes (nyílt forrás) | 66/86/74/66 | https://github.com/astral-sh/uv
-oss-skfolio | skfolio | free | ingyenes (nyílt forrás) | 62/84/78/67 | https://github.com/skfolio/skfolio
-oss-optuna | Optuna | free | ingyenes (nyílt forrás) | 61/84/76/64 | https://github.com/optuna/optuna
-oss-hypothesis | Hypothesis | free | ingyenes (nyílt forrás) | 60/86/76/63 | https://github.com/HypothesisWorks/hypothesis
-oss-awesome-quant | awesome-quant | free | ingyenes (nyílt forrás) | 66/81/72/66 | https://github.com/wilsonfreitas/awesome-quant
-oss-gitleaks | Gitleaks | free | ingyenes (nyílt forrás) | 62/83/72/64 | https://github.com/gitleaks/gitleaks
-oss-mt5linux | mt5linux | free | ingyenes (nyílt forrás) | 66/76/70/66 | https://github.com/lucas-campagna/mt5linux
-oss-xgboost | XGBoost | free | ingyenes (nyílt forrás) | 70/84/78/71 | https://github.com/dmlc/xgboost
-oss-vectorbt-pro | VectorBT PRO | paid | $25/hó; $225/év (=18,75 $/hó); $500 élet | 71/84/78/68 | https://vectorbt.pro/
-oss-finos-perspective | Perspective (FINOS) | free | ingyenes (nyílt forrás) | 68/86/74/66 | https://github.com/finos/perspective
-oss-quantlib | QuantLib | free | ingyenes (nyílt forrás) | 64/86/78/68 | https://github.com/lballabio/QuantLib
-oss-qlib | Microsoft Qlib | free | ingyenes (nyílt forrás) | 68/78/76/73 | https://github.com/microsoft/qlib
-oss-river | River | free | ingyenes (nyílt forrás) | 69/79/72/70 | https://github.com/online-ml/river
-oss-zstd | Zstandard (zstd) | free | ingyenes (nyílt forrás) | 65/85/72/66 | https://github.com/facebook/zstd
-oss-valkey | Valkey | free | ingyenes (nyílt forrás) | 66/84/72/65 | https://github.com/valkey-io/valkey
-oss-best-of-algorithmic-trading | Best-of Algorithmic Trading | free | ingyenes (nyílt forrás) | 68/82/72/67 | https://github.com/merovinh/best-of-algorithmic-trading
-oss-mapie | MAPIE | free | ingyenes (nyílt forrás) | 64/80/75/68 | https://github.com/scikit-learn-contrib/MAPIE
-oss-chronos-forecasting | Chronos / Chronos-Bolt / Chronos-2 (kód) | free | ingyenes (nyílt forrás) | 64/81/74/67 | https://github.com/amazon-science/chronos-forecasting
-oss-kafka | Apache Kafka | free | ingyenes (nyílt forrás) | 62/86/74/64 | https://github.com/apache/kafka
-oss-ruff | Ruff | free | ingyenes (nyílt forrás) | 64/84/72/64 | https://github.com/astral-sh/ruff
-hf-amazon-chronos-2 | Chronos-2 (HF) | free | ingyenes (nyílt forrás) | 64/81/74/67 | https://huggingface.co/amazon/chronos-2
-oss-quickfixj | QuickFIX/J | free | ingyenes (nyílt forrás) | 66/80/70/66 | https://github.com/quickfix-j/quickfixj
-oss-feast | Feast | free | ingyenes (nyílt forrás) | 64/81/72/65 | https://github.com/feast-dev/feast
-oss-dagster | Dagster | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/dagster-io/dagster
-oss-ray | Ray | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/ray-project/ray
-oss-plotly-py | Plotly (Python) | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/plotly/plotly.py
-oss-streamlit | Streamlit | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/streamlit/streamlit
-oss-machine-learning-for-trading | Machine Learning for Trading (kódok) | free | ingyenes (nyílt forrás) | 61/78/74/67 | https://github.com/stefan-jansen/machine-learning-for-trading
-oss-kronos | Kronos (pénzügyi K-line alapmodell) | free | ingyenes (nyílt forrás) | 68/73/70/70 | https://github.com/shiyu-coder/Kronos
-hf-google-timesfm-2-5-200m-pytorch | TimesFM 2.5 200M (HF) | free | ingyenes (nyílt forrás) | 63/78/72/66 | https://huggingface.co/google/timesfm-2.5-200m-pytorch
-oss-ta-lib | TA-Lib (C mag) | free | ingyenes (nyílt forrás) | 63/78/68/64 | https://github.com/TA-Lib/ta-lib
-oss-timesfm | TimesFM (kód) | free | ingyenes (nyílt forrás) | 61/78/72/64 | https://github.com/google-research/timesfm
-oss-timescaledb | TimescaleDB | free | ingyenes (nyílt forrás) | 60/80/72/60 | https://github.com/timescale/timescaledb
-oss-prefect | Prefect | free | ingyenes (nyílt forrás) | 59/82/72/61 | https://github.com/PrefectHQ/prefect
-oss-loki | Grafana Loki | free | ingyenes (nyílt forrás) | 60/81/71/60 | https://github.com/grafana/loki
-oss-openbao | OpenBao | free | ingyenes (nyílt forrás) | 60/80/70/62 | https://github.com/openbao/openbao
-oss-dash | Dash | free | ingyenes (nyílt forrás) | 58/82/72/61 | https://github.com/plotly/dash
-oss-awesome-systematic-trading | awesome-systematic-trading | free | ingyenes (nyílt forrás) | 64/76/68/66 | https://github.com/paperswithbacktest/awesome-systematic-trading
-oss-riskfolio-lib | Riskfolio-Lib | free | ingyenes (nyílt forrás) | 59/78/72/64 | https://github.com/dcajasn/Riskfolio-Lib
-oss-neuralforecast | NeuralForecast | free | ingyenes (nyílt forrás) | 60/77/70/64 | https://github.com/Nixtla/neuralforecast
-oss-mlforecast | MLForecast | free | ingyenes (nyílt forrás) | 60/77/70/64 | https://github.com/Nixtla/mlforecast
-oss-quickfixn | QuickFIX/n | free | ingyenes (nyílt forrás) | 64/76/66/64 | https://github.com/connamara/quickfixn
-hf-neoquasar-kronos-base | Kronos-base (HF) | free | ingyenes (nyílt forrás) | 66/70/68/68 | https://huggingface.co/NeoQuasar/Kronos-base
-oss-sktime | sktime | free | ingyenes (nyílt forrás) | 58/76/70/62 | https://github.com/sktime/sktime
-oss-darts | Darts | free | ingyenes (nyílt forrás) | 58/76/70/62 | https://github.com/unit8co/darts
-oss-openbb | OpenBB Platform | free | ingyenes (nyílt forrás) | 60/76/70/62 | https://github.com/OpenBB-finance/OpenBB
-oss-pandera | pandera | free | ingyenes (nyílt forrás) | 58/79/69/60 | https://github.com/unionai-oss/pandera
-oss-trufflehog | TruffleHog | free | ingyenes (nyílt forrás) | 58/78/68/58 | https://github.com/trufflesecurity/trufflehog
-oss-rd-agent | RD-Agent (Microsoft) | free | ingyenes (nyílt forrás) | 62/70/68/66 | https://github.com/microsoft/RD-Agent
-oss-opensourcerisk-engine | Open Source Risk Engine (ORE) | free | ingyenes (nyílt forrás) | 54/78/70/61 | https://github.com/OpenSourceRisk/Engine
-oss-ruptures | ruptures | free | ingyenes (nyílt forrás) | 61/72/66/66 | https://github.com/deepcharles/ruptures
-oss-evidently | Evidently | free | ingyenes (nyílt forrás) | 57/74/66/62 | https://github.com/evidentlyai/evidently
-oss-great-expectations | Great Expectations | free | ingyenes (nyílt forrás) | 54/78/69/58 | https://github.com/great-expectations/great_expectations
-oss-awesome-ai-in-finance | awesome-ai-in-finance | free | ingyenes (nyílt forrás) | 62/72/63/62 | https://github.com/georgezouq/awesome-ai-in-finance
-oss-metatrader5-docker-image | MetaTrader5 Docker Image (gmag11) | free | ingyenes (nyílt forrás) | 58/72/64/61 | https://github.com/gmag11/MetaTrader5-Docker-Image
-oss-alphalens-reloaded | alphalens-reloaded | free | ingyenes (nyílt forrás) | 58/68/64/62 | https://github.com/stefan-jansen/alphalens-reloaded
-oss-mql5-algo-forge | MQL5 Algo Forge | registration | ingyenes (MQL5.com fiók) | 56/70/62/58 | https://forge.mql5.io/
-oss-backtesting-py | Backtesting.py | free | ingyenes (nyílt forrás) | 56/68/62/56 | https://github.com/kernc/backtesting.py
-oss-pyfolio-reloaded | pyfolio-reloaded | free | ingyenes (nyílt forrás) | 53/70/63/58 | https://github.com/stefan-jansen/pyfolio-reloaded
-oss-quantstats | QuantStats | free | ingyenes (nyílt forrás) | 52/68/62/58 | https://github.com/ranaroussi/quantstats
-oss-gift-eval | GIFT-Eval benchmark | free | ingyenes (nyílt forrás) | 50/71/62/54 | https://github.com/SalesforceAIResearch/gift-eval
-oss-empyrical-reloaded | empyrical-reloaded | free | ingyenes (nyílt forrás) | 52/68/60/56 | https://github.com/stefan-jansen/empyrical-reloaded
-oss-ea31337-classes | EA31337 Framework (classes) | free | ingyenes (nyílt forrás) | 55/65/58/58 | https://github.com/EA31337/EA31337-classes
-oss-catboost | CatBoost | free | ingyenes (nyílt forrás) | 66/81/75/68 | https://github.com/catboost/catboost
-oss-grpc | gRPC | free | ingyenes (nyílt forrás) | 64/84/72/64 | https://github.com/grpc/grpc
-oss-c-blosc2 | C-Blosc2 | free | ingyenes (nyílt forrás) | 64/80/68/64 | https://github.com/Blosc/c-blosc2
-oss-victoriametrics | VictoriaMetrics | free | ingyenes (nyílt forrás) | 61/80/69/62 | https://github.com/VictoriaMetrics/VictoriaMetrics
-oss-opentelemetry-collector | OpenTelemetry Collector | free | ingyenes (nyílt forrás) | 59/80/69/60 | https://github.com/open-telemetry/opentelemetry-collector
-hf-amazon-chronos-bolt-base | Chronos-Bolt Base (HF) | free | ingyenes (nyílt forrás) | 64/74/66/66 | https://huggingface.co/amazon/chronos-bolt-base
-oss-redpanda | Redpanda | free | ingyenes (nyílt forrás) | 58/79/69/56 | https://github.com/redpanda-data/redpanda
-oss-echarts | Apache ECharts | free | ingyenes (nyílt forrás) | 58/78/68/60 | https://github.com/apache/echarts
-oss-iceberg | Apache Iceberg | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/iceberg
-oss-databento-python | databento-python | paid | ? | 60/75/65/60 | https://github.com/databento/databento-python
-oss-airflow | Apache Airflow | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/airflow
-oss-superset | Apache Superset | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/superset
-oss-quantlib-swig | QuantLib-SWIG (Python/Java/C#) | free | ingyenes (nyílt forrás) | 56/76/67/60 | https://github.com/lballabio/QuantLib-SWIG
-oss-granite-tsfm | IBM Granite TinyTimeMixer (TTM) | free | ingyenes (nyílt forrás) | 61/72/63/62 | https://github.com/ibm-granite/granite-tsfm
-oss-quickfix | QuickFIX (C++) | free | ingyenes (nyílt forrás) | 62/71/61/64 | https://github.com/quickfix/quickfix
-oss-bokeh | Bokeh | free | ingyenes (nyílt forrás) | 56/77/66/58 | https://github.com/bokeh/bokeh
-hf-ibm-granite-granite-timeseries-ttm-r2 | Granite TTM r2 (HF) | free | ingyenes (nyílt forrás) | 62/71/62/62 | https://huggingface.co/ibm-granite/granite-timeseries-ttm-r2
-hf-neoquasar-kronos-small | Kronos-small (HF) | free | ingyenes (nyílt forrás) | 64/68/63/65 | https://huggingface.co/NeoQuasar/Kronos-small
-oss-linearmodels | linearmodels | free | ingyenes (nyílt forrás) | 54/75/67/59 | https://github.com/bashtage/linearmodels
-oss-gluonts | GluonTS | free | ingyenes (nyílt forrás) | 56/72/66/61 | https://github.com/awslabs/gluonts
-oss-pykalman | pykalman | free | ingyenes (nyílt forrás) | 61/68/63/64 | https://github.com/pykalman/pykalman
-oss-stable-baselines3 | Stable-Baselines3 | free | ingyenes (nyílt forrás) | 54/73/64/59 | https://github.com/DLR-RM/stable-baselines3
-oss-influxdb | InfluxDB | free | ingyenes (nyílt forrás) | 58/72/61/56 | https://github.com/influxdata/influxdb
-oss-dbt-core | dbt Core | free | ingyenes (nyílt forrás) | 52/76/66/56 | https://github.com/dbt-labs/dbt-core
-oss-barter-rs | Barter (Rust) | free | ingyenes (nyílt forrás) | 62/65/58/62 | https://github.com/barter-rs/barter-rs
-oss-dvc | DVC | free | ingyenes (nyílt forrás) | 52/74/65/56 | https://github.com/iterative/dvc
-oss-klinechart | KLineChart | free | ingyenes (nyílt forrás) | 57/70/60/57 | https://github.com/klinecharts/KLineChart
-hf-google-timesfm-2-0-500m-pytorch | TimesFM 2.0 500M (HF) | free | ingyenes (nyílt forrás) | 56/68/62/62 | https://huggingface.co/google/timesfm-2.0-500m-pytorch
-oss-zipline-reloaded | zipline-reloaded | free | ingyenes (nyílt forrás) | 54/68/62/60 | https://github.com/stefan-jansen/zipline-reloaded
-oss-finrl | FinRL | free | ingyenes (nyílt forrás) | 56/66/62/61 | https://github.com/AI4Finance-Foundation/FinRL
-oss-tsfresh | tsfresh | free | ingyenes (nyílt forrás) | 53/69/64/60 | https://github.com/blue-yonder/tsfresh
-oss-vnpy | VeighNa (vn.py) | free | ingyenes (nyílt forrás) | 56/66/60/58 | https://github.com/vnpy/vnpy
-oss-cvxportfolio | Cvxportfolio | free | ingyenes (nyílt forrás) | 53/68/62/57 | https://github.com/cvxgrp/cvxportfolio
-oss-datadog-toto | Toto (Datadog) | free | ingyenes (nyílt forrás) | 55/67/59/58 | https://github.com/DataDog/toto
-oss-tirex | TiRex (NX-AI) | free | ingyenes (nyílt forrás) | 55/66/62/54 | https://github.com/NX-AI/tirex
-oss-wandb | Weights & Biases (SDK) | freemium | ? | 49/73/64/50 | https://github.com/wandb/wandb
-oss-pathway | Pathway | free | ingyenes (nyílt forrás) | 56/67/60/53 | https://github.com/pathwaycom/pathway
-hf-datadog-toto-open-base-1-0 | Toto Open Base 1.0 (HF) | free | ingyenes (nyílt forrás) | 55/67/59/58 | https://huggingface.co/Datadog/Toto-Open-Base-1.0
-hf-nx-ai-tirex | TiRex (HF) | free | ingyenes (nyílt forrás) | 55/66/62/54 | https://huggingface.co/NX-AI/TiRex
-hf-prosusai-finbert | FinBERT (HF, ProsusAI) | free | ingyenes (nyílt forrás) | 58/65/60/52 | https://huggingface.co/ProsusAI/finbert
-oss-bt | bt | free | ingyenes (nyílt forrás) | 53/66/60/58 | https://github.com/pmorissette/bt
-oss-abides-jpmc-public | ABIDES (J.P. Morgan) | free | ingyenes (nyílt forrás) | 56/61/59/64 | https://github.com/jpmorganchase/abides-jpmc-public
-oss-risklabai-py | RiskLabAI.py | free | ingyenes (nyílt forrás) | 56/62/60/60 | https://github.com/RiskLabAI/RiskLabAI.py
-oss-hmmlearn | hmmlearn | free | ingyenes (nyílt forrás) | 56/62/58/62 | https://github.com/hmmlearn/hmmlearn
-oss-time-series-library | Time-Series-Library (TSLib) | free | ingyenes (nyílt forrás) | 52/67/60/58 | https://github.com/thuml/Time-Series-Library
-oss-fingpt | FinGPT | free | ingyenes (nyílt forrás) | 56/62/60/58 | https://github.com/AI4Finance-Foundation/FinGPT
-oss-finbert | FinBERT (Prosus) | free | ingyenes (nyílt forrás) | 56/64/60/54 | https://github.com/ProsusAI/finBERT
-oss-best-of-ml-python | best-of-ml-python | free | ingyenes (nyílt forrás) | 52/68/58/56 | https://github.com/ml-tooling/best-of-ml-python
-hf-mrm8488-distilroberta-finetuned-financial-news-sentiment-analysis | DistilRoBERTa financial news sentiment (HF) | free | ingyenes (nyílt forrás) | 61/60/52/62 | https://huggingface.co/mrm8488/distilroberta-finetuned-financial-news-sentiment-analysis
-oss-ffn | ffn | free | ingyenes (nyílt forrás) | 50/66/60/55 | https://github.com/pmorissette/ffn
-oss-pyportfolioopt | PyPortfolioOpt | free | ingyenes (nyílt forrás) | 51/66/59/56 | https://github.com/robertmartin8/PyPortfolioOpt
-oss-pybroker | PyBroker | free | ingyenes (nyílt forrás) | 52/62/58/54 | https://github.com/edtechre/pybroker
-oss-uni2ts | Moirai (uni2ts) | free | ingyenes (nyílt forrás) | 52/64/60/50 | https://github.com/SalesforceAIResearch/uni2ts
-oss-aiomql | aiomql | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://github.com/Ichinga-Samuel/aiomql
-hf-salesforce-moirai-2-0-r-small | Moirai 2.0 R small (HF) | free | ingyenes (nyílt forrás) | 54/62/58/50 | https://huggingface.co/Salesforce/moirai-2.0-R-small
-hf-thuml-sundial-base-128m | Sundial base 128M (HF) | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://huggingface.co/thuml/sundial-base-128m
-oss-mlfinlab-commercial | MLFinLab (Hudson & Thames, fizetős) | paid | £100 (+VAT)/hó/felhasználó (Business); E | 51/63/60/53 | https://hudsonthames.org/mlfinlab/
-oss-backtrader | backtrader | free | ingyenes (nyílt forrás) | 53/60/54/58 | https://github.com/mementum/backtrader
-oss-financepy | FinancePy | free | ingyenes (nyílt forrás) | 48/64/58/51 | https://github.com/domokane/FinancePy
-oss-moment-timeseries-foundation-model-moment | MOMENT (kód) | free | ingyenes (nyílt forrás) | 52/62/55/56 | https://github.com/moment-timeseries-foundation-model/moment
-oss-large-time-series-model | Timer / Sundial (thuml) | free | ingyenes (nyílt forrás) | 52/62/55/56 | https://github.com/thuml/Large-Time-Series-Model
-oss-mql4-lib | mql4-lib | free | ingyenes (nyílt forrás) | 53/61/53/58 | https://github.com/dingmaotu/mql4-lib
-oss-awesome-quant-machine-learning-trading | Awesome Quant ML Trading | free | ingyenes (nyílt forrás) | 52/62/54/57 | https://github.com/grananqvist/Awesome-Quant-Machine-Learning-Trading
-oss-kelvins-awesome-mlops | awesome-mlops (kelvins) | free | ingyenes (nyílt forrás) | 51/64/54/54 | https://github.com/kelvins/awesome-mlops
-oss-basana | Basana | free | ingyenes (nyílt forrás) | 52/60/53/54 | https://github.com/gbeced/basana
-oss-lumibot | Lumibot | free | ingyenes (nyílt forrás) | 50/62/56/51 | https://github.com/Lumiwealth/lumibot
-oss-ta | ta (Technical Analysis Library) | free | ingyenes (nyílt forrás) | 50/61/54/56 | https://github.com/bukosabino/ta
-oss-financial-machine-learning | financial-machine-learning | free | ingyenes (nyílt forrás) | 50/61/54/56 | https://github.com/firmai/financial-machine-learning
-hf-autonlab-moment-1-large | MOMENT-1 large (HF) | free | ingyenes (nyílt forrás) | 51/60/54/56 | https://huggingface.co/AutonLab/MOMENT-1-large
-oss-arbitragelab | ArbitrageLab | free | ingyenes (nyílt forrás) | 53/54/54/58 | https://github.com/hudson-and-thames/arbitragelab
-oss-py-vollib | py_vollib | free | ingyenes (nyílt forrás) | 50/60/52/54 | https://github.com/vollib/py_vollib
-oss-metatrader-mcp-server | MetaTrader MCP Server | free | ingyenes (nyílt forrás) | 50/60/54/52 | https://github.com/ariadng/metatrader-mcp-server
-oss-openapipy | cTrader Open API Python SDK | free | ingyenes (nyílt forrás) | 53/58/50/56 | https://github.com/spotware/OpenApiPy
-oss-lightweight-charts-python | lightweight-charts-python | free | ingyenes (nyílt forrás) | 52/60/50/54 | https://github.com/louisnw01/lightweight-charts-python
-oss-pypbo | pypbo | free | ingyenes (nyílt forrás) | 50/57/54/52 | https://github.com/esvhd/pypbo
-oss-male5 | MALE5 | free | ingyenes (nyílt forrás) | 54/54/48/56 | https://github.com/MegaJoctan/MALE5
-oss-mt5-expert-advisor-template | MT5 Expert Advisor Template (EarnForex) | free | ingyenes (nyílt forrás) | 48/60/52/52 | https://github.com/EarnForex/MT5-Expert-Advisor-Template
-oss-awesome-time-series | awesome-time-series | free | ingyenes (nyílt forrás) | 48/60/52/52 | https://github.com/lmmentel/awesome-time-series
-hf-yiyanghkust-finbert-tone | FinBERT-tone (HF) | free | ingyenes (nyílt forrás) | 54/54/50/52 | https://huggingface.co/yiyanghkust/finbert-tone
-oss-elegantrl | ElegantRL | free | ingyenes (nyílt forrás) | 48/57/50/53 | https://github.com/AI4Finance-Foundation/ElegantRL
-oss-pixiu | PIXIU / FinMA / FinBen | free | ingyenes (nyílt forrás) | 46/59/54/50 | https://github.com/The-FinAI/PIXIU
-oss-metatrader5-quant-server-python | MetaTrader5 Quant Server (sesto-dev) | free | ingyenes (nyílt forrás) | 49/54/48/54 | https://github.com/sesto-dev/metatrader5-quant-server-python
-oss-quant-trading | quant-trading (je-suis-tm) | free | ingyenes (nyílt forrás) | 48/54/50/55 | https://github.com/je-suis-tm/quant-trading
-hf-fingpt-fingpt-mt-llama3-8b-lora | FinGPT multi-task Llama-3 8B LoRA (HF) | free | ingyenes (nyílt forrás) | 50/54/50/51 | https://huggingface.co/FinGPT/fingpt-mt_llama3-8b_lora
-oss-metaapi-python-sdk | MetaApi Python SDK | freemium | ? | 46/56/50/45 | https://github.com/metaapi/metaapi-python-sdk
-oss-awesome-mlops | awesome-mlops (visenger) | free | ingyenes (nyílt forrás) | 45/56/48/52 | https://github.com/visenger/awesome-mlops
-oss-geraked-metatrader5 | geraked/metatrader5 (EA-gyűjtemény) | free | ingyenes (nyílt forrás) | 48/52/46/51 | https://github.com/geraked/metatrader5
-oss-fx-1-minute-data | FX-1-Minute-Data | free | ingyenes (nyílt forrás) | 44/54/50/48 | https://github.com/philipperemy/FX-1-Minute-Data
-oss-alpha-vantage | alpha_vantage (Python) | free | ingyenes (nyílt forrás) | 43/56/49/47 | https://github.com/RomelTorres/alpha_vantage
-oss-mplfinance | mplfinance | free | ingyenes (nyílt forrás) | 42/56/48/50 | https://github.com/matplotlib/mplfinance
-hf-sufe-aiflm-lab-fin-r1 | Fin-R1 (HF) | free | ingyenes (nyílt forrás) | 46/52/50/46 | https://huggingface.co/SUFE-AIFLM-Lab/Fin-R1
-hf-patronusai-financebench | FinanceBench (HF dataset) | free | ingyenes (nyílt forrás) | 38/60/55/43 | https://huggingface.co/datasets/PatronusAI/financebench
-oss-pandas-ta-pypi | pandas-ta (PyPI) | free | ingyenes | 47/53/48/48 | https://pypi.org/project/pandas-ta/
-oss-aeron | Aeron | free | ingyenes (nyílt forrás) | 63/78/65/62 | https://github.com/aeron-io/aeron
-oss-pykx | PyKX (kdb+/q Python) | paid | kdb+ kereskedelmi: kérésre (sales); Pers | 58/74/64/54 | https://github.com/KxSystems/pykx
-oss-chronicle-queue | Chronicle Queue | free | ingyenes (nyílt forrás) | 60/73/61/58 | https://github.com/OpenHFT/Chronicle-Queue
-oss-kdb-x-kx | kdb+ / KDB-X (KX) | institutional | kérésre (nem publikus) | 58/72/63/53 | https://kx.com/
-oss-disruptor | LMAX Disruptor | free | ingyenes (nyílt forrás) | 59/68/55/60 | https://github.com/LMAX-Exchange/disruptor
-oss-vuu | FINOS Vuu | free | ingyenes (nyílt forrás) | 58/68/58/56 | https://github.com/finos/vuu
-oss-greptimedb | GreptimeDB | free | ingyenes (nyílt forrás) | 54/67/56/54 | https://github.com/GreptimeTeam/greptimedb
-oss-tdengine | TDengine | free | ingyenes (nyílt forrás) | 54/64/55/50 | https://github.com/taosdata/TDengine
-oss-metabase | Metabase | free | ingyenes (nyílt forrás) | 48/68/60/49 | https://github.com/metabase/metabase
-oss-fdc3 | FINOS FDC3 | free | ingyenes (nyílt forrás) | 49/67/58/52 | https://github.com/finos/FDC3
-oss-legend-engine | FINOS Legend Engine | free | ingyenes (nyílt forrás) | 47/66/58/52 | https://github.com/finos/legend-engine
-oss-legend-studio | FINOS Legend Studio | free | ingyenes (nyílt forrás) | 47/66/58/52 | https://github.com/finos/legend-studio
-oss-wondertrader | WonderTrader | free | ingyenes (nyílt forrás) | 56/57/50/56 | https://github.com/wondertrader/wondertrader
-oss-gs-quant | gs-quant | freemium | ? | 48/64/58/48 | https://github.com/goldmansachs/gs-quant
-oss-bytewax | Bytewax | free | ingyenes (nyílt forrás) | 53/60/50/56 | https://github.com/bytewax/bytewax
-oss-common-domain-model | FINOS Common Domain Model (CDM) | free | ingyenes (nyílt forrás) | 45/66/58/50 | https://github.com/finos/common-domain-model
-oss-alpaca-py | alpaca-py | free | ingyenes (nyílt forrás) | 50/60/54/47 | https://github.com/alpacahq/alpaca-py
-hf-amazon-chronos-t5-large | Chronos-T5 Large (HF) | free | ingyenes (nyílt forrás) | 48/60/54/54 | https://huggingface.co/amazon/chronos-t5-large
-hf-thuml-timer-base-84m | Timer base 84M (HF) | free | ingyenes (nyílt forrás) | 52/58/51/55 | https://huggingface.co/thuml/timer-base-84m
-oss-nixtla-timegpt-api | TimeGPT API (Nixtla) | paid | Enterprise: kérésre; Azure: token-alapú  | 50/60/55/49 | https://www.nixtla.io/
-oss-time-moe | Time-MoE | free | ingyenes (nyílt forrás) | 48/59/52/53 | https://github.com/Time-MoE/Time-MoE
-oss-lag-llama | Lag-Llama (kód) | free | ingyenes (nyílt forrás) | 49/56/50/54 | https://github.com/time-series-foundation-models/lag-llama
-hf-time-series-foundation-models-lag-llama | Lag-Llama (HF) | free | ingyenes (nyílt forrás) | 50/56/48/55 | https://huggingface.co/time-series-foundation-models/Lag-Llama
-oss-abides | ABIDES (eredeti) | free | ingyenes (nyílt forrás) | 49/52/50/57 | https://github.com/abides-sim/abides
-oss-rune-dsl | FINOS Rune DSL | free | ingyenes (nyílt forrás) | 42/60/52/48 | https://github.com/finos/rune-dsl
-oss-morphir | FINOS Morphir | free | ingyenes (nyílt forrás) | 42/60/52/48 | https://github.com/finos/morphir
-hf-salesforce-moirai-1-1-r-large | Moirai 1.1 R large (HF) | free | ingyenes (nyílt forrás) | 48/56/52/46 | https://huggingface.co/Salesforce/moirai-1.1-R-large
-hf-salesforce-moirai-moe-1-0-r-base | Moirai-MoE 1.0 R base (HF) | free | ingyenes (nyílt forrás) | 48/56/52/46 | https://huggingface.co/Salesforce/moirai-moe-1.0-R-base
-oss-finrl-meta | FinRL-Meta | free | ingyenes (nyílt forrás) | 48/52/48/54 | https://github.com/AI4Finance-Foundation/FinRL-Meta
-oss-tf-quant-finance | TF Quant Finance | free | ingyenes (nyílt forrás) | 47/54/47/53 | https://github.com/google/tf-quant-finance
-oss-awesome-crypto-trading-bots | awesome-crypto-trading-bots | free | ingyenes (nyílt forrás) | 46/56/48/50 | https://github.com/botcrypto-io/awesome-crypto-trading-bots
-oss-rateslib | rateslib | freemium | ? | 42/58/52/42 | https://github.com/attack68/rateslib
-oss-akshare | AKShare | free | ingyenes (nyílt forrás) | 44/56/52/42 | https://github.com/akfamily/akshare
-hf-maple728-timemoe-200m | Time-MoE 200M (HF) | free | ingyenes (nyílt forrás) | 46/54/47/52 | https://huggingface.co/Maple728/TimeMoE-200M
-hf-salesforce-lotsa-data | LOTSA (HF dataset) | free | ingyenes (nyílt forrás) | 40/58/52/48 | https://huggingface.co/datasets/Salesforce/lotsa_data
-oss-diffusion-ts | Diffusion-TS | free | ingyenes (nyílt forrás) | 46/50/46/52 | https://github.com/Y-debug-sys/Diffusion-TS
-oss-superalgos | Superalgos | free | ingyenes (nyílt forrás) | 46/50/44/50 | https://github.com/Superalgos/Superalgos
-oss-awesome-ai-for-time-series-papers | awesome-AI-for-time-series-papers | free | ingyenes (nyílt forrás) | 42/54/46/49 | https://github.com/qingsongedu/awesome-AI-for-time-series-papers
-hf-autogluon-chronos-datasets | Chronos datasets (HF dataset) | free | ingyenes (nyílt forrás) | 37/57/52/42 | https://huggingface.co/datasets/autogluon/chronos_datasets
-hf-fingpt-fingpt-sentiment-llama2-13b-lora | FinGPT sentiment Llama-2 13B LoRA (HF) | free | ingyenes (nyílt forrás) | 45/48/44/48 | https://huggingface.co/FinGPT/fingpt-sentiment_llama2-13b_lora
-oss-tensortrade | TensorTrade | free | ingyenes (nyílt forrás) | 42/49/44/48 | https://github.com/tensortrade-org/tensortrade
-oss-timegan | TimeGAN | free | ingyenes (nyílt forrás) | 44/46/43/50 | https://github.com/jsyoon0823/TimeGAN
-hf-adaptllm-finance-chat | AdaptLLM finance-chat (HF) | free | ingyenes (nyílt forrás) | 42/48/44/46 | https://huggingface.co/AdaptLLM/finance-chat
-hf-josephgflowers-finance-instruct-500k | Finance-Instruct-500k (HF dataset) | free | ingyenes (nyílt forrás) | 37/53/48/44 | https://huggingface.co/datasets/Josephgflowers/Finance-Instruct-500k
-oss-qstrader | QSTrader | free | ingyenes (nyílt forrás) | 41/48/42/48 | https://github.com/mhallsmoore/qstrader
-oss-pmdarima | pmdarima | free | ingyenes (nyílt forrás) | 39/50/42/46 | https://github.com/alkaline-ml/pmdarima
-oss-prophet | Prophet | free | ingyenes (nyílt forrás) | 38/50/43/45 | https://github.com/facebook/prophet
-oss-ydata-synthetic | ydata-synthetic | free | ingyenes (nyílt forrás) | 41/48/42/48 | https://github.com/ydataai/ydata-synthetic
-oss-ea31337-libre | EA31337 Libre | free | ingyenes (nyílt forrás) | 44/46/40/48 | https://github.com/EA31337/EA31337-Libre
-oss-bad-robot-framework | bad-robot.framework | free | ingyenes (nyílt forrás) | 44/45/39/50 | https://github.com/erlonfs/bad-robot.framework
-oss-roffildlibrary | RoffildLibrary | free | ingyenes (nyílt forrás) | 44/44/38/50 | https://github.com/Roffild/RoffildLibrary
-hf-thefinai-finma-7b-full | FinMA 7B full (HF, TheFinAI) | free | ingyenes (nyílt forrás) | 41/46/42/44 | https://huggingface.co/TheFinAI/finma-7b-full
-oss-mlfinlab | MLFinLab (GitHub-maradvány) | free | ingyenes (nyílt forrás) | 41/43/42/44 | https://github.com/hudson-and-thames/mlfinlab
-oss-ib-insync | ib_insync | free | ingyenes (nyílt forrás) | 42/44/36/48 | https://github.com/erdewit/ib_insync
-oss-arctic | Arctic (régi) | free | ingyenes (nyílt forrás) | 40/46/38/46 | https://github.com/man-group/arctic
-oss-probabilistic-sharpe-ratio | Probabilistic Sharpe Ratio (notebook) | free | ingyenes (nyílt forrás) | 38/44/40/44 | https://github.com/rubenbriones/Probabilistic-Sharpe-Ratio
-oss-darwinexlabs | DarwinexLabs | free | ingyenes (nyílt forrás) | 40/42/38/48 | https://github.com/darwinex/DarwinexLabs
-hf-chancefocus-finma-7b-nlp | FinMA 7B NLP (HF) | free | ingyenes (nyílt forrás) | 40/43/38/44 | https://huggingface.co/ChanceFocus/finma-7b-nlp
-hf-fingpt-fingpt-sentiment-train | FinGPT sentiment train (HF dataset) | free | ingyenes (nyílt forrás) | 36/46/44/40 | https://huggingface.co/datasets/FinGPT/fingpt-sentiment-train
-oss-awesome-deep-trading | awesome-deep-trading | free | ingyenes (nyílt forrás) | 36/44/38/45 | https://github.com/cbailes/awesome-deep-trading
-oss-zipline | zipline (eredeti Quantopian) | free | ingyenes (nyílt forrás) | 38/40/35/46 | https://github.com/quantopian/zipline
-oss-pyalgotrade | PyAlgoTrade | free | ingyenes (nyílt forrás) | 36/42/34/44 | https://github.com/gbeced/pyalgotrade
-oss-quanttrader | quanttrader | free | ingyenes (nyílt forrás) | 37/40/34/43 | https://github.com/letianzj/quanttrader
-oss-pyfolio | pyfolio (eredeti) | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/pyfolio
-oss-empyrical | empyrical (eredeti) | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/empyrical
-oss-alphalens | alphalens (eredeti) | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/alphalens
-oss-autotrader | AutoTrader | free | ingyenes (nyílt forrás) | 36/39/32/43 | https://github.com/kieran-mackle/AutoTrader
-oss-blankly | Blankly | free | ingyenes (nyílt forrás) | 36/40/33/41 | https://github.com/blankly-finance/blankly
-hf-adaptllm-finance-tasks | AdaptLLM finance-tasks (HF dataset) | free | ingyenes (nyílt forrás) | 31/43/39/36 | https://huggingface.co/datasets/AdaptLLM/finance-tasks
-oss-pymt5adapter | pymt5adapter | free | ingyenes (nyílt forrás) | 36/38/33/35 | https://github.com/nicholishen/pymt5adapter
-oss-fastquant | fastquant | free | ingyenes (nyílt forrás) | 33/36/30/40 | https://github.com/enzoampil/fastquant
-oss-btgym | BTGym | free | ingyenes (nyílt forrás) | 32/34/28/38 | https://github.com/Kismuz/btgym
-oss-gekko | Gekko | free | ingyenes (nyílt forrás) | 28/31/24/36 | https://github.com/askmike/gekko
-oss-zenbot | Zenbot | free | ingyenes (nyílt forrás) | 28/31/24/36 | https://github.com/DeviaVir/zenbot
+oss-nautilus-trader | 0 | NautilusTrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 77/92/84/76 | https://github.com/nautechsystems/nautilus_trader | Rust mag, Python API; determinisztikus eseményvezérelt motor, nanoszekundumos…
+oss-lean | 0 | QuantConnect LEAN | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 72/88/82/73 | https://github.com/QuantConnect/Lean | C# mag, Python API; eseményvezérelt backtest + élő kereskedés…
+oss-clickhouse | 0 | ClickHouse | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 70/92/81/70 | https://github.com/ClickHouse/ClickHouse | Oszlopos OLAP adatbázis, kiváló tömörítéssel…
+oss-polars | 0 | Polars | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 70/91/81/70 | https://github.com/pola-rs/polars | Rust-alapú, lusta kiértékelésű DataFrame-könyvtár – a pandasnál…
+oss-lightgbm | 0 | LightGBM | Idősor-elemzés | free | ingyenes (nyílt forrás) | 71/86/80/72 | https://github.com/microsoft/LightGBM | Gyors gradient boosting – táblás pénzügyi feature-ökön a de facto alapmodell.
+oss-questdb | 0 | QuestDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 72/88/78/70 | https://github.com/questdb/questdb | Nagy írási sebességű idősor-adatbázis SQL-lel, ASOF JOIN-nal, InfluxDB line…
+oss-duckdb | 0 | DuckDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 68/90/81/70 | https://github.com/duckdb/duckdb | Beágyazott analitikus SQL motor Parquet/Arrow/CSV/Iceberg fölött – a kutatógép…
+oss-statsmodels | 0 | statsmodels | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 64/90/83/70 | https://github.com/statsmodels/statsmodels | Statisztikai modellek, idősor…
+oss-prometheus | 0 | Prometheus | MLOps | free | ingyenes (nyílt forrás) | 67/90/79/68 | https://github.com/prometheus/prometheus | Metrika-gyűjtés és riasztás (Alertmanager) – a spec szerinti megfigyelési réteg…
+oss-arch | 0 | arch | Validálás | free | ingyenes (nyílt forrás) | 66/86/81/71 | https://github.com/bashtage/arch | GARCH-családok, egységgyök-tesztek, és bootstrap (stationary, circular block) +…
+oss-ta-lib-python | 0 | TA-Lib (Python wrapper) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 70/85/76/70 | https://github.com/TA-Lib/ta-lib-python | 150+ technikai indikátor C-ben, Python wrapperrel (PyPI TA-Lib 0.8.3); MT5…
+oss-arrow | 0 | Apache Arrow | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 67/89/76/67 | https://github.com/apache/arrow | Oszlopos memóriaformátum + Parquet I/O + Flight RPC – a Polars/DuckDB/pandas…
+oss-grafana | 0 | Grafana | MLOps | free | ingyenes (nyílt forrás) | 66/90/78/66 | https://github.com/grafana/grafana | Dashboardok a Prometheus/Loki adatokra; kereskedési és ágens-dashboard.…
+oss-nats-server | 0 | NATS | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 68/88/76/67 | https://github.com/nats-io/nats-server | Könnyű, nagyon alacsony késleltetésű üzenetbusz (JetStream perzisztenciával)…
+oss-mt5-strategy-tester | 0 | MT5 Strategy Tester (beépített) | Backtest- és élő motorok | free | ingyenes… | 70/84/78/72 | https://www.metatrader5.com/en/automated-trading/strategy-tester | Az MT5 beépített tesztere: 'minden tick valós tickek alapján' mód, genetikus…
+oss-vectorbt | 0 | vectorbt (nyílt) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 72/81/75/70 | https://github.com/polakowo/vectorbt | NumPy/Numba alapú vektoros backtest; paraméter-rácsok ezreit futtatja…
+oss-arcticdb | 0 | ArcticDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 66/86/77/66 | https://github.com/man-group/ArcticDB | Man Group nagy teljesítményű DataFrame-adatbázis (S3/LMDB háttér), verziózás…
+oss-lightweight-charts | 0 | TradingView Lightweight Charts | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 66/88/76/65 | https://github.com/tradingview/lightweight-charts | Nagy teljesítményű HTML5 pénzügyi chart-könyvtár (Apache-2.0) – a platform…
+oss-cvxpy | 0 | CVXPY | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 62/88/78/66 | https://github.com/cvxpy/cvxpy | Konvex optimalizálás modellezőnyelv; portfólió-, kockázati- és…
+oss-statsforecast | 0 | StatsForecast | Idősor-elemzés | free | ingyenes (nyílt forrás) | 66/84/76/68 | https://github.com/Nixtla/statsforecast | Numba-gyorsított AutoARIMA, ETS, Theta, GARCH stb. – nagyon gyors baseline-ok…
+oss-pyzmq | 0 | pyzmq | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 68/85/72/66 | https://github.com/zeromq/pyzmq | ZeroMQ Python kötés.
+oss-mlflow | 0 | MLflow | MLOps | free | ingyenes (nyílt forrás) | 61/89/79/64 | https://github.com/mlflow/mlflow | Kísérletkövetés, modell-regiszter, modellkiszolgálás, LLM/ágens-trace-elés – a…
+oss-uv | 0 | uv | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 66/86/74/66 | https://github.com/astral-sh/uv | Gyors Python csomag- és környezetkezelő lockfile-lal – reprodukálható, ellátási…
+oss-skfolio | 0 | skfolio | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 62/84/78/67 | https://github.com/skfolio/skfolio | scikit-learn-kompatibilis portfólió-optimalizálás, beépített Combinatorial…
+oss-optuna | 0 | Optuna | Validálás | free | ingyenes (nyílt forrás) | 61/84/76/64 | https://github.com/optuna/optuna | Hiperparaméter- és stratégia-paraméter optimalizálás (TPE, CMA-ES), pruning…
+oss-hypothesis | 0 | Hypothesis | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 60/86/76/63 | https://github.com/HypothesisWorks/hypothesis | Property-based testing Pythonhoz – a spec M14 követelménye…
+oss-awesome-quant | 0 | awesome-quant | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 66/81/72/66 | https://github.com/wilsonfreitas/awesome-quant | A legnagyobb kvant könyvtár- és erőforráslista nyelvek szerint…
+oss-gitleaks | 0 | Gitleaks | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 62/83/72/64 | https://github.com/gitleaks/gitleaks | Titkok (API-kulcs, jelszó) keresése a git-történetben és pre-commit hookban; az…
+oss-mt5linux | 0 | mt5linux | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 66/76/70/66 | https://github.com/lucas-campagna/mt5linux | A Wine alatti Windows-Pythonban futó MetaTrader5 csomagot RPyC-n át natív…
+oss-xgboost | 1 | XGBoost | Idősor-elemzés | free | ingyenes (nyílt forrás) | 70/84/78/71 | https://github.com/dmlc/xgboost | Gradient boosting GPU-támogatással.
+oss-vectorbt-pro | 1 | VectorBT PRO | Backtest- és élő motorok | paid | $25/hó; $225/év (=18,75 $/hó); $500… | 71/84/78/68 | https://vectorbt.pro/ | A vectorbt fizetős utódja: gyorsabb motor, portfólió-szimuláció…
+oss-finos-perspective | 1 | Perspective (FINOS) | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 68/86/74/66 | https://github.com/finos/perspective | WebAssembly/Arrow-alapú valós idejű adatrács és pivot-vizualizáció…
+oss-quantlib | 1 | QuantLib | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 64/86/78/68 | https://github.com/lballabio/QuantLib | A referencia nyílt C++ könyvtár derivatíva-árazásra, hozamgörbékre, kockázatra…
+oss-qlib | 1 | Microsoft Qlib | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 68/78/76/73 | https://github.com/microsoft/qlib | AI-orientált kvant kutatási platform: adatkezelés, feature-ök (Alpha158/360)…
+oss-river | 1 | River | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 69/79/72/70 | https://github.com/online-ml/river | Online (streaming) gépi tanulás és drift-detektálás – folyamatos…
+oss-zstd | 1 | Zstandard (zstd) | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 65/85/72/66 | https://github.com/facebook/zstd | Gyors veszteségmentes tömörítés – Parquet/ClickHouse/ArcticDB alapértelmezett…
+oss-valkey | 1 | Valkey | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 66/84/72/65 | https://github.com/valkey-io/valkey | BSD-3 licencű Redis-fork: in-memory állapot (pozíciók, limitek), online feature…
+oss-best-of-algorithmic-trading | 1 | Best-of Algorithmic Trading | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 68/82/72/67 | https://github.com/merovinh/best-of-algorithmic-trading | Automatikusan, projekt-minőségi pontszám (csillag, aktivitás) szerint…
+oss-mapie | 1 | MAPIE | Validálás | free | ingyenes (nyílt forrás) | 64/80/75/68 | https://github.com/scikit-learn-contrib/MAPIE | Konformális predikció (regresszió, osztályozás, idősor – EnbPI/ACI)…
+oss-chronos-forecasting | 1 | Chronos / Chronos-Bolt / Chronos-2 (kód) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 64/81/74/67 | https://github.com/amazon-science/chronos-forecasting | Amazon idősoros alapmodell-család; Chronos-2 (HF: 119M param, Apache-2.0)…
+oss-kafka | 1 | Apache Kafka | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 62/86/74/64 | https://github.com/apache/kafka | Elosztott eseménynapló – piaci adat és megbízás-események tartós busza.
+oss-ruff | 1 | Ruff | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 64/84/72/64 | https://github.com/astral-sh/ruff | Nagyon gyors Python linter/formatter – AI-generált kód minőségkapuja.
+hf-amazon-chronos-2 | 1 | Chronos-2 (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 64/81/74/67 | https://huggingface.co/amazon/chronos-2 | 119,5M param, Apache-2.0; többváltozós és kovariánsos előrejelzés; 7,85M…
+oss-quickfixj | 1 | QuickFIX/J | Végrehajtás | free | ingyenes (nyílt forrás) | 66/80/70/66 | https://github.com/quickfix-j/quickfixj | Java FIX motor, aktívan karbantartott.
+oss-feast | 1 | Feast | MLOps | free | ingyenes (nyílt forrás) | 64/81/72/65 | https://github.com/feast-dev/feast | Nyílt feature store: offline (Parquet/DuckDB/BigQuery) és online (Redis/Valkey)…
+oss-dagster | 1 | Dagster | MLOps | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/dagster-io/dagster | Asset-központú adat-orkesztráció lineage-dzsel – adattó rétegeihez…
+oss-ray | 1 | Ray | MLOps | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/ray-project/ray | Elosztott számítás; a Ray Tune párhuzamosan futtat Optuna/Ax keresőket több…
+oss-plotly-py | 1 | Plotly (Python) | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/plotly/plotly.py | Interaktív grafikonok Pythonból – kutatási riportok, HTML-katalógus…
+oss-streamlit | 1 | Streamlit | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 60/84/74/62 | https://github.com/streamlit/streamlit | Gyors Python webappok – belső kutatási és jóváhagyási felületek…
+oss-machine-learning-for-trading | 1 | Machine Learning for Trading (kódok) | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 61/78/74/67 | https://github.com/stefan-jansen/machine-learning-for-trading | Stefan Jansen könyvének (2. kiadás) teljes notebook-gyűjteménye: adat…
+oss-kronos | 1 | Kronos (pénzügyi K-line alapmodell) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 68/73/70/70 | https://github.com/shiyu-coder/Kronos | Kifejezetten pénzügyi gyertyaadatokon (OHLCV) előtanított alapmodell-család…
+hf-google-timesfm-2-5-200m-pytorch | 1 | TimesFM 2.5 200M (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 63/78/72/66 | https://huggingface.co/google/timesfm-2.5-200m-pytorch | A TimesFM legújabb nyílt súlyai; 231,3M param (safetensors), Apache-2.0, 1,63M…
+oss-ta-lib | 1 | TA-Lib (C mag) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 63/78/68/64 | https://github.com/TA-Lib/ta-lib | A TA-Lib C könyvtár újraélesztett, karbantartott repója.
+oss-timesfm | 1 | TimesFM (kód) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 61/78/72/64 | https://github.com/google-research/timesfm | Google decoder-only idősoros alapmodell; HF: timesfm-2.5-200m…
+oss-timescaledb | 1 | TimescaleDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 60/80/72/60 | https://github.com/timescale/timescaledb | PostgreSQL-bővítmény idősorokra (hypertable, continuous aggregates, tömörítés).
+oss-prefect | 1 | Prefect | MLOps | free | ingyenes (nyílt forrás) | 59/82/72/61 | https://github.com/PrefectHQ/prefect | Python-natív workflow-orkesztráció (letöltés, ETL, újratanítás ütemezése).
+oss-loki | 1 | Grafana Loki | MLOps | free | ingyenes (nyílt forrás) | 60/81/71/60 | https://github.com/grafana/loki | Log-aggregáció (EA-, híd- és ágensnaplók) – auditnapló alapja.
+oss-openbao | 1 | OpenBao | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 60/80/70/62 | https://github.com/openbao/openbao | A HashiCorp Vault MPL-2.0 alatt maradt nyílt forkja (Linux Foundation)…
+oss-dash | 1 | Dash | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 58/82/72/61 | https://github.com/plotly/dash | Python webes dashboard-keretrendszer (Plotly-ra).
+oss-awesome-systematic-trading | 1 | awesome-systematic-trading | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 64/76/68/66 | https://github.com/paperswithbacktest/awesome-systematic-trading | Szisztematikus kereskedési könyvtárak, stratégiák, cikkek, könyvek listája…
+oss-riskfolio-lib | 1 | Riskfolio-Lib | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 59/78/72/64 | https://github.com/dcajasn/Riskfolio-Lib | Portfólió-optimalizálás 20+ kockázati mértékkel (CVaR, CDaR, EVaR), risk…
+oss-neuralforecast | 1 | NeuralForecast | Idősor-elemzés | free | ingyenes (nyílt forrás) | 60/77/70/64 | https://github.com/Nixtla/neuralforecast | Mély előrejelzők (NHITS, TFT, PatchTST, TimesNet) egységes API-val.
+oss-mlforecast | 1 | MLForecast | Idősor-elemzés | free | ingyenes (nyílt forrás) | 60/77/70/64 | https://github.com/Nixtla/mlforecast | Gradient boosting alapú előrejelzés lag-feature-ökkel, skálázható…
+oss-quickfixn | 1 | QuickFIX/n | Végrehajtás | free | ingyenes (nyílt forrás) | 64/76/66/64 | https://github.com/connamara/quickfixn | C#/.NET FIX motor – C#-os (LEAN, StockSharp) környezethez.
+hf-neoquasar-kronos-base | 1 | Kronos-base (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 66/70/68/68 | https://huggingface.co/NeoQuasar/Kronos-base | 102,3M param, MIT; K-line (OHLCV) tokenizálóval, 45+ tőzsde adatain előtanítva…
+oss-sktime | 1 | sktime | Idősor-elemzés | free | ingyenes (nyílt forrás) | 58/76/70/62 | https://github.com/sktime/sktime | Egységes scikit-learn-szerű idősor-API: előrejelzés, osztályozás…
+oss-darts | 1 | Darts | Idősor-elemzés | free | ingyenes (nyílt forrás) | 58/76/70/62 | https://github.com/unit8co/darts | Egységes előrejelző API klasszikus és mély modellekhez (N-BEATS, TFT, TiDE)…
+oss-openbb | 1 | OpenBB Platform | Adateszközök | free | ingyenes (nyílt forrás) | 60/76/70/62 | https://github.com/OpenBB-finance/OpenBB | A Bloomberg nyílt forrású 'megfelelője': Open Data Platform…
+oss-pandera | 1 | pandera | MLOps | free | ingyenes (nyílt forrás) | 58/79/69/60 | https://github.com/unionai-oss/pandera | DataFrame-séma-validáció (pandas/Polars) – tick- és feature-táblák szerződései.
+oss-trufflehog | 1 | TruffleHog | Fejlesztés és biztonság | free | ingyenes (nyílt forrás) | 58/78/68/58 | https://github.com/trufflesecurity/trufflehog | Titokkereső élő ellenőrzéssel (verifikálja, hogy a kulcs érvényes-e).
+oss-rd-agent | 1 | RD-Agent (Microsoft) | Validálás | free | ingyenes (nyílt forrás) | 62/70/68/66 | https://github.com/microsoft/RD-Agent | LLM-ágens, amely Qlib-en faktorokat és modelleket javasol, implementál…
+oss-opensourcerisk-engine | 1 | Open Source Risk Engine (ORE) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 54/78/70/61 | https://github.com/OpenSourceRisk/Engine | QuantLib-alapú intézményi kockázati motor: XVA, VaR/ES (SIMM, SA-CCR)…
+oss-ruptures | 1 | ruptures | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 61/72/66/66 | https://github.com/deepcharles/ruptures | Változáspont-detektálás (PELT, Binseg, kernel) – rezsimváltás-felismeréshez.
+oss-evidently | 1 | Evidently | MLOps | free | ingyenes (nyílt forrás) | 57/74/66/62 | https://github.com/evidentlyai/evidently | Adat- és modell-drift monitorozás, riportok – a döntési réteg modelljeinek…
+oss-great-expectations | 1 | Great Expectations | MLOps | free | ingyenes (nyílt forrás) | 54/78/69/58 | https://github.com/great-expectations/great_expectations | Adatminőségi elvárások és validáció (hiányzó tickek, kiugrók, duplikátumok) a…
+oss-awesome-ai-in-finance | 1 | awesome-ai-in-finance | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 62/72/63/62 | https://github.com/georgezouq/awesome-ai-in-finance | AI/LLM a pénzügyekben: kutatások, eszközök, ágensek (CC0).
+oss-metatrader5-docker-image | 1 | MetaTrader5 Docker Image (gmag11) | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 58/72/64/61 | https://github.com/gmag11/MetaTrader5-Docker-Image | MT5 terminál Dockerben (Wine + KasmVNC böngészős felület) beépített…
+oss-alphalens-reloaded | 1 | alphalens-reloaded | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 58/68/64/62 | https://github.com/stefan-jansen/alphalens-reloaded | Alfa-faktor elemzés (IC, kvantilis hozamok, turnover) – jelek gyors szűrésére.
+oss-mql5-algo-forge | 1 | MQL5 Algo Forge | MetaTrader-hidak | registration | ingyenes (MQL5.com fiók) | 56/70/62/58 | https://forge.mql5.io/ | A MetaQuotes Git-alapú (Forgejo) kódtárhelye MQL5-projekteknek, MetaEditorba…
+oss-backtesting-py | 1 | Backtesting.py | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 56/68/62/56 | https://github.com/kernc/backtesting.py | Kis, gyors, egyszerű API-jú backtester Bokeh-riportokkal; prototípushoz és…
+oss-pyfolio-reloaded | 1 | pyfolio-reloaded | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 53/70/63/58 | https://github.com/stefan-jansen/pyfolio-reloaded | Portfólió-teljesítmény és kockázati 'tear sheet'…
+oss-quantstats | 1 | QuantStats | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 52/68/62/58 | https://github.com/ranaroussi/quantstats | Teljesítmény- és kockázati riportok HTML tear sheettel…
+oss-gift-eval | 1 | GIFT-Eval benchmark | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 50/71/62/54 | https://github.com/SalesforceAIResearch/gift-eval | Általános idősoros alapmodell-benchmark és ranglista – modellválasztáshoz.
+oss-empyrical-reloaded | 1 | empyrical-reloaded | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 52/68/60/56 | https://github.com/stefan-jansen/empyrical-reloaded | Kockázati/teljesítmény-mutatók (Sharpe, Sortino, max DD, alpha/beta)…
+oss-ea31337-classes | 1 | EA31337 Framework (classes) | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 55/65/58/58 | https://github.com/EA31337/EA31337-classes | MQL4/MQL5 osztálykönyvtár EA-k, indikátorok, szkriptek írására…
+oss-catboost | 2 | CatBoost | Idősor-elemzés | free | ingyenes (nyílt forrás) | 66/81/75/68 | https://github.com/catboost/catboost
+oss-grpc | 2 | gRPC | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 64/84/72/64 | https://github.com/grpc/grpc
+oss-c-blosc2 | 2 | C-Blosc2 | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 64/80/68/64 | https://github.com/Blosc/c-blosc2
+oss-victoriametrics | 2 | VictoriaMetrics | MLOps | free | ingyenes (nyílt forrás) | 61/80/69/62 | https://github.com/VictoriaMetrics/VictoriaMetrics
+oss-opentelemetry-collector | 2 | OpenTelemetry Collector | MLOps | free | ingyenes (nyílt forrás) | 59/80/69/60 | https://github.com/open-telemetry/opentelemetry-collector
+hf-amazon-chronos-bolt-base | 2 | Chronos-Bolt Base (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 64/74/66/66 | https://huggingface.co/amazon/chronos-bolt-base
+oss-redpanda | 2 | Redpanda | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 58/79/69/56 | https://github.com/redpanda-data/redpanda
+oss-echarts | 2 | Apache ECharts | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 58/78/68/60 | https://github.com/apache/echarts
+oss-iceberg | 2 | Apache Iceberg | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/iceberg
+oss-databento-python | 2 | databento-python | Adateszközök | paid | ? | 60/75/65/60 | https://github.com/databento/databento-python
+oss-airflow | 2 | Apache Airflow | MLOps | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/airflow
+oss-superset | 2 | Apache Superset | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 55/79/69/58 | https://github.com/apache/superset
+oss-quantlib-swig | 2 | QuantLib-SWIG (Python/Java/C#) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 56/76/67/60 | https://github.com/lballabio/QuantLib-SWIG
+oss-granite-tsfm | 2 | IBM Granite TinyTimeMixer (TTM) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 61/72/63/62 | https://github.com/ibm-granite/granite-tsfm
+oss-quickfix | 2 | QuickFIX (C++) | Végrehajtás | free | ingyenes (nyílt forrás) | 62/71/61/64 | https://github.com/quickfix/quickfix
+oss-bokeh | 2 | Bokeh | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 56/77/66/58 | https://github.com/bokeh/bokeh
+hf-ibm-granite-granite-timeseries-ttm-r2 | 2 | Granite TTM r2 (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 62/71/62/62 | https://huggingface.co/ibm-granite/granite-timeseries-ttm-r2
+hf-neoquasar-kronos-small | 2 | Kronos-small (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 64/68/63/65 | https://huggingface.co/NeoQuasar/Kronos-small
+oss-linearmodels | 2 | linearmodels | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 54/75/67/59 | https://github.com/bashtage/linearmodels
+oss-gluonts | 2 | GluonTS | Idősor-elemzés | free | ingyenes (nyílt forrás) | 56/72/66/61 | https://github.com/awslabs/gluonts
+oss-pykalman | 2 | pykalman | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 61/68/63/64 | https://github.com/pykalman/pykalman
+oss-stable-baselines3 | 2 | Stable-Baselines3 | Idősor-elemzés | free | ingyenes (nyílt forrás) | 54/73/64/59 | https://github.com/DLR-RM/stable-baselines3
+oss-influxdb | 2 | InfluxDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 58/72/61/56 | https://github.com/influxdata/influxdb
+oss-dbt-core | 2 | dbt Core | MLOps | free | ingyenes (nyílt forrás) | 52/76/66/56 | https://github.com/dbt-labs/dbt-core
+oss-barter-rs | 2 | Barter (Rust) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 62/65/58/62 | https://github.com/barter-rs/barter-rs
+oss-dvc | 2 | DVC | MLOps | free | ingyenes (nyílt forrás) | 52/74/65/56 | https://github.com/iterative/dvc
+oss-klinechart | 2 | KLineChart | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 57/70/60/57 | https://github.com/klinecharts/KLineChart
+hf-google-timesfm-2-0-500m-pytorch | 2 | TimesFM 2.0 500M (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 56/68/62/62 | https://huggingface.co/google/timesfm-2.0-500m-pytorch
+oss-zipline-reloaded | 2 | zipline-reloaded | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 54/68/62/60 | https://github.com/stefan-jansen/zipline-reloaded
+oss-finrl | 2 | FinRL | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 56/66/62/61 | https://github.com/AI4Finance-Foundation/FinRL
+oss-tsfresh | 2 | tsfresh | Idősor-elemzés | free | ingyenes (nyílt forrás) | 53/69/64/60 | https://github.com/blue-yonder/tsfresh
+oss-vnpy | 2 | VeighNa (vn.py) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 56/66/60/58 | https://github.com/vnpy/vnpy
+oss-cvxportfolio | 2 | Cvxportfolio | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 53/68/62/57 | https://github.com/cvxgrp/cvxportfolio
+oss-datadog-toto | 2 | Toto (Datadog) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 55/67/59/58 | https://github.com/DataDog/toto
+oss-tirex | 2 | TiRex (NX-AI) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 55/66/62/54 | https://github.com/NX-AI/tirex
+oss-wandb | 2 | Weights & Biases (SDK) | MLOps | freemium | ? | 49/73/64/50 | https://github.com/wandb/wandb
+oss-pathway | 2 | Pathway | MLOps | free | ingyenes (nyílt forrás) | 56/67/60/53 | https://github.com/pathwaycom/pathway
+hf-datadog-toto-open-base-1-0 | 2 | Toto Open Base 1.0 (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 55/67/59/58 | https://huggingface.co/Datadog/Toto-Open-Base-1.0
+hf-nx-ai-tirex | 2 | TiRex (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 55/66/62/54 | https://huggingface.co/NX-AI/TiRex
+hf-prosusai-finbert | 2 | FinBERT (HF, ProsusAI) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 58/65/60/52 | https://huggingface.co/ProsusAI/finbert
+oss-bt | 2 | bt | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 53/66/60/58 | https://github.com/pmorissette/bt
+oss-abides-jpmc-public | 2 | ABIDES (J.P. Morgan) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 56/61/59/64 | https://github.com/jpmorganchase/abides-jpmc-public
+oss-risklabai-py | 2 | RiskLabAI.py | Validálás | free | ingyenes (nyílt forrás) | 56/62/60/60 | https://github.com/RiskLabAI/RiskLabAI.py
+oss-hmmlearn | 2 | hmmlearn | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 56/62/58/62 | https://github.com/hmmlearn/hmmlearn
+oss-time-series-library | 2 | Time-Series-Library (TSLib) | Idősor-elemzés | free | ingyenes (nyílt forrás) | 52/67/60/58 | https://github.com/thuml/Time-Series-Library
+oss-fingpt | 2 | FinGPT | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 56/62/60/58 | https://github.com/AI4Finance-Foundation/FinGPT
+oss-finbert | 2 | FinBERT (Prosus) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 56/64/60/54 | https://github.com/ProsusAI/finBERT
+oss-best-of-ml-python | 2 | best-of-ml-python | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 52/68/58/56 | https://github.com/ml-tooling/best-of-ml-python
+hf-mrm8488-distilroberta-finetuned-financial-news-sentiment-analysis | 2 | DistilRoBERTa financial news sentiment (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 61/60/52/62 | https://huggingface.co/mrm8488/distilroberta-finetuned-financial-news-sentiment-analysis
+oss-ffn | 2 | ffn | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 50/66/60/55 | https://github.com/pmorissette/ffn
+oss-pyportfolioopt | 2 | PyPortfolioOpt | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 51/66/59/56 | https://github.com/robertmartin8/PyPortfolioOpt
+oss-pybroker | 2 | PyBroker | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 52/62/58/54 | https://github.com/edtechre/pybroker
+oss-uni2ts | 2 | Moirai (uni2ts) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 52/64/60/50 | https://github.com/SalesforceAIResearch/uni2ts
+oss-aiomql | 2 | aiomql | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://github.com/Ichinga-Samuel/aiomql
+hf-salesforce-moirai-2-0-r-small | 2 | Moirai 2.0 R small (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 54/62/58/50 | https://huggingface.co/Salesforce/moirai-2.0-R-small
+hf-thuml-sundial-base-128m | 2 | Sundial base 128M (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 54/62/55/56 | https://huggingface.co/thuml/sundial-base-128m
+oss-mlfinlab-commercial | 2 | MLFinLab (Hudson & Thames, fizetős) | Validálás | paid | £100 (+VAT)/hó/felhasználó (Business)… | 51/63/60/53 | https://hudsonthames.org/mlfinlab/
+oss-backtrader | 2 | backtrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 53/60/54/58 | https://github.com/mementum/backtrader
+oss-financepy | 2 | FinancePy | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 48/64/58/51 | https://github.com/domokane/FinancePy
+oss-moment-timeseries-foundation-model-moment | 2 | MOMENT (kód) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 52/62/55/56 | https://github.com/moment-timeseries-foundation-model/moment
+oss-large-time-series-model | 2 | Timer / Sundial (thuml) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 52/62/55/56 | https://github.com/thuml/Large-Time-Series-Model
+oss-mql4-lib | 2 | mql4-lib | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 53/61/53/58 | https://github.com/dingmaotu/mql4-lib
+oss-awesome-quant-machine-learning-trading | 2 | Awesome Quant ML Trading | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 52/62/54/57 | https://github.com/grananqvist/Awesome-Quant-Machine-Learning-Trading
+oss-kelvins-awesome-mlops | 2 | awesome-mlops (kelvins) | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 51/64/54/54 | https://github.com/kelvins/awesome-mlops
+oss-basana | 2 | Basana | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 52/60/53/54 | https://github.com/gbeced/basana
+oss-lumibot | 2 | Lumibot | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 50/62/56/51 | https://github.com/Lumiwealth/lumibot
+oss-ta | 2 | ta (Technical Analysis Library) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 50/61/54/56 | https://github.com/bukosabino/ta
+oss-financial-machine-learning | 2 | financial-machine-learning | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 50/61/54/56 | https://github.com/firmai/financial-machine-learning
+hf-autonlab-moment-1-large | 2 | MOMENT-1 large (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 51/60/54/56 | https://huggingface.co/AutonLab/MOMENT-1-large
+oss-arbitragelab | 2 | ArbitrageLab | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 53/54/54/58 | https://github.com/hudson-and-thames/arbitragelab
+oss-py-vollib | 2 | py_vollib | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 50/60/52/54 | https://github.com/vollib/py_vollib
+oss-metatrader-mcp-server | 2 | MetaTrader MCP Server | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 50/60/54/52 | https://github.com/ariadng/metatrader-mcp-server
+oss-openapipy | 2 | cTrader Open API Python SDK | Végrehajtás | free | ingyenes (nyílt forrás) | 53/58/50/56 | https://github.com/spotware/OpenApiPy
+oss-lightweight-charts-python | 2 | lightweight-charts-python | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 52/60/50/54 | https://github.com/louisnw01/lightweight-charts-python
+oss-pypbo | 2 | pypbo | Validálás | free | ingyenes (nyílt forrás) | 50/57/54/52 | https://github.com/esvhd/pypbo
+oss-male5 | 2 | MALE5 | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 54/54/48/56 | https://github.com/MegaJoctan/MALE5
+oss-mt5-expert-advisor-template | 2 | MT5 Expert Advisor Template (EarnForex) | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 48/60/52/52 | https://github.com/EarnForex/MT5-Expert-Advisor-Template
+oss-awesome-time-series | 2 | awesome-time-series | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 48/60/52/52 | https://github.com/lmmentel/awesome-time-series
+hf-yiyanghkust-finbert-tone | 2 | FinBERT-tone (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 54/54/50/52 | https://huggingface.co/yiyanghkust/finbert-tone
+oss-elegantrl | 2 | ElegantRL | Idősor-elemzés | free | ingyenes (nyílt forrás) | 48/57/50/53 | https://github.com/AI4Finance-Foundation/ElegantRL
+oss-pixiu | 2 | PIXIU / FinMA / FinBen | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 46/59/54/50 | https://github.com/The-FinAI/PIXIU
+oss-metatrader5-quant-server-python | 2 | MetaTrader5 Quant Server (sesto-dev) | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 49/54/48/54 | https://github.com/sesto-dev/metatrader5-quant-server-python
+oss-quant-trading | 2 | quant-trading (je-suis-tm) | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 48/54/50/55 | https://github.com/je-suis-tm/quant-trading
+hf-fingpt-fingpt-mt-llama3-8b-lora | 2 | FinGPT multi-task Llama-3 8B LoRA (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 50/54/50/51 | https://huggingface.co/FinGPT/fingpt-mt_llama3-8b_lora
+oss-metaapi-python-sdk | 2 | MetaApi Python SDK | MetaTrader-hidak | freemium | ? | 46/56/50/45 | https://github.com/metaapi/metaapi-python-sdk
+oss-awesome-mlops | 2 | awesome-mlops (visenger) | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 45/56/48/52 | https://github.com/visenger/awesome-mlops
+oss-geraked-metatrader5 | 2 | geraked/metatrader5 (EA-gyűjtemény) | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 48/52/46/51 | https://github.com/geraked/metatrader5
+oss-fx-1-minute-data | 2 | FX-1-Minute-Data | Adateszközök | free | ingyenes (nyílt forrás) | 44/54/50/48 | https://github.com/philipperemy/FX-1-Minute-Data
+oss-alpha-vantage | 2 | alpha_vantage (Python) | Adateszközök | free | ingyenes (nyílt forrás) | 43/56/49/47 | https://github.com/RomelTorres/alpha_vantage
+oss-mplfinance | 2 | mplfinance | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 42/56/48/50 | https://github.com/matplotlib/mplfinance
+hf-sufe-aiflm-lab-fin-r1 | 2 | Fin-R1 (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 46/52/50/46 | https://huggingface.co/SUFE-AIFLM-Lab/Fin-R1
+hf-patronusai-financebench | 2 | FinanceBench (HF dataset) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 38/60/55/43 | https://huggingface.co/datasets/PatronusAI/financebench
+oss-pandas-ta-pypi | 2 | pandas-ta (PyPI) | Kvant-könyvtárak | free | ingyenes | 47/53/48/48 | https://pypi.org/project/pandas-ta/
+oss-aeron | 3 | Aeron | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 63/78/65/62 | https://github.com/aeron-io/aeron
+oss-pykx | 3 | PyKX (kdb+/q Python) | Adattárolók (tick, idősor) | paid | kdb+ kereskedelmi: kérésre (sales)… | 58/74/64/54 | https://github.com/KxSystems/pykx
+oss-chronicle-queue | 3 | Chronicle Queue | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 60/73/61/58 | https://github.com/OpenHFT/Chronicle-Queue
+oss-kdb-x-kx | 3 | kdb+ / KDB-X (KX) | Adattárolók (tick, idősor) | institutional | kérésre (nem publikus) | 58/72/63/53 | https://kx.com/
+oss-disruptor | 3 | LMAX Disruptor | Infrastruktúra-szoftver | free | ingyenes (nyílt forrás) | 59/68/55/60 | https://github.com/LMAX-Exchange/disruptor
+oss-vuu | 3 | FINOS Vuu | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 58/68/58/56 | https://github.com/finos/vuu
+oss-greptimedb | 3 | GreptimeDB | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 54/67/56/54 | https://github.com/GreptimeTeam/greptimedb
+oss-tdengine | 3 | TDengine | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 54/64/55/50 | https://github.com/taosdata/TDengine
+oss-metabase | 3 | Metabase | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 48/68/60/49 | https://github.com/metabase/metabase
+oss-fdc3 | 3 | FINOS FDC3 | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 49/67/58/52 | https://github.com/finos/FDC3
+oss-legend-engine | 3 | FINOS Legend Engine | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 47/66/58/52 | https://github.com/finos/legend-engine
+oss-legend-studio | 3 | FINOS Legend Studio | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 47/66/58/52 | https://github.com/finos/legend-studio
+oss-wondertrader | 3 | WonderTrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 56/57/50/56 | https://github.com/wondertrader/wondertrader
+oss-gs-quant | 3 | gs-quant | Kvant-könyvtárak | freemium | ? | 48/64/58/48 | https://github.com/goldmansachs/gs-quant
+oss-bytewax | 3 | Bytewax | MLOps | free | ingyenes (nyílt forrás) | 53/60/50/56 | https://github.com/bytewax/bytewax
+oss-common-domain-model | 3 | FINOS Common Domain Model (CDM) | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 45/66/58/50 | https://github.com/finos/common-domain-model
+oss-alpaca-py | 3 | alpaca-py | Végrehajtás | free | ingyenes (nyílt forrás) | 50/60/54/47 | https://github.com/alpacahq/alpaca-py
+hf-amazon-chronos-t5-large | 3 | Chronos-T5 Large (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 48/60/54/54 | https://huggingface.co/amazon/chronos-t5-large
+hf-thuml-timer-base-84m | 3 | Timer base 84M (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 52/58/51/55 | https://huggingface.co/thuml/timer-base-84m
+oss-nixtla-timegpt-api | 3 | TimeGPT API (Nixtla) | Idősor-alapmodellek | paid | Enterprise: kérésre; Azure: token-alapú… | 50/60/55/49 | https://www.nixtla.io/
+oss-time-moe | 3 | Time-MoE | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 48/59/52/53 | https://github.com/Time-MoE/Time-MoE
+oss-lag-llama | 3 | Lag-Llama (kód) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 49/56/50/54 | https://github.com/time-series-foundation-models/lag-llama
+hf-time-series-foundation-models-lag-llama | 3 | Lag-Llama (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 50/56/48/55 | https://huggingface.co/time-series-foundation-models/Lag-Llama
+oss-abides | 3 | ABIDES (eredeti) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 49/52/50/57 | https://github.com/abides-sim/abides
+oss-rune-dsl | 3 | FINOS Rune DSL | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 42/60/52/48 | https://github.com/finos/rune-dsl
+oss-morphir | 3 | FINOS Morphir | Vizualizáció, terminál | free | ingyenes (nyílt forrás) | 42/60/52/48 | https://github.com/finos/morphir
+hf-salesforce-moirai-1-1-r-large | 3 | Moirai 1.1 R large (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 48/56/52/46 | https://huggingface.co/Salesforce/moirai-1.1-R-large
+hf-salesforce-moirai-moe-1-0-r-base | 3 | Moirai-MoE 1.0 R base (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 48/56/52/46 | https://huggingface.co/Salesforce/moirai-moe-1.0-R-base
+oss-finrl-meta | 3 | FinRL-Meta | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 48/52/48/54 | https://github.com/AI4Finance-Foundation/FinRL-Meta
+oss-tf-quant-finance | 3 | TF Quant Finance | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 47/54/47/53 | https://github.com/google/tf-quant-finance
+oss-awesome-crypto-trading-bots | 3 | awesome-crypto-trading-bots | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 46/56/48/50 | https://github.com/botcrypto-io/awesome-crypto-trading-bots
+oss-rateslib | 3 | rateslib | Kvant-könyvtárak | freemium | ? | 42/58/52/42 | https://github.com/attack68/rateslib
+oss-akshare | 3 | AKShare | Adateszközök | free | ingyenes (nyílt forrás) | 44/56/52/42 | https://github.com/akfamily/akshare
+hf-maple728-timemoe-200m | 3 | Time-MoE 200M (HF) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 46/54/47/52 | https://huggingface.co/Maple728/TimeMoE-200M
+hf-salesforce-lotsa-data | 3 | LOTSA (HF dataset) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 40/58/52/48 | https://huggingface.co/datasets/Salesforce/lotsa_data
+oss-diffusion-ts | 3 | Diffusion-TS | Validálás | free | ingyenes (nyílt forrás) | 46/50/46/52 | https://github.com/Y-debug-sys/Diffusion-TS
+oss-superalgos | 3 | Superalgos | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 46/50/44/50 | https://github.com/Superalgos/Superalgos
+oss-awesome-ai-for-time-series-papers | 3 | awesome-AI-for-time-series-papers | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 42/54/46/49 | https://github.com/qingsongedu/awesome-AI-for-time-series-papers
+hf-autogluon-chronos-datasets | 3 | Chronos datasets (HF dataset) | Idősor-alapmodellek | free | ingyenes (nyílt forrás) | 37/57/52/42 | https://huggingface.co/datasets/autogluon/chronos_datasets
+hf-fingpt-fingpt-sentiment-llama2-13b-lora | 3 | FinGPT sentiment Llama-2 13B LoRA (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 45/48/44/48 | https://huggingface.co/FinGPT/fingpt-sentiment_llama2-13b_lora
+oss-tensortrade | 3 | TensorTrade | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 42/49/44/48 | https://github.com/tensortrade-org/tensortrade
+oss-timegan | 3 | TimeGAN | Validálás | free | ingyenes (nyílt forrás) | 44/46/43/50 | https://github.com/jsyoon0823/TimeGAN
+hf-adaptllm-finance-chat | 3 | AdaptLLM finance-chat (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 42/48/44/46 | https://huggingface.co/AdaptLLM/finance-chat
+hf-josephgflowers-finance-instruct-500k | 3 | Finance-Instruct-500k (HF dataset) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 37/53/48/44 | https://huggingface.co/datasets/Josephgflowers/Finance-Instruct-500k
+oss-qstrader | 3 | QSTrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 41/48/42/48 | https://github.com/mhallsmoore/qstrader
+oss-pmdarima | 3 | pmdarima | Idősor-elemzés | free | ingyenes (nyílt forrás) | 39/50/42/46 | https://github.com/alkaline-ml/pmdarima
+oss-prophet | 3 | Prophet | Idősor-elemzés | free | ingyenes (nyílt forrás) | 38/50/43/45 | https://github.com/facebook/prophet
+oss-ydata-synthetic | 3 | ydata-synthetic | Validálás | free | ingyenes (nyílt forrás) | 41/48/42/48 | https://github.com/ydataai/ydata-synthetic
+oss-ea31337-libre | 3 | EA31337 Libre | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 44/46/40/48 | https://github.com/EA31337/EA31337-Libre
+oss-bad-robot-framework | 3 | bad-robot.framework | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 44/45/39/50 | https://github.com/erlonfs/bad-robot.framework
+oss-roffildlibrary | 3 | RoffildLibrary | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 44/44/38/50 | https://github.com/Roffild/RoffildLibrary
+hf-thefinai-finma-7b-full | 3 | FinMA 7B full (HF, TheFinAI) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 41/46/42/44 | https://huggingface.co/TheFinAI/finma-7b-full
+oss-mlfinlab | 3 | MLFinLab (GitHub-maradvány) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 41/43/42/44 | https://github.com/hudson-and-thames/mlfinlab
+oss-ib-insync | 3 | ib_insync | Végrehajtás | free | ingyenes (nyílt forrás) | 42/44/36/48 | https://github.com/erdewit/ib_insync
+oss-arctic | 3 | Arctic (régi) | Adattárolók (tick, idősor) | free | ingyenes (nyílt forrás) | 40/46/38/46 | https://github.com/man-group/arctic
+oss-probabilistic-sharpe-ratio | 3 | Probabilistic Sharpe Ratio (notebook) | Validálás | free | ingyenes (nyílt forrás) | 38/44/40/44 | https://github.com/rubenbriones/Probabilistic-Sharpe-Ratio
+oss-darwinexlabs | 3 | DarwinexLabs | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 40/42/38/48 | https://github.com/darwinex/DarwinexLabs
+hf-chancefocus-finma-7b-nlp | 3 | FinMA 7B NLP (HF) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 40/43/38/44 | https://huggingface.co/ChanceFocus/finma-7b-nlp
+hf-fingpt-fingpt-sentiment-train | 3 | FinGPT sentiment train (HF dataset) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 36/46/44/40 | https://huggingface.co/datasets/FinGPT/fingpt-sentiment-train
+oss-awesome-deep-trading | 3 | awesome-deep-trading | Gyűjtőlisták, meta-indexek | free | ingyenes (nyílt forrás) | 36/44/38/45 | https://github.com/cbailes/awesome-deep-trading
+oss-zipline | 3 | zipline (eredeti Quantopian) | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 38/40/35/46 | https://github.com/quantopian/zipline
+oss-pyalgotrade | 3 | PyAlgoTrade | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 36/42/34/44 | https://github.com/gbeced/pyalgotrade
+oss-quanttrader | 3 | quanttrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 37/40/34/43 | https://github.com/letianzj/quanttrader
+oss-pyfolio | 3 | pyfolio (eredeti) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/pyfolio
+oss-empyrical | 3 | empyrical (eredeti) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/empyrical
+oss-alphalens | 3 | alphalens (eredeti) | Kvant-könyvtárak | free | ingyenes (nyílt forrás) | 35/40/33/44 | https://github.com/quantopian/alphalens
+oss-autotrader | 3 | AutoTrader | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 36/39/32/43 | https://github.com/kieran-mackle/AutoTrader
+oss-blankly | 3 | Blankly | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 36/40/33/41 | https://github.com/blankly-finance/blankly
+hf-adaptllm-finance-tasks | 3 | AdaptLLM finance-tasks (HF dataset) | Pénzügyi LLM-ek | free | ingyenes (nyílt forrás) | 31/43/39/36 | https://huggingface.co/datasets/AdaptLLM/finance-tasks
+oss-pymt5adapter | 3 | pymt5adapter | MetaTrader-hidak | free | ingyenes (nyílt forrás) | 36/38/33/35 | https://github.com/nicholishen/pymt5adapter
+oss-fastquant | 3 | fastquant | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 33/36/30/40 | https://github.com/enzoampil/fastquant
+oss-btgym | 3 | BTGym | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 32/34/28/38 | https://github.com/Kismuz/btgym
+oss-gekko | 3 | Gekko | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 28/31/24/36 | https://github.com/askmike/gekko
+oss-zenbot | 3 | Zenbot | Backtest- és élő motorok | free | ingyenes (nyílt forrás) | 28/31/24/36 | https://github.com/DeviaVir/zenbot
 
 ## AI-kereskedés kutatása, LLM-ágensek, súlyozás, validálás, irodalom, benchmark-platformok
-paper-tsmom-2012 | Moskowitz, Ooi, Pedersen (2012): Time Series Momentum | paid | ? | 68/86/84/76 | https://doi.org/10.1016/j.jfineco.2011.11.003
-psi-basket-options-report-2014 | US Senate PSI: Abuse of Structured Financial Products – Misusing Baske | free | 0 | 62/90/84/70 | https://www.hsgac.senate.gov/wp-content/uploads/imo/media/doc/REPORT-Abuse%20of%20Structured%20Financial%20Products%20(Basket%20Options)%20(7-22-14,%20updated%209-30-14).pdf
-book-afml | López de Prado: Advances in Financial Machine Learning (2018) | paid | fizetős, ár nem mérve | 64/86/83/72 | https://openlibrary.org/isbn/9781119482086
-ldp-10-reasons-ml-funds-fail | López de Prado: The 10 Reasons Most Machine Learning Funds Fail (SSRN  | free | 0 | 62/86/82/70 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3104816
-paper-gkx-2020 | Gu, Kelly, Xiu (2020): Empirical Asset Pricing via Machine Learning | paid | ? | 63/86/82/72 | https://doi.org/10.1093/rfs/hhaa009
-hlz-cross-section | Harvey, Liu, Zhu: …and the Cross-Section of Expected Returns (RFS, 201 | free | 0 | 60/88/82/67 | https://doi.org/10.1093/rfs/hhv059
-mclean-pontiff | McLean & Pontiff: Does Academic Research Destroy Stock Return Predicta | free | 0 | 60/88/82/67 | https://doi.org/10.1111/jofi.12365
-lopez-lira-tang-chatgpt | Lopez-Lira & Tang: Can ChatGPT Forecast Stock Price Movements? (2023) | free | 0 | 70/75/76/74 | https://arxiv.org/abs/2304.07619
-bailey-pbo | Bailey, Borwein, López de Prado, Zhu: The Probability of Backtest Over | free | 0 | 60/86/80/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2326253
-deflated-sharpe | Bailey & López de Prado: The Deflated Sharpe Ratio (DSR) | free | 0 | 60/86/80/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551
-book-ml-asset-managers | López de Prado: Machine Learning for Asset Managers (Cambridge Element | paid | fizetős, ár nem mérve | 61/84/80/69 | https://openlibrary.org/isbn/9781108792899
-book-kelly-xiu-financial-ml | Kelly & Xiu: Financial Machine Learning (Foundations and Trends, 2023; | free | ingyenes (SSRN) | 60/86/80/68 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4501707
-gibbs-candes-aci | Gibbs & Candès: Adaptive Conformal Inference Under Distribution Shift  | free | 0 | 62/83/76/67 | https://arxiv.org/abs/2106.00170
-kakushadze-101-alphas | Kakushadze: 101 Formulaic Alphas (2016) | free | 0 | 66/78/75/71 | https://arxiv.org/abs/1601.00991
-sharpe-ratio-efficient-frontier | Bailey & López de Prado: The Sharpe Ratio Efficient Frontier – PSR, Mi | free | 0 | 58/84/78/65 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1821643
-book-carver-systematic | Robert Carver: Systematic Trading (2015) | paid | fizetős, ár nem mérve | 60/81/77/68 | https://openlibrary.org/isbn/9780857194459
-book-esl | Hastie, Tibshirani, Friedman: The Elements of Statistical Learning, 2. | free | ingyenes | 56/86/78/65 | https://openlibrary.org/isbn/9780387848570
-paper-stw-data-snooping-1999 | Sullivan, Timmermann, White (1999): Data-Snooping, Technical Trading R | paid | ? | 57/84/78/66 | https://doi.org/10.1111/0022-1082.00163
-yao-vehtari-stacking-bayes | Yao, Vehtari, Simpson, Gelman: Using Stacking to Average Bayesian Pred | free | 0 | 58/82/76/65 | https://arxiv.org/abs/1704.02030
-book-carver-leveraged | Robert Carver: Leveraged Trading (2019) | paid | fizetős, ár nem mérve | 60/80/76/68 | https://openlibrary.org/isbn/9780857197214
-book-grinold-kahn | Grinold & Kahn: Active Portfolio Management, 2. kiadás (2000) | paid | fizetős, ár nem mérve | 57/82/76/65 | https://openlibrary.org/isbn/9780070248823
-paper-hrp-2016 | López de Prado (2016): Building Diversified Portfolios that Outperform | free | 0 | 58/82/76/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2708678
-freund-schapire-hedge | Freund & Schapire: Hedge / döntéselméleti online tanulás (1997) | paid | ? | 57/81/75/63 | https://doi.org/10.1006/jcss.1997.1504
-russo-thompson-tutorial | Russo, Van Roy et al.: A Tutorial on Thompson Sampling (2017) | free | 0 | 58/80/74/64 | https://arxiv.org/abs/1707.02038
-sklearn-calibration | scikit-learn: Probability calibration (CalibratedClassifierCV, reliabi | free | 0 | 56/82/74/62 | https://scikit-learn.org/stable/modules/calibration.html
-joubert-meta-labeling-theory | Joubert: Meta-Labeling: Theory and Framework (JFDS, 2022) | paid | ? | 61/76/74/68 | https://doi.org/10.3905/jfds.2022.1.098
-harvey-liu-backtesting | Harvey & Liu: Backtesting (JPM, 2015) | free | 0 | 55/83/76/62 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2345489
-arxiv-qfin | arXiv q-fin – kvantitatív pénzügyi preprintek | free | 0 | 64/76/70/66 | https://arxiv.org/archive/q-fin
-paper-lo-sharpe-2002 | Lo (2002): The Statistics of Sharpe Ratios | paid | ? | 54/84/76/62 | https://doi.org/10.2469/faj.v58.n4.2453
-timmermann-forecast-combinations | Timmermann: Forecast Combinations (Handbook of Economic Forecasting, 2 | paid | ? | 55/80/75/62 | https://doi.org/10.1016/S1574-0706(05)01004-9
-bma-hoeting-tutorial | Hoeting, Madigan, Raftery, Volinsky: Bayesian Model Averaging: A Tutor | free | 0 | 56/80/74/64 | https://doi.org/10.1214/ss/1009212519
-white-reality-check | White: A Reality Check for Data Snooping (Econometrica, 2000) | paid | ? | 53/83/76/60 | https://doi.org/10.1111/1468-0262.00152
-hansen-spa | Hansen: A Test for Superior Predictive Ability (JBES, 2005) | paid | ? | 53/83/76/60 | https://doi.org/10.1198/073500105000000063
-mql5-forum | MQL5.com fórum és cikkek | free | 0 | 60/76/72/64 | https://www.mql5.com/en/forum
-brier-1950 | Brier: Verification of Forecasts Expressed in Terms of Probability (19 | free | 0 | 54/80/74/60 | https://doi.org/10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2
-bates-granger-1969 | Bates & Granger: The Combination of Forecasts (1969) | paid | ? | 54/78/72/60 | https://doi.org/10.1057/jors.1969.103
-angelopoulos-bates-conformal | Angelopoulos & Bates: A Gentle Introduction to Conformal Prediction (2 | free | 0 | 53/79/72/60 | https://arxiv.org/abs/2107.07511
-arian-backtest-overfitting-ml-era | Arian, Norouzi Mobarekeh, Seco: Backtest Overfitting in the Machine Le | paid | ? | 54/77/72/62 | https://doi.org/10.1016/j.knosys.2024.112477
-ssrn-fen | SSRN Financial Economics Network | free | 0 | 60/74/68/61 | https://www.ssrn.com/
-liang-divergent-debate | Liang et al.: Encouraging Divergent Thinking through Multi-Agent Debat | free | 0 | 56/74/69/62 | https://arxiv.org/abs/2305.19118
-semantic-entropy | Kuhn, Gal, Farquhar: Semantic Uncertainty (2023) és Farquhar et al., N | free | 0 | 56/74/69/62 | https://arxiv.org/abs/2302.09664
-deep-ensembles | Lakshminarayanan et al.: Deep Ensembles – prediktív bizonytalanság (20 | free | 0 | 56/74/69/62 | https://arxiv.org/abs/1612.01474
-gneiting-raftery-scoring | Gneiting & Raftery: Strictly Proper Scoring Rules, Prediction, and Est | paid | ? | 50/78/70/58 | https://doi.org/10.1198/016214506000001437
-du-multiagent-debate | Du et al.: Improving Factuality and Reasoning through Multiagent Debat | free | 0 | 54/72/66/60 | https://arxiv.org/abs/2305.14325
-devils-advocate-anticipatory-reflection | Wang et al.: Devil's Advocate: Anticipatory Reflection for LLM Agents  | free | 0 | 55/71/66/60 | https://arxiv.org/abs/2405.16334
-finben | FinBen: A Holistic Financial Benchmark for LLMs (Xie et al., 2024) | free | 0 | 52/72/66/58 | https://arxiv.org/abs/2402.12659
-paper-cont-ofi-2014 | Cont, Kukanov, Stoikov (2014): The Price Impact of Order Book Events ( | free | 0 | 78/86/80/78 | https://arxiv.org/abs/1011.6402
-paper-ke-kelly-xiu-text | Ke, Kelly, Xiu (2019): Predicting Returns with Text Data (SESTM) | free | 0 | 69/83/78/74 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3389884
-paper-hurst-ooi-pedersen-century | Hurst, Ooi, Pedersen (2017): A Century of Evidence on Trend-Following  | free | 0 | 64/83/80/72 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2993026
-paper-carry-2018 | Koijen, Moskowitz, Pedersen, Vrugt (2018): Carry | paid | ? | 64/84/80/71 | https://doi.org/10.1016/j.jfineco.2017.11.002
-paper-lustig-roussanov-verdelhan | Lustig, Roussanov, Verdelhan (2011): Common Risk Factors in Currency M | paid | ? | 64/84/80/71 | https://doi.org/10.1093/rfs/hhr068
-paper-jegadeesh-titman-1993 | Jegadeesh & Titman (1993): Returns to Buying Winners and Selling Loser | paid | ? | 62/83/80/70 | https://doi.org/10.1111/j.1540-6261.1993.tb04702.x
-paper-value-momentum-everywhere | Asness, Moskowitz, Pedersen (2013): Value and Momentum Everywhere | paid | ? | 62/83/80/70 | https://doi.org/10.1111/jofi.12021
-paper-deeplob | Zhang, Zohren, Roberts (2019): DeepLOB | free | 0 | 70/78/72/72 | https://arxiv.org/abs/1808.03668
-paper-vpin-2012 | Easley, López de Prado, O'Hara (2012): Flow Toxicity and Liquidity in  | paid | ? | 68/78/71/70 | https://doi.org/10.1093/rfs/hhs053
-paper-lim-zohren-tsmom-dnn | Lim, Zohren, Roberts (2019): Enhancing Time-Series Momentum Strategies | free | 0 | 64/79/76/71 | https://arxiv.org/abs/1904.04912
-paper-daniel-moskowitz-crashes | Daniel & Moskowitz (2016): Momentum Crashes | paid | ? | 60/83/78/68 | https://doi.org/10.1016/j.jfineco.2015.12.002
-paper-barroso-santa-clara | Barroso & Santa-Clara (2015): Momentum Has Its Moments | paid | ? | 60/83/78/68 | https://doi.org/10.1016/j.jfineco.2014.11.010
-paper-moreira-muir-2017 | Moreira & Muir (2017): Volatility-Managed Portfolios | paid | ? | 60/83/78/68 | https://doi.org/10.1111/jofi.12513
-paper-menkhoff-carry-vol | Menkhoff, Sarno, Schmeling, Schrimpf (2012): Carry Trades and Global F | paid | ? | 60/83/78/68 | https://doi.org/10.1111/j.1540-6261.2012.01728.x
-paper-bnp-carry-crashes | Brunnermeier, Nagel, Pedersen (2008): Carry Trades and Currency Crashe | paid | ? | 60/83/78/68 | https://doi.org/10.1086/593088
-paper-jiang-kelly-xiu-images | Jiang, Kelly, Xiu (2023): (Re-)Imag(in)ing Price Trends | free | 0 | 62/80/74/69 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3756587
-paper-corsi-har-2009 | Corsi (2009): A Simple Approximate Long-Memory Model of Realized Volat | paid | ? | 60/83/76/66 | https://doi.org/10.1093/jjfinec/nbp001
-jkp-replication-crisis | Jensen, Kelly, Pedersen: Is There a Replication Crisis in Finance? (JF | free | 0 | 57/82/77/64 | https://doi.org/10.1111/jofi.13249
-paper-hamilton-regime-1989 | Hamilton (1989): A New Approach to the Economic Analysis of Nonstation | paid | ? | 58/82/76/65 | https://doi.org/10.2307/1912559
-zaffran-agaci | Zaffran et al.: Adaptive Conformal Predictions for Time Series (2022) | free | 0 | 60/79/72/66 | https://arxiv.org/abs/2202.07282
-pseudo-mathematics-charlatanism | Bailey, Borwein, López de Prado, Zhu: Pseudo-Mathematics and Financial | free | 0 | 55/83/76/62 | https://doi.org/10.1090/noti1105
-jax-interpretation | JAX (Google) – 'Jax-hez hasonló' értelmezés: autodiff/XLA numerikus ML | free | 0 | 59/80/72/63 | https://github.com/google/jax
-aqr-research-library | AQR Research Library | free | 0 | 58/80/74/65 | https://www.aqr.com/Insights/Research
-paper-fama-french-1993 | Fama & French (1993): Common Risk Factors in the Returns on Stocks and | paid | ? | 56/82/76/64 | https://doi.org/10.1016/0304-405X(93)90023-5
-paper-ipca-2019 | Kelly, Pruitt, Su (2019): Characteristics Are Covariances (IPCA) | paid | ? | 56/82/76/64 | https://doi.org/10.1016/j.jfineco.2019.05.001
-paper-black-litterman-1992 | Black & Litterman (1992): Global Portfolio Optimization | paid | ? | 56/82/76/64 | https://doi.org/10.2469/faj.v48.n5.28
-hansen-lunde-nason-mcs | Hansen, Lunde, Nason: The Model Confidence Set (Econometrica, 2011) | paid | ? | 53/83/76/60 | https://doi.org/10.3982/ECTA5771
-book-harris-trading-exchanges | Larry Harris: Trading and Exchanges (2003) | paid | fizetős, ár nem mérve | 56/80/74/64 | https://openlibrary.org/isbn/9780195144703
-book-bda3 | Gelman et al.: Bayesian Data Analysis, 3. kiadás (2013) | free | ingyenes | 54/82/74/62 | https://openlibrary.org/isbn/9781439840955
-quantpedia | Quantpedia – kvant stratégia-adatbázis | freemium | Premium: 599 USD / 12 hó (~45 €/hó) | 61/74/72/66 | https://quantpedia.com/
-paper-gatev-pairs-2006 | Gatev, Goetzmann, Rouwenhorst (2006): Pairs Trading | paid | ? | 58/78/72/65 | https://doi.org/10.1093/rfs/hhj020
-paper-avellaneda-lee-2010 | Avellaneda & Lee (2010): Statistical Arbitrage in the US Equities Mark | paid | ? | 60/76/71/66 | https://doi.org/10.1080/14697680903124632
-paper-bollerslev-garch-1986 | Bollerslev (1986): Generalized ARCH (GARCH) | paid | ? | 54/82/74/62 | https://doi.org/10.1016/0304-4076(86)90063-1
-paper-engle-granger-1987 | Engle & Granger (1987): Co-Integration and Error Correction | paid | ? | 56/80/73/64 | https://doi.org/10.2307/1913236
-tradingagents | TradingAgents (Tauric Research) – többágenses LLM kereskedési keretren | free | 0 | 60/73/72/64 | https://github.com/TauricResearch/TradingAgents
-kirtac-aggregate-llm-agents | Kirtac: Learning to Aggregate Zero-Shot LLM Agents for Corporate Discl | free | 0 | 64/68/68/69 | https://arxiv.org/abs/2603.20965
-littlestone-warmuth-wma | Littlestone & Warmuth: The Weighted Majority Algorithm (1994) | paid | ? | 56/78/72/62 | https://doi.org/10.1006/inco.1994.1009
-auer-exp3 | Auer, Cesa-Bianchi, Freund, Schapire: The Nonstochastic Multiarmed Ban | paid | ? | 56/78/72/62 | https://doi.org/10.1137/S0097539701398375
-xu-xie-enbpi | Xu & Xie: Conformal Prediction for Time Series – EnbPI (2020) | free | 0 | 58/76/70/64 | https://arxiv.org/abs/2010.09107
-tradingview | TradingView – grafikon, Pine Script, közösség | freemium | Essential 12,95 – Ultimate 199,95 USD/hó | 62/74/67/63 | https://www.tradingview.com/pricing/
-book-carver-advanced-futures | Robert Carver: Advanced Futures Trading Strategies (2023) | paid | fizetős, ár nem mérve | 57/76/72/64 | https://openlibrary.org/isbn/9780857199683
-book-isichenko-qpm | Michael Isichenko: Quantitative Portfolio Management (2021) | paid | fizetős, ár nem mérve | 57/76/72/65 | https://openlibrary.org/isbn/9781119821328
-book-fpp3 | Hyndman & Athanasopoulos: Forecasting: Principles and Practice, 3. kia | free | ingyenes | 54/80/72/62 | https://otexts.com/fpp3/
-quantresearch-lopez-de-prado | quantresearch.org – López de Prado előadásai és anyagai | free | 0 | 56/77/72/65 | https://www.quantresearch.org/
-paper-fama-french-2015 | Fama & French (2015): A Five-Factor Asset Pricing Model | paid | ? | 54/80/73/62 | https://doi.org/10.1016/j.jfineco.2014.10.010
-paper-thorp-kelly-handbook | Thorp (2006): The Kelly Criterion in Blackjack, Sports Betting, and th | paid | ? | 54/79/73/62 | https://doi.org/10.1016/s1872-0978(06)01009-x
-paper-ledoit-wolf-2004 | Ledoit & Wolf (2004): Honey, I Shrunk the Sample Covariance Matrix | paid | ? | 52/82/74/61 | https://doi.org/10.3905/jpm.2004.110
-paper-politis-romano-1994 | Politis & Romano (1994): The Stationary Bootstrap | paid | ? | 52/82/74/61 | https://doi.org/10.1080/01621459.1994.10476870
-paper-cont-stylized-facts-2001 | Cont (2001): Empirical Properties of Asset Returns: Stylized Facts | paid | ? | 52/82/74/61 | https://doi.org/10.1080/713665670
-wolpert-stacked-generalization | Wolpert: Stacked Generalization (1992) | paid | ? | 54/78/72/60 | https://doi.org/10.1016/S0893-6080(05)80023-1
-breiman-stacked-regressions | Breiman: Stacked Regressions (1996) | paid | ? | 54/78/72/60 | https://doi.org/10.1007/BF00117832
-li-hoi-olps-survey | Li & Hoi: Online Portfolio Selection: A Survey (2014) | free | 0 | 58/74/70/64 | https://arxiv.org/abs/1212.2129
-romano-wolf-stepm | Romano & Wolf: Stepwise Multiple Testing as Formalized Data Snooping ( | paid | ? | 52/80/73/59 | https://doi.org/10.1111/j.1468-0262.2005.00615.x
-hou-xue-zhang-replicating | Hou, Xue, Zhang: Replicating Anomalies (RFS, 2020) | paid | ? | 52/80/73/59 | https://doi.org/10.1093/rfs/hhy131
-livetradebench | LiveTradeBench: Seeking Real-World Alpha with LLMs (2025) | free | 0 | 60/74/68/64 | https://arxiv.org/abs/2511.03628
-numerai-tournament | Numerai Tournament – crowdsourced hedge fund, ingyenes titkosított ada | free | 0 | 57/74/72/60 | https://numer.ai/
-book-chan-quant-trading | Ernest Chan: Quantitative Trading, 2. kiadás (2021) | paid | fizetős, ár nem mérve | 57/74/70/64 | https://openlibrary.org/isbn/9781119800064
-book-hamilton-tsa | James Hamilton: Time Series Analysis (1994) | paid | fizetős, ár nem mérve | 52/80/72/60 | https://openlibrary.org/isbn/9780691042893
-book-bouchaud-tqp | Bouchaud, Bonart, Donier, Gould: Trades, Quotes and Prices (2018) | paid | fizetős, ár nem mérve | 56/76/70/63 | https://openlibrary.org/isbn/9781107156050
-book-cartea-ahft | Cartea, Jaimungal, Penalva: Algorithmic and High-Frequency Trading (20 | paid | fizetős, ár nem mérve | 56/76/70/63 | https://openlibrary.org/isbn/9781107091146
-mit-18s096 | MIT OCW 18.S096: Topics in Mathematics with Applications in Finance (2 | free | ingyenes | 54/78/71/62 | https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/
-paper-engle-arch-1982 | Engle (1982): Autoregressive Conditional Heteroscedasticity (ARCH) | paid | ? | 53/80/71/60 | https://doi.org/10.2307/1912773
-wisdom-silicon-crowd | Schoenegger et al.: Wisdom of the Silicon Crowd (2024) | free | 0 | 58/72/68/64 | https://arxiv.org/abs/2402.19379
-helmbold-olps-multiplicative | Helmbold et al.: On-Line Portfolio Selection Using Multiplicative Upda | paid | ? | 54/76/70/60 | https://doi.org/10.1111/1467-9965.00058
-stockbench | StockBench: Can LLM Agents Trade Stocks Profitably in Real-world Marke | free | 0 | 58/73/68/62 | https://arxiv.org/abs/2510.02209
-book-chan-algorithmic-trading | Ernest Chan: Algorithmic Trading (2013) | paid | fizetős, ár nem mérve | 56/72/69/64 | https://openlibrary.org/isbn/9781118460146
-book-jansen-ml4t | Stefan Jansen: Machine Learning for Algorithmic Trading, 2. kiadás (20 | paid | fizetős, ár nem mérve | 54/75/70/62 | https://openlibrary.org/isbn/9781839217715
-book-ilmanen-expected-returns | Antti Ilmanen: Expected Returns (2011) | paid | fizetős, ár nem mérve | 54/76/70/62 | https://openlibrary.org/isbn/9781119990727
-alpha-architect | Alpha Architect – kvant faktorbefektetési blog és kutatás | free | 0 | 56/74/68/63 | https://alphaarchitect.com/blog/
-paper-markowitz-1952 | Markowitz (1952): Portfolio Selection | paid | ? | 51/79/71/60 | https://doi.org/10.1111/j.1540-6261.1952.tb01525.x
-paper-rockafellar-uryasev-cvar | Rockafellar & Uryasev (2000): Optimization of Conditional Value-at-Ris | paid | ? | 51/79/71/60 | https://doi.org/10.21314/JOR.2000.038
-paper-artzner-coherent-1999 | Artzner, Delbaen, Eber, Heath (1999): Coherent Measures of Risk | paid | ? | 51/79/71/60 | https://doi.org/10.1111/1467-9965.00068
-arora-hazan-kale-mwu | Arora, Hazan, Kale: The Multiplicative Weights Update Method (2012) | free | 0 | 52/76/70/59 | https://theoryofcomputing.org/articles/v008a006/
-cover-universal-portfolios | Cover: Universal Portfolios (1991) | paid | ? | 52/76/70/59 | https://doi.org/10.1111/j.1467-9965.1991.tb00002.x
-guo-calibration-nn | Guo et al.: On Calibration of Modern Neural Networks (2017) | free | 0 | 52/76/70/59 | https://arxiv.org/abs/1706.04599
-barber-beyond-exchangeability | Barber, Candès, Ramdas, Tibshirani: Conformal Prediction Beyond Exchan | free | 0 | 53/76/68/60 | https://arxiv.org/abs/2202.13415
-quantconnect-learning | QuantConnect Learning Center / Bootcamp | freemium | ? | 55/73/68/60 | https://www.quantconnect.com/learning
-halawi-human-level-forecasting | Halawi et al.: Approaching Human-Level Forecasting with Language Model | free | 0 | 56/70/66/62 | https://arxiv.org/abs/2402.18563
-blackrock-scenario-methodology | BlackRock Scenario Tester / Portfolio Analyzer módszertan (nyilvános) | free | 0 | 54/73/66/60 | https://www.blackrock.com/us/financial-professionals/tools/scenarios-methodology
-worldquant-brain | WorldQuant BRAIN – ingyenes alfa-szimulációs platform | registration | ? | 56/70/68/58 | https://platform.worldquantbrain.com/
-numerai-signals | Numerai Signals – saját jel beküldése tickerekre | free | 0 | 56/70/68/58 | https://signals.numer.ai/
-book-tsay-aft | Ruey Tsay: Analysis of Financial Time Series, 3. kiadás (2010) | paid | fizetős, ár nem mérve | 50/76/68/59 | https://openlibrary.org/isbn/9780470414354
-book-pedersen-efficiently-inefficient | Lasse Heje Pedersen: Efficiently Inefficient (2015) | paid | fizetős, ár nem mérve | 52/73/68/60 | https://openlibrary.org/isbn/9780691166193
-wqu-msc-fe | WorldQuant University – ingyenes online MSc in Financial Engineering | free | ingyenes (tandíjmentes) | 52/74/68/58 | https://www.wqu.edu/
-podcast-flirting-with-models | Flirting with Models (Corey Hoffstein) podcast | free | 0 | 53/74/66/60 | https://www.flirtingwithmodels.com/
-cesa-bianchi-lugosi-plg | Cesa-Bianchi & Lugosi: Prediction, Learning, and Games (Cambridge, 200 | paid | ? | 49/75/68/56 | https://openlibrary.org/isbn/9780521841085
-zadrozny-elkan-isotonic | Zadrozny & Elkan: Transforming Classifier Scores into Accurate Multicl | paid | ? | 49/75/68/56 | https://doi.org/10.1145/775047.775151
-niculescu-mizil-caruana | Niculescu-Mizil & Caruana: Predicting Good Probabilities with Supervis | paid | ? | 49/75/68/56 | https://doi.org/10.1145/1102351.1102430
-zuckerman-man-who-solved-market | Zuckerman: The Man Who Solved the Market (Portfolio, 2019) | paid | ? | 52/71/67/58 | https://openlibrary.org/isbn/9780735217980
-cornell-medallion-counterexample | Cornell: Medallion Fund: The Ultimate Counterexample? (SSRN 3504766, 2 | free | 0 | 52/72/66/59 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3504766
-quantconnect-forum | QuantConnect közösség / fórum | free | 0 | 54/70/65/60 | https://www.quantconnect.com/forum
-khan-persuasive-debate | Khan et al.: Debating with More Persuasive LLMs Leads to More Truthful | free | 0 | 53/69/64/59 | https://arxiv.org/abs/2402.06782
-self-consistency | Wang et al.: Self-Consistency Improves Chain of Thought Reasoning (202 | free | 0 | 51/72/64/58 | https://arxiv.org/abs/2203.11171
-kadavath-know-what-they-know | Kadavath et al.: Language Models (Mostly) Know What They Know (2022) | free | 0 | 52/71/64/58 | https://arxiv.org/abs/2207.05221
-finance-agent-benchmark | Finance Agent Benchmark (Vals AI, 2025) | free | 0 | 53/70/63/58 | https://arxiv.org/abs/2508.00828
-jane-street-kaggle-2024 | Jane Street Real-Time Market Data Forecasting (Kaggle, 2024) | registration | ? | 54/67/64/59 | https://www.kaggle.com/competitions/jane-street-real-time-market-data-forecasting
-book-paleologo-apm | Giuseppe Paleologo: Advanced Portfolio Management (2021) | paid | fizetős, ár nem mérve | 50/72/66/58 | https://openlibrary.org/isbn/9781119789796
-ai-hedge-fund-virattt | AI Hedge Fund (virattt) – befektetői persona-ágensek | free | 0 | 52/68/64/56 | https://github.com/virattt/ai-hedge-fund
-koyfin | Koyfin – olcsó terminál-alternatíva | freemium | Plus 39 USD/hó; Premium 79 USD/hó (~71 € | 53/68/61/56 | https://www.koyfin.com/pricing/
-investorbench | InvestorBench: befektetési döntési feladatok LLM-ágensekkel (2024) | free | 0 | 52/66/61/58 | https://arxiv.org/abs/2412.18174
-jane-street-interpretation | Jane Street – 'Jane-hez hasonló' értelmezés: statisztikai/ML alapú mar | institutional | ? | 52/66/62/56 | https://www.janestreet.com/
-irving-ai-safety-debate | Irving, Christiano, Amodei: AI safety via debate (2018) | free | 0 | 48/68/62/56 | https://arxiv.org/abs/1805.00899
-finrobot | FinRobot (AI4Finance) – nyílt AI-ágens platform pénzügyi feladatokra | free | 0 | 50/64/60/54 | https://github.com/AI4Finance-Foundation/FinRobot
-hudson-thames-meta-labeling-repo | Hudson & Thames meta-labeling kód a cikksorozathoz | free | 0 | 53/60/58/58 | https://github.com/hudson-and-thames/meta-labeling
-financebench | FinanceBench (Patronus AI) – nyílt könyves pénzügyi kérdés-válasz | freemium | ? | 46/66/61/52 | https://github.com/patronus-ai/financebench
-llm-agent-trading-survey | Large Language Model Agent in Financial Trading: A Survey (Ding et al. | free | 0 | 47/63/58/54 | https://arxiv.org/abs/2408.06361
-paper-sirignano-cont-universal | Sirignano & Cont (2019): Universal Features of Price Formation (Deep L | free | 0 | 66/76/69/69 | https://arxiv.org/abs/1803.06917
-paper-bouchaud-farmer-lillo-2008 | Bouchaud, Farmer, Lillo (2008): How Markets Slowly Digest Changes in S | free | 0 | 60/77/70/66 | https://arxiv.org/abs/0809.0822
-paper-gatheral-rough-vol | Gatheral, Jaisson, Rosenbaum (2014): Volatility is Rough | free | 0 | 56/76/70/64 | https://arxiv.org/abs/1410.3394
-paper-carhart-1997 | Carhart (1997): On Persistence in Mutual Fund Performance | paid | ? | 51/79/71/60 | https://doi.org/10.1111/j.1540-6261.1997.tb03808.x
-paper-almgren-chriss-2001 | Almgren & Chriss (2001): Optimal Execution of Portfolio Transactions | paid | ? | 56/76/66/60 | https://doi.org/10.21314/JOR.2001.041
-paper-bab-2014 | Frazzini & Pedersen (2014): Betting Against Beta | paid | ? | 54/74/70/62 | https://doi.org/10.1016/j.jfineco.2013.10.005
-paper-tetlock-2007 | Tetlock (2007): Giving Content to Investor Sentiment | paid | ? | 56/75/68/62 | https://doi.org/10.1111/j.1540-6261.2007.01232.x
-paper-kyle-1985 | Kyle (1985): Continuous Auctions and Insider Trading | paid | ? | 52/77/68/59 | https://doi.org/10.2307/1913210
-paper-loughran-mcdonald-2011 | Loughran & McDonald (2011): When Is a Liability Not a Liability? | paid | ? | 54/74/68/60 | https://doi.org/10.1111/j.1540-6261.2010.01625.x
-rentech-13f-edgar | Renaissance Technologies LLC – 13F beadványok (SEC EDGAR, CIK 00010373 | free | 0 | 51/75/68/59 | https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001037389&type=13F
-paper-moody-saffell-2001 | Moody & Saffell (2001): Learning to Trade via Direct Reinforcement | paid | ? | 53/73/66/60 | https://doi.org/10.1109/72.935097
-paper-lmw-technical-2000 | Lo, Mamaysky, Wang (2000): Foundations of Technical Analysis | paid | ? | 53/73/66/60 | https://doi.org/10.1111/0022-1082.00265
-paper-bll-technical-1992 | Brock, Lakonishok, LeBaron (1992): Simple Technical Trading Rules | paid | ? | 53/73/66/60 | https://doi.org/10.1111/j.1540-6261.1992.tb04681.x
-cheng-hu-llm-provider-dispersion | Cheng & Hu: LLM-szolgáltatók közti hírszentiment-szórás és hozamok (20 | free | 0 | 62/62/62/66 | https://skbi.smu.edu.sg/sites/skbi.smu.edu.sg/files/2026-06/Day1_1115_Si%20Cheng%20(paper).pdf
-hazan-oco | Hazan: Introduction to Online Convex Optimization (2019) | free | 0 | 50/74/67/58 | https://arxiv.org/abs/1909.05207
-ldp-computing-pbo | López de Prado: Computing the Probability of Over-Fitting in the Back- | free | 0 | 50/74/67/58 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2308659
-chen-didisheim-somoza-black-box | Chen, Didisheim, Somoza: Out of the (Black)Box: AI as Conditional Prob | free | 0 | 58/63/62/63 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5012852
-harvey-liu-lucky-factors | Harvey & Liu: Lucky Factors (JFE, 2021) | paid | ? | 48/74/66/56 | https://doi.org/10.1016/j.jfineco.2021.04.014
-book-chan-machine-trading | Ernest Chan: Machine Trading (2017) | paid | fizetős, ár nem mérve | 52/70/64/60 | https://openlibrary.org/isbn/9781119219606
-book-natenberg | Sheldon Natenberg: Option Volatility and Pricing, 2. kiadás (2014) | paid | fizetős, ár nem mérve | 50/71/65/59 | https://openlibrary.org/isbn/9780071818773
-paper-novy-marx-2013 | Novy-Marx (2013): The Other Side of Value: Gross Profitability Premium | paid | ? | 50/72/66/58 | https://doi.org/10.1016/j.jfineco.2013.01.003
-man-ahl | Man AHL és Man Group Insights | institutional | ? | 50/70/64/58 | https://www.man.com/ahl
-book-understanding-ml | Shalev-Shwartz & Ben-David: Understanding Machine Learning (2014) | free | ingyenes | 48/73/64/56 | https://openlibrary.org/isbn/9781107057135
-mit-15401 | MIT OCW 15.401: Finance Theory I (2008, Andrew Lo) | free | ingyenes | 48/73/64/56 | https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/
-paper-kolm-ritter-rl | Kolm & Ritter (2019): Modern Perspectives on Reinforcement Learning in | free | 0 | 50/70/64/58 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3449401
-trading-r1-paper | Trading-R1: Financial Trading with LLM Reasoning via Reinforcement Lea | free | 0 | 55/62/62/59 | https://arxiv.org/abs/2509.11420
-alphaagent-paper | AlphaAgent: LLM-Driven Alpha Mining with Regularized Exploration to Co | free | 0 | 56/62/61/60 | https://arxiv.org/abs/2502.16789
-jev-typesafe | Jev (TypeSafe AI) – kalibrált valószínűségeket adó döntési modell – a  | paid | 0,042 USD / 1M input token; output 0 | 58/62/56/57 | https://typesafe.ai/
-psi-rentech-statement-2014 | Renaissance Technologies közös nyilatkozata a PSI-meghallgatáson (2014 | free | 0 | 47/72/63/54 | https://www.hsgac.senate.gov/wp-content/uploads/imo/media/doc/STMT%20-%20Renaissance%20(July%2022%202014).pdf
-book-kissell-algo-trading | Robert Kissell: The Science of Algorithmic Trading and Portfolio Manag | paid | fizetős, ár nem mérve | 50/69/62/57 | https://openlibrary.org/isbn/9780124016897
-podcast-top-traders-unplugged | Top Traders Unplugged podcast | free | 0 | 50/68/61/57 | https://www.toptradersunplugged.com/
-paper-finrl-2020 | Liu et al. (2020): FinRL: A Deep RL Library for Automated Stock Tradin | free | 0 | 52/66/60/59 | https://arxiv.org/abs/2011.09607
-automate-strategy-finding-llm | Automate Strategy Finding with LLM in Quant Investment (Kou et al., 20 | free | 0 | 55/60/60/60 | https://arxiv.org/abs/2409.06289
-thompson-1933 | Thompson: On the Likelihood that One Unknown Probability Exceeds Anoth | paid | ? | 46/70/63/53 | https://doi.org/10.1093/biomet/25.3-4.285
-paper-deng-ddrl-2017 | Deng et al. (2017): Deep Direct Reinforcement Learning for Financial S | paid | ? | 50/66/60/58 | https://doi.org/10.1109/TNNLS.2016.2522401
-paper-jiang-drl-portfolio-2017 | Jiang, Xu, Liang (2017): A Deep RL Framework for the Financial Portfol | free | 0 | 52/64/59/59 | https://arxiv.org/abs/1706.10059
-universal-portfolios-lib | universal-portfolios (Python) – OLPS-algoritmusok gyűjteménye | free | 0 | 50/64/60/55 | https://github.com/Marigold/universal-portfolios
-rentech-irs-settlement-2021 | Renaissance-vezetők adóegyezsége az IRS-szel (2021) – kb. 7 Mrd USD | free | 0 | 46/68/60/53 | https://www.cnbc.com/2021/09/03/renaissance-executives-agree-to-pay-7-billion-to-settle-tax-dispute.html
-simons-ted-2015 | Jim Simons TED-interjú: A rare interview with the mathematician who cr | free | 0 | 46/68/60/53 | https://www.ted.com/talks/jim_simons_a_rare_interview_with_the_mathematician_who_cracked_wall_street
-book-thorp-man-all-markets | Edward Thorp: A Man for All Markets (2017) | paid | fizetős, ár nem mérve | 47/67/60/54 | https://openlibrary.org/isbn/9781400067961
-udacity-ml4t | Georgia Tech / Udacity: Machine Learning for Trading (ud501) | free | 0 | 48/66/60/56 | https://www.udacity.com/course/machine-learning-for-trading--ud501
-alpha-gpt-paper | Alpha-GPT: Human-AI Interactive Alpha Mining (Wang et al., 2023) | free | 0 | 54/58/57/58 | https://arxiv.org/abs/2308.00016
-finsentllm | FinSentLLM: Multi-LLM and Structured Semantic Signals for Financial Se | free | 0 | 54/58/56/58 | https://arxiv.org/abs/2509.12638
-numerapi | numerapi – Numerai Python API és CLI | free | 0 | 48/65/60/51 | https://github.com/numerai/numerapi
-numerai-example-scripts | Numerai example-scripts | free | 0 | 48/65/60/51 | https://github.com/numerai/example-scripts
-coursera-ml-rl-finance | Coursera: Machine Learning and Reinforcement Learning in Finance (NYU  | freemium | ? | 46/66/60/54 | https://www.coursera.org/specializations/machine-learning-reinforcement-finance
-fincon-paper | FinCon: LLM többágenses rendszer fogalmi verbális megerősítéssel (Yu e | free | 0 | 51/58/56/56 | https://arxiv.org/abs/2407.06567
-chateval | ChatEval: LLM-értékelők többágenses vitával (Chan et al., 2023) | free | 0 | 48/62/56/54 | https://arxiv.org/abs/2308.07201
-flue-flang | FLUE / FLANG: When FLUE Meets FLANG (Shah et al., 2022) | free | 0 | 46/64/58/54 | https://arxiv.org/abs/2211.00083
-bizbench | BizBench: Quantitative Reasoning Benchmark for Business and Finance (2 | free | 0 | 46/64/58/54 | https://arxiv.org/abs/2311.06602
-book-taleb-fooled | Taleb: Fooled by Randomness (2005-ös kiadás) | paid | fizetős, ár nem mérve | 44/66/58/51 | https://openlibrary.org/isbn/9780812975215
-hudson-thames | Hudson & Thames – pénzügyi ML kutatólabor | freemium | ? | 49/61/56/55 | https://hudsonthames.org/
-quantagent-paper | QuantAgent: Seeking Holy Grail in Trading by Self-Improving LLM (Wang  | free | 0 | 50/57/55/56 | https://arxiv.org/abs/2402.03755
-alphaagents-portfolio-paper | AlphaAgents: LLM-alapú többágenses részvényportfólió-építés (2025) | free | 0 | 50/57/55/56 | https://arxiv.org/abs/2508.11152
-finqa | FinQA: numerikus érvelés pénzügyi adatokon (Chen et al., 2021) | free | 0 | 46/62/56/54 | https://github.com/czyssrs/FinQA
-finsearchcomp | FinSearchComp: pénzügyi keresés és érvelés szakértői szintű kiértékelé | free | 0 | 48/60/54/54 | https://arxiv.org/abs/2509.13160
-finagent-paper | FinAgent: A Multimodal Foundation Agent for Financial Trading (Zhang e | free | 0 | 50/56/54/54 | https://arxiv.org/abs/2402.18485
-llm-finance-survey-nie | A Survey of LLMs for Financial Applications (Nie et al., 2024) | free | 0 | 46/60/55/53 | https://arxiv.org/abs/2406.11903
-awesome-conformal-prediction | awesome-conformal-prediction (valeman) – forrásgyűjtemény | free | 0 | 44/62/56/48 | https://github.com/valeman/awesome-conformal-prediction
-dexter-virattt | Dexter (virattt) – autonóm pénzügyi kutatóágens | free | 0 | 45/60/55/48 | https://github.com/virattt/dexter
-bloomberggpt-paper | BloombergGPT: A Large Language Model for Finance (Wu et al., 2023) | free | 0 | 46/58/54/52 | https://arxiv.org/abs/2303.17564
-convfinqa | ConvFinQA: társalgási numerikus pénzügyi QA (2022) | free | 0 | 44/60/54/53 | https://arxiv.org/abs/2210.03849
-tat-qa | TAT-QA: táblázat + szöveg hibrid pénzügyi QA (2021) | free | 0 | 44/60/54/53 | https://arxiv.org/abs/2105.07624
-ai-trader-hkuds | AI-Trader (HKUDS) – teljesen automatizált ágens-natív kereskedés | free | 0 | 48/55/52/48 | https://github.com/HKUDS/AI-Trader
-financial-phrasebank | Financial PhraseBank: Good Debt or Bad Debt (Malo et al., 2014) | free | 0 | 44/58/53/51 | https://arxiv.org/abs/1307.5336
-flag-trader-paper | FLAG-Trader: LLM-ágens + gradiensalapú RL fúzió (Xiong et al., 2025) | free | 0 | 47/52/50/52 | https://arxiv.org/abs/2502.11433
-llm-finance-survey-li | Large Language Models in Finance: A Survey (Li et al., 2023) | free | 0 | 44/56/51/52 | https://arxiv.org/abs/2311.10723
-quantra | Quantra (QuantInsti) – algokereskedési kurzusok | freemium | ? | 42/58/52/48 | https://quantra.quantinsti.com/
-reddit-algotrading | r/algotrading (Reddit) | free | 0 | 46/54/50/48 | https://www.reddit.com/r/algotrading/
-tradingagents-cn | TradingAgents-CN – kínai bővített fork | free | 0 | 44/54/52/44 | https://github.com/hsliuping/TradingAgents-CN
-trademaster | TradeMaster (NTU) – RL-alapú kvant kereskedési platform | free | 0 | 46/52/49/51 | https://github.com/TradeMaster-NTU/TradeMaster
-rentech-simons-interpretation | Jim Simons / Renaissance-szerű statisztikai arbitrázs – tartalmi értel | institutional | ? | 42/56/52/48 | https://en.wikipedia.org/wiki/Renaissance_Technologies
-finmem | FinMem – rétegzett memóriájú LLM kereskedőágens | free | 0 | 46/50/48/51 | https://github.com/pipiku915/FinMem-LLM-StockTrading
-tradinggpt-paper | TradingGPT: többágenses rendszer rétegzett memóriával (Li et al., 2023 | free | 0 | 44/50/46/50 | https://arxiv.org/abs/2309.03736
-stockagent | StockAgent – LLM-alapú kereskedés szimulált valós környezetben | free | 0 | 42/50/48/44 | https://github.com/MingyuJ666/Stockagent
-bloomberg-bql-bquant | Bloomberg Query Language (BQL) és BQuant | paid | ? | 58/72/64/60 | https://guides.nyu.edu/bloombergguide/bloomberg-query-language-bql
-bloomberg-b-pipe | Bloomberg B-PIPE (Market Data Feed) | institutional | ? | 58/72/60/58 | https://aws.amazon.com/financial-services/partner-solutions/bloomberg-b-pipe
-aladdin-risk | Aladdin Risk | institutional | ? | 54/74/66/56 | https://www.blackrock.com/aladdin/products/aladdin-risk
-aladdin-platform | BlackRock Aladdin – befektetéskezelési és kockázati platform | institutional | ? | 52/72/63/55 | https://www.blackrock.com/aladdin
-bloomberg-blpapi | Bloomberg API (blpapi) Python SDK | paid | ? | 56/68/58/56 | https://pypi.org/project/blpapi/
-factset | FactSet Workstation | paid | kb. 12–40 ezer USD/év (becsült) (~1 960  | 52/67/58/54 | https://www.factset.com/
-two-sigma | Two Sigma – adatvezérelt befektetési cég, nyilvános kutatás | institutional | ? | 48/68/61/56 | https://www.twosigma.com/
-book-thorp-beat-dealer | Edward Thorp: Beat the Dealer (1966) | paid | fizetős, ár nem mérve | 46/64/58/52 | https://openlibrary.org/isbn/9780394703107
-book-taleb-dynamic-hedging | Taleb: Dynamic Hedging (1997) | paid | fizetős, ár nem mérve | 44/62/56/52 | https://openlibrary.org/isbn/9780471152804
-coursera-shiller-financial-markets | Coursera: Financial Markets (Yale, Robert Shiller) | freemium | ? | 42/64/56/49 | https://www.coursera.org/learn/financial-markets-global
-citadel | Citadel és Citadel Securities | institutional | ? | 43/62/54/50 | https://www.citadel.com/
-de-shaw | D. E. Shaw & Co. – kvant pionír; nyilvános könyvtár | institutional | ? | 43/62/54/50 | https://www.deshaw.com/
-ycharts | YCharts | paid | kb. 3 600–6 000 USD/év (becsült) (~271 € | 44/58/50/48 | https://ycharts.com/
-podcast-chat-with-traders | Chat With Traders podcast | free | 0 | 44/58/50/50 | https://chatwithtraders.com/
-aladdin-wealth | Aladdin Wealth | institutional | ? | 42/58/50/45 | https://www.blackrock.com/aladdin/products/aladdin-wealth
-xtx-markets | XTX Markets | institutional | ? | 42/57/50/48 | https://www.xtxmarkets.com/
-wilmott-forum | Wilmott fórum | free | 0 | 41/58/50/48 | https://forum.wilmott.com/
-finmaster | FinMaster: teljes pénzügyi munkafolyamat benchmark (2025) | free | 0 | 40/56/50/47 | https://arxiv.org/abs/2505.13533
-quantnet | QuantNet – kvant karrier és oktatási fórum | free | 0 | 40/56/50/46 | https://quantnet.com/
-jarvis-hugginggpt-interpretation | JARVIS / HuggingGPT (Microsoft) – 'Jarvis-szerű' értelmezés: LLM-vezér | free | 0 | 42/54/46/48 | https://github.com/microsoft/JARVIS
-jump-trading | Jump Trading | institutional | ? | 40/54/48/47 | https://www.jumptrading.com/
-elite-trader | Elite Trader fórum | free | 0 | 42/54/47/46 | https://www.elitetrader.com/
-fingaia | FinGAIA: kínai pénzügyi AI-ágens benchmark (2025) | free | 0 | 38/54/47/46 | https://arxiv.org/abs/2507.17186
-rentec-site | Renaissance Technologies hivatalos oldal | institutional | ? | 39/54/46/46 | https://www.rentec.com/
-fineval | FinEval: kínai pénzügyi tudás benchmark (2023) | free | 0 | 38/52/46/46 | https://arxiv.org/abs/2308.09975
-java-ml-interpretation | Java-alapú statisztikai ML (Weka, Deeplearning4j) – 'Javához hasonló'  | free | 0 | 38/50/43/45 | https://ml.cms.waikato.ac.nz/weka
-nuclear-phynance | Nuclear Phynance fórum | free | 0 | 37/48/41/45 | https://www.nuclearphynance.com/
-aladdin-efront | eFront (Aladdin magánpiaci modul) | institutional | ? | 32/48/40/38 | https://www.efront.com/
+paper-tsmom-2012 | 0 | Moskowitz, Ooi, Pedersen (2012): Time Series Momentum | M13 Tudás | paid | ? | 68/86/84/76 | https://doi.org/10.1016/j.jfineco.2011.11.003 | Az azonosító Crossref/arXiv API-val ellenőrizve. Idősoros momentum 58 likvid…
+psi-basket-options-report-2014 | 0 | US Senate PSI: Abuse of Structured Financial Products – Misusing… | M12 Benchmark-platformok | free | 0 | 62/90/84/70 | https://www.hsgac.senate.gov/wp-content/uploads/imo/media/doc/REPORT-Abuse%20of%20Structured%20Financial%20Products%20(Basket%20Options)%20(7-22-14,%20updated%209-30-14).pdf | Elsődleges, hiteles forrás (PDF letöltve és kereshetően átnézve). Mért tények…
+book-afml | 0 | López de Prado: Advances in Financial Machine Learning (2018) | M13 Tudás | paid | fizetős, ár nem mérve | 64/86/83/72 | https://openlibrary.org/isbn/9781119482086 | ISBN 9781119482086 (Open Library ellenőrizve), kiadó: Wiley. A projekt…
+ldp-10-reasons-ml-funds-fail | 0 | López de Prado: The 10 Reasons Most Machine Learning Funds Fail… | M9 AI döntési réteg | free | 0 | 62/86/82/70 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3104816 | Gyakorlati hibalista: 'Sziszifusz-paradigma', integer differenciálás, időalapú…
+paper-gkx-2020 | 0 | Gu, Kelly, Xiu (2020): Empirical Asset Pricing via Machine Learning | M13 Tudás | paid | ? | 63/86/82/72 | https://doi.org/10.1093/rfs/hhaa009 | Az azonosító Crossref/arXiv API-val ellenőrizve. Fák és neurális hálók a…
+hlz-cross-section | 0 | Harvey, Liu, Zhu: …and the Cross-Section of Expected Returns… | M9 AI döntési réteg | free | 0 | 60/88/82/67 | https://doi.org/10.1093/rfs/hhv059 | 316 publikált faktor többszörös tesztelési korrekciója; új faktorhoz t>3,0…
+mclean-pontiff | 0 | McLean & Pontiff: Does Academic Research Destroy Stock Return… | M9 AI döntési réteg | free | 0 | 60/88/82/67 | https://doi.org/10.1111/jofi.12365 | 97 anomália: a hozam a mintán kívül ~26%-kal, a publikálás után ~58%-kal…
+lopez-lira-tang-chatgpt | 0 | Lopez-Lira & Tang: Can ChatGPT Forecast Stock Price Movements? (2023) | M9 AI döntési réteg | free | 0 | 70/75/76/74 | https://arxiv.org/abs/2304.07619 | Hírcímekre adott ChatGPT-pontszám előrejelzi a következő napi hozamot; a hatás…
+bailey-pbo | 0 | Bailey, Borwein, López de Prado, Zhu: The Probability of Backtest… | M9 AI döntési réteg | free | 0 | 60/86/80/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2326253 | CSCV (combinatorially symmetric cross-validation) alapú PBO: annak…
+deflated-sharpe | 0 | Bailey & López de Prado: The Deflated Sharpe Ratio (DSR) | M9 AI döntési réteg | free | 0 | 60/86/80/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551 | A Sharpe-ráta korrekciója a kipróbált stratégiák számára (szelekciós torzítás)…
+book-ml-asset-managers | 0 | López de Prado: Machine Learning for Asset Managers… | M13 Tudás | paid | fizetős, ár nem mérve | 61/84/80/69 | https://openlibrary.org/isbn/9781108792899 | ISBN 9781108792899 (Open Library ellenőrizve), kiadó: Cambridge University…
+book-kelly-xiu-financial-ml | 0 | Kelly & Xiu: Financial Machine Learning… | M13 Tudás | free | ingyenes (SSRN) | 60/86/80/68 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4501707 | A pénzügyi ML legjobb akadémiai áttekintése: hozam-előrejelzés, faktormodellek…
+gibbs-candes-aci | 0 | Gibbs & Candès: Adaptive Conformal Inference Under Distribution Shift… | M9 AI döntési réteg | free | 0 | 62/83/76/67 | https://arxiv.org/abs/2106.00170 | ACI: online frissített küszöb, amely eloszlásváltozás mellett is hosszú távú…
+kakushadze-101-alphas | 0 | Kakushadze: 101 Formulaic Alphas (2016) | M12 Benchmark-platformok | free | 0 | 66/78/75/71 | https://arxiv.org/abs/1601.00991 | 101 valódi, éles WorldQuant-alfa képlete (ár/volumen alapú); átlagos tartás…
+sharpe-ratio-efficient-frontier | 0 | Bailey & López de Prado: The Sharpe Ratio Efficient Frontier – PSR… | M9 AI döntési réteg | free | 0 | 58/84/78/65 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1821643 | Probabilistic Sharpe Ratio és Minimum Track Record Length: mennyi élő track…
+book-carver-systematic | 0 | Robert Carver: Systematic Trading (2015) | M13 Tudás | paid | fizetős, ár nem mérve | 60/81/77/68 | https://openlibrary.org/isbn/9780857194459 | ISBN 9780857194459 (Open Library ellenőrizve), kiadó: Harriman House.…
+book-esl | 0 | Hastie, Tibshirani, Friedman: The Elements of Statistical Learning… | M13 Tudás | free | ingyenes | 56/86/78/65 | https://openlibrary.org/isbn/9780387848570 | ISBN 9780387848570 (Open Library ellenőrizve), kiadó: Springer. Statisztikai ML…
+paper-stw-data-snooping-1999 | 0 | Sullivan, Timmermann, White (1999): Data-Snooping, Technical Trading… | M13 Tudás | paid | ? | 57/84/78/66 | https://doi.org/10.1111/0022-1082.00163 | Az azonosító Crossref/arXiv API-val ellenőrizve. A BLL-eredmények Reality…
+yao-vehtari-stacking-bayes | 0 | Yao, Vehtari, Simpson, Gelman: Using Stacking to Average Bayesian… | M9 AI döntési réteg | free | 0 | 58/82/76/65 | https://arxiv.org/abs/1704.02030 | Prediktív eloszlások stackingje LOO-CV alapon; M-open helyzetben…
+book-carver-leveraged | 0 | Robert Carver: Leveraged Trading (2019) | M13 Tudás | paid | fizetős, ár nem mérve | 60/80/76/68 | https://openlibrary.org/isbn/9780857197214 | ISBN 9780857197214 (Open Library ellenőrizve), kiadó: Harriman House.…
+book-grinold-kahn | 0 | Grinold & Kahn: Active Portfolio Management, 2. kiadás (2000) | M13 Tudás | paid | fizetős, ár nem mérve | 57/82/76/65 | https://openlibrary.org/isbn/9780070248823 | ISBN 9780070248823 (Open Library ellenőrizve), kiadó: McGraw-Hill. Az aktív…
+paper-hrp-2016 | 0 | López de Prado (2016): Building Diversified Portfolios that… | M13 Tudás | free | 0 | 58/82/76/66 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2708678 | Az azonosító Crossref/arXiv API-val ellenőrizve. Hierarchical Risk Parity…
+freund-schapire-hedge | 0 | Freund & Schapire: Hedge / döntéselméleti online tanulás (1997) | M9 AI döntési réteg | paid | ? | 57/81/75/63 | https://doi.org/10.1006/jcss.1997.1504 | A Hedge algoritmus: w_i ← w_i·exp(−η·veszteség_i). Az M9 online…
+russo-thompson-tutorial | 0 | Russo, Van Roy et al.: A Tutorial on Thompson Sampling (2017) | M9 AI döntési réteg | free | 0 | 58/80/74/64 | https://arxiv.org/abs/1707.02038 | Gyakorlati Thompson-mintavétel: Bayesi poszteriorból mintavételezett…
+sklearn-calibration | 0 | scikit-learn: Probability calibration… | M9 AI döntési réteg | free | ingyenes (OSS) | 56/82/74/62 | https://scikit-learn.org/stable/modules/calibration.html | Kalibrációs görbe (reliability diagram), CalibratedClassifierCV…
+joubert-meta-labeling-theory | 0 | Joubert: Meta-Labeling: Theory and Framework (JFDS, 2022) | M9 AI döntési réteg | paid | ? | 61/76/74/68 | https://doi.org/10.3905/jfds.2022.1.098 | A meta-labeling (López de Prado, AFML 3. fejezet) formális kerete: másodlagos…
+harvey-liu-backtesting | 0 | Harvey & Liu: Backtesting (JPM, 2015) | M9 AI döntési réteg | free | 0 | 55/83/76/62 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2345489 | A Sharpe-ráta 'haircut'-ja többszörös tesztelés miatt (Bonferroni, Holm, BHY)…
+arxiv-qfin | 0 | arXiv q-fin – kvantitatív pénzügyi preprintek | M13 Tudás | free | 0 | 64/76/70/66 | https://arxiv.org/archive/q-fin | Alkategóriák: q-fin.TR (kereskedés, mikrostruktúra), q-fin.PM, q-fin.RM…
+paper-lo-sharpe-2002 | 0 | Lo (2002): The Statistics of Sharpe Ratios | M13 Tudás | paid | ? | 54/84/76/62 | https://doi.org/10.2469/faj.v58.n4.2453 | Az azonosító Crossref/arXiv API-val ellenőrizve. A Sharpe-ráta standard hibája…
+timmermann-forecast-combinations | 0 | Timmermann: Forecast Combinations… | M9 AI döntési réteg | paid | ? | 55/80/75/62 | https://doi.org/10.1016/S1574-0706(05)01004-9 | Átfogó elmélet: mikor nyer az egyszerű átlag (forecast combination puzzle)…
+bma-hoeting-tutorial | 0 | Hoeting, Madigan, Raftery, Volinsky: Bayesian Model Averaging: A… | M9 AI döntési réteg | free | 0 | 56/80/74/64 | https://doi.org/10.1214/ss/1009212519 | BMA: a modellek poszterior valószínűségével súlyozott előrejelzés. Statistical…
+white-reality-check | 0 | White: A Reality Check for Data Snooping (Econometrica, 2000) | M9 AI döntési réteg | paid | ? | 53/83/76/60 | https://doi.org/10.1111/1468-0262.00152 | Bootstrap-alapú teszt: van-e a sok kipróbált szabály közül bármelyik jobb a…
+hansen-spa | 0 | Hansen: A Test for Superior Predictive Ability (JBES, 2005) | M9 AI döntési réteg | paid | ? | 53/83/76/60 | https://doi.org/10.1198/073500105000000063 | SPA-teszt: studentizált statisztika, irreleváns alternatívák hatásának…
+mql5-forum | 0 | MQL5.com fórum és cikkek | M13 Tudás | free | 0 | 60/76/72/64 | https://www.mql5.com/en/forum | A MetaTrader-fejlesztés fő közössége; több ezer technikai cikk…
+brier-1950 | 0 | Brier: Verification of Forecasts Expressed in Terms of Probability… | M9 AI döntési réteg | free | 0 | 54/80/74/60 | https://doi.org/10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2 | A Brier-pontszám eredeti cikke: valószínűségi előrejelzés négyzetes hibája. Az…
+bates-granger-1969 | 0 | Bates & Granger: The Combination of Forecasts (1969) | M9 AI döntési réteg | paid | ? | 54/78/72/60 | https://doi.org/10.1057/jors.1969.103 | Az előrejelzés-kombinálás alapcikke: a kombinált előrejelzés hibája kisebb…
+angelopoulos-bates-conformal | 0 | Angelopoulos & Bates: A Gentle Introduction to Conformal Prediction… | M9 AI döntési réteg | free | 0 | 53/79/72/60 | https://arxiv.org/abs/2107.07511 | A konformális predikció gyakorlati bevezetője: eloszlásmentes lefedettségi…
+arian-backtest-overfitting-ml-era | 0 | Arian, Norouzi Mobarekeh, Seco: Backtest Overfitting in the Machine… | M9 AI döntési réteg | paid | ? | 54/77/72/62 | https://doi.org/10.1016/j.knosys.2024.112477 | Összehasonlítja a walk-forward, k-fold, purged k-fold és CPCV módszereket…
+ssrn-fen | 0 | SSRN Financial Economics Network | M13 Tudás | free | 0 | 60/74/68/61 | https://www.ssrn.com/ | A pénzügyi working paperek fő tárhelye; DOI: 10.2139/ssrn.<ID>…
+liang-divergent-debate | 0 | Liang et al.: Encouraging Divergent Thinking through Multi-Agent… | M9 AI döntési réteg | free | 0 | 56/74/69/62 | https://arxiv.org/abs/2305.19118 | MAD-keretrendszer: a 'Degeneration-of-Thought' (önreflexiós beragadás) ellen…
+semantic-entropy | 0 | Kuhn, Gal, Farquhar: Semantic Uncertainty (2023) és Farquhar et al.… | M9 AI döntési réteg | free | 0 | 56/74/69/62 | https://arxiv.org/abs/2302.09664 | Szemantikus entrópia: a jelentés szerint klaszterezett válaszok entrópiája…
+deep-ensembles | 0 | Lakshminarayanan et al.: Deep Ensembles – prediktív bizonytalanság… | M9 AI döntési réteg | free | 0 | 56/74/69/62 | https://arxiv.org/abs/1612.01474 | Független modellek egyet nem értése jó bizonytalanság-becslő; az ML-szavazók…
+gneiting-raftery-scoring | 0 | Gneiting & Raftery: Strictly Proper Scoring Rules, Prediction, and… | M9 AI döntési réteg | paid | ? | 50/78/70/58 | https://doi.org/10.1198/016214506000001437 | Szigorúan helyes pontozási szabályok (log, Brier, CRPS) elmélete – mivel…
+du-multiagent-debate | 0 | Du et al.: Improving Factuality and Reasoning through Multiagent… | M9 AI döntési réteg | free | 0 | 54/72/66/60 | https://arxiv.org/abs/2305.14325 | Több LLM-példány több körös vitája javítja a pontosságot és csökkenti a…
+devils-advocate-anticipatory-reflection | 0 | Wang et al.: Devil's Advocate: Anticipatory Reflection for LLM Agents… | M9 AI döntési réteg | free | 0 | 55/71/66/60 | https://arxiv.org/abs/2405.16334 | Az ágens cselekvés ELŐTT önmaga ellen érvel (előrelátó reflexió), alternatív…
+finben | 0 | FinBen: A Holistic Financial Benchmark for LLMs (Xie et al., 2024) | M9 AI döntési réteg | free | 0 | 52/72/66/58 | https://arxiv.org/abs/2402.12659 | Több tucat pénzügyi feladat…
+paper-cont-ofi-2014 | 1 | Cont, Kukanov, Stoikov (2014): The Price Impact of Order Book Events… | M13 Tudás | free | 0 | 78/86/80/78 | https://arxiv.org/abs/1011.6402 | Az azonosító Crossref/arXiv API-val ellenőrizve. Order Flow Imbalance…
+paper-ke-kelly-xiu-text | 1 | Ke, Kelly, Xiu (2019): Predicting Returns with Text Data (SESTM) | M13 Tudás | free | 0 | 69/83/78/74 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3389884 | Az azonosító Crossref/arXiv API-val ellenőrizve. Felügyelt szentiment-szótár…
+paper-hurst-ooi-pedersen-century | 1 | Hurst, Ooi, Pedersen (2017): A Century of Evidence on Trend-Following… | M13 Tudás | free | 0 | 64/83/80/72 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2993026 | Az azonosító Crossref/arXiv API-val ellenőrizve. Trendkövetés 1880-tól…
+paper-carry-2018 | 1 | Koijen, Moskowitz, Pedersen, Vrugt (2018): Carry | M13 Tudás | paid | ? | 64/84/80/71 | https://doi.org/10.1016/j.jfineco.2017.11.002 | Az azonosító Crossref/arXiv API-val ellenőrizve. Carry egységes definíciója…
+paper-lustig-roussanov-verdelhan | 1 | Lustig, Roussanov, Verdelhan (2011): Common Risk Factors in Currency… | M13 Tudás | paid | ? | 64/84/80/71 | https://doi.org/10.1093/rfs/hhr068 | Az azonosító Crossref/arXiv API-val ellenőrizve. FX carry-faktor (HML_FX) és…
+paper-jegadeesh-titman-1993 | 1 | Jegadeesh & Titman (1993): Returns to Buying Winners and Selling… | M13 Tudás | paid | ? | 62/83/80/70 | https://doi.org/10.1111/j.1540-6261.1993.tb04702.x | Az azonosító Crossref/arXiv API-val ellenőrizve. A keresztmetszeti momentum…
+paper-value-momentum-everywhere | 1 | Asness, Moskowitz, Pedersen (2013): Value and Momentum Everywhere | M13 Tudás | paid | ? | 62/83/80/70 | https://doi.org/10.1111/jofi.12021 | Az azonosító Crossref/arXiv API-val ellenőrizve. Value és momentum 8…
+paper-deeplob | 1 | Zhang, Zohren, Roberts (2019): DeepLOB | M13 Tudás | free | 0 | 70/78/72/72 | https://arxiv.org/abs/1808.03668 | Az azonosító Crossref/arXiv API-val ellenőrizve. CNN+LSTM limit order book…
+paper-vpin-2012 | 1 | Easley, López de Prado, O'Hara (2012): Flow Toxicity and Liquidity in… | M13 Tudás | paid | ? | 68/78/71/70 | https://doi.org/10.1093/rfs/hhs053 | Az azonosító Crossref/arXiv API-val ellenőrizve. VPIN: volumenszinkronizált…
+paper-lim-zohren-tsmom-dnn | 1 | Lim, Zohren, Roberts (2019): Enhancing Time-Series Momentum… | M13 Tudás | free | 0 | 64/79/76/71 | https://arxiv.org/abs/1904.04912 | Az azonosító Crossref/arXiv API-val ellenőrizve. Közvetlen Sharpe-optimalizálás…
+paper-daniel-moskowitz-crashes | 1 | Daniel & Moskowitz (2016): Momentum Crashes | M13 Tudás | paid | ? | 60/83/78/68 | https://doi.org/10.1016/j.jfineco.2015.12.002 | Az azonosító Crossref/arXiv API-val ellenőrizve. Momentum-összeomlások…
+paper-barroso-santa-clara | 1 | Barroso & Santa-Clara (2015): Momentum Has Its Moments | M13 Tudás | paid | ? | 60/83/78/68 | https://doi.org/10.1016/j.jfineco.2014.11.010 | Az azonosító Crossref/arXiv API-val ellenőrizve. Volatilitás-skálázott momentum…
+paper-moreira-muir-2017 | 1 | Moreira & Muir (2017): Volatility-Managed Portfolios | M13 Tudás | paid | ? | 60/83/78/68 | https://doi.org/10.1111/jofi.12513 | Az azonosító Crossref/arXiv API-val ellenőrizve. Magas volatilitásnál kisebb…
+paper-menkhoff-carry-vol | 1 | Menkhoff, Sarno, Schmeling, Schrimpf (2012): Carry Trades and Global… | M13 Tudás | paid | ? | 60/83/78/68 | https://doi.org/10.1111/j.1540-6261.2012.01728.x | Az azonosító Crossref/arXiv API-val ellenőrizve. A carry-hozam a globális…
+paper-bnp-carry-crashes | 1 | Brunnermeier, Nagel, Pedersen (2008): Carry Trades and Currency… | M13 Tudás | paid | ? | 60/83/78/68 | https://doi.org/10.1086/593088 | Az azonosító Crossref/arXiv API-val ellenőrizve. Carry = negatív ferdeség…
+paper-jiang-kelly-xiu-images | 1 | Jiang, Kelly, Xiu (2023): (Re-)Imag(in)ing Price Trends | M13 Tudás | free | 0 | 62/80/74/69 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3756587 | Az azonosító Crossref/arXiv API-val ellenőrizve. CNN árgrafikon-képeken – a…
+paper-corsi-har-2009 | 1 | Corsi (2009): A Simple Approximate Long-Memory Model of Realized… | M13 Tudás | paid | ? | 60/83/76/66 | https://doi.org/10.1093/jjfinec/nbp001 | Az azonosító Crossref/arXiv API-val ellenőrizve. HAR-RV: napi/heti/havi…
+jkp-replication-crisis | 1 | Jensen, Kelly, Pedersen: Is There a Replication Crisis in Finance?… | M9 AI döntési réteg | free | 0 | 57/82/77/64 | https://doi.org/10.1111/jofi.13249 | Bayesi megközelítés: a faktorok többsége replikálható és nemzetközileg is él…
+paper-hamilton-regime-1989 | 1 | Hamilton (1989): A New Approach to the Economic Analysis of… | M13 Tudás | paid | ? | 58/82/76/65 | https://doi.org/10.2307/1912559 | Az azonosító Crossref/arXiv API-val ellenőrizve. Markov-rezsimváltó modell…
+zaffran-agaci | 1 | Zaffran et al.: Adaptive Conformal Predictions for Time Series (2022) | M9 AI döntési réteg | free | 0 | 60/79/72/66 | https://arxiv.org/abs/2202.07282 | AgACI: több ACI-lépésköz online aggregálása (szakértő-aggregáció) – a…
+pseudo-mathematics-charlatanism | 1 | Bailey, Borwein, López de Prado, Zhu: Pseudo-Mathematics and… | M9 AI döntési réteg | free | 0 | 55/83/76/62 | https://doi.org/10.1090/noti1105 | Megmutatja, hány backtest-próbálkozás után 'garantált' egy hamis magas Sharpe…
+jax-interpretation | 1 | JAX (Google) – 'Jax-hez hasonló' értelmezés: autodiff/XLA numerikus… | M9 AI döntési réteg | free | 0 | 59/80/72/63 | https://github.com/google/jax | Ha 'Jax' volt a szó: kompozálható transzformációk (grad, jit, vmap, pmap)…
+aqr-research-library | 1 | AQR Research Library | M12 Benchmark-platformok | free | 0 | 58/80/74/65 | https://www.aqr.com/Insights/Research | Ingyenes cikkek faktorbefektetésről (value, momentum, carry, defensive)…
+paper-fama-french-1993 | 1 | Fama & French (1993): Common Risk Factors in the Returns on Stocks… | M13 Tudás | paid | ? | 56/82/76/64 | https://doi.org/10.1016/0304-405X(93)90023-5 | Az azonosító Crossref/arXiv API-val ellenőrizve. Háromfaktoros modell…
+paper-ipca-2019 | 1 | Kelly, Pruitt, Su (2019): Characteristics Are Covariances (IPCA) | M13 Tudás | paid | ? | 56/82/76/64 | https://doi.org/10.1016/j.jfineco.2019.05.001 | Az azonosító Crossref/arXiv API-val ellenőrizve. Instrumentált PCA…
+paper-black-litterman-1992 | 1 | Black & Litterman (1992): Global Portfolio Optimization | M13 Tudás | paid | ? | 56/82/76/64 | https://doi.org/10.2469/faj.v48.n5.28 | Az azonosító Crossref/arXiv API-val ellenőrizve. Piaci egyensúly + nézetek…
+hansen-lunde-nason-mcs | 1 | Hansen, Lunde, Nason: The Model Confidence Set (Econometrica, 2011) | M9 AI döntési réteg | paid | ? | 53/83/76/60 | https://doi.org/10.3982/ECTA5771 | A legjobb modellek halmaza adott konfidenciával – az ensemble-be beengedett…
+book-harris-trading-exchanges | 1 | Larry Harris: Trading and Exchanges (2003) | M13 Tudás | paid | fizetős, ár nem mérve | 56/80/74/64 | https://openlibrary.org/isbn/9780195144703 | ISBN 9780195144703 (Open Library ellenőrizve), kiadó: Oxford University Press.…
+book-bda3 | 1 | Gelman et al.: Bayesian Data Analysis, 3. kiadás (2013) | M13 Tudás | free | ingyenes | 54/82/74/62 | https://openlibrary.org/isbn/9781439840955 | ISBN 9781439840955 (Open Library ellenőrizve), kiadó: CRC Press. Bayesi…
+quantpedia | 1 | Quantpedia – kvant stratégia-adatbázis | M13 Tudás | freemium | Premium: 599 USD / 12 hó (~45 €/hó) | 61/74/72/66 | https://quantpedia.com/ | 900+ stratégia akadémiai forrással, backtesttel, portfólió-modellezés. Mért…
+paper-gatev-pairs-2006 | 1 | Gatev, Goetzmann, Rouwenhorst (2006): Pairs Trading | M13 Tudás | paid | ? | 58/78/72/65 | https://doi.org/10.1093/rfs/hhj020 | Az azonosító Crossref/arXiv API-val ellenőrizve. Távolság-alapú párkereskedés…
+paper-avellaneda-lee-2010 | 1 | Avellaneda & Lee (2010): Statistical Arbitrage in the US Equities… | M13 Tudás | paid | ? | 60/76/71/66 | https://doi.org/10.1080/14697680903124632 | Az azonosító Crossref/arXiv API-val ellenőrizve. PCA/ETF-reziduum mean…
+paper-bollerslev-garch-1986 | 1 | Bollerslev (1986): Generalized ARCH (GARCH) | M13 Tudás | paid | ? | 54/82/74/62 | https://doi.org/10.1016/0304-4076(86)90063-1 | Az azonosító Crossref/arXiv API-val ellenőrizve. GARCH(1,1) – a…
+paper-engle-granger-1987 | 1 | Engle & Granger (1987): Co-Integration and Error Correction | M13 Tudás | paid | ? | 56/80/73/64 | https://doi.org/10.2307/1913236 | Az azonosító Crossref/arXiv API-val ellenőrizve. Kointegráció – párkereskedés…
+tradingagents | 1 | TradingAgents (Tauric Research) – többágenses LLM kereskedési… | M9 AI döntési réteg | free | 0 | 60/73/72/64 | https://github.com/TauricResearch/TradingAgents | Kereskedőcég-szerű szerepek: fundamentális, szentiment-, hír- és technikai…
+kirtac-aggregate-llm-agents | 1 | Kirtac: Learning to Aggregate Zero-Shot LLM Agents for Corporate… | M9 AI döntési réteg | free | 0 | 64/68/68/69 | https://arxiv.org/abs/2603.20965 | Meta-osztályozó több zero-shot LLM-ágens kimenetén, a másnapi hozam irányára…
+littlestone-warmuth-wma | 1 | Littlestone & Warmuth: The Weighted Majority Algorithm (1994) | M9 AI döntési réteg | paid | ? | 56/78/72/62 | https://doi.org/10.1006/inco.1994.1009 | Szakértők súlyozott többségi szavazása; hibánként multiplikatív súlycsökkentés.…
+auer-exp3 | 1 | Auer, Cesa-Bianchi, Freund, Schapire: The Nonstochastic Multiarmed… | M9 AI döntési réteg | paid | ? | 56/78/72/62 | https://doi.org/10.1137/S0097539701398375 | Exp3: súlyfrissítés, ha csak a kiválasztott 'kar' (stratégia) eredménye…
+xu-xie-enbpi | 1 | Xu & Xie: Conformal Prediction for Time Series – EnbPI (2020) | M9 AI döntési réteg | free | 0 | 58/76/70/64 | https://arxiv.org/abs/2010.09107 | Ensemble batch prediction interval: bootstrap-ensemble alapú konformális sáv…
+tradingview | 1 | TradingView – grafikon, Pine Script, közösség | M12 Benchmark-platformok | freemium | Essential 12,95 – Ultimate 199,95… | 62/74/67/63 | https://www.tradingview.com/pricing/ | Mért árak (éves számlázásnál havi): Basic 0; Essential 12,95; Plus 29,95…
+book-carver-advanced-futures | 1 | Robert Carver: Advanced Futures Trading Strategies (2023) | M13 Tudás | paid | fizetős, ár nem mérve | 57/76/72/64 | https://openlibrary.org/isbn/9780857199683 | ISBN 9780857199683 (Open Library ellenőrizve), kiadó: Harriman House. 30…
+book-isichenko-qpm | 1 | Michael Isichenko: Quantitative Portfolio Management (2021) | M13 Tudás | paid | fizetős, ár nem mérve | 57/76/72/65 | https://openlibrary.org/isbn/9781119821328 | ISBN 9781119821328 (Open Library ellenőrizve), kiadó: Wiley. Gyakorlati kvant…
+book-fpp3 | 1 | Hyndman & Athanasopoulos: Forecasting: Principles and Practice, 3.… | M13 Tudás | free | ingyenes | 54/80/72/62 | https://otexts.com/fpp3/ | Ingyenes online tankönyv: előrejelzés, idősor-keresztvalidáció…
+quantresearch-lopez-de-prado | 1 | quantresearch.org – López de Prado előadásai és anyagai | M13 Tudás | free | 0 | 56/77/72/65 | https://www.quantresearch.org/ | Ingyenes előadás-diák…
+paper-fama-french-2015 | 1 | Fama & French (2015): A Five-Factor Asset Pricing Model | M13 Tudás | paid | ? | 54/80/73/62 | https://doi.org/10.1016/j.jfineco.2014.10.010 | Az azonosító Crossref/arXiv API-val ellenőrizve. Profitabilitás (RMW) és…
+paper-thorp-kelly-handbook | 1 | Thorp (2006): The Kelly Criterion in Blackjack, Sports Betting, and… | M13 Tudás | paid | ? | 54/79/73/62 | https://doi.org/10.1016/s1872-0978(06)01009-x | Az azonosító Crossref/arXiv API-val ellenőrizve. Gyakorlati Kelly-alkalmazás…
+paper-ledoit-wolf-2004 | 1 | Ledoit & Wolf (2004): Honey, I Shrunk the Sample Covariance Matrix | M13 Tudás | paid | ? | 52/82/74/61 | https://doi.org/10.3905/jpm.2004.110 | Az azonosító Crossref/arXiv API-val ellenőrizve. Kovariancia-shrinkage…
+paper-politis-romano-1994 | 1 | Politis & Romano (1994): The Stationary Bootstrap | M13 Tudás | paid | ? | 52/82/74/61 | https://doi.org/10.1080/01621459.1994.10476870 | Az azonosító Crossref/arXiv API-val ellenőrizve. Véletlen blokkhosszú bootstrap…
+paper-cont-stylized-facts-2001 | 1 | Cont (2001): Empirical Properties of Asset Returns: Stylized Facts | M13 Tudás | paid | ? | 52/82/74/61 | https://doi.org/10.1080/713665670 | Az azonosító Crossref/arXiv API-val ellenőrizve. Vastag farkak…
+wolpert-stacked-generalization | 1 | Wolpert: Stacked Generalization (1992) | M9 AI döntési réteg | paid | ? | 54/78/72/60 | https://doi.org/10.1016/S0893-6080(05)80023-1 | A stacking/meta-learner eredeti cikke: egy második szintű modell tanulja meg a…
+breiman-stacked-regressions | 1 | Breiman: Stacked Regressions (1996) | M9 AI döntési réteg | paid | ? | 54/78/72/60 | https://doi.org/10.1007/BF00117832 | Nemnegatív súlyokra korlátozott stacking – stabilabb súlyok; gyakorlati recept…
+li-hoi-olps-survey | 1 | Li & Hoi: Online Portfolio Selection: A Survey (2014) | M9 AI döntési réteg | free | 0 | 58/74/70/64 | https://arxiv.org/abs/1212.2129 | OLPS-algoritmusok…
+romano-wolf-stepm | 1 | Romano & Wolf: Stepwise Multiple Testing as Formalized Data Snooping… | M9 AI döntési réteg | paid | ? | 52/80/73/59 | https://doi.org/10.1111/j.1468-0262.2005.00615.x | StepM: nemcsak azt mondja meg, van-e jó stratégia, hanem azonosítja mindegyiket…
+hou-xue-zhang-replicating | 1 | Hou, Xue, Zhang: Replicating Anomalies (RFS, 2020) | M9 AI döntési réteg | paid | ? | 52/80/73/59 | https://doi.org/10.1093/rfs/hhy131 | 452 anomália replikálása: mikrocap-ek kiszűrésével és értéksúlyozással a…
+livetradebench | 1 | LiveTradeBench: Seeking Real-World Alpha with LLMs (2025) | M9 AI döntési réteg | free | 0 | 60/74/68/64 | https://arxiv.org/abs/2511.03628 | Élő piaci adatfolyamon (részvény + predikciós piac) futó LLM-kiértékelés…
+numerai-tournament | 1 | Numerai Tournament – crowdsourced hedge fund, ingyenes titkosított… | M12 Benchmark-platformok | free | 0 | 57/74/72/60 | https://numer.ai/ | Ingyenes, obfuszkált globális részvény-jellemző adatkészlet (parquet), heti…
+book-chan-quant-trading | 1 | Ernest Chan: Quantitative Trading, 2. kiadás (2021) | M13 Tudás | paid | fizetős, ár nem mérve | 57/74/70/64 | https://openlibrary.org/isbn/9781119800064 | ISBN 9781119800064 (Open Library ellenőrizve), kiadó: Wiley. Egyéni kvant…
+book-hamilton-tsa | 1 | James Hamilton: Time Series Analysis (1994) | M13 Tudás | paid | fizetős, ár nem mérve | 52/80/72/60 | https://openlibrary.org/isbn/9780691042893 | ISBN 9780691042893 (Open Library ellenőrizve), kiadó: Princeton University…
+book-bouchaud-tqp | 1 | Bouchaud, Bonart, Donier, Gould: Trades, Quotes and Prices (2018) | M13 Tudás | paid | fizetős, ár nem mérve | 56/76/70/63 | https://openlibrary.org/isbn/9781107156050 | ISBN 9781107156050 (Open Library ellenőrizve), kiadó: Cambridge University…
+book-cartea-ahft | 1 | Cartea, Jaimungal, Penalva: Algorithmic and High-Frequency Trading… | M13 Tudás | paid | fizetős, ár nem mérve | 56/76/70/63 | https://openlibrary.org/isbn/9781107091146 | ISBN 9781107091146 (Open Library ellenőrizve), kiadó: Cambridge University…
+mit-18s096 | 1 | MIT OCW 18.S096: Topics in Mathematics with Applications in Finance… | M13 Tudás | free | ingyenes | 54/78/71/62 | https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/ | Ingyenes videós kurzus: lineáris algebra, valószínűség, idősor, sztochasztikus…
+paper-engle-arch-1982 | 1 | Engle (1982): Autoregressive Conditional Heteroscedasticity (ARCH) | M13 Tudás | paid | ? | 53/80/71/60 | https://doi.org/10.2307/1912773 | Az azonosító Crossref/arXiv API-val ellenőrizve. Volatilitás-klaszterezés…
+wisdom-silicon-crowd | 1 | Schoenegger et al.: Wisdom of the Silicon Crowd (2024) | M9 AI döntési réteg | free | 0 | 58/72/68/64 | https://arxiv.org/abs/2402.19379 | 12 LLM aggregált előrejelzése egy előrejelző versenyen statisztikailag nem…
+helmbold-olps-multiplicative | 1 | Helmbold et al.: On-Line Portfolio Selection Using Multiplicative… | M9 AI döntési réteg | paid | ? | 54/76/70/60 | https://doi.org/10.1111/1467-9965.00058 | Exponentiated Gradient (EG) portfólió – a Hedge portfólióváltozata, olcsóbb a…
+stockbench | 1 | StockBench: Can LLM Agents Trade Stocks Profitably in Real-world… | M9 AI döntési réteg | free | 0 | 58/73/68/62 | https://arxiv.org/abs/2510.02209 | Szennyezésmentes (a tudáshatár utáni) időszakon értékelt LLM-kereskedőágensek…
+book-chan-algorithmic-trading | 1 | Ernest Chan: Algorithmic Trading (2013) | M13 Tudás | paid | fizetős, ár nem mérve | 56/72/69/64 | https://openlibrary.org/isbn/9781118460146 | ISBN 9781118460146 (Open Library ellenőrizve), kiadó: Wiley. Mean reversion…
+book-jansen-ml4t | 1 | Stefan Jansen: Machine Learning for Algorithmic Trading, 2. kiadás… | M13 Tudás | paid | fizetős, ár nem mérve | 54/75/70/62 | https://openlibrary.org/isbn/9781839217715 | ISBN 9781839217715 (Open Library ellenőrizve), kiadó: Packt. Teljes ML-pipeline…
+book-ilmanen-expected-returns | 1 | Antti Ilmanen: Expected Returns (2011) | M13 Tudás | paid | fizetős, ár nem mérve | 54/76/70/62 | https://openlibrary.org/isbn/9781119990727 | ISBN 9781119990727 (Open Library ellenőrizve), kiadó: Wiley. Kockázati…
+alpha-architect | 1 | Alpha Architect – kvant faktorbefektetési blog és kutatás | M13 Tudás | free | 0 | 56/74/68/63 | https://alphaarchitect.com/blog/ | Ingyenes akadémiai cikk-összefoglalók (Architect Academic Insights)…
+paper-markowitz-1952 | 1 | Markowitz (1952): Portfolio Selection | M13 Tudás | paid | ? | 51/79/71/60 | https://doi.org/10.1111/j.1540-6261.1952.tb01525.x | Az azonosító Crossref/arXiv API-val ellenőrizve. Átlag-variancia optimalizálás.
+paper-rockafellar-uryasev-cvar | 1 | Rockafellar & Uryasev (2000): Optimization of Conditional… | M13 Tudás | paid | ? | 51/79/71/60 | https://doi.org/10.21314/JOR.2000.038 | Az azonosító Crossref/arXiv API-val ellenőrizve. CVaR lineáris programozással…
+paper-artzner-coherent-1999 | 1 | Artzner, Delbaen, Eber, Heath (1999): Coherent Measures of Risk | M13 Tudás | paid | ? | 51/79/71/60 | https://doi.org/10.1111/1467-9965.00068 | Az azonosító Crossref/arXiv API-val ellenőrizve. Koherens kockázati mértékek…
+arora-hazan-kale-mwu | 1 | Arora, Hazan, Kale: The Multiplicative Weights Update Method (2012) | M9 AI döntési réteg | free | 0 | 52/76/70/59 | https://theoryofcomputing.org/articles/v008a006/ | A multiplikatív súlyfrissítés egységes áttekintése (Theory of Computing 8).…
+cover-universal-portfolios | 1 | Cover: Universal Portfolios (1991) | M9 AI döntési réteg | paid | ? | 52/76/70/59 | https://doi.org/10.1111/j.1467-9965.1991.tb00002.x | Online portfólióválasztás: aszimptotikusan eléri a legjobb konstans…
+guo-calibration-nn | 1 | Guo et al.: On Calibration of Modern Neural Networks (2017) | M9 AI döntési réteg | free | 0 | 52/76/70/59 | https://arxiv.org/abs/1706.04599 | Modern mély hálók túlmagabiztosak; temperature scaling egyszerű javítás.…
+barber-beyond-exchangeability | 1 | Barber, Candès, Ramdas, Tibshirani: Conformal Prediction Beyond… | M9 AI döntési réteg | free | 0 | 53/76/68/60 | https://arxiv.org/abs/2202.13415 | Súlyozott konformális módszer nem felcserélhető adatra; a lefedettség-veszteség…
+quantconnect-learning | 1 | QuantConnect Learning Center / Bootcamp | M13 Tudás | freemium | ? | 55/73/68/60 | https://www.quantconnect.com/learning | Interaktív LEAN-alapú tanulóanyagok és bootcamp-leckék (Python/C#)…
+halawi-human-level-forecasting | 1 | Halawi et al.: Approaching Human-Level Forecasting with Language… | M9 AI döntési réteg | free | 0 | 56/70/66/62 | https://arxiv.org/abs/2402.18563 | Visszakereséssel bővített LLM-rendszer predikciós piaci kérdéseken a tömeg…
+blackrock-scenario-methodology | 1 | BlackRock Scenario Tester / Portfolio Analyzer módszertan (nyilvános) | M12 Benchmark-platformok | free | 0 | 54/73/66/60 | https://www.blackrock.com/us/financial-professionals/tools/scenarios-methodology | A legrészletesebb NYILVÁNOS leírás a BlackRock kockázati modelljéről…
+worldquant-brain | 1 | WorldQuant BRAIN – ingyenes alfa-szimulációs platform | M12 Benchmark-platformok | registration | ? | 56/70/68/58 | https://platform.worldquantbrain.com/ | Webes alfa-szimulátor Fast Expression nyelvvel (adatmezők + operátorok); a…
+numerai-signals | 1 | Numerai Signals – saját jel beküldése tickerekre | M12 Benchmark-platformok | free | 0 | 56/70/68/58 | https://signals.numer.ai/ | Saját adatból készített részvényjel (tickerek); a Numerai neutralizálja ismert…
+book-tsay-aft | 1 | Ruey Tsay: Analysis of Financial Time Series, 3. kiadás (2010) | M13 Tudás | paid | fizetős, ár nem mérve | 50/76/68/59 | https://openlibrary.org/isbn/9780470414354 | ISBN 9780470414354 (Open Library ellenőrizve), kiadó: Wiley. ARMA, GARCH…
+book-pedersen-efficiently-inefficient | 1 | Lasse Heje Pedersen: Efficiently Inefficient (2015) | M13 Tudás | paid | fizetős, ár nem mérve | 52/73/68/60 | https://openlibrary.org/isbn/9780691166193 | ISBN 9780691166193 (Open Library ellenőrizve), kiadó: Princeton University…
+wqu-msc-fe | 1 | WorldQuant University – ingyenes online MSc in Financial Engineering | M13 Tudás | free | ingyenes (tandíjmentes) | 52/74/68/58 | https://www.wqu.edu/ | Akkreditált, tandíjmentes online mesterképzés (pénzügyi mérnökség); ingyenes…
+podcast-flirting-with-models | 1 | Flirting with Models (Corey Hoffstein) podcast | M13 Tudás | free | 0 | 53/74/66/60 | https://www.flirtingwithmodels.com/ | Mély, technikai interjúk kvant PM-ekkel…
+cesa-bianchi-lugosi-plg | 1 | Cesa-Bianchi & Lugosi: Prediction, Learning, and Games… | M9 AI döntési réteg | paid | ? | 49/75/68/56 | https://openlibrary.org/isbn/9780521841085 | ISBN 9780521841085 (Open Library ellenőrizve). Az expert-advice, online…
+zadrozny-elkan-isotonic | 1 | Zadrozny & Elkan: Transforming Classifier Scores into Accurate… | M9 AI döntési réteg | paid | ? | 49/75/68/56 | https://doi.org/10.1145/775047.775151 | Izotonikus regresszió alapú kalibráció.
+niculescu-mizil-caruana | 1 | Niculescu-Mizil & Caruana: Predicting Good Probabilities with… | M9 AI döntési réteg | paid | ? | 49/75/68/56 | https://doi.org/10.1145/1102351.1102430 | Összehasonlítja a Platt- és izotonikus kalibrációt különböző modellosztályokon…
+zuckerman-man-who-solved-market | 1 | Zuckerman: The Man Who Solved the Market (Portfolio, 2019) | M12 Benchmark-platformok | paid | ? | 52/71/67/58 | https://openlibrary.org/isbn/9780735217980 | ISBN 9780735217980 (Open Library ellenőrizve). A Renaissance és Jim Simons…
+cornell-medallion-counterexample | 1 | Cornell: Medallion Fund: The Ultimate Counterexample?… | M12 Benchmark-platformok | free | 0 | 52/72/66/59 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3504766 | 1988–2018: átlagos bruttó éves hozam 66,1%, nettó 39,2% (szórás 31,7% / 20,3%)…
+quantconnect-forum | 1 | QuantConnect közösség / fórum | M13 Tudás | free | 0 | 54/70/65/60 | https://www.quantconnect.com/forum | LEAN-felhasználók stratégiamegosztása, kód, alfa-verseny történet.
+khan-persuasive-debate | 1 | Khan et al.: Debating with More Persuasive LLMs Leads to More… | M9 AI döntési réteg | free | 0 | 53/69/64/59 | https://arxiv.org/abs/2402.06782 | Empirikus: a vita gyengébb bírót (embert vagy modellt) pontosabb ítéletre…
+self-consistency | 1 | Wang et al.: Self-Consistency Improves Chain of Thought Reasoning… | M9 AI döntési réteg | free | 0 | 51/72/64/58 | https://arxiv.org/abs/2203.11171 | Több mintavételezett érvelési lánc többségi szavazása; a válaszok szórása…
+kadavath-know-what-they-know | 1 | Kadavath et al.: Language Models (Mostly) Know What They Know (2022) | M9 AI döntési réteg | free | 0 | 52/71/64/58 | https://arxiv.org/abs/2207.05221 | LLM önértékelt valószínűségei (P(True)) nagy modelleknél jól kalibráltak…
+finance-agent-benchmark | 1 | Finance Agent Benchmark (Vals AI, 2025) | M9 AI döntési réteg | free | 0 | 53/70/63/58 | https://arxiv.org/abs/2508.00828 | Valós elemzői kutatási feladatok (SEC-beadványok, eszközhasználat)…
+jane-street-kaggle-2024 | 1 | Jane Street Real-Time Market Data Forecasting (Kaggle, 2024) | M9 AI döntési réteg | registration | ? | 54/67/64/59 | https://www.kaggle.com/competitions/jane-street-real-time-market-data-forecasting | Valós termelési rendszerekből származó anonimizált idősor-adat; értékelési API.…
+book-paleologo-apm | 1 | Giuseppe Paleologo: Advanced Portfolio Management (2021) | M13 Tudás | paid | fizetős, ár nem mérve | 50/72/66/58 | https://openlibrary.org/isbn/9781119789796 | ISBN 9781119789796 (Open Library ellenőrizve), kiadó: Wiley. Gyakorlati…
+ai-hedge-fund-virattt | 1 | AI Hedge Fund (virattt) – befektetői persona-ágensek | M9 AI döntési réteg | free | 0 | 52/68/64/56 | https://github.com/virattt/ai-hedge-fund | Oktatási célú többágenses rendszer: híres befektetők stílusát utánzó ágensek…
+koyfin | 1 | Koyfin – olcsó terminál-alternatíva | M12 Benchmark-platformok | freemium | Plus 39 USD/hó; Premium 79 USD/hó… | 53/68/61/56 | https://www.koyfin.com/pricing/ | Mért árak (oldal, 2026-11-15, havi díj): Free 0; Plus 39 USD; Premium 79 USD…
+investorbench | 1 | InvestorBench: befektetési döntési feladatok LLM-ágensekkel (2024) | M9 AI döntési réteg | free | 0 | 52/66/61/58 | https://arxiv.org/abs/2412.18174 | Ágens-benchmark részvény, kripto, ETF kereskedési döntésekre – a FinMem/FinCon…
+jane-street-interpretation | 1 | Jane Street – 'Jane-hez hasonló' értelmezés: statisztikai/ML alapú… | M9 AI döntési réteg | institutional | ? | 52/66/62/56 | https://www.janestreet.com/ | Ha a megrendelő Jane Street-et gondolt: globális ETF/opció/kötvény árjegyző…
+irving-ai-safety-debate | 1 | Irving, Christiano, Amodei: AI safety via debate (2018) | M9 AI döntési réteg | free | 0 | 48/68/62/56 | https://arxiv.org/abs/1805.00899 | Elméleti alap: két ágens vitázik, egy korlátozott bíró dönt; a hazugság…
+finrobot | 1 | FinRobot (AI4Finance) – nyílt AI-ágens platform pénzügyi feladatokra | M9 AI döntési réteg | free | 0 | 50/64/60/54 | https://github.com/AI4Finance-Foundation/FinRobot | Többrétegű ágens-architektúra…
+hudson-thames-meta-labeling-repo | 1 | Hudson & Thames meta-labeling kód a cikksorozathoz | M9 AI döntési réteg | free | 0 | 53/60/58/58 | https://github.com/hudson-and-thames/meta-labeling | A JFDS meta-labeling cikksorozat hivatalos kísérő kódja…
+financebench | 1 | FinanceBench (Patronus AI) – nyílt könyves pénzügyi kérdés-válasz | M9 AI döntési réteg | freemium | ? | 46/66/61/52 | https://github.com/patronus-ai/financebench | 10 231 kérdés tőzsdei cégek beadványairól; nyíltan 150 annotált minta…
+llm-agent-trading-survey | 1 | Large Language Model Agent in Financial Trading: A Survey… | M9 AI döntési réteg | free | 0 | 47/63/58/54 | https://arxiv.org/abs/2408.06361 | Az LLM-kereskedési ágensek architektúráinak, adatforrásainak és kiértékelési…
+paper-sirignano-cont-universal | 2 | Sirignano & Cont (2019): Universal Features of Price Formation… | M13 Tudás | free | 0 | 66/76/69/69 | https://arxiv.org/abs/1803.06917
+paper-bouchaud-farmer-lillo-2008 | 2 | Bouchaud, Farmer, Lillo (2008): How Markets Slowly Digest Changes in… | M13 Tudás | free | 0 | 60/77/70/66 | https://arxiv.org/abs/0809.0822
+paper-gatheral-rough-vol | 2 | Gatheral, Jaisson, Rosenbaum (2014): Volatility is Rough | M13 Tudás | free | 0 | 56/76/70/64 | https://arxiv.org/abs/1410.3394
+paper-carhart-1997 | 2 | Carhart (1997): On Persistence in Mutual Fund Performance | M13 Tudás | paid | ? | 51/79/71/60 | https://doi.org/10.1111/j.1540-6261.1997.tb03808.x
+paper-almgren-chriss-2001 | 2 | Almgren & Chriss (2001): Optimal Execution of Portfolio Transactions | M13 Tudás | paid | ? | 56/76/66/60 | https://doi.org/10.21314/JOR.2001.041
+paper-bab-2014 | 2 | Frazzini & Pedersen (2014): Betting Against Beta | M13 Tudás | paid | ? | 54/74/70/62 | https://doi.org/10.1016/j.jfineco.2013.10.005
+paper-tetlock-2007 | 2 | Tetlock (2007): Giving Content to Investor Sentiment | M13 Tudás | paid | ? | 56/75/68/62 | https://doi.org/10.1111/j.1540-6261.2007.01232.x
+paper-kyle-1985 | 2 | Kyle (1985): Continuous Auctions and Insider Trading | M13 Tudás | paid | ? | 52/77/68/59 | https://doi.org/10.2307/1913210
+paper-loughran-mcdonald-2011 | 2 | Loughran & McDonald (2011): When Is a Liability Not a Liability? | M13 Tudás | paid | ? | 54/74/68/60 | https://doi.org/10.1111/j.1540-6261.2010.01625.x
+rentech-13f-edgar | 2 | Renaissance Technologies LLC – 13F beadványok… | M12 Benchmark-platformok | free | 0 | 51/75/68/59 | https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001037389&type=13F
+paper-moody-saffell-2001 | 2 | Moody & Saffell (2001): Learning to Trade via Direct Reinforcement | M13 Tudás | paid | ? | 53/73/66/60 | https://doi.org/10.1109/72.935097
+paper-lmw-technical-2000 | 2 | Lo, Mamaysky, Wang (2000): Foundations of Technical Analysis | M13 Tudás | paid | ? | 53/73/66/60 | https://doi.org/10.1111/0022-1082.00265
+paper-bll-technical-1992 | 2 | Brock, Lakonishok, LeBaron (1992): Simple Technical Trading Rules | M13 Tudás | paid | ? | 53/73/66/60 | https://doi.org/10.1111/j.1540-6261.1992.tb04681.x
+cheng-hu-llm-provider-dispersion | 2 | Cheng & Hu: LLM-szolgáltatók közti hírszentiment-szórás és hozamok… | M9 AI döntési réteg | free | 0 | 62/62/62/66 | https://skbi.smu.edu.sg/sites/skbi.smu.edu.sg/files/2026-06/Day1_1115_Si%20Cheng%20(paper).pdf
+hazan-oco | 2 | Hazan: Introduction to Online Convex Optimization (2019) | M9 AI döntési réteg | free | 0 | 50/74/67/58 | https://arxiv.org/abs/1909.05207
+ldp-computing-pbo | 2 | López de Prado: Computing the Probability of Over-Fitting in the… | M9 AI döntési réteg | free | 0 | 50/74/67/58 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2308659
+chen-didisheim-somoza-black-box | 2 | Chen, Didisheim, Somoza: Out of the (Black)Box: AI as Conditional… | M9 AI döntési réteg | free | 0 | 58/63/62/63 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5012852
+harvey-liu-lucky-factors | 2 | Harvey & Liu: Lucky Factors (JFE, 2021) | M9 AI döntési réteg | paid | ? | 48/74/66/56 | https://doi.org/10.1016/j.jfineco.2021.04.014
+book-chan-machine-trading | 2 | Ernest Chan: Machine Trading (2017) | M13 Tudás | paid | fizetős, ár nem mérve | 52/70/64/60 | https://openlibrary.org/isbn/9781119219606
+book-natenberg | 2 | Sheldon Natenberg: Option Volatility and Pricing, 2. kiadás (2014) | M13 Tudás | paid | fizetős, ár nem mérve | 50/71/65/59 | https://openlibrary.org/isbn/9780071818773
+paper-novy-marx-2013 | 2 | Novy-Marx (2013): The Other Side of Value: Gross Profitability Premium | M13 Tudás | paid | ? | 50/72/66/58 | https://doi.org/10.1016/j.jfineco.2013.01.003
+man-ahl | 2 | Man AHL és Man Group Insights | M12 Benchmark-platformok | institutional | ? | 50/70/64/58 | https://www.man.com/ahl
+book-understanding-ml | 2 | Shalev-Shwartz & Ben-David: Understanding Machine Learning (2014) | M13 Tudás | free | ingyenes | 48/73/64/56 | https://openlibrary.org/isbn/9781107057135
+mit-15401 | 2 | MIT OCW 15.401: Finance Theory I (2008, Andrew Lo) | M13 Tudás | free | ingyenes | 48/73/64/56 | https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/
+paper-kolm-ritter-rl | 2 | Kolm & Ritter (2019): Modern Perspectives on Reinforcement Learning… | M13 Tudás | free | 0 | 50/70/64/58 | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3449401
+trading-r1-paper | 2 | Trading-R1: Financial Trading with LLM Reasoning via Reinforcement… | M9 AI döntési réteg | free | 0 | 55/62/62/59 | https://arxiv.org/abs/2509.11420
+alphaagent-paper | 2 | AlphaAgent: LLM-Driven Alpha Mining with Regularized Exploration to… | M9 AI döntési réteg | free | 0 | 56/62/61/60 | https://arxiv.org/abs/2502.16789
+jev-typesafe | 2 | Jev (TypeSafe AI) – kalibrált valószínűségeket adó döntési modell – a… | M9 AI döntési réteg | paid | 0,042 USD / 1M input token; output 0 | 58/62/56/57 | https://typesafe.ai/
+psi-rentech-statement-2014 | 2 | Renaissance Technologies közös nyilatkozata a PSI-meghallgatáson… | M12 Benchmark-platformok | free | 0 | 47/72/63/54 | https://www.hsgac.senate.gov/wp-content/uploads/imo/media/doc/STMT%20-%20Renaissance%20(July%2022%202014).pdf
+book-kissell-algo-trading | 2 | Robert Kissell: The Science of Algorithmic Trading and Portfolio… | M13 Tudás | paid | fizetős, ár nem mérve | 50/69/62/57 | https://openlibrary.org/isbn/9780124016897
+podcast-top-traders-unplugged | 2 | Top Traders Unplugged podcast | M13 Tudás | free | 0 | 50/68/61/57 | https://www.toptradersunplugged.com/
+paper-finrl-2020 | 2 | Liu et al. (2020): FinRL: A Deep RL Library for Automated Stock… | M13 Tudás | free | 0 | 52/66/60/59 | https://arxiv.org/abs/2011.09607
+automate-strategy-finding-llm | 2 | Automate Strategy Finding with LLM in Quant Investment… | M9 AI döntési réteg | free | 0 | 55/60/60/60 | https://arxiv.org/abs/2409.06289
+thompson-1933 | 2 | Thompson: On the Likelihood that One Unknown Probability Exceeds… | M9 AI döntési réteg | paid | ? | 46/70/63/53 | https://doi.org/10.1093/biomet/25.3-4.285
+paper-deng-ddrl-2017 | 2 | Deng et al. (2017): Deep Direct Reinforcement Learning for Financial… | M13 Tudás | paid | ? | 50/66/60/58 | https://doi.org/10.1109/TNNLS.2016.2522401
+paper-jiang-drl-portfolio-2017 | 2 | Jiang, Xu, Liang (2017): A Deep RL Framework for the Financial… | M13 Tudás | free | 0 | 52/64/59/59 | https://arxiv.org/abs/1706.10059
+universal-portfolios-lib | 2 | universal-portfolios (Python) – OLPS-algoritmusok gyűjteménye | M9 AI döntési réteg | free | 0 | 50/64/60/55 | https://github.com/Marigold/universal-portfolios
+rentech-irs-settlement-2021 | 2 | Renaissance-vezetők adóegyezsége az IRS-szel (2021) – kb. 7 Mrd USD | M12 Benchmark-platformok | free | 0 | 46/68/60/53 | https://www.cnbc.com/2021/09/03/renaissance-executives-agree-to-pay-7-billion-to-settle-tax-dispute.html
+simons-ted-2015 | 2 | Jim Simons TED-interjú: A rare interview with the mathematician who… | M12 Benchmark-platformok | free | 0 | 46/68/60/53 | https://www.ted.com/talks/jim_simons_a_rare_interview_with_the_mathematician_who_cracked_wall_street
+book-thorp-man-all-markets | 2 | Edward Thorp: A Man for All Markets (2017) | M13 Tudás | paid | fizetős, ár nem mérve | 47/67/60/54 | https://openlibrary.org/isbn/9781400067961
+udacity-ml4t | 2 | Georgia Tech / Udacity: Machine Learning for Trading (ud501) | M13 Tudás | free | 0 | 48/66/60/56 | https://www.udacity.com/course/machine-learning-for-trading--ud501
+alpha-gpt-paper | 2 | Alpha-GPT: Human-AI Interactive Alpha Mining (Wang et al., 2023) | M9 AI döntési réteg | free | 0 | 54/58/57/58 | https://arxiv.org/abs/2308.00016
+finsentllm | 2 | FinSentLLM: Multi-LLM and Structured Semantic Signals for Financial… | M9 AI döntési réteg | free | 0 | 54/58/56/58 | https://arxiv.org/abs/2509.12638
+numerapi | 2 | numerapi – Numerai Python API és CLI | M12 Benchmark-platformok | free | 0 | 48/65/60/51 | https://github.com/numerai/numerapi
+numerai-example-scripts | 2 | Numerai example-scripts | M12 Benchmark-platformok | free | 0 | 48/65/60/51 | https://github.com/numerai/example-scripts
+coursera-ml-rl-finance | 2 | Coursera: Machine Learning and Reinforcement Learning in Finance… | M13 Tudás | freemium | ? | 46/66/60/54 | https://www.coursera.org/specializations/machine-learning-reinforcement-finance
+fincon-paper | 2 | FinCon: LLM többágenses rendszer fogalmi verbális megerősítéssel… | M9 AI döntési réteg | free | 0 | 51/58/56/56 | https://arxiv.org/abs/2407.06567
+chateval | 2 | ChatEval: LLM-értékelők többágenses vitával (Chan et al., 2023) | M9 AI döntési réteg | free | 0 | 48/62/56/54 | https://arxiv.org/abs/2308.07201
+flue-flang | 2 | FLUE / FLANG: When FLUE Meets FLANG (Shah et al., 2022) | M9 AI döntési réteg | free | 0 | 46/64/58/54 | https://arxiv.org/abs/2211.00083
+bizbench | 2 | BizBench: Quantitative Reasoning Benchmark for Business and Finance… | M9 AI döntési réteg | free | 0 | 46/64/58/54 | https://arxiv.org/abs/2311.06602
+book-taleb-fooled | 2 | Taleb: Fooled by Randomness (2005-ös kiadás) | M13 Tudás | paid | fizetős, ár nem mérve | 44/66/58/51 | https://openlibrary.org/isbn/9780812975215
+hudson-thames | 2 | Hudson & Thames – pénzügyi ML kutatólabor | M13 Tudás | freemium | ? | 49/61/56/55 | https://hudsonthames.org/
+quantagent-paper | 2 | QuantAgent: Seeking Holy Grail in Trading by Self-Improving LLM… | M9 AI döntési réteg | free | 0 | 50/57/55/56 | https://arxiv.org/abs/2402.03755
+alphaagents-portfolio-paper | 2 | AlphaAgents: LLM-alapú többágenses részvényportfólió-építés (2025) | M9 AI döntési réteg | free | 0 | 50/57/55/56 | https://arxiv.org/abs/2508.11152
+finqa | 2 | FinQA: numerikus érvelés pénzügyi adatokon (Chen et al., 2021) | M9 AI döntési réteg | free | 0 | 46/62/56/54 | https://github.com/czyssrs/FinQA
+finsearchcomp | 2 | FinSearchComp: pénzügyi keresés és érvelés szakértői szintű… | M9 AI döntési réteg | free | 0 | 48/60/54/54 | https://arxiv.org/abs/2509.13160
+finagent-paper | 2 | FinAgent: A Multimodal Foundation Agent for Financial Trading… | M9 AI döntési réteg | free | 0 | 50/56/54/54 | https://arxiv.org/abs/2402.18485
+llm-finance-survey-nie | 2 | A Survey of LLMs for Financial Applications (Nie et al., 2024) | M9 AI döntési réteg | free | 0 | 46/60/55/53 | https://arxiv.org/abs/2406.11903
+awesome-conformal-prediction | 2 | awesome-conformal-prediction (valeman) – forrásgyűjtemény | M9 AI döntési réteg | free | 0 | 44/62/56/48 | https://github.com/valeman/awesome-conformal-prediction
+dexter-virattt | 2 | Dexter (virattt) – autonóm pénzügyi kutatóágens | M9 AI döntési réteg | free | 0 | 45/60/55/48 | https://github.com/virattt/dexter
+bloomberggpt-paper | 2 | BloombergGPT: A Large Language Model for Finance (Wu et al., 2023) | M9 AI döntési réteg | free | 0 | 46/58/54/52 | https://arxiv.org/abs/2303.17564
+convfinqa | 2 | ConvFinQA: társalgási numerikus pénzügyi QA (2022) | M9 AI döntési réteg | free | 0 | 44/60/54/53 | https://arxiv.org/abs/2210.03849
+tat-qa | 2 | TAT-QA: táblázat + szöveg hibrid pénzügyi QA (2021) | M9 AI döntési réteg | free | 0 | 44/60/54/53 | https://arxiv.org/abs/2105.07624
+ai-trader-hkuds | 2 | AI-Trader (HKUDS) – teljesen automatizált ágens-natív kereskedés | M9 AI döntési réteg | free | 0 | 48/55/52/48 | https://github.com/HKUDS/AI-Trader
+financial-phrasebank | 2 | Financial PhraseBank: Good Debt or Bad Debt (Malo et al., 2014) | M9 AI döntési réteg | free | 0 | 44/58/53/51 | https://arxiv.org/abs/1307.5336
+flag-trader-paper | 2 | FLAG-Trader: LLM-ágens + gradiensalapú RL fúzió (Xiong et al., 2025) | M9 AI döntési réteg | free | 0 | 47/52/50/52 | https://arxiv.org/abs/2502.11433
+llm-finance-survey-li | 2 | Large Language Models in Finance: A Survey (Li et al., 2023) | M9 AI döntési réteg | free | 0 | 44/56/51/52 | https://arxiv.org/abs/2311.10723
+quantra | 2 | Quantra (QuantInsti) – algokereskedési kurzusok | M13 Tudás | freemium | ? | 42/58/52/48 | https://quantra.quantinsti.com/
+reddit-algotrading | 2 | r/algotrading (Reddit) | M13 Tudás | free | 0 | 46/54/50/48 | https://www.reddit.com/r/algotrading/
+tradingagents-cn | 2 | TradingAgents-CN – kínai bővített fork | M9 AI döntési réteg | free | 0 | 44/54/52/44 | https://github.com/hsliuping/TradingAgents-CN
+trademaster | 2 | TradeMaster (NTU) – RL-alapú kvant kereskedési platform | M9 AI döntési réteg | free | 0 | 46/52/49/51 | https://github.com/TradeMaster-NTU/TradeMaster
+rentech-simons-interpretation | 2 | Jim Simons / Renaissance-szerű statisztikai arbitrázs – tartalmi… | M9 AI döntési réteg | institutional | ? | 42/56/52/48 | https://en.wikipedia.org/wiki/Renaissance_Technologies
+finmem | 2 | FinMem – rétegzett memóriájú LLM kereskedőágens | M9 AI döntési réteg | free | 0 | 46/50/48/51 | https://github.com/pipiku915/FinMem-LLM-StockTrading
+tradinggpt-paper | 2 | TradingGPT: többágenses rendszer rétegzett memóriával… | M9 AI döntési réteg | free | 0 | 44/50/46/50 | https://arxiv.org/abs/2309.03736
+stockagent | 2 | StockAgent – LLM-alapú kereskedés szimulált valós környezetben | M9 AI döntési réteg | free | 0 | 42/50/48/44 | https://github.com/MingyuJ666/Stockagent
+bloomberg-bql-bquant | 3 | Bloomberg Query Language (BQL) és BQuant | M12 Benchmark-platformok | paid | ? | 58/72/64/60 | https://guides.nyu.edu/bloombergguide/bloomberg-query-language-bql
+bloomberg-b-pipe | 3 | Bloomberg B-PIPE (Market Data Feed) | M12 Benchmark-platformok | institutional | ? | 58/72/60/58 | https://aws.amazon.com/financial-services/partner-solutions/bloomberg-b-pipe
+aladdin-risk | 3 | Aladdin Risk | M12 Benchmark-platformok | institutional | ? | 54/74/66/56 | https://www.blackrock.com/aladdin/products/aladdin-risk
+aladdin-platform | 3 | BlackRock Aladdin – befektetéskezelési és kockázati platform | M12 Benchmark-platformok | institutional | ? | 52/72/63/55 | https://www.blackrock.com/aladdin
+bloomberg-blpapi | 3 | Bloomberg API (blpapi) Python SDK | M12 Benchmark-platformok | paid | ? | 56/68/58/56 | https://pypi.org/project/blpapi/
+factset | 3 | FactSet Workstation | M12 Benchmark-platformok | paid | kb. 12–40 ezer USD/év (becsült)… | 52/67/58/54 | https://www.factset.com/
+two-sigma | 3 | Two Sigma – adatvezérelt befektetési cég, nyilvános kutatás | M12 Benchmark-platformok | institutional | ? | 48/68/61/56 | https://www.twosigma.com/
+book-thorp-beat-dealer | 3 | Edward Thorp: Beat the Dealer (1966) | M13 Tudás | paid | fizetős, ár nem mérve | 46/64/58/52 | https://openlibrary.org/isbn/9780394703107
+book-taleb-dynamic-hedging | 3 | Taleb: Dynamic Hedging (1997) | M13 Tudás | paid | fizetős, ár nem mérve | 44/62/56/52 | https://openlibrary.org/isbn/9780471152804
+coursera-shiller-financial-markets | 3 | Coursera: Financial Markets (Yale, Robert Shiller) | M13 Tudás | freemium | ? | 42/64/56/49 | https://www.coursera.org/learn/financial-markets-global
+citadel | 3 | Citadel és Citadel Securities | M12 Benchmark-platformok | institutional | ? | 43/62/54/50 | https://www.citadel.com/
+de-shaw | 3 | D. E. Shaw & Co. – kvant pionír; nyilvános könyvtár | M12 Benchmark-platformok | institutional | ? | 43/62/54/50 | https://www.deshaw.com/
+ycharts | 3 | YCharts | M12 Benchmark-platformok | paid | kb. 3 600–6 000 USD/év (becsült)… | 44/58/50/48 | https://ycharts.com/
+podcast-chat-with-traders | 3 | Chat With Traders podcast | M13 Tudás | free | 0 | 44/58/50/50 | https://chatwithtraders.com/
+aladdin-wealth | 3 | Aladdin Wealth | M12 Benchmark-platformok | institutional | ? | 42/58/50/45 | https://www.blackrock.com/aladdin/products/aladdin-wealth
+xtx-markets | 3 | XTX Markets | M12 Benchmark-platformok | institutional | ? | 42/57/50/48 | https://www.xtxmarkets.com/
+wilmott-forum | 3 | Wilmott fórum | M13 Tudás | free | 0 | 41/58/50/48 | https://forum.wilmott.com/
+finmaster | 3 | FinMaster: teljes pénzügyi munkafolyamat benchmark (2025) | M9 AI döntési réteg | free | 0 | 40/56/50/47 | https://arxiv.org/abs/2505.13533
+quantnet | 3 | QuantNet – kvant karrier és oktatási fórum | M13 Tudás | free | 0 | 40/56/50/46 | https://quantnet.com/
+jarvis-hugginggpt-interpretation | 3 | JARVIS / HuggingGPT (Microsoft) – 'Jarvis-szerű' értelmezés… | M9 AI döntési réteg | free | 0 | 42/54/46/48 | https://github.com/microsoft/JARVIS
+jump-trading | 3 | Jump Trading | M12 Benchmark-platformok | institutional | ? | 40/54/48/47 | https://www.jumptrading.com/
+elite-trader | 3 | Elite Trader fórum | M13 Tudás | free | 0 | 42/54/47/46 | https://www.elitetrader.com/
+fingaia | 3 | FinGAIA: kínai pénzügyi AI-ágens benchmark (2025) | M9 AI döntési réteg | free | 0 | 38/54/47/46 | https://arxiv.org/abs/2507.17186
+rentec-site | 3 | Renaissance Technologies hivatalos oldal | M12 Benchmark-platformok | institutional | ? | 39/54/46/46 | https://www.rentec.com/
+fineval | 3 | FinEval: kínai pénzügyi tudás benchmark (2023) | M9 AI döntési réteg | free | 0 | 38/52/46/46 | https://arxiv.org/abs/2308.09975
+java-ml-interpretation | 3 | Java-alapú statisztikai ML (Weka, Deeplearning4j) – 'Javához hasonló'… | M9 AI döntési réteg | free | 0 | 38/50/43/45 | https://ml.cms.waikato.ac.nz/weka
+nuclear-phynance | 3 | Nuclear Phynance fórum | M13 Tudás | free | 0 | 37/48/41/45 | https://www.nuclearphynance.com/
+aladdin-efront | 3 | eFront (Aladdin magánpiaci modul) | M12 Benchmark-platformok | institutional | ? | 32/48/40/38 | https://www.efront.com/
 
 ## Infrastruktúra, szerverhelyek, hardver, költözés, adó, szabályozás
-vantage-server-name-helpcenter | Vantage szervernév megkeresése (Help Center, 2026-11-09) | free | 0 | 74/86/78/77 | https://global.vantagehelpcenter.com/hc/en-us/articles/10955773578895-Where-can-I-find-my-Vantage-trading-server-name
-mifid2-annex-ii-professional-client | MiFID II II. melléklet – kérésre szakmai ügyfél (elective professional | free | 0 | 67/90/82/72 | https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifid-ii/annex-ii
-vantage-latency-howto | Vantage MT5 szerver-késleltetés mérési eljárás (ajánlott) | free | 0 | 76/83/76/76 | https://global.vantagehelpcenter.com/hc/en-us/articles/10955579802127-How-do-I-connect-to-my-Vantage-trading-server-on-MT4-or-MT5
-esma-cfd-product-intervention-2018 | ESMA CFD-termékintervenció (2018) – tőkeáttételi limitek | free | 0 | 64/88/78/70 | https://www.esma.europa.eu/node/84933
-hu-szja-tv-67a-etu | Szja tv. 67/A. § – ellenőrzött tőkepiaci ügylet (ETÜ) | free | 0 | 64/84/77/70 | https://net.jogtar.hu/jogszabaly?docid=99500117.tv
-hu-szocho-tv-2018-lii | 2018. évi LII. törvény a szociális hozzájárulási adóról (Szocho tv.) | free | 0 | 64/84/77/70 | https://net.jogtar.hu/jogszabaly?docid=A1800052.TV
-equinix-ld4-slough-fx-hub | Equinix LD4/LD5 (Slough) – az európai FX-likviditás központja | free | 0 | 70/75/68/70 | https://support.deribit.com/hc/en-us/articles/25944617582877
-equinix-ny4-secaucus-fx-hub | Equinix NY4/NY5 (Secaucus, NJ) – az amerikai FX-központ | free | 0 | 70/75/68/70 | https://datacenterknowledge.com/hyperscalers/ny4-inside-equinix-s-crown-jewel-in-new-jersey
-hetzner-ax-dedicated | Hetzner AX dedikált szerverek (AX41/AX42/AX102/AX162) | paid | 59–614 EUR/hó (~159 €/hó) | 60/83/75/66 | https://www.hetzner.com/dedicated-rootserver/matrix-ax/
-vantage-stop-out-20 | Vantage stop-out 20% és negatívegyenleg-védelem (Help Center) | free | 0 | 62/80/74/63 | https://global.vantagehelpcenter.com/hc/en-us/articles/10948711085839-What-is-stop-out-and-how-is-it-calculated
-nycservers | NYCServers (New York City Servers) | paid | 20,83–50 USD/hó VPS; 145,83 USD/hó dedik | 68/75/67/68 | https://newyorkcityservers.com/forex-vps
-hetzner-cloud | Hetzner Cloud (kutatás, adatgyűjtés, backtest-ügynökök) | paid | 5,49–36,99+ EUR/hó (~5 €/hó) | 58/80/72/64 | https://www.hetzner.com/cloud/
-vantage-entities-helpcenter-2026 | Vantage jogalanyok és szabályozók (Help Center „Who is Vantage?”, fris | registration | ? | 60/76/73/61 | https://global.vantagehelpcenter.com/hc/en-us/articles/10945714674959-Who-is-Vantage
-hu-kriptotorveny-2024-vii-validalas | 2024. évi VII. törvény (kriptoeszköz-piacok) – 2025-ös validálási köte | free | 0 | 59/78/70/64 | https://njt.jog.gov.hu/jogszabaly/2025-72-00-00
-hu-2025-lxxxiii-kripto-veszteseg | 2025. évi LXXXIII. törvény – kripto-veszteség időbeli korlátjának eltö | free | 0 | 59/78/70/64 | https://kpmg.com/hu/hu/home/tanulmanyok/2025/11/taxalert-2025-11-25.html
-nav-crs-dac2-jogkovetesi-vizsgalat | NAV: CRS/DAC2 adatok alapján jogkövetési vizsgálat a külföldi tőkejöve | free | 0 | 59/78/70/64 | https://www.portfolio.hu/gazdasag/20251202/bekemenyit-a-nav-celkeresztben-a-kulfoldi-tokejovedelem-803434
-eu-dac8-2023-2226 | DAC8 – Tanácsi (EU) 2023/2226 irányelv: kripto-szolgáltatói adatszolgá | free | 0 | 59/78/70/64 | https://eur-lex.europa.eu/eli/dir/2023/2226/oj
-ccxt-exchange-latency-map-2026 | CCXT: „How far is your exchange?” – kripto API-késleltetés-térkép (202 | free | 0 | 73/80/72/74 | https://docs.ccxt.com/blog/how-far-is-your-exchange
-hu-dtt-lista-kozbeszerzes-2026 | Magyarország hatályos kettősadó-egyezményei – lista (Közbeszerzési Hat | free | 0 | 64/84/77/70 | https://kozbeszerzes.hu/media/documents/utmutato-kettos-adozas-2026-honlapra.pdf
-polymarket-servers-eu-west-2 | Polymarket – szerverek AWS eu-west-2 (London), colocation KYC-vel; geo | free | 0 | 70/72/70/64 | https://docs.polymarket.com/api-reference/geoblock
-beeks-vps | Beeks Group (BeeksFX) VPS + Proximity/Exchange Cloud | paid | 32/57/100 GBP/hó + ÁFA (~37 €/hó) | 66/77/68/67 | https://beeksgroup.com/services/trading-infrastructure/virtual-private-servers-vps/
-aws-eu-west-2-london | AWS eu-west-2 (London) – Polymarket-közeli és LD-közeli felhő | paid | ? | 65/75/68/66 | https://aws.amazon.com/ec2/pricing/on-demand/
-hu-tao-tv-19-9szazalek | Tao tv. 19. § – társasági adó 9% (Kft. saját számlás kereskedése) | free | 0 | 59/78/70/64 | https://net.jogtar.hu/jogszabaly?docid=99600081.tv
-hu-kiva-katv-21-10szazalek | Katv. 21. § – kisvállalati adó (KIVA) 10%, TAO és szocho helyett | free | 0 | 59/78/70/64 | https://net.jogtar.hu/jogszabaly?docid=a1200147.tv
-hu-alacsony-adokulcsu-allam | Alacsony adókulcsú államból származó tőkejövedelem = egyéb jövedelem ( | free | 0 | 59/78/70/64 | https://taxsummaries.pwc.com/hungary/individual/income-determination
-vantage-free-vps-program | Vantage ingyenes VPS-program (visszatérítés) – feltételek | registration | 0 (visszatérítés max. 50 USD/hó) | 62/75/66/64 | https://global.vantagehelpcenter.com/hc/en-us/articles/10946826718095-How-can-I-take-advantage-of-the-Free-VPS-promotion-and-what-are-the-requirements
-reloc-cyprus | Ciprus | free | 0 | 59/76/70/62 | https://taxsummaries.pwc.com/cyprus/individual/income-determination
-reloc-uk | Egyesült Királyság | free | 0 | 64/74/66/61 | https://www.gov.uk/capital-gains-tax/rates
-reloc-bulgaria | Bulgária | free | 0 | 60/73/67/62 | https://taxsummaries.pwc.com/bulgaria/individual/income-determination
-wondernetwork-pings | WonderNetwork Global Ping Statistics – város–város késleltetés | free | 0 | 60/74/62/62 | https://wondernetwork.com/pings/Budapest/London
-mnb-cfd-termekintervencio-2020 | MNB CFD-termékintervenciós határozatok (2020. április) | free | 0 | 56/74/65/60 | https://www.penzcentrum.hu/megtakaritas/20200409/itt-az-mnb-szigoru-intezkedese-mostantol-csak-igy-teheti-aki-ilyen-ugyletet-akar-kotni-1092610/amp
-binance-aws-tokyo | Binance – origin AWS Tokió (ap-northeast-1) | free | 0 | 63/68/63/59 | https://latency.glassnode.com/cex/about
-tradingfxvps | TradingFXVPS | paid | 17,50–22,11 USD/hó (éves) (~17 €/hó) | 63/68/60/64 | https://tradingfxvps.com/services/forex-vps-plan/
-reloc-malta | Málta | free | 0 | 58/71/65/60 | https://taxsummaries.pwc.com/malta/individual/income-determination
-eurostat-pli-2024 | Eurostat árszínvonal-index (PLI), tényleges egyéni fogyasztás, EU27=10 | free | 0 | 53/76/66/60 | https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_ppp_ind?format=JSON&na_item=PLI_EU27_2020&ppp_cat=A01&geo=HU
-findstack-forex-vps-location-2026 | Findstack: „Forex VPS Location: We Measured Three Brokers” (2026-08-17 | free | 0 | 56/71/63/62 | https://findstack.com/resources/forex-vps-location
-hw-gpu-rtx5090 | GeForce RTX 5090 32 GB (Zotac Solid White OC) | paid | 3418390 HUF | 56/72/64/60 | https://ipon.hu/shop/termek/zotac-solid-white-oc-geforce-rtx-5090-32gb-gddr7-dlss4-zt-b50900q-10p/2499436
-reloc-switzerland | Svájc | free | 0 | 58/70/62/58 | https://taxsummaries.pwc.com/switzerland/individual/income-determination
-hw-cpu-ryzen7-9700x | AMD Ryzen 7 9700X (AM5, BOX) | paid | 107989 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-7-9700x-380ghz-am5-box-100-100001404wof/2289499
-hw-cpu-ryzen9-9950x3d | AMD Ryzen 9 9950X3D (AM5, BOX) | paid | 255090 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-9-9950x3d-430ghz-am5-box-100-100000719wof/2347507
-hw-cpu-ryzen9-9950x3d2 | AMD Ryzen 9 9950X3D2 (AM5, BOX) | paid | 339990 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-9-9950x3d2-430ghz-am5-box-100-100001978wof/2510774
-hw-cpu-core-ultra9-285k | Intel Core Ultra 9 285K (LGA1851, BOX) | paid | 207890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/intel-core-ultra-9-processor-285k-37-ghz-lga-1851-box-bx80768285k/2319503
-hw-cpu-tr-9960x | AMD Ryzen Threadripper 9960X (TR5, BOX) | paid | 632390 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-threadripper-9960x-420ghz-tr5-box-100-100001595wof/2402888
-hw-cpu-tr-9970x | AMD Ryzen Threadripper 9970X (TR5, BOX) | paid | 1061890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-threadripper-9970x-40ghz-tr5-box-100-100001594wof/2403952
-hw-mb-b850m-pro-rs | ASRock B850M Pro RS (AM5) | paid | 52690 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/asrock-b850m-pro-rs/2339763
-hw-mb-x870e-pro | MSI PRO X870E-S EVO WIFI (AM5) | paid | 97890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/msi-pro-x870e-s-evo-wifi-7e86-003r/2496088
-hw-mb-trx50-ws | ASRock TRX50 WS (sTR5) | paid | 246990 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/asrock-trx50-ws/2230674
-hw-ram-32-ddr5-6000 | G.Skill 32 GB DDR5-6000 kit (2×16) | paid | 279790 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/gskill-dimm-32gb-ddr5-6000-dual-kit-trident-z5-neo-x-rgb-f5-6000a3636f16gx2-tz5nxrw/2536205
-hw-ram-64-ddr5-6000 | KLEVV 64 GB DDR5-6000 CL30 kit | paid | 501390 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/klevv-64gb-bolt-v-ddr5-6000mhz-cl30-kit-feher-kd5bgua80-60a300i/2503918
-hw-ram-128-ddr5 | Kingston FURY Beast 128 GB DDR5-5600 kit | paid | 1023590 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/kingston-fury-128gb-beast-ddr5-5600mhz-cl36-kit-kf556c36bbek2-128/2369630
-hw-ram-128-rdimm | Kingston FURY Renegade Pro 128 GB DDR5-6400 RDIMM ECC kit | paid | 2582290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/kingston-fury-128gb-renegade-pro-ddr5-rdimm-6400mhz-cl32-kit-kf564r32rbe2k4-128/2559035
-hw-nvme-990pro-2tb | Samsung 990 PRO 2 TB NVMe | paid | 184989 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-2tb-990-pro-m2-pcie-m2-2280-mz-v9p2t0bw/2066316
-hw-nvme-990pro-4tb | Samsung 990 PRO 4 TB NVMe | paid | 290090 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-4tb-990-pro-m2-pcie-m2-2280-mz-v9p4t0bw/2205029
-hw-nvme-9100pro-4tb | Samsung 9100 PRO 4 TB (PCIe 5.0) | paid | 346490 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-4tb-9100-pro-m2-pcie-m2-2280-mz-vap4t0bw/2354995
-hw-hdd-toshiba-mg10-22tb | Toshiba MG10 22 TB SATA (MG10AFA22TE) | paid | 394490 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/toshiba-mg-series-22tb-35-7200rpm-512mb-sata-iii-mg10afa22te/2259318
-hw-hdd-exos-x24-24tb | Seagate Exos X24 24 TB SATA (ST24000NM002H) | paid | 660290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/seagate-exos-x24-24tb-35-7200rpm-512mb-sata-st24000nm002h/2235025
-hw-hdd-ultrastar-22tb | WD Ultrastar DC HC580 22 TB SATA | paid | 688790 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/wd-ultrastar-dc-hc580-22tb-35-7200rpm-512mb-sata-0f62785/2365017
-hw-nic-intel-x710-da2 | Intel X710-DA2 2×10 GbE SFP+ | paid | 115590 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/intel-700-x710-da2-2x-10gigabit-sfp-pcie-kartya-ex710da2g2p5/2511087
-hw-nic-cx7-25g | NVIDIA ConnectX-7 25 GbE HHHL (900-9X7AO-0003-ST0) | paid | 442290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/nvidia-900-9x7ao-0003-st0-connectx-7-hhhl-adapter-card-25/2319912
-hw-config-trading-t1 | Kereskedőgép – 1. szint (belépő) | paid | 775238 HUF | 57/70/60/60 | https://ipon.hu/
-hw-config-research-t1 | Kutató/ML munkaállomás – 1. szint | paid | 3081621 HUF | 57/70/60/60 | https://ipon.hu/
-reloc-uae | Egyesült Arab Emírségek (Dubaj) | free | 0 | 50/68/64/54 | https://taxsummaries.pwc.com/united-arab-emirates/individual/taxes-on-personal-income
-reloc-georgia | Grúzia | free | 0 | 54/65/61/55 | https://taxsummaries.pwc.com/georgia/individual/taxes-on-personal-income
-hw-gpu-rtx5070ti | GeForce RTX 5070 Ti 16 GB (Palit GamingPro-S) | paid | 579990 HUF | 52/66/58/56 | https://ipon.hu/shop/termek/palit-gamingpro-s-geforce-rtx-5070-ti-16gb-gddr7-dlss4/2397570
-reloc-portugal | Portugália (NHR megszűnt → IFICI) | free | 0 | 52/66/58/54 | https://taxsummaries.pwc.com/portugal/individual/other-tax-credits-and-incentives
-ecb-fx-ref-2026-11-13 | EKB referencia-árfolyam (az átszámításokhoz) | free | 0 | 61/80/68/64 | https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
-hetzner-gex-gpu | Hetzner GEX GPU-szerverek (RTX PRO 4000/6000 Blackwell) | paid | 214–3599 EUR/hó (~214 €/hó) | 56/74/68/62 | https://www.hetzner.com/dedicated-rootserver/matrix-gpu/
-equinix-ty3-tokyo-fx-hub | Equinix TY3 (Tokió) – ázsiai FX-központ | free | 0 | 62/69/62/62 | https://www.equinix.com/newsroom/press-releases/2014/12/lmax-exchange-launches-matching-engine-in-equinix-s-tokyo-data-center
-hw-config-trading-t2 | Kereskedőgép – 2. szint (közép) | paid | 1302548 HUF | 57/70/60/60 | https://ipon.hu/
-hw-config-research-t2 | Kutató/ML munkaállomás – 2. szint | paid | 9200790 HUF | 57/70/60/60 | https://ipon.hu/
-kalshi-aws-us-east-2 | Kalshi – API origin AWS us-east-2 (Ohio); nemzetközi hozzáférés a Memb | free | 0 | 60/64/62/56 | https://hyperlatency.glassnode.com/prediction-markets/about
-fxvm | FXVM | paid | 15–50 USD/hó (~23 €/hó) | 60/64/57/62 | https://fxvm.net/
-ovh-rise | OVHcloud Rise dedikált szerverek | paid | 56,99–64,99 EUR/hó-tól (~57 €/hó) | 54/70/62/58 | https://eco.ovhcloud.com/en-ie/rise/
-hw-gpu-rtx-pro-4000 | NVIDIA RTX PRO 4000 Blackwell 24 GB (PNY, SFF) | paid | 1111090 HUF | 52/70/61/57 | https://ipon.hu/shop/termek/pny-vcnrtxpro4000lp-pb-rtx-pro-4000-24gb-gddr7-blackwell-sff-pcie/2468004
-reloc-ireland | Írország | free | 0 | 58/66/58/56 | https://taxsummaries.pwc.com/ireland/individual/income-determination
-reloc-czechia | Csehország | free | 0 | 54/66/58/54 | https://taxsummaries.pwc.com/czech-republic/individual/income-determination
-reloc-austria | Ausztria | free | 0 | 53/68/59/54 | https://taxsummaries.pwc.com/austria/individual/income-determination
-massivegrid-ny-forex-vps | MassiveGRID Forex VPS New York – brókerszerver-tábla és árak | paid | 4,79–65,16 USD/hó (~4 €/hó) | 56/62/56/58 | https://massivegrid.com/forex-vps-new-york/
-vpsmart-vantage-ping-table | VPS-Mart Vantage ping-tábla (MT4/MT5 szerverek NY/LD/NV/Virginia címké | paid | Windows VPS 4,05–51,99 USD/hó (az oldalo | 52/62/58/58 | https://www.vps-mart.com/vantage
-reloc-singapore | Szingapúr | free | 0 | 49/66/60/52 | https://www.iras.gov.sg/taxes/individual-income-tax/basics-of-individual-income-tax/what-is-taxable-what-is-not/gains-from-sale-of-property-shares-and-financial-instruments
-reloc-estonia | Észtország | free | 0 | 52/64/57/54 | https://taxsummaries.pwc.com/estonia/individual/taxes-on-personal-income
-hw-nic-mellanox-cx4lx-amazon | Mellanox ConnectX-4 Lx EN 2×25 GbE (MCX4121A-ACAT) – amazon.de | paid | 168.37 USD | 54/60/52/58 | https://www.amazon.de/dp/B011HVAZ78
-hw-gpu-rtx5080 | GeForce RTX 5080 16 GB (Gainward Python III) | paid | 795490 HUF | 48/62/54/53 | https://ipon.hu/shop/termek/gainward-python-iii-geforce-rtx-5080-16gb-gddr7-dlss4-ne75080019t2-gb2035t/2531706
-hw-shops-hu-eu-access | Boltelérés gépi árgyűjtéshez (2026-11-15) | free | 0 | 49/61/52/54 | https://ipon.hu/
-fca-cfd-retail-rules | FCA (UK) CFD-szabályok lakossági ügyfélnek | free | 0 | 48/62/54/52 | https://www.fca.org.uk/publication/impact-assessments/mifid-ii-client-categorisation.pdf
-reloc-slovakia | Szlovákia | free | 0 | 52/59/52/52 | https://taxsummaries.pwc.com/slovak-republic/individual/income-determination
-hw-psu-1000w-gold | 1000 W 80 Plus Gold tápegység (be quiet! Pure Power 12) | paid | 45991 HUF | 46/60/50/51 | https://ipon.hu/shop/termek/be-quiet-pure-power-12-1000w-80-plus-gold-tapegyseg/2325035
-hw-gpu-rtx-pro-6000 | NVIDIA RTX PRO 6000 Blackwell Max-Q 96 GB (PNY) | paid | 6743290 HUF | 54/72/65/60 | https://ipon.hu/shop/termek/pny-vcnrtxpro6000mq-sb-quadro-rtx-pro-6000-96gb-gddr7-blackwell-max-q-pcie-oem/2412517
-hw-config-trading-t3 | Kereskedőgép – 3. szint (prémium) | paid | 2659129 HUF | 57/70/60/60 | https://ipon.hu/
-hw-config-research-t3 | Kutató/ML munkaállomás – 3. szint | paid | 17176841 HUF | 57/70/60/60 | https://ipon.hu/
-equinix-sg1-hk1-asia | Equinix SG1 (Szingapúr) és HK1 (Hongkong) – regionális FX/kripto-csomó | free | 0 | 56/58/52/57 | https://newyorkcityservers.com/broker-latency
-massivegrid-london-vps | MassiveGRID Forex VPS London | paid | 4,79 USD/hó-tól (~4 €/hó) | 52/58/51/55 | https://massivegrid.com/forex-vps-london/
-equinix-cross-connect | Cross-connect és colocation az Equinixben (LD4/NY4) – intézményi szint | institutional | ? | 56/56/48/54 | https://beeksgroup.com/services/managed-cloud/proximity-cloud/pricing/
-hw-nic-solarflare | AMD Solarflare X2522/X3522 (Onload kernel-bypass) | paid | ? | 54/56/46/54 | https://www.amd.com/en/products/accelerators/alveo.html
-cns-commercial-network-services | Commercial Network Services (CNS) – NY4 hosting/cross-connect | paid | ? | 50/49/41/52 | https://fortex.com/en/news/fortex-and-cns-release-fiber-cross-connect-ny4/
-reloc-puerto-rico | Puerto Rico (Act 60) | free | 0 | 45/48/44/45 | https://taxsummaries.pwc.com/puerto-rico/individual/other-tax-credits-and-incentives
-reloc-monaco | Monaco | free | 0 | 42/43/37/39 | https://taxsummaries.pwc.com/monaco/individual/taxes-on-personal-income
+vantage-server-name-helpcenter | 0 | Vantage szervernév megkeresése (Help Center, 2026-11-09) | Szerverhelyek | free | 0 | 74/86/78/77 | https://global.vantagehelpcenter.com/hc/en-us/articles/10955773578895-Where-can-I-find-my-Vantage-trading-server-name | Mért: a szervernév a Client Portal → Accounts alatt a számlaszám mellett…
+mifid2-annex-ii-professional-client | 0 | MiFID II II. melléklet – kérésre szakmai ügyfél… | Szabályozás | free | 0 | 67/90/82/72 | https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifid-ii/annex-ii | Feltétel: a háromból kettő (A8, mért). (1) Az elmúlt 4 negyedévben átlagosan…
+vantage-latency-howto | 0 | Vantage MT5 szerver-késleltetés mérési eljárás (ajánlott) | Késleltetés | free | 0 | 76/83/76/76 | https://global.vantagehelpcenter.com/hc/en-us/articles/10955579802127-How-do-I-connect-to-my-Vantage-trading-server-on-MT4-or-MT5 | Következtetett eljárás a mért forrásokból: (1) Client Portal → Accounts…
+esma-cfd-product-intervention-2018 | 0 | ESMA CFD-termékintervenció (2018) – tőkeáttételi limitek | Szabályozás | free | 0 | 64/88/78/70 | https://www.esma.europa.eu/node/84933 | Mért (ESMA sajtóközlemény, 2018-03-27): lakossági nyitási limitek: fő devizapár…
+hu-szja-tv-67a-etu | 0 | Szja tv. 67/A. § – ellenőrzött tőkepiaci ügylet (ETÜ) | Magyar adó és jog | free | 0 | 64/84/77/70 | https://net.jogtar.hu/jogszabaly?docid=99500117.tv | Adó (mért): EGT-s/OECD-s/egyezményes, felügyelt brókernél ETÜ 15%, szocho…
+hu-szocho-tv-2018-lii | 0 | 2018. évi LII. törvény a szociális hozzájárulási adóról (Szocho tv.) | Magyar adó és jog | free | 0 | 64/84/77/70 | https://net.jogtar.hu/jogszabaly?docid=A1800052.TV | Mért (hatály 2026.X.1.-től): szocho 13% (2. § (1)). Alap: az összevont…
+equinix-ld4-slough-fx-hub | 0 | Equinix LD4/LD5 (Slough) – az európai FX-likviditás központja | Szerverhelyek | free | 0 | 70/75/68/70 | https://support.deribit.com/hc/en-us/articles/25944617582877 | Mért: a Deribit hivatalos dokumentációja szerint a matching engine az Equinix…
+equinix-ny4-secaucus-fx-hub | 0 | Equinix NY4/NY5 (Secaucus, NJ) – az amerikai FX-központ | Szerverhelyek | free | 0 | 70/75/68/70 | https://datacenterknowledge.com/hyperscalers/ny4-inside-equinix-s-crown-jewel-in-new-jersey | Mért (sajtó): NY4 a secaucusi Equinix-kampusz része, az LD4 és a TY3 mellett a…
+hetzner-ax-dedicated | 0 | Hetzner AX dedikált szerverek (AX41/AX42/AX102/AX162) | VPS és colocation | paid | 59–614 EUR/hó (~159 €/hó) | 60/83/75/66 | https://www.hetzner.com/dedicated-rootserver/matrix-ax/ | Mért (az oldalon, ÁFA nélkül): AX41 Ryzen 5 3600/64 GB/2×512 GB – 59 EUR/hó…
+vantage-stop-out-20 | 0 | Vantage stop-out 20% és negatívegyenleg-védelem (Help Center) | Bróker-szabályozás | free | 0 | 62/80/74/63 | https://global.vantagehelpcenter.com/hc/en-us/articles/10948711085839-What-is-stop-out-and-how-is-it-calculated | Mért: „Vantage's margin stop-out level on all trading platforms is set at 20%”…
+nycservers | 0 | NYCServers (New York City Servers) | VPS és colocation | paid | 20,83–50 USD/hó VPS; 145,83 USD/hó… | 68/75/67/68 | https://newyorkcityservers.com/forex-vps | Mért (az oldalon): Basic 2 mag/2 GB DDR5/60 GB NVMe 20,83 USD/hó (éves 16,67)…
+hetzner-cloud | 0 | Hetzner Cloud (kutatás, adatgyűjtés, backtest-ügynökök) | VPS és colocation | paid | 5,49–36,99+ EUR/hó (~5 €/hó) | 58/80/72/64 | https://www.hetzner.com/cloud/ | Mért (az oldalon): Regular Performance 5,49 EUR/hó-tól (megosztott)…
+vantage-entities-helpcenter-2026 | 0 | Vantage jogalanyok és szabályozók… | Bróker-szabályozás | registration | ? | 60/76/73/61 | https://global.vantagehelpcenter.com/hc/en-us/articles/10945714674959-Who-is-Vantage | Mért: a Vantage súgója szerint „Protections offered by one Vantage entity do…
+hu-kriptotorveny-2024-vii-validalas | 0 | 2024. évi VII. törvény (kriptoeszköz-piacok) – 2025-ös validálási… | Magyar adó és jog | free | 0 | 59/78/70/64 | https://njt.jog.gov.hu/jogszabaly/2025-72-00-00 | Mért (sajtó): a 2025 júniusi módosítás validálási kötelezettséget vezetett be a…
+hu-2025-lxxxiii-kripto-veszteseg | 0 | 2025. évi LXXXIII. törvény – kripto-veszteség időbeli korlátjának… | Magyar adó és jog | free | 0 | 59/78/70/64 | https://kpmg.com/hu/hu/home/tanulmanyok/2025/11/taxalert-2025-11-25.html | Mért (Magyar Közlöny-hivatkozás a keresési találatban; KPMG 2025-11-25): az…
+nav-crs-dac2-jogkovetesi-vizsgalat | 0 | NAV: CRS/DAC2 adatok alapján jogkövetési vizsgálat a külföldi… | Szabályozás | free | 0 | 59/78/70/64 | https://www.portfolio.hu/gazdasag/20251202/bekemenyit-a-nav-celkeresztben-a-kulfoldi-tokejovedelem-803434 | Mért (Portfolio, RSM, 2025-12-02): a NAV a külföldi pénzügyi számlákról érkező…
+eu-dac8-2023-2226 | 0 | DAC8 – Tanácsi (EU) 2023/2226 irányelv: kripto-szolgáltatói… | Szabályozás | free | 0 | 59/78/70/64 | https://eur-lex.europa.eu/eli/dir/2023/2226/oj | Nem ellenőrzött részletek (az EUR-Lex oldalt nem nyitottuk meg): a DAC8 a…
+ccxt-exchange-latency-map-2026 | 1 | CCXT: „How far is your exchange?” – kripto API-késleltetés-térkép… | Szerverhelyek | free | 0 | 73/80/72/74 | https://docs.ccxt.com/blog/how-far-is-your-exchange | Mért (Globalping, medián TTFB, 8 város): legjobb régió – Binance Tokió 8 ms…
+hu-dtt-lista-kozbeszerzes-2026 | 1 | Magyarország hatályos kettősadó-egyezményei – lista… | Magyar adó és jog | free | 0 | 64/84/77/70 | https://kozbeszerzes.hu/media/documents/utmutato-kettos-adozas-2026-honlapra.pdf | Nem ellenőrzött adószabály (PwC-oldal 404): az andorrai személyi jövedelemadó…
+polymarket-servers-eu-west-2 | 1 | Polymarket – szerverek AWS eu-west-2 (London), colocation KYC-vel… | Szerverhelyek | free | 0 | 70/72/70/64 | https://docs.polymarket.com/api-reference/geoblock | Mért (hivatalos docs): elsődleges szerverek eu-west-2, a legközelebbi nem…
+beeks-vps | 1 | Beeks Group (BeeksFX) VPS + Proximity/Exchange Cloud | VPS és colocation | paid | 32/57/100 GBP/hó + ÁFA (~37 €/hó) | 66/77/68/67 | https://beeksgroup.com/services/trading-infrastructure/virtual-private-servers-vps/ | Mért (az oldalon): Bronze 1 vCPU/2560 MB/30 GB – 32 GBP/hó + ÁFA; Silver 2…
+aws-eu-west-2-london | 1 | AWS eu-west-2 (London) – Polymarket-közeli és LD-közeli felhő | VPS és colocation | paid | ? | 65/75/68/66 | https://aws.amazon.com/ec2/pricing/on-demand/ | Következtetett: a Polymarket elsődleges szerverei eu-west-2-ben vannak…
+hu-tao-tv-19-9szazalek | 1 | Tao tv. 19. § – társasági adó 9% (Kft. saját számlás kereskedése) | Magyar adó és jog | free | 0 | 59/78/70/64 | https://net.jogtar.hu/jogszabaly?docid=99600081.tv | Mért (hatály 2026.X.1.–XII.31.): „A társasági adó mértéke 9 százalék”, a…
+hu-kiva-katv-21-10szazalek | 1 | Katv. 21. § – kisvállalati adó (KIVA) 10%, TAO és szocho helyett | Magyar adó és jog | free | 0 | 59/78/70/64 | https://net.jogtar.hu/jogszabaly?docid=a1200147.tv | Mért (hatály 2026.V.14.-től): „Az adó mértéke az adó alapjának 10 százaléka”; a…
+hu-alacsony-adokulcsu-allam | 1 | Alacsony adókulcsú államból származó tőkejövedelem = egyéb jövedelem… | Magyar adó és jog | free | 0 | 59/78/70/64 | https://taxsummaries.pwc.com/hungary/individual/income-determination | Mért (PwC, 2026-07-01): az „alacsony adókulcsú országban” lévő társaságtól…
+vantage-free-vps-program | 1 | Vantage ingyenes VPS-program (visszatérítés) – feltételek | Szerverhelyek | registration | 0 (visszatérítés max. 50 USD/hó) | 62/75/66/64 | https://global.vantagehelpcenter.com/hc/en-us/articles/10946826718095-How-can-I-take-advantage-of-the-Free-VPS-promotion-and-what-are-the-requirements | Mért (súgó, frissítve 2026-10-23): legalább 1000 USD befizetés; a VPS…
+reloc-cyprus | 1 | Ciprus | Költözés, adórezidencia | free | 0 | 59/76/70/62 | https://taxsummaries.pwc.com/cyprus/individual/income-determination | Adó (mért, PwC 2026-08-04): tőkenyereség általában adómentes…
+reloc-uk | 1 | Egyesült Királyság | Költözés, adórezidencia | free | 0 | 64/74/66/61 | https://www.gov.uk/capital-gains-tax/rates | Adó (mért): CGT 18% (alapkulcsú sávon belül) / 24% (felette) 2026-04-06-tól…
+reloc-bulgaria | 1 | Bulgária | Költözés, adórezidencia | free | 0 | 60/73/67/62 | https://taxsummaries.pwc.com/bulgaria/individual/income-determination | Adó (mért, PwC 2026-08-02): rezidensnél a részvények, egyéb pénzügyi eszközök…
+wondernetwork-pings | 1 | WonderNetwork Global Ping Statistics – város–város késleltetés | Késleltetés | free | 0 | 60/74/62/62 | https://wondernetwork.com/pings/Budapest/London | Mért (2026-11-15, átlag): Budapest→London 27,9 ms, →New York 107,6, →Tokió…
+mnb-cfd-termekintervencio-2020 | 1 | MNB CFD-termékintervenciós határozatok (2020. április) | Szabályozás | free | 0 | 56/74/65/60 | https://www.penzcentrum.hu/megtakaritas/20200409/itt-az-mnb-szigoru-intezkedese-mostantol-csak-igy-teheti-aki-ilyen-ugyletet-akar-kotni-1092610/amp | Mért (sajtóforrás, 2020-04-09): az uniós (ESMA) intézkedés lejárta után az MNB…
+binance-aws-tokyo | 1 | Binance – origin AWS Tokió (ap-northeast-1) | Szerverhelyek | free | 0 | 63/68/63/59 | https://latency.glassnode.com/cex/about | Mért…
+tradingfxvps | 1 | TradingFXVPS | VPS és colocation | paid | 17,50–22,11 USD/hó (éves) (~17 €/hó) | 63/68/60/64 | https://tradingfxvps.com/services/forex-vps-plan/ | Mért (az oldalon): HFT Standard 1 mag AMD Ryzen 9 4,3 GHz, 2 GB DDR5, 30 GB…
+reloc-malta | 1 | Málta | Költözés, adórezidencia | free | 0 | 58/71/65/60 | https://taxsummaries.pwc.com/malta/individual/income-determination | Adó (mért, PwC 2026-09-30): részvények/értékpapírok (fix hozamúak kivételével)…
+eurostat-pli-2024 | 1 | Eurostat árszínvonal-index (PLI), tényleges egyéni fogyasztás… | Költözés, adórezidencia | free | 0 | 53/76/66/60 | https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_ppp_ind?format=JSON&na_item=PLI_EU27_2020&ppp_cat=A01&geo=HU | Mért (2024, Eurostat API, frissítve 2025-07-10): HU 68,3; BG 56,9; CZ 80,2; SK…
+findstack-forex-vps-location-2026 | 1 | Findstack: „Forex VPS Location: We Measured Three Brokers”… | Szerverhelyek | free | 0 | 56/71/63/62 | https://findstack.com/resources/forex-vps-location | Mért (cikk): TCP-connect mérés (8 kapcsolat, medián, 443-as port) Nürnbergből…
+hw-gpu-rtx5090 | 1 | GeForce RTX 5090 32 GB (Zotac Solid White OC) | Hardver | paid | 3418390 HUF | 56/72/64/60 | https://ipon.hu/shop/termek/zotac-solid-white-oc-geforce-rtx-5090-32gb-gddr7-dlss4-zt-b50900q-10p/2499436 | Ár: 3 418 390 Ft (mért, ipon.hu, legolcsóbb 5090) ≈ 9350 EUR; alternate.de…
+reloc-switzerland | 1 | Svájc | Költözés, adórezidencia | free | 0 | 58/70/62/58 | https://taxsummaries.pwc.com/switzerland/individual/income-determination | Adó (mért, PwC 2026-07-01): magáncélú ingó vagyon (pl. részvény)…
+hw-cpu-ryzen7-9700x | 1 | AMD Ryzen 7 9700X (AM5, BOX) | Hardver | paid | 107989 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-7-9700x-380ghz-am5-box-100-100001404wof/2289499 | Ár: 107 989 Ft (mért  ipon.hu  2026-11-15) ≈ 295 EUR…
+hw-cpu-ryzen9-9950x3d | 1 | AMD Ryzen 9 9950X3D (AM5, BOX) | Hardver | paid | 255090 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-9-9950x3d-430ghz-am5-box-100-100000719wof/2347507 | Ár: 255 090 Ft (mért  ipon.hu  2026-11-15) ≈ 698 EUR…
+hw-cpu-ryzen9-9950x3d2 | 1 | AMD Ryzen 9 9950X3D2 (AM5, BOX) | Hardver | paid | 339990 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-9-9950x3d2-430ghz-am5-box-100-100001978wof/2510774 | Ár: 339 990 Ft (mért  ipon.hu  2026-11-15) ≈ 930 EUR…
+hw-cpu-core-ultra9-285k | 1 | Intel Core Ultra 9 285K (LGA1851, BOX) | Hardver | paid | 207890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/intel-core-ultra-9-processor-285k-37-ghz-lga-1851-box-bx80768285k/2319503 | Ár: 207 890 Ft (mért  ipon.hu  2026-11-15) ≈ 569 EUR…
+hw-cpu-tr-9960x | 1 | AMD Ryzen Threadripper 9960X (TR5, BOX) | Hardver | paid | 632390 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-threadripper-9960x-420ghz-tr5-box-100-100001595wof/2402888 | Ár: 632 390 Ft (mért  ipon.hu  2026-11-15) ≈ 1730 EUR…
+hw-cpu-tr-9970x | 1 | AMD Ryzen Threadripper 9970X (TR5, BOX) | Hardver | paid | 1061890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/amd-ryzen-threadripper-9970x-40ghz-tr5-box-100-100001594wof/2403952 | Ár: 1 061 890 Ft (mért  ipon.hu  2026-11-15) ≈ 2905 EUR…
+hw-mb-b850m-pro-rs | 1 | ASRock B850M Pro RS (AM5) | Hardver | paid | 52690 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/asrock-b850m-pro-rs/2339763 | Ár: 52 690 Ft (mért  ipon.hu  2026-11-15) ≈ 144 EUR…
+hw-mb-x870e-pro | 1 | MSI PRO X870E-S EVO WIFI (AM5) | Hardver | paid | 97890 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/msi-pro-x870e-s-evo-wifi-7e86-003r/2496088 | Ár: 97 890 Ft (mért  ipon.hu  2026-11-15) ≈ 268 EUR…
+hw-mb-trx50-ws | 1 | ASRock TRX50 WS (sTR5) | Hardver | paid | 246990 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/asrock-trx50-ws/2230674 | Ár: 246 990 Ft (mért  ipon.hu  2026-11-15) ≈ 676 EUR…
+hw-ram-32-ddr5-6000 | 1 | G.Skill 32 GB DDR5-6000 kit (2×16) | Hardver | paid | 279790 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/gskill-dimm-32gb-ddr5-6000-dual-kit-trident-z5-neo-x-rgb-f5-6000a3636f16gx2-tz5nxrw/2536205 | Ár: 279 790 Ft (mért  ipon.hu  2026-11-15) ≈ 765 EUR…
+hw-ram-64-ddr5-6000 | 1 | KLEVV 64 GB DDR5-6000 CL30 kit | Hardver | paid | 501390 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/klevv-64gb-bolt-v-ddr5-6000mhz-cl30-kit-feher-kd5bgua80-60a300i/2503918 | Ár: 501 390 Ft (mért  ipon.hu  2026-11-15) ≈ 1371 EUR…
+hw-ram-128-ddr5 | 1 | Kingston FURY Beast 128 GB DDR5-5600 kit | Hardver | paid | 1023590 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/kingston-fury-128gb-beast-ddr5-5600mhz-cl36-kit-kf556c36bbek2-128/2369630 | Ár: 1 023 590 Ft (mért  ipon.hu  2026-11-15) ≈ 2800 EUR…
+hw-ram-128-rdimm | 1 | Kingston FURY Renegade Pro 128 GB DDR5-6400 RDIMM ECC kit | Hardver | paid | 2582290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/kingston-fury-128gb-renegade-pro-ddr5-rdimm-6400mhz-cl32-kit-kf564r32rbe2k4-128/2559035 | Ár: 2 582 290 Ft (mért  ipon.hu  2026-11-15) ≈ 7063 EUR…
+hw-nvme-990pro-2tb | 1 | Samsung 990 PRO 2 TB NVMe | Hardver | paid | 184989 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-2tb-990-pro-m2-pcie-m2-2280-mz-v9p2t0bw/2066316 | Ár: 184 989 Ft (mért  ipon.hu  2026-11-15) ≈ 506 EUR…
+hw-nvme-990pro-4tb | 1 | Samsung 990 PRO 4 TB NVMe | Hardver | paid | 290090 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-4tb-990-pro-m2-pcie-m2-2280-mz-v9p4t0bw/2205029 | Ár: 290 090 Ft (mért  ipon.hu  2026-11-15) ≈ 793 EUR…
+hw-nvme-9100pro-4tb | 1 | Samsung 9100 PRO 4 TB (PCIe 5.0) | Hardver | paid | 346490 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/samsung-4tb-9100-pro-m2-pcie-m2-2280-mz-vap4t0bw/2354995 | Ár: 346 490 Ft (mért  ipon.hu  2026-11-15) ≈ 948 EUR…
+hw-hdd-toshiba-mg10-22tb | 1 | Toshiba MG10 22 TB SATA (MG10AFA22TE) | Hardver | paid | 394490 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/toshiba-mg-series-22tb-35-7200rpm-512mb-sata-iii-mg10afa22te/2259318 | Ár: 394 490 Ft (mért  ipon.hu  2026-11-15) ≈ 1079 EUR…
+hw-hdd-exos-x24-24tb | 1 | Seagate Exos X24 24 TB SATA (ST24000NM002H) | Hardver | paid | 660290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/seagate-exos-x24-24tb-35-7200rpm-512mb-sata-st24000nm002h/2235025 | Ár: 660 290 Ft (mért  ipon.hu  2026-11-15) ≈ 1806 EUR…
+hw-hdd-ultrastar-22tb | 1 | WD Ultrastar DC HC580 22 TB SATA | Hardver | paid | 688790 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/wd-ultrastar-dc-hc580-22tb-35-7200rpm-512mb-sata-0f62785/2365017 | Ár: 688 790 Ft (mért  ipon.hu  2026-11-15) ≈ 1884 EUR…
+hw-nic-intel-x710-da2 | 1 | Intel X710-DA2 2×10 GbE SFP+ | Hardver | paid | 115590 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/intel-700-x710-da2-2x-10gigabit-sfp-pcie-kartya-ex710da2g2p5/2511087 | Ár: 115 590 Ft (mért  ipon.hu  2026-11-15) ≈ 316 EUR…
+hw-nic-cx7-25g | 1 | NVIDIA ConnectX-7 25 GbE HHHL (900-9X7AO-0003-ST0) | Hardver | paid | 442290 HUF | 57/70/60/60 | https://ipon.hu/shop/termek/nvidia-900-9x7ao-0003-st0-connectx-7-hhhl-adapter-card-25/2319912 | Ár: 442 290 Ft (mért  ipon.hu  2026-11-15) ≈ 1210 EUR…
+reloc-uae | 1 | Egyesült Arab Emírségek (Dubaj) | Költözés, adórezidencia | free | 0 | 50/68/64/54 | https://taxsummaries.pwc.com/united-arab-emirates/individual/taxes-on-personal-income | Adó (mért, PwC 2026-09-09): „There is currently no personal income tax”…
+reloc-georgia | 1 | Grúzia | Költözés, adórezidencia | free | 0 | 54/65/61/55 | https://taxsummaries.pwc.com/georgia/individual/taxes-on-personal-income | Adó (mért, PwC 2026-09-02): „Resident individuals are exempt from tax on income…
+hw-gpu-rtx5070ti | 1 | GeForce RTX 5070 Ti 16 GB (Palit GamingPro-S) | Hardver | paid | 579990 HUF | 52/66/58/56 | https://ipon.hu/shop/termek/palit-gamingpro-s-geforce-rtx-5070-ti-16gb-gddr7-dlss4/2397570 | Ár: 579 990 Ft (mért, ipon.hu) ≈ 1586 EUR. Belépő ML-GPU (16 GB): gradient…
+reloc-portugal | 1 | Portugália (NHR megszűnt → IFICI) | Költözés, adórezidencia | free | 0 | 52/66/58/54 | https://taxsummaries.pwc.com/portugal/individual/other-tax-credits-and-incentives | Adó (mért, PwC 2026-10-03): tőkenyereség flat 28%; <365 napos…
+ecb-fx-ref-2026-11-13 | 2 | EKB referencia-árfolyam (az átszámításokhoz) | Hardver | free | 0 | 61/80/68/64 | https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+hetzner-gex-gpu | 2 | Hetzner GEX GPU-szerverek (RTX PRO 4000/6000 Blackwell) | VPS és colocation | paid | 214–3599 EUR/hó (~214 €/hó) | 56/74/68/62 | https://www.hetzner.com/dedicated-rootserver/matrix-gpu/
+equinix-ty3-tokyo-fx-hub | 2 | Equinix TY3 (Tokió) – ázsiai FX-központ | Szerverhelyek | free | 0 | 62/69/62/62 | https://www.equinix.com/newsroom/press-releases/2014/12/lmax-exchange-launches-matching-engine-in-equinix-s-tokyo-data-center
+kalshi-aws-us-east-2 | 2 | Kalshi – API origin AWS us-east-2 (Ohio); nemzetközi hozzáférés a… | Szerverhelyek | free | 0 | 60/64/62/56 | https://hyperlatency.glassnode.com/prediction-markets/about
+fxvm | 2 | FXVM | VPS és colocation | paid | 15–50 USD/hó (~23 €/hó) | 60/64/57/62 | https://fxvm.net/
+ovh-rise | 2 | OVHcloud Rise dedikált szerverek | VPS és colocation | paid | 56,99–64,99 EUR/hó-tól (~57 €/hó) | 54/70/62/58 | https://eco.ovhcloud.com/en-ie/rise/
+hw-gpu-rtx-pro-4000 | 2 | NVIDIA RTX PRO 4000 Blackwell 24 GB (PNY, SFF) | Hardver | paid | 1111090 HUF | 52/70/61/57 | https://ipon.hu/shop/termek/pny-vcnrtxpro4000lp-pb-rtx-pro-4000-24gb-gddr7-blackwell-sff-pcie/2468004
+reloc-ireland | 2 | Írország | Költözés, adórezidencia | free | 0 | 58/66/58/56 | https://taxsummaries.pwc.com/ireland/individual/income-determination
+reloc-czechia | 2 | Csehország | Költözés, adórezidencia | free | 0 | 54/66/58/54 | https://taxsummaries.pwc.com/czech-republic/individual/income-determination
+reloc-austria | 2 | Ausztria | Költözés, adórezidencia | free | 0 | 53/68/59/54 | https://taxsummaries.pwc.com/austria/individual/income-determination
+massivegrid-ny-forex-vps | 2 | MassiveGRID Forex VPS New York – brókerszerver-tábla és árak | Szerverhelyek | paid | 4,79–65,16 USD/hó (~4 €/hó) | 56/62/56/58 | https://massivegrid.com/forex-vps-new-york/
+vpsmart-vantage-ping-table | 2 | VPS-Mart Vantage ping-tábla… | Szerverhelyek | paid | Windows VPS 4,05–51,99 USD/hó… | 52/62/58/58 | https://www.vps-mart.com/vantage
+reloc-singapore | 2 | Szingapúr | Költözés, adórezidencia | free | 0 | 49/66/60/52 | https://www.iras.gov.sg/taxes/individual-income-tax/basics-of-individual-income-tax/what-is-taxable-what-is-not/gains-from-sale-of-property-shares-and-financial-instruments
+reloc-estonia | 2 | Észtország | Költözés, adórezidencia | free | 0 | 52/64/57/54 | https://taxsummaries.pwc.com/estonia/individual/taxes-on-personal-income
+hw-nic-mellanox-cx4lx-amazon | 2 | Mellanox ConnectX-4 Lx EN 2×25 GbE (MCX4121A-ACAT) – amazon.de | Hardver | paid | 168.37 USD | 54/60/52/58 | https://www.amazon.de/dp/B011HVAZ78
+hw-gpu-rtx5080 | 2 | GeForce RTX 5080 16 GB (Gainward Python III) | Hardver | paid | 795490 HUF | 48/62/54/53 | https://ipon.hu/shop/termek/gainward-python-iii-geforce-rtx-5080-16gb-gddr7-dlss4-ne75080019t2-gb2035t/2531706
+hw-shops-hu-eu-access | 2 | Boltelérés gépi árgyűjtéshez (2026-11-15) | Hardver | free | 775238 HUF | 49/61/52/54 | https://ipon.hu/
+fca-cfd-retail-rules | 2 | FCA (UK) CFD-szabályok lakossági ügyfélnek | Szabályozás | free | 0 | 48/62/54/52 | https://www.fca.org.uk/publication/impact-assessments/mifid-ii-client-categorisation.pdf
+reloc-slovakia | 2 | Szlovákia | Költözés, adórezidencia | free | 0 | 52/59/52/52 | https://taxsummaries.pwc.com/slovak-republic/individual/income-determination
+hw-psu-1000w-gold | 2 | 1000 W 80 Plus Gold tápegység (be quiet! Pure Power 12) | Hardver | paid | 45991 HUF | 46/60/50/51 | https://ipon.hu/shop/termek/be-quiet-pure-power-12-1000w-80-plus-gold-tapegyseg/2325035
+hw-gpu-rtx-pro-6000 | 3 | NVIDIA RTX PRO 6000 Blackwell Max-Q 96 GB (PNY) | Hardver | paid | 6743290 HUF | 54/72/65/60 | https://ipon.hu/shop/termek/pny-vcnrtxpro6000mq-sb-quadro-rtx-pro-6000-96gb-gddr7-blackwell-max-q-pcie-oem/2412517
+equinix-sg1-hk1-asia | 3 | Equinix SG1 (Szingapúr) és HK1 (Hongkong) – regionális… | Szerverhelyek | free | 0 | 56/58/52/57 | https://newyorkcityservers.com/broker-latency
+massivegrid-london-vps | 3 | MassiveGRID Forex VPS London | VPS és colocation | paid | 4,79 USD/hó-tól (~4 €/hó) | 52/58/51/55 | https://massivegrid.com/forex-vps-london/
+equinix-cross-connect | 3 | Cross-connect és colocation az Equinixben (LD4/NY4) – intézményi szint | VPS és colocation | institutional | ? | 56/56/48/54 | https://beeksgroup.com/services/managed-cloud/proximity-cloud/pricing/
+hw-nic-solarflare | 3 | AMD Solarflare X2522/X3522 (Onload kernel-bypass) | Hardver | paid | ? | 54/56/46/54 | https://www.amd.com/en/products/accelerators/alveo.html
+cns-commercial-network-services | 3 | Commercial Network Services (CNS) – NY4 hosting/cross-connect | VPS és colocation | paid | ? | 50/49/41/52 | https://fortex.com/en/news/fortex-and-cns-release-fiber-cross-connect-ny4/
+reloc-puerto-rico | 3 | Puerto Rico (Act 60) | Költözés, adórezidencia | free | 0 | 45/48/44/45 | https://taxsummaries.pwc.com/puerto-rico/individual/other-tax-credits-and-incentives
+reloc-monaco | 3 | Monaco | Költözés, adórezidencia | free | 0 | 42/43/37/39 | https://taxsummaries.pwc.com/monaco/individual/taxes-on-personal-income
 
 ## Platform-architektúra és AI-fejlesztési eszközök
-nautilustrader-architecture | NautilusTrader architektúra-dokumentáció | free | ingyenes (OSS) | 79/94/86/80 | https://nautilustrader.io/docs/latest/concepts/architecture
-optuna | Optuna | free | ingyenes (OSS) | 77/93/86/78 | https://optuna.org/
-mlflow-registry | MLflow (tracking + Model Registry) | free | ingyenes (OSS) | 72/92/84/74 | https://mlflow.org/docs/latest/ml/model-registry/
-hypothesis | Hypothesis (property-based testing) | free | ingyenes (OSS) | 71/92/82/72 | https://hypothesis.readthedocs.io/
-fowler-lmax-architecture | Martin Fowler: The LMAX Architecture | free | ingyenes (OSS) | 74/88/78/75 | https://martinfowler.com/articles/lmax.html
-claude-code | Claude Code (Anthropic) | paid | Pro $20/hó; Max $100/hó; Ultra $200/hó ( | 69/90/80/70 | https://code.claude.com/docs/en/overview
-prometheus | Prometheus | free | ingyenes (OSS) | 70/90/79/71 | https://prometheus.io/
-opentelemetry | OpenTelemetry (+ GenAI szemantikai konvenciók) | free | ingyenes (OSS) | 70/90/79/71 | https://opentelemetry.io/
-owasp-llm-top10-2025 | OWASP Top 10 for LLM Applications 2025 | free | ingyenes (OSS) | 68/90/80/72 | https://genai.owasp.org/llm-top-10/
-uv | uv (Python csomag- és projektkezelő) | free | ingyenes (OSS) | 68/90/77/69 | https://docs.astral.sh/uv/
-nats | NATS / JetStream | free | ingyenes (OSS) | 68/88/76/69 | https://nats.io/
-pyzmq | PyZMQ | free | ingyenes (OSS) | 70/86/75/70 | https://pyzmq.readthedocs.io/
-mql5-trade-return-codes | MQL5 trade server return codes | free | ingyenes (OSS) | 68/86/76/71 | https://www.mql5.com/en/docs/constants/errorswarnings/enum_trade_return_codes
-mql5-ordercheck | MQL5 OrderCheck() | free | ingyenes (OSS) | 68/86/76/71 | https://www.mql5.com/en/docs/trading/ordercheck
-fowler-event-sourcing | Martin Fowler: Event Sourcing | free | ingyenes (OSS) | 66/86/76/70 | https://martinfowler.com/eaaDev/EventSourcing.html
-zeromq | ZeroMQ (libzmq) | free | ingyenes (OSS) | 70/84/74/70 | https://zeromq.org/
-mt5-python-package | MetaTrader5 Python csomag (hivatalos) | free | ingyenes (OSS) | 70/81/76/72 | https://www.mql5.com/en/docs/python_metatrader5
-sops | SOPS | free | ingyenes (OSS) | 66/88/76/68 | https://github.com/getsops/sops
-opa | Open Policy Agent (OPA / Rego) | free | ingyenes (OSS) | 66/88/76/68 | https://www.openpolicyagent.org/
-knight-capital-sec-order | SEC-végzés: Knight Capital Americas LLC (Release 34-70694, 2013) | free | ingyenes (OSS) | 63/90/78/68 | https://www.sec.gov/litigation/admin/2013/34-70694.pdf
-pydantic-settings | pydantic-settings | free | ingyenes (OSS) | 66/88/76/68 | https://docs.pydantic.dev/latest/concepts/pydantic_settings/
-pandera | Pandera (DataFrame-szerződések) | free | ingyenes (OSS) | 68/85/75/70 | https://pandera.readthedocs.io/
-arcticdb | ArcticDB (Man Group) | free | ingyenes (OSS) | 66/84/76/67 | https://arcticdb.io/
-pytest-regressions | pytest-regressions | free | ingyenes (OSS) | 68/84/74/70 | https://github.com/ESSS/pytest-regressions
-promptfoo | promptfoo (LLM-eval és red teaming) | free | ingyenes (OSS) | 66/84/75/68 | https://www.promptfoo.dev/
-json-schema | JSON Schema | free | ingyenes (OSS) | 65/86/74/66 | https://json-schema.org/
-alertmanager | Prometheus Alertmanager | free | ingyenes (OSS) | 64/85/73/66 | https://github.com/prometheus/alertmanager
-owasp-llm-pi-cheatsheet | OWASP LLM Prompt Injection Prevention Cheat Sheet | free | ingyenes (OSS) | 66/83/74/68 | https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
-hydra | Hydra (konfiguráció-kompozíció) | free | ingyenes (OSS) | 67/82/72/70 | https://hydra.cc/
-github-spec-kit | GitHub Spec Kit (spec-driven development) | free | ingyenes (OSS) | 65/82/72/67 | https://github.com/github/spec-kit
-dual-llm-pattern | Simon Willison: The Dual LLM pattern | free | ingyenes (OSS) | 65/82/72/68 | https://simonwillison.net/2023/Apr/25/dual-llm-pattern/
-pip-audit | pip-audit | free | ingyenes (OSS) | 64/82/70/65 | https://github.com/pypa/pip-audit
-river | River (online ML) | free | ingyenes (OSS) | 76/86/79/76 | https://riverml.xyz/
-mapie | MAPIE (konformális predikció) | free | ingyenes (OSS) | 74/86/79/76 | https://mapie.readthedocs.io/
-lmax-disruptor | LMAX Disruptor | free | ingyenes (OSS) | 74/84/74/74 | https://lmax-exchange.github.io/disruptor/
-feast | Feast feature store | free | ingyenes (OSS) | 69/85/77/72 | https://docs.feast.dev/
-quantconnect-lean-architecture | QuantConnect LEAN motor-dokumentáció | free | ingyenes (OSS) | 66/84/75/70 | https://www.quantconnect.com/docs/v2/lean-engine
-apache-iceberg | Apache Iceberg | free | ingyenes (OSS) | 64/86/76/68 | https://iceberg.apache.org/
-openai-codex-cli | OpenAI Codex CLI | freemium | ChatGPT Plus $20/hó (~18 €/hó) | 66/84/74/68 | https://github.com/openai/codex
-fix-protocol | FIX Trading Community (FIX protokoll) | free | ingyenes (OSS) | 66/84/74/66 | https://www.fixtrading.org/
-github-copilot | GitHub Copilot | freemium | Pro $10/fő/hó (~9 €/hó) | 66/83/73/67 | https://github.com/features/copilot/plans
-sec-15c3-5 | SEC Rule 15c3-5 (Market Access Rule) – végleges szabály, Release 34-63 | free | ingyenes (OSS) | 62/87/76/66 | https://www.sec.gov/rules/final/2010/34-63241.pdf
-eu-rts6-2017-589 | Bizottsági (EU) 2017/589 felhatalmazáson alapuló rendelet (MiFID II RT | free | ingyenes (OSS) | 62/87/76/66 | https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017R0589
-mql5-socketcreate | MQL5 SocketCreate() és hálózati függvények | free | ingyenes (OSS) | 66/81/71/68 | https://www.mql5.com/en/docs/network/socketcreate
-semver | Semantic Versioning 2.0.0 | free | ingyenes (OSS) | 64/84/72/65 | https://semver.org/
-buf-protobuf | Buf (Protocol Buffers eszközlánc) | free | ingyenes (OSS) | 63/82/70/65 | https://buf.build/
-mcp | Model Context Protocol (MCP) | free | ingyenes (OSS) | 64/81/72/65 | https://modelcontextprotocol.io/
-camel-prompt-injection | Debenedetti et al.: Defeating Prompt Injections by Design (CaMeL) | free | ingyenes (OSS) | 63/81/72/68 | https://arxiv.org/abs/2503.18813
-design-patterns-pi-agents | Beurer-Kellner et al.: Design Patterns for Securing LLM Agents against | free | ingyenes (OSS) | 63/81/72/68 | https://arxiv.org/abs/2506.08837
-telegram-bot-api | Telegram Bot API | free | ingyenes (OSS) | 64/82/70/64 | https://core.telegram.org/bots/api
-fia-automated-trading-risk-controls-2024 | FIA: Best Practices for Automated Trading Risk Controls and System Saf | free | ingyenes (OSS) | 60/84/73/64 | https://www.fia.org/sites/default/files/2024-07/FIA_WP_AUTOMATED%20TRADING%20RISK%20CONTROLS_FINAL_0.pdf
-cursor | Cursor (agentic IDE) | freemium | Premium $30/hó (~27 €/hó) | 64/80/70/65 | https://cursor.com/
-semgrep | Semgrep | freemium | ingyenes (OSS) | 62/81/70/64 | https://semgrep.dev/
-langfuse | Langfuse (LLM-megfigyelés) | freemium | ingyenes (OSS) | 62/80/71/64 | https://langfuse.com/
-hashicorp-vault | HashiCorp Vault | free | ingyenes (OSS) | 62/82/70/62 | https://developer.hashicorp.com/vault
-openbao | OpenBao | free | ingyenes (OSS) | 63/80/69/65 | https://openbao.org/
-age | age (fájltitkosítás) | free | ingyenes (OSS) | 62/81/69/65 | https://github.com/FiloSottile/age
-sigstore-cosign | Sigstore / cosign | free | ingyenes (OSS) | 61/82/70/64 | https://www.sigstore.dev/
-anthropic-building-effective-agents | Anthropic: Building effective agents | free | ingyenes (OSS) | 62/78/70/66 | https://www.anthropic.com/research/building-effective-agents
-osv-scanner | OSV-Scanner | free | ingyenes (OSS) | 62/80/68/64 | https://google.github.io/osv-scanner/
-greshake-indirect-pi | Greshake et al.: Not what you've signed up for (indirect prompt inject | free | ingyenes (OSS) | 62/78/70/66 | https://arxiv.org/abs/2302.12173
-openfeature | OpenFeature (feature-flag szabvány) | free | ingyenes (OSS) | 62/80/68/64 | https://openfeature.dev/
-claude-code-best-practices | Claude Code best practices | free | ingyenes (OSS) | 59/80/69/63 | https://code.claude.com/docs/en/best-practices
-syrupy | syrupy (snapshot testing) | free | ingyenes (OSS) | 62/78/66/64 | https://github.com/syrupy-project/syrupy
-openssf-ai-code-assistant-guide | OpenSSF: Security-Focused Guide for AI Code Assistant Instructions | free | ingyenes (OSS) | 59/80/69/63 | https://best.openssf.org/Security-Focused-Guide-for-AI-Code-Assistant-Instructions
-loki | Grafana Loki | free | ingyenes (OSS) | 60/79/68/62 | https://grafana.com/oss/loki/
-renovate | Renovate | free | ingyenes (OSS) | 60/79/68/62 | https://github.com/renovatebot/renovate
-google-sre-books | Google SRE könyvek (online) | free | ingyenes (OSS) | 56/80/69/62 | https://sre.google/books/
-agents-md | AGENTS.md (ágens-utasításfájl formátum) | free | ingyenes (OSS) | 60/77/66/62 | https://agents.md/
-package-hallucination-paper | Spracklen et al.: We Have a Package for You! (package hallucination) | free | ingyenes (OSS) | 58/78/68/63 | https://arxiv.org/abs/2406.10279
-nist-ai-rmf | NIST AI Risk Management Framework | free | ingyenes (OSS) | 56/80/69/62 | https://www.nist.gov/itl/ai-risk-management-framework
-immudb | immudb (tamper-evident adatbázis) | free | ingyenes (OSS) | 59/78/68/61 | https://immudb.io/
-ddia-book | Kleppmann: Designing Data-Intensive Applications | paid | könyv, ár boltonként | 54/78/67/60 | https://dataintensive.net/
-ax-platform | Ax (adaptív kísérletezés, Meta) | free | ingyenes (OSS) | 66/78/70/68 | https://ax.dev/
-apache-kafka | Apache Kafka | free | ingyenes (OSS) | 60/82/71/63 | https://kafka.apache.org/
-gemini-cli | Gemini CLI | freemium | nem ellenőrzött | 64/79/69/66 | https://github.com/google-gemini/gemini-cli
-openhands | OpenHands | freemium | OSS ingyenes; Teams $500/hó | 62/78/69/64 | https://www.openhands.dev/
-smac3 | SMAC3 | free | ingyenes (OSS) | 64/76/68/67 | https://github.com/automl/SMAC3
-dvc | DVC (adat- és kísérlet-verziózás) | free | ingyenes (OSS) | 62/78/68/66 | https://dvc.org/
-aider | Aider | free | ingyenes (OSS) | 64/76/66/66 | https://aider.chat/
-temporal | Temporal (tartós munkafolyamatok) | free | ingyenes (OSS) | 58/79/68/62 | https://docs.temporal.io/
-cline | Cline | free | ingyenes (OSS) | 62/74/65/64 | https://github.com/cline/cline
-slsa | SLSA (Supply-chain Levels for Software Artifacts) | free | ingyenes (OSS) | 58/79/68/62 | https://slsa.dev/
-garak | garak (NVIDIA LLM vulnerability scanner) | free | ingyenes (OSS) | 58/78/68/62 | https://github.com/NVIDIA/garak
-dagster | Dagster | free | ingyenes (OSS) | 57/78/67/60 | https://dagster.io/
-ossf-scorecard | OpenSSF Scorecard | free | ingyenes (OSS) | 58/76/66/61 | https://github.com/ossf/scorecard
-syft | Syft (SBOM-generátor) | free | ingyenes (OSS) | 58/76/66/61 | https://github.com/anchore/syft
-github-dependabot | GitHub Dependabot / supply-chain dokumentáció | free | ingyenes (OSS) | 58/76/66/61 | https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain
-cedar | Cedar policy language | free | ingyenes (OSS) | 60/76/64/62 | https://www.cedarpolicy.com/
-jane-street-tech-blog | Jane Street Tech Blog | free | ingyenes (OSS) | 57/74/66/62 | https://blog.janestreet.com/
-nist-ssdf | NIST SP 800-218 (Secure Software Development Framework) | free | ingyenes (OSS) | 55/77/66/60 | https://csrc.nist.gov/pubs/sp/800/218/final
-cyclonedx | CycloneDX (SBOM-szabvány) | free | ingyenes (OSS) | 56/76/66/60 | https://cyclonedx.org/
-langgraph-hitl | LangGraph human-in-the-loop (interrupts) | free | ingyenes (OSS) | 58/74/64/61 | https://docs.langchain.com/oss/python/langgraph/interrupts
-man-group-technology | Man Group Technology oldal és tech-cikkek | free | ingyenes (OSS) | 56/73/64/62 | https://www.man.com/technology
-mitre-atlas | MITRE ATLAS | free | ingyenes (OSS) | 56/74/64/60 | https://atlas.mitre.org/
-hrt-beat | Hudson River Trading – The HRT Beat | free | ingyenes (OSS) | 56/72/64/60 | https://www.hudsonrivertrading.com/hrtbeat/
-two-sigma-engineering | Two Sigma Engineering cikkek | free | ingyenes (OSS) | 56/70/62/60 | https://www.twosigma.com/topic/engineering/
-mql5-article-5691 | MQL5 cikk: MetaTrader 5 and Python integration: receiving and sending  | free | ingyenes (OSS) | 59/68/59/62 | https://www.mql5.com/en/articles/5691
-purplellama | Meta PurpleLlama (Llama Guard, Prompt Guard, CyberSecEval) | free | ingyenes (OSS) | 56/71/61/58 | https://github.com/meta-llama/PurpleLlama
-jane-street-tech-talks | Jane Street Tech Talks | free | ingyenes (OSS) | 54/69/61/59 | https://www.janestreet.com/tech-talks/
-mql5-article-22111 | MQL5 cikk: From Signal to Trade via a Chain of Agents: LangChain Archi | free | ingyenes (OSS) | 57/67/60/60 | https://www.mql5.com/en/articles/22111
-exchange-core | exchange-core (matching engine) | free | ingyenes (OSS) | 58/66/54/62 | https://github.com/exchange-core/exchange-core
-mechanical-sympathy-blog | Martin Thompson: Mechanical Sympathy blog | free | ingyenes (OSS) | 56/67/56/60 | https://mechanical-sympathy.blogspot.com/
-aeron | Aeron (Real Logic / Adaptive) | free | ingyenes (OSS) | 66/78/66/66 | https://aeron.io/
-botorch | BoTorch | free | ingyenes (OSS) | 64/78/70/67 | https://botorch.org/
-mt5-broker-apis | MetaTrader 5 brókeroldali API-k (Manager, Gateway, Server, Report, Web | institutional | brókerlicenc, nem nyilvános | 50/64/54/48 | https://www.metatrader5.com/en/brokers
-mt5manager-pypi | MT5Manager Python csomag (MetaQuotes) | institutional | brókerhozzáférés szükséges | 46/56/47/43 | https://pypi.org/project/MT5Manager/
+nautilustrader-architecture | 0 | NautilusTrader architektúra-dokumentáció | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 79/94/86/80 | https://nautilustrader.io/docs/latest/concepts/architecture | Dokumentált elvek (mért az oldalon): NautilusKernel, MessageBus…
+optuna | 0 | Optuna | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 77/93/86/78 | https://optuna.org/ | Define-by-run hiperparaméter-optimalizálás…
+mlflow-registry | 0 | MLflow (tracking + Model Registry) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 72/92/84/74 | https://mlflow.org/docs/latest/ml/model-registry/ | Kísérletkövetés (paraméter, metrika, artefaktum) és modell-regiszter…
+hypothesis | 0 | Hypothesis (property-based testing) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 71/92/82/72 | https://hypothesis.readthedocs.io/ | Tulajdonság-alapú tesztelés: invariánsok…
+fowler-lmax-architecture | 0 | Martin Fowler: The LMAX Architecture | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 74/88/78/75 | https://martinfowler.com/articles/lmax.html | A cikk szerint a Business Logic Processor egy szálon 6 millió megbízás/s-ot…
+claude-code | 0 | Claude Code (Anthropic) | Platform, AI-fejlesztés, mozgatókar | paid | Pro $20/hó; Max $100/hó; Ultra $200/hó… | 69/90/80/70 | https://code.claude.com/docs/en/overview | Terminál/IDE kódolóágens; hookok, jogosultsági módok, subagentek, MCP. Ár…
+prometheus | 0 | Prometheus | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 70/90/79/71 | https://prometheus.io/ | Metrika-gyűjtés és PromQL; trading-metrikák: latency (tick→döntés→kötés)…
+opentelemetry | 0 | OpenTelemetry (+ GenAI szemantikai konvenciók) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 70/90/79/71 | https://opentelemetry.io/ | Elosztott trace: egy kereskedési döntés végigkövetése…
+owasp-llm-top10-2025 | 0 | OWASP Top 10 for LLM Applications 2025 | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/90/80/72 | https://genai.owasp.org/llm-top-10/ | Mért lista: LLM01 Prompt Injection, LLM02 Sensitive Information Disclosure…
+uv | 0 | uv (Python csomag- és projektkezelő) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/90/77/69 | https://docs.astral.sh/uv/ | Gyors csomagkezelő lockfájllal (uv.lock) és hash-ellenőrzéssel; reprodukálható…
+nats | 0 | NATS / JetStream | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/88/76/69 | https://nats.io/ | Könnyű pub/sub + JetStream tartós stream; egy binárisként futtatható. Ajánlott…
+pyzmq | 0 | PyZMQ | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 70/86/75/70 | https://pyzmq.readthedocs.io/ | Python kötés a ZeroMQ-hoz (asyncio támogatással); a Python 'agy' oldala.…
+mql5-trade-return-codes | 0 | MQL5 trade server return codes | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/86/76/71 | https://www.mql5.com/en/docs/constants/errorswarnings/enum_trade_return_codes | A kereskedési szerver visszatérési kódjai…
+mql5-ordercheck | 0 | MQL5 OrderCheck() | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/86/76/71 | https://www.mql5.com/en/docs/trading/ordercheck | Megbízás előzetes ellenőrzése (margin, szabad margin a kötés után) küldés…
+fowler-event-sourcing | 0 | Martin Fowler: Event Sourcing | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/86/76/70 | https://martinfowler.com/eaaDev/EventSourcing.html | Az állapot az események sorozatából áll elő; auditnapló és backtest/élő paritás…
+zeromq | 0 | ZeroMQ (libzmq) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 70/84/74/70 | https://zeromq.org/ | Bróker nélküli socket-könyvtár (REQ/REP, PUB/SUB, PUSH/PULL); az MT5-EA ↔…
+mt5-python-package | 0 | MetaTrader5 Python csomag (hivatalos) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 70/81/76/72 | https://www.mql5.com/en/docs/python_metatrader5 | Hivatalos IPC-kapcsolat a futó MT5 terminálhoz: initialize, symbol_info_tick…
+sops | 0 | SOPS | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/88/76/68 | https://github.com/getsops/sops | Titkosított konfigurációs fájlok (YAML/JSON/ENV) gitben, age/KMS kulcsokkal; az…
+opa | 0 | Open Policy Agent (OPA / Rego) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/88/76/68 | https://www.openpolicyagent.org/ | Általános policy-motor; a mozgatókar szintjei, limitjei és időablakai…
+knight-capital-sec-order | 0 | SEC-végzés: Knight Capital Americas LLC (Release 34-70694, 2013) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 63/90/78/68 | https://www.sec.gov/litigation/admin/2013/34-70694.pdf | A végzés szövege szerint (mért): 2012. augusztus 1-jén a SMARS rendszer kb. 45…
+pydantic-settings | 0 | pydantic-settings | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/88/76/68 | https://docs.pydantic.dev/latest/concepts/pydantic_settings/ | Típusos, validált beállítás-modellek környezeti változókból/fájlokból; a…
+pandera | 0 | Pandera (DataFrame-szerződések) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/85/75/70 | https://pandera.readthedocs.io/ | Statisztikai adatvalidálás DataFrame-ekre…
+arcticdb | 0 | ArcticDB (Man Group) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/84/76/67 | https://arcticdb.io/ | Szerver nélküli DataFrame-adatbázis S3/LMDB fölött, verziózott (time-travel)…
+pytest-regressions | 0 | pytest-regressions | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 68/84/74/70 | https://github.com/ESSS/pytest-regressions | Adat-, num- és DataFrame-regressziós fixture-ök: a referencia-backtest…
+promptfoo | 0 | promptfoo (LLM-eval és red teaming) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/84/75/68 | https://www.promptfoo.dev/ | Promptok/ágensek tesztelése és red teaming CI-ban; injekciós korpusz a…
+json-schema | 0 | JSON Schema | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 65/86/74/66 | https://json-schema.org/ | A konfiguráció és a modulközi üzenetek nyelvfüggetlen sémája; az MQL5-oldali…
+alertmanager | 0 | Prometheus Alertmanager | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/85/73/66 | https://github.com/prometheus/alertmanager | Riasztás-irányítás, csoportosítás, némítás; a margin-, drawdown- és 'heartbeat…
+owasp-llm-pi-cheatsheet | 0 | OWASP LLM Prompt Injection Prevention Cheat Sheet | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/83/74/68 | https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html | Gyakorlati védelmek promptinjekció ellen…
+hydra | 0 | Hydra (konfiguráció-kompozíció) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 67/82/72/70 | https://hydra.cc/ | Hierarchikus YAML-konfiguráció kompozícióval, felülírással és multirunnal; a…
+github-spec-kit | 0 | GitHub Spec Kit (spec-driven development) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 65/82/72/67 | https://github.com/github/spec-kit | Eszközkészlet spec-driven fejlesztéshez: specifikáció → terv → feladatok →…
+dual-llm-pattern | 0 | Simon Willison: The Dual LLM pattern | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 65/82/72/68 | https://simonwillison.net/2023/Apr/25/dual-llm-pattern/ | Privilegizált LLM (eszközöket hív, de nem lát megbízhatatlan szöveget) és…
+pip-audit | 0 | pip-audit | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/82/70/65 | https://github.com/pypa/pip-audit | Python-függőségek ismert sérülékenységeinek ellenőrzése (PyPI/OSV adatbázis)…
+river | 1 | River (online ML) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 76/86/79/76 | https://riverml.xyz/ | Inkrementális (online) gépi tanulás Pythonban: drift-detektálás (ADWIN stb.)…
+mapie | 1 | MAPIE (konformális predikció) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 74/86/79/76 | https://mapie.readthedocs.io/ | Konformális predikciós intervallumok és halmazok scikit-learn-kompatibilis…
+lmax-disruptor | 1 | LMAX Disruptor | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 74/84/74/74 | https://lmax-exchange.github.io/disruptor/ | Lock-free gyűrűpuffer szálak közötti üzenetküldésre; az LMAX tőzsde magjának…
+feast | 1 | Feast feature store | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 69/85/77/72 | https://docs.feast.dev/ | Nyílt feature store: offline (point-in-time join) és online tár ugyanarra a…
+quantconnect-lean-architecture | 1 | QuantConnect LEAN motor-dokumentáció | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/84/75/70 | https://www.quantconnect.com/docs/v2/lean-engine | Moduláris (Data Feed, Transaction Handler, Result Handler, Brokerage) C# motor…
+apache-iceberg | 1 | Apache Iceberg | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/86/76/68 | https://iceberg.apache.org/ | Nyílt táblaformátum Parquet fölött: séma-evolúció, partíció-evolúció…
+openai-codex-cli | 1 | OpenAI Codex CLI | Platform, AI-fejlesztés, mozgatókar | freemium | ChatGPT Plus $20/hó (~18 €/hó) | 66/84/74/68 | https://github.com/openai/codex | Nyílt forrású terminál-kódolóágens (Apache-2.0). Ár…
+fix-protocol | 1 | FIX Trading Community (FIX protokoll) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/84/74/66 | https://www.fixtrading.org/ | A megbízás-/végrehajtás-üzenetek ipari szabványa; az OMS belső order-modelljét…
+github-copilot | 1 | GitHub Copilot | Platform, AI-fejlesztés, mozgatókar | freemium | Pro $10/fő/hó (~9 €/hó) | 66/83/73/67 | https://github.com/features/copilot/plans | IDE-asszisztens és coding agent a GitHubon. Ár (mért): Free $0, Pro $10/fő/hó…
+sec-15c3-5 | 1 | SEC Rule 15c3-5 (Market Access Rule) – végleges szabály, Release… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/87/76/66 | https://www.sec.gov/rules/final/2010/34-63241.pdf | A PDF szövege szerint (mért): előre beállított hitel-/tőkeküszöböket meghaladó…
+eu-rts6-2017-589 | 1 | Bizottsági (EU) 2017/589 felhatalmazáson alapuló rendelet… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/87/76/66 | https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017R0589 | Algoritmikus kereskedés szervezeti követelményei. 12. cikk: kill functionality…
+mql5-socketcreate | 1 | MQL5 SocketCreate() és hálózati függvények | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/81/71/68 | https://www.mql5.com/en/docs/network/socketcreate | Natív MQL5 TCP-kliens (DLL nélkül); a vékony EA DLL-mentes transzportja…
+semver | 1 | Semantic Versioning 2.0.0 | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/84/72/65 | https://semver.org/ | MAJOR.MINOR.PATCH verziózás a stratégia-konfigurációkra és a sémára; MAJOR =…
+buf-protobuf | 1 | Buf (Protocol Buffers eszközlánc) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 63/82/70/65 | https://buf.build/ | Protobuf-sémák lintelése, breaking-change ellenőrzése CI-ban; a modulközi…
+mcp | 1 | Model Context Protocol (MCP) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/81/72/65 | https://modelcontextprotocol.io/ | Nyílt protokoll eszközök/adatforrások LLM-ágensekhez kötésére; az LLM-szavazók…
+camel-prompt-injection | 1 | Debenedetti et al.: Defeating Prompt Injections by Design (CaMeL) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 63/81/72/68 | https://arxiv.org/abs/2503.18813 | Google DeepMind és társszerzők (2025-03-24): vezérlés- és adatfolyam…
+design-patterns-pi-agents | 1 | Beurer-Kellner et al.: Design Patterns for Securing LLM Agents… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 63/81/72/68 | https://arxiv.org/abs/2506.08837 | 2025-06-10: hat tervezési minta…
+telegram-bot-api | 1 | Telegram Bot API | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/82/70/64 | https://core.telegram.org/bots/api | Inline gombos jóváhagyás/elutasítás és kill-switch parancs mobilról; riasztások…
+fia-automated-trading-risk-controls-2024 | 1 | FIA: Best Practices for Automated Trading Risk Controls and System… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/84/73/64 | https://www.fia.org/sites/default/files/2024-07/FIA_WP_AUTOMATED%20TRADING%20RISK%20CONTROLS_FINAL_0.pdf | Az FIA 2024. júliusi összefoglalója: pre-trade kontrollok…
+cursor | 1 | Cursor (agentic IDE) | Platform, AI-fejlesztés, mozgatókar | freemium | Premium $30/hó (~27 €/hó) | 64/80/70/65 | https://cursor.com/ | VS Code-alapú agentic IDE. Ár (mért, cursor.com/pricing, 2026-11-15): Free $0…
+semgrep | 1 | Semgrep | Platform, AI-fejlesztés, mozgatókar | freemium | ingyenes (OSS) | 62/81/70/64 | https://semgrep.dev/ | SAST több nyelvre egyedi szabályokkal; AI-generált kódra saját szabályok…
+langfuse | 1 | Langfuse (LLM-megfigyelés) | Platform, AI-fejlesztés, mozgatókar | freemium | ingyenes (OSS) | 62/80/71/64 | https://langfuse.com/ | Önhosztolható LLM-trace, prompt-verziózás, értékelések; az LLM-szavazók…
+hashicorp-vault | 1 | HashiCorp Vault | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/82/70/62 | https://developer.hashicorp.com/vault | Központi titokkezelés, dinamikus és rövid életű hitelesítők, audit device; a…
+openbao | 1 | OpenBao | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 63/80/69/65 | https://openbao.org/ | A Vault nyílt (MPL-2.0) közösségi forkja (Linux Foundation); API-kompatibilis…
+age | 1 | age (fájltitkosítás) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/81/69/65 | https://github.com/FiloSottile/age | Egyszerű, modern titkosító eszköz; a SOPS kulcs-háttere. [GitHub: 24315…
+sigstore-cosign | 1 | Sigstore / cosign | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 61/82/70/64 | https://www.sigstore.dev/ | Konténer-image-ek és artefaktumok aláírása és ellenőrzése (keyless OIDC-vel); a…
+anthropic-building-effective-agents | 1 | Anthropic: Building effective agents | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/78/70/66 | https://www.anthropic.com/research/building-effective-agents | Workflow vs. ágens, prompt chaining, routing, parallelization (voting)…
+osv-scanner | 1 | OSV-Scanner | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/80/68/64 | https://google.github.io/osv-scanner/ | Többnyelvű lockfájl-szkenner az OSV adatbázisra; Python, Rust, JS, konténer egy…
+greshake-indirect-pi | 1 | Greshake et al.: Not what you've signed up for… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/78/70/66 | https://arxiv.org/abs/2302.12173 | Az indirekt promptinjekció alapcikke (2023-02-23): a lekért tartalomba…
+openfeature | 1 | OpenFeature (feature-flag szabvány) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/80/68/64 | https://openfeature.dev/ | Szállító-független feature-flag API; a stratégiánkénti/szimbólumonkénti…
+claude-code-best-practices | 1 | Claude Code best practices | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 59/80/69/63 | https://code.claude.com/docs/en/best-practices | Hivatalos gyakorlatok: CLAUDE.md, tervezés-előbb, tesztvezérelt ciklus…
+syrupy | 1 | syrupy (snapshot testing) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/78/66/64 | https://github.com/syrupy-project/syrupy | Snapshot-tesztek pytesthez: LLM-prompt sablonok, konfigurációs feloldás…
+openssf-ai-code-assistant-guide | 1 | OpenSSF: Security-Focused Guide for AI Code Assistant Instructions | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 59/80/69/63 | https://best.openssf.org/Security-Focused-Guide-for-AI-Code-Assistant-Instructions | Biztonsági utasítás-minták AI-kódasszisztensekhez…
+loki | 1 | Grafana Loki | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/79/68/62 | https://grafana.com/oss/loki/ | Címke-alapú naplóaggregáció; strukturált (JSON) naplók az összes modulból, a…
+renovate | 1 | Renovate | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/79/68/62 | https://github.com/renovatebot/renovate | Automatikus függőség-frissítő PR-ek; minimumRelease-késleltetéssel (pl. 7 nap)…
+google-sre-books | 1 | Google SRE könyvek (online) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/80/69/62 | https://sre.google/books/ | SLO, error budget, riasztási elvek, incidenskezelés, postmortem; a mi riasztási…
+agents-md | 1 | AGENTS.md (ágens-utasításfájl formátum) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/77/66/62 | https://agents.md/ | Nyílt konvenció a repó gyökerében elhelyezett ágens-utasításokra…
+package-hallucination-paper | 1 | Spracklen et al.: We Have a Package for You! (package hallucination) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/78/68/63 | https://arxiv.org/abs/2406.10279 | Kódgeneráló LLM-ek nem létező csomagneveket 'hallucinálnak'…
+nist-ai-rmf | 1 | NIST AI Risk Management Framework | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/80/69/62 | https://www.nist.gov/itl/ai-risk-management-framework | Govern–Map–Measure–Manage keretrendszer; a mozgatókar szintjeinek dokumentált…
+immudb | 1 | immudb (tamper-evident adatbázis) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 59/78/68/61 | https://immudb.io/ | Kriptográfiailag ellenőrizhető, csak hozzáfűzhető adatbázis; a mozgatókar…
+ddia-book | 1 | Kleppmann: Designing Data-Intensive Applications | Platform, AI-fejlesztés, mozgatókar | paid | könyv, ár boltonként | 54/78/67/60 | https://dataintensive.net/ | Napló-alapú architektúra, replikáció, exactly-once, stream processing; a csapat…
+ax-platform | 2 | Ax (adaptív kísérletezés, Meta) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/78/70/68 | https://ax.dev/
+apache-kafka | 2 | Apache Kafka | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/82/71/63 | https://kafka.apache.org/
+gemini-cli | 2 | Gemini CLI | Platform, AI-fejlesztés, mozgatókar | freemium | nem ellenőrzött | 64/79/69/66 | https://github.com/google-gemini/gemini-cli
+openhands | 2 | OpenHands | Platform, AI-fejlesztés, mozgatókar | freemium | OSS ingyenes; Teams $500/hó | 62/78/69/64 | https://www.openhands.dev/
+smac3 | 2 | SMAC3 | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/76/68/67 | https://github.com/automl/SMAC3
+dvc | 2 | DVC (adat- és kísérlet-verziózás) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/78/68/66 | https://dvc.org/
+aider | 2 | Aider | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/76/66/66 | https://aider.chat/
+temporal | 2 | Temporal (tartós munkafolyamatok) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/79/68/62 | https://docs.temporal.io/
+cline | 2 | Cline | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 62/74/65/64 | https://github.com/cline/cline
+slsa | 2 | SLSA (Supply-chain Levels for Software Artifacts) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/79/68/62 | https://slsa.dev/
+garak | 2 | garak (NVIDIA LLM vulnerability scanner) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/78/68/62 | https://github.com/NVIDIA/garak
+dagster | 2 | Dagster | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 57/78/67/60 | https://dagster.io/
+ossf-scorecard | 2 | OpenSSF Scorecard | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/76/66/61 | https://github.com/ossf/scorecard
+syft | 2 | Syft (SBOM-generátor) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/76/66/61 | https://github.com/anchore/syft
+github-dependabot | 2 | GitHub Dependabot / supply-chain dokumentáció | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/76/66/61 | https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain
+cedar | 2 | Cedar policy language | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 60/76/64/62 | https://www.cedarpolicy.com/
+jane-street-tech-blog | 2 | Jane Street Tech Blog | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 57/74/66/62 | https://blog.janestreet.com/
+nist-ssdf | 2 | NIST SP 800-218 (Secure Software Development Framework) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 55/77/66/60 | https://csrc.nist.gov/pubs/sp/800/218/final
+cyclonedx | 2 | CycloneDX (SBOM-szabvány) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/76/66/60 | https://cyclonedx.org/
+langgraph-hitl | 2 | LangGraph human-in-the-loop (interrupts) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/74/64/61 | https://docs.langchain.com/oss/python/langgraph/interrupts
+man-group-technology | 2 | Man Group Technology oldal és tech-cikkek | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/73/64/62 | https://www.man.com/technology
+mitre-atlas | 2 | MITRE ATLAS | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/74/64/60 | https://atlas.mitre.org/
+hrt-beat | 2 | Hudson River Trading – The HRT Beat | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/72/64/60 | https://www.hudsonrivertrading.com/hrtbeat/
+two-sigma-engineering | 2 | Two Sigma Engineering cikkek | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/70/62/60 | https://www.twosigma.com/topic/engineering/
+mql5-article-5691 | 2 | MQL5 cikk: MetaTrader 5 and Python integration: receiving and sending… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 59/68/59/62 | https://www.mql5.com/en/articles/5691
+purplellama | 2 | Meta PurpleLlama (Llama Guard, Prompt Guard, CyberSecEval) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/71/61/58 | https://github.com/meta-llama/PurpleLlama
+jane-street-tech-talks | 2 | Jane Street Tech Talks | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 54/69/61/59 | https://www.janestreet.com/tech-talks/
+mql5-article-22111 | 2 | MQL5 cikk: From Signal to Trade via a Chain of Agents: LangChain… | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 57/67/60/60 | https://www.mql5.com/en/articles/22111
+exchange-core | 2 | exchange-core (matching engine) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 58/66/54/62 | https://github.com/exchange-core/exchange-core
+mechanical-sympathy-blog | 2 | Martin Thompson: Mechanical Sympathy blog | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 56/67/56/60 | https://mechanical-sympathy.blogspot.com/
+aeron | 3 | Aeron (Real Logic / Adaptive) | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 66/78/66/66 | https://aeron.io/
+botorch | 3 | BoTorch | Platform, AI-fejlesztés, mozgatókar | free | ingyenes (OSS) | 64/78/70/67 | https://botorch.org/
+mt5-broker-apis | 3 | MetaTrader 5 brókeroldali API-k… | Platform, AI-fejlesztés, mozgatókar | institutional | brókerlicenc, nem nyilvános | 50/64/54/48 | https://www.metatrader5.com/en/brokers
+mt5manager-pypi | 3 | MT5Manager Python csomag (MetaQuotes) | Platform, AI-fejlesztés, mozgatókar | institutional | brókerhozzáférés szükséges | 46/56/47/43 | https://pypi.org/project/MT5Manager/
 
 ## Platform- és bróker-összehasonlítás: van-e jobb, mint a jelenlegi (MT5/Vantage)
-a11-broker-ibkr-ireland | Interactive Brokers Ireland Limited (Central Bank of Ireland C423427) | registration | FX 0,20 bp, min. 2 USD/megbízás (mért) | 74/90/83/76 | https://www.interactivebrokers.ie/en/home.php
-a11-plat-ibkr-api | Interactive Brokers TWS API + Web (Client Portal) API | registration | FX: 0,08–0,20 bp × kötésérték, min. 2 US | 72/89/82/74 | https://www.interactivebrokers.com/en/trading/ib-api.php
-a11-plat-darwinex-stack | Darwinex – MT4/MT5, FIX 4.4, ZeroMQ, DXtrade + tőkeallokáció | registration | pro: 1,5 USD/lot/megbízástól (mért); ret | 72/81/76/72 | https://www.darwinex.com/trading/platforms
-a11-broker-darwinex | Darwinex – Tradeslide Trading Tech (FCA 586466) + Sapiens Markets EU S | registration | pro: 1,5 USD/lot/megbízás (mért) | 72/81/76/72 | https://www.darwinex.com/
-a11-broker-pepperstone-eu | Pepperstone EU – Pepperstone EU Limited, CySEC 388/20 (+ Pepperstone G | registration | Razor: 3,50 USD/lot/oldal (mért) | 66/80/72/68 | https://pepperstone.com/en-eu/
-a11-plat-mt5 | MetaTrader 5 (MQL5 EA + Python API) – automatizálási profil | free | kliens ingyenes; MetaQuotes VPS 10–15 US | 65/77/71/65 | https://www.metatrader5.com/en/trading-platform
-a11-pro-pepperstone-eu | Pepperstone Pro (EU) – akár 1:500 | registration | ? | 61/74/68/63 | https://pepperstone.com/en-eu/ways-to-trade/professional-clients/
-a11-pro-tickmill-eu | Tickmill Europe Professional – 1:500 NBP-vel | registration | ? | 61/74/68/63 | https://www.tickmill.com/eu/trading/professional-clients
-a11-broker-dukascopy-europe | Dukascopy Europe IBS AS (Latvijas Banka) – EU | registration | 35→5 USD / 1 M USD / oldal (mért) | 68/78/72/70 | https://www.dukascopy.com/europe/english/home/
-a11-plat-dukascopy-jforex-fix | Dukascopy JForex (Java API) + FIX 4.4 | registration | 35→5 USD / 1 M USD / oldal (betétfüggő) | 68/76/70/69 | https://www.dukascopy.com/europe/english/forex/api/fix-api/
-a11-plat-ctrader-fix | cTrader FIX API (FIX 4.4) | free | ingyenes (bróker-díjak) | 66/76/70/66 | https://help.ctrader.com/fix/
-a11-plat-quantconnect-live | QuantConnect LEAN – élő brókerkapcsolatok | freemium | nem ellenőrzött (felhős live node díj) | 62/77/72/64 | https://www.quantconnect.com/docs/v2/cloud-platform/live-trading/brokerages
-a11-broker-tickmill-eu | Tickmill Europe – Tickmill Europe Ltd, CySEC 278/15 | registration | Raw: 3 USD/lot/oldal (mért) | 64/76/69/66 | https://www.tickmill.com/eu
-a11-broker-fpmarkets-eu | FP Markets EU – First Prudential Markets Ltd, CySEC 371/18 | registration | Raw: 3 USD/oldal (mért) | 63/75/68/64 | https://www.fpmarkets.eu/
-a11-broker-saxo | Saxo Bank A/S (Finanstilsynet, Dánia) | registration | ? | 58/77/70/62 | https://www.home.saxo/
-a11-pro-icmarkets-eu | IC Markets EU – professional ügyfél-eljárás | registration | ? | 61/74/68/63 | https://www.icmarkets.eu/en/trading-accounts/professional-clients
-a11-pro-fpmarkets-eu | FP Markets EU Pro számla – 1:500 | registration | ? | 61/74/68/63 | https://www.fpmarkets.eu/professional-account/
-a11-pro-axi-eu | Axi EU Professional – akár 1:400, NBP nélkül | registration | ? | 61/74/68/63 | https://www.axi-solaris.com/eu/trading-accounts/professional-account
-a11-pro-oanda-tms | OANDA TMS Professional – 200:1 és 0–45% rebate | registration | ? | 61/74/68/63 | https://www.oanda.com/eu-en/professional-client
-a11-pro-darwinex | Darwinex Professional Clients (COBS 3.5 / MiFID) | registration | ? | 61/74/68/63 | https://www.darwinex.com/trading/professional-traders
-a11-pro-saxo | Saxo Elective Professional – külön margin-tábla | registration | ? | 61/74/68/63 | https://www.home.saxo/products/margin-information
-a11-pro-swissquote-eu | Swissquote Bank Europe – FX/CFD csak professional ügyfélnek | registration | ? | 61/74/68/63 | https://www.swissquote.com/en-lu/private/trade/products/forex
-a11-pro-ig-europe | IG Europe – professional státusz (nem ellenőrzött részletek) | registration | ? | 61/74/68/63 | https://www.ig.com/ie
-a11-plat-saxo-openapi | Saxo OpenAPI (REST + streaming) és FIX | registration | API ingyenes; FX min. jutalék 1 USD kis  | 58/76/68/62 | https://www.developer.saxo/openapi/learn/rate-limiting
-a11-broker-ig-europe | IG Europe GmbH (BaFin 148759) | registration | spread-alapú (nem ellenőrzött számokkal) | 58/72/65/60 | https://www.ig.com/ie
-a11-plat-ig-api | IG REST + Streaming API (és intézményi FIX) | registration | API ingyenes; spread-alapú díjak | 57/70/64/60 | https://labs.ig.com/
-a11-plat-tradingview-webhooks | TradingView – riasztás-webhookok mint jelforrás | paid | Essential 12,95 / Plus 29,95 / Premium 5 | 52/66/62/56 | https://www.tradingview.com/support/solutions/43000529348-how-to-configure-webhook-alerts/
-a11-plat-sierra-chart | Sierra Chart (ACSIL C++, DTC protokoll) | paid | 26 / 36 / 46 / 56 USD/hó (~33 €/hó) | 61/67/62/60 | https://www.sierrachart.com/index.php?page=doc/Packages.php
-a11-broker-icmarkets-global | IC Markets Global – Raw Trading Ltd, FSA Seychelles SD018 | registration | Raw: nem ellenőrzött (≈3,5 USD/oldal, be | 58/68/64/54 | https://www.ic.com/en/
-a11-plat-rithmic | Rithmic R \| Protocol API (futures order routing) | institutional | nem ellenőrzött (FCM-en át) | 60/64/59/58 | https://www.rithmic.com/apis
-a11-plat-ninjatrader | NinjaTrader (NinjaScript C#) + NinjaTrader Clearing | freemium | Free 0 / 99 USD/hó / 1499 USD egyszeri;  | 58/64/60/56 | https://ninjatrader.com/pricing/
-a11-plat-cqg | CQG WebAPI / FIX (globális futures) | institutional | nem ellenőrzött | 56/64/58/56 | https://www.cqg.com/
-a11-broker-admirals-europe | Admirals – Admirals Europe Ltd, CySEC 201/13 | registration | ? | 52/62/55/54 | https://admiralmarkets.com/
-a11-plat-prediction-venues | Predikciós helyek API-ja (Polymarket, Kalshi, Betfair) – röviden; rész | registration | lásd A3 | 54/56/56/50 | https://docs.polymarket.com/
-a11-broker-swissquote-europe | Swissquote Bank Europe SA (CSSF, Luxemburg) | registration | ? | 50/62/55/51 | https://www.swissquote.com/en-lu/private
-a11-broker-axi-eu | Axi EU – Solaris EMEA Ltd, CySEC 433/23 | registration | ? | 50/60/53/52 | https://www.axi-solaris.com/eu
-a11-plat-tradingview-broker-integration | TradingView brókerintegráció (chartról kötés) | freemium | TV-csomag + bróker-díjak | 48/60/53/50 | https://www.tradingview.com/brokers/
-a11-plat-tradestation | TradeStation (EasyLanguage + TradeStation API) | registration | nem ellenőrzött | 49/58/54/47 | https://www.tradestation.com/
-a11-broker-exness-cy | Exness (Cy) Ltd – CySEC (EU) | registration | ? | 50/54/50/50 | https://www.exness.eu/
-a11-broker-fxcm-stratos-europe | FXCM EU – Stratos Europe Ltd (ex FXCM EU Ltd), CySEC | registration | ? | 49/54/50/50 | https://www.fxcm.com/
-a11-plat-mt4 | MetaTrader 4 – örökölt EA-platform | free | ingyenes kliens | 50/52/46/52 | https://www.metatrader4.com/
-a11-broker-eightcap-eu | Eightcap EU Ltd (CySEC) | registration | ? | 46/54/48/47 | https://www.eightcap.com/en/
-a11-broker-xm-eu | XM – Trading Point of Financial Instruments Ltd (CySEC) | registration | ? | 46/52/46/46 | https://www.xm.com/
-a11-broker-tickmill-sc | Tickmill Ltd (Seychelles, FSA SD008) – offshore | registration | ? | 52/58/54/48 | https://www.tickmill.com/
-a11-broker-swissquote-ch | Swissquote Bank SA (FINMA, Svájc) | registration | ? | 46/58/52/46 | https://www.swissquote.com/en-ch/private
-a11-broker-blackbull | BlackBull Markets – FSA Seychelles SD045 (NZ központ) | registration | RAW: 3 USD/oldal (mért) | 48/54/51/44 | https://blackbull.com/en/
-a11-plat-multicharts | MultiCharts (PowerLanguage / .NET) | paid | nem ellenőrzött | 46/51/46/47 | https://www.multicharts.com/
-a11-plat-dxtrade | DXtrade (Devexperts) – bróker-white-label platform | registration | bróker-díjak | 44/48/42/44 | https://devexperts.com/dxtrade/
-a11-broker-exness-sc | Exness (SC) Ltd – Seychelles (offshore, 'unlimited leverage') | registration | ? | 44/48/46/40 | https://www.exness.com/
-a11-broker-axi-svg | AxiTrader LLC (SVG) – offshore | registration | ? | 38/42/38/34 | https://www.axi.com/int
-a11-broker-xm-global | XM Global Limited – offshore | registration | ? | 36/38/35/32 | https://www.xm.com/
+a11-broker-ibkr-ireland | 0 | Interactive Brokers Ireland Limited (Central Bank of Ireland C423427) | Brókerek | registration | FX 0,20 bp, min. 2 USD/megbízás (mért) | 74/90/83/76 | https://www.interactivebrokers.ie/en/home.php | Az interactivebrokers.hu az interactivebrokers.ie-re irányít (mért). A szerződő…
+a11-plat-ibkr-api | 0 | Interactive Brokers TWS API + Web (Client Portal) API | platform | registration | FX: 0,08–0,20 bp × kötésérték, min. 2… | 72/89/82/74 | https://www.interactivebrokers.com/en/trading/ib-api.php | API: TWS API (socket; Java, C++, C#, Python), Web API (REST + WebSocket), FIX…
+a11-plat-darwinex-stack | 0 | Darwinex – MT4/MT5, FIX 4.4, ZeroMQ, DXtrade + tőkeallokáció | platform | registration | pro: 1,5 USD/lot/megbízástól (mért)… | 72/81/76/72 | https://www.darwinex.com/trading/platforms | Platformok (mért): TradingView, MetaTrader 4 és 5, DXtrade, API-k. A Labs…
+a11-broker-pepperstone-eu | 0 | Pepperstone EU – Pepperstone EU Limited, CySEC 388/20… | Brókerek | registration | Razor: 3,50 USD/lot/oldal (mért) | 66/80/72/68 | https://pepperstone.com/en-eu/ | Pepperstone EU Limited, HE 398429, CySEC 388/20 (mért, lábléc); az…
+a11-plat-mt5 | 0 | MetaTrader 5 (MQL5 EA + Python API) – automatizálási profil | platform | free | kliens ingyenes; MetaQuotes VPS 10–15… | 65/77/71/65 | https://www.metatrader5.com/en/trading-platform | API: MQL5 EA a terminálon belül (eseményvezérelt OnTick/OnTradeTransaction)…
+a11-pro-pepperstone-eu | 0 | Pepperstone Pro (EU) – akár 1:500 | pro-status | registration | ? | 61/74/68/63 | https://pepperstone.com/en-eu/ways-to-trade/professional-clients/ | Folyamat (mért): bejelentkezés a kliensterületre → 'Pepperstone Pro' gomb jobb…
+a11-pro-tickmill-eu | 0 | Tickmill Europe Professional – 1:500 NBP-vel | pro-status | registration | ? | 61/74/68/63 | https://www.tickmill.com/eu/trading/professional-clients | Feltételek (mért): a háromból kettő; az (1) pontnál a Tickmillnél ÉS más…
+a11-broker-dukascopy-europe | 1 | Dukascopy Europe IBS AS (Latvijas Banka) – EU | Brókerek | registration | 35→5 USD / 1 M USD / oldal (mért) | 68/78/72/70 | https://www.dukascopy.com/europe/english/home/ | Dukascopy Europe IBS AS, Riga; az ESMA-registerben aktív befektetési…
+a11-plat-dukascopy-jforex-fix | 1 | Dukascopy JForex (Java API) + FIX 4.4 | platform | registration | 35→5 USD / 1 M USD / oldal (betétfüggő) | 68/76/70/69 | https://www.dukascopy.com/europe/english/forex/api/fix-api/ | API: JForex Java stratégia-API valós tickes testerrel (A1), FIX 4.4…
+a11-plat-ctrader-fix | 1 | cTrader FIX API (FIX 4.4) | platform | free | ingyenes (bróker-díjak) | 66/76/70/66 | https://help.ctrader.com/fix/ | API: FIX 4.4 (mért). A Spotware szerint a FIX API a cTraderen keresztül…
+a11-plat-quantconnect-live | 1 | QuantConnect LEAN – élő brókerkapcsolatok | platform | freemium | nem ellenőrzött (felhős live node díj) | 62/77/72/64 | https://www.quantconnect.com/docs/v2/cloud-platform/live-trading/brokerages | Élő brókerek (mért, QC docs 2026-11-15): QuantConnect Paper, Interactive…
+a11-broker-tickmill-eu | 1 | Tickmill Europe – Tickmill Europe Ltd, CySEC 278/15 | Brókerek | registration | Raw: 3 USD/lot/oldal (mért) | 64/76/69/66 | https://www.tickmill.com/eu | Tickmill Europe Ltd, CySEC CIF 278/15, ICF-tag (mért); ESMA-register: aktív…
+a11-broker-fpmarkets-eu | 1 | FP Markets EU – First Prudential Markets Ltd, CySEC 371/18 | Brókerek | registration | Raw: 3 USD/oldal (mért) | 63/75/68/64 | https://www.fpmarkets.eu/ | First Prudential Markets Ltd, HE 372179, CySEC 371/18 (mért, lábléc)…
+a11-broker-saxo | 1 | Saxo Bank A/S (Finanstilsynet, Dánia) | Brókerek | registration | ? | 58/77/70/62 | https://www.home.saxo/ | Saxo Bank A/S, Hellerup; az ESMA-registerben aktív, felügyelője a…
+a11-pro-icmarkets-eu | 1 | IC Markets EU – professional ügyfél-eljárás | pro-status | registration | ? | 61/74/68/63 | https://www.icmarkets.eu/en/trading-accounts/professional-clients | A háromból kettő: ügyletek (10/negyedév, 4 negyedév, jelentős méret), pénzügyi…
+a11-pro-fpmarkets-eu | 1 | FP Markets EU Pro számla – 1:500 | pro-status | registration | ? | 61/74/68/63 | https://www.fpmarkets.eu/professional-account/ | Feltételek (mért): a háromból kettő. A 'jelentős méret' itt 1 lot, 10…
+a11-pro-axi-eu | 1 | Axi EU Professional – akár 1:400, NBP nélkül | pro-status | registration | ? | 61/74/68/63 | https://www.axi-solaris.com/eu/trading-accounts/professional-account | Feltételek (mért): a háromból kettő – gyakori kereskedő (jelentős ügyletek)…
+a11-pro-oanda-tms | 1 | OANDA TMS Professional – 200:1 és 0–45% rebate | pro-status | registration | ? | 61/74/68/63 | https://www.oanda.com/eu-en/professional-client | Előnyök (mért): akár 200:1; jutalék-rebate havi volumen szerint: 50 M USD alatt…
+a11-pro-darwinex | 1 | Darwinex Professional Clients (COBS 3.5 / MiFID) | pro-status | registration | ? | 61/74/68/63 | https://www.darwinex.com/trading/professional-traders | Feltételek (mért): COBS 3.5 szerinti elective professional, a háromból kettő…
+a11-pro-saxo | 1 | Saxo Elective Professional – külön margin-tábla | pro-status | registration | ? | 61/74/68/63 | https://www.home.saxo/products/margin-information | Alapértelmezés szerint retail margin érvényes. ESMA-szabályozott ügyfélként…
+a11-pro-swissquote-eu | 1 | Swissquote Bank Europe – FX/CFD csak professional ügyfélnek | pro-status | registration | ? | 61/74/68/63 | https://www.swissquote.com/en-lu/private/trade/products/forex | A Forex & CFD hozzáférés kizárólag MiFID szerinti professional ügyfélnek vagy…
+a11-plat-saxo-openapi | 1 | Saxo OpenAPI (REST + streaming) és FIX | platform | registration | API ingyenes; FX min. jutalék 1 USD kis… | 58/76/68/62 | https://www.developer.saxo/openapi/learn/rate-limiting | API: REST OpenAPI OAuth/SAML-lel, streaming, szimulációs környezet; intézményi…
+a11-broker-ig-europe | 1 | IG Europe GmbH (BaFin 148759) | Brókerek | registration | spread-alapú (nem ellenőrzött számokkal) | 58/72/65/60 | https://www.ig.com/ie | Az ig.com/hu az ig.com/ie-re irányít (mért), ott a szerződő fél az IG Europe…
+a11-plat-ig-api | 1 | IG REST + Streaming API (és intézményi FIX) | platform | registration | API ingyenes; spread-alapú díjak | 57/70/64/60 | https://labs.ig.com/ | API (mért): REST kereskedési és streaming API-k CFD-re és spread bettingre.…
+a11-plat-tradingview-webhooks | 1 | TradingView – riasztás-webhookok mint jelforrás | platform | paid | Essential 12,95 / Plus 29,95 / Premium… | 52/66/62/56 | https://www.tradingview.com/support/solutions/43000529348-how-to-configure-webhook-alerts/ | API: kimenő HTTP POST riasztáskor (JSON vagy text/plain), csak a 80-as és a…
+a11-plat-sierra-chart | 2 | Sierra Chart (ACSIL C++, DTC protokoll) | platform | paid | 26 / 36 / 46 / 56 USD/hó (~33 €/hó) | 61/67/62/60 | https://www.sierrachart.com/index.php?page=doc/Packages.php
+a11-plat-rithmic | 2 | Rithmic R \| Protocol API (futures order routing) | platform | institutional | nem ellenőrzött (FCM-en át) | 60/64/59/58 | https://www.rithmic.com/apis
+a11-plat-ninjatrader | 2 | NinjaTrader (NinjaScript C#) + NinjaTrader Clearing | platform | freemium | Free 0 / 99 USD/hó / 1499 USD egyszeri… | 58/64/60/56 | https://ninjatrader.com/pricing/
+a11-broker-admirals-europe | 2 | Admirals – Admirals Europe Ltd, CySEC 201/13 | Brókerek | registration | ? | 52/62/55/54 | https://admiralmarkets.com/
+a11-plat-prediction-venues | 2 | Predikciós helyek API-ja (Polymarket, Kalshi, Betfair) – röviden… | platform | registration | lásd A3 | 54/56/56/50 | https://docs.polymarket.com/
+a11-broker-swissquote-europe | 2 | Swissquote Bank Europe SA (CSSF, Luxemburg) | Brókerek | registration | ? | 50/62/55/51 | https://www.swissquote.com/en-lu/private
+a11-broker-axi-eu | 2 | Axi EU – Solaris EMEA Ltd, CySEC 433/23 | Brókerek | registration | ? | 50/60/53/52 | https://www.axi-solaris.com/eu
+a11-plat-tradingview-broker-integration | 2 | TradingView brókerintegráció (chartról kötés) | platform | freemium | TV-csomag + bróker-díjak | 48/60/53/50 | https://www.tradingview.com/brokers/
+a11-plat-tradestation | 2 | TradeStation (EasyLanguage + TradeStation API) | platform | registration | nem ellenőrzött | 49/58/54/47 | https://www.tradestation.com/
+a11-broker-exness-cy | 2 | Exness (Cy) Ltd – CySEC (EU) | Brókerek | registration | ? | 50/54/50/50 | https://www.exness.eu/
+a11-broker-fxcm-stratos-europe | 2 | FXCM EU – Stratos Europe Ltd (ex FXCM EU Ltd), CySEC | Brókerek | registration | ? | 49/54/50/50 | https://www.fxcm.com/
+a11-plat-mt4 | 2 | MetaTrader 4 – örökölt EA-platform | platform | free | ingyenes kliens | 50/52/46/52 | https://www.metatrader4.com/
+a11-broker-eightcap-eu | 2 | Eightcap EU Ltd (CySEC) | Brókerek | registration | ? | 46/54/48/47 | https://www.eightcap.com/en/
+a11-broker-swissquote-ch | 3 | Swissquote Bank SA (FINMA, Svájc) | Brókerek | registration | ? | 46/58/52/46 | https://www.swissquote.com/en-ch/private
+a11-broker-blackbull | 3 | BlackBull Markets – FSA Seychelles SD045 (NZ központ) | Brókerek | registration | RAW: 3 USD/oldal (mért) | 48/54/51/44 | https://blackbull.com/en/
+a11-plat-multicharts | 3 | MultiCharts (PowerLanguage / .NET) | platform | paid | nem ellenőrzött | 46/51/46/47 | https://www.multicharts.com/
+a11-plat-dxtrade | 3 | DXtrade (Devexperts) – bróker-white-label platform | platform | registration | bróker-díjak | 44/48/42/44 | https://devexperts.com/dxtrade/
 
 ## Bevált módszerek: statisztikai összefüggésekből értelem és eredmény (esettanulmányok, módszertár)
-m-kalman-state-space | Kalman-szűrő és állapottér-modellek | free | 0 | 78/91/85/80 | https://github.com/rlabbe/filterpy
-m-gradient-boosting | Gradiens boosting (LightGBM, XGBoost, CatBoost) | free | 0 | 76/92/88/80 | https://github.com/microsoft/LightGBM
-cs-gjp-superforecasters | Good Judgment Project – Tetlock szuperelőrejelzői (IARPA ACE, 2011–201 | free | 0 | 74/90/88/80 | https://doi.org/10.1177/0956797614524255
-cs-benter-horse-racing | Bill Benter – számítógépes lóverseny-handicapping Hongkongban (multino | paid | ? | 78/87/86/80 | https://doi.org/10.1142/9789812819192_0019
-m-stacking-ensembling | Ensemble és stacking (Netflix Prize, M4-tanulságok) | free | 0 | 74/92/88/78 | https://github.com/rasbt/mlxtend
-cs-thorp-blackjack-kelly | Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés | free | 0 | 74/89/86/78 | https://doi.org/10.1073/pnas.47.1.110
-cs-kalman-apollo | Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig | free | 0 | 76/90/83/77 | https://doi.org/10.1115/1.3662552
-m-cointegration-engle-granger | Kointegráció – Engle–Granger kétlépéses teszt | free | 0 | 74/90/85/78 | https://github.com/statsmodels/statsmodels
-m-garch-har-rv | GARCH és HAR-RV volatilitás-modellek | free | 0 | 73/92/86/76 | https://github.com/bashtage/arch
-cs-aqr-time-series-momentum | Idősori momentum / trendkövetés (Moskowitz–Ooi–Pedersen 2012; Hurst–Oo | free | 0 | 73/88/86/79 | https://doi.org/10.1016/j.jfineco.2011.11.003
-m-kelly-criterion | Kelly-kritérium és frakcionált Kelly | free | 0 | 71/92/86/76 | https://doi.org/10.1109/TIT.1956.1056803
-cs-avellaneda-lee-pca-statarb | Avellaneda–Lee – PCA/ETF-reziduál statisztikai arbitrázs (2010) | free | 0 | 76/84/82/80 | https://doi.org/10.1080/14697680903124632
-cs-gu-kelly-xiu-ml-asset-pricing | Gu–Kelly–Xiu – gépi tanulás az eszközárazásban (RFS 2020) | free | 0 | 71/88/86/78 | https://doi.org/10.1093/rfs/hhaa009
-cs-fx-carry-lustig | FX carry kockázati faktor – Lustig, Roussanov, Verdelhan (RFS 2011) | free | 0 | 71/88/86/78 | https://doi.org/10.1093/rfs/hhr068
-cs-nyfed-staff-nowcast | NY Fed Staff Nowcast – dinamikus faktormodell (Giannone–Reichlin–Small | free | 0 | 74/87/82/78 | https://www.newyorkfed.org/research/policy/nowcast
-cs-turing-banburismus | Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park) | free | 0 | 72/90/83/75 | https://doi.org/10.1093/biomet/66.2.393
-cs-worldquant-101-alphas | WorldQuant – '101 Formulaic Alphas' (Kakushadze 2016) | free | 0 | 74/84/81/78 | https://arxiv.org/abs/1601.00991
-m-fdr-benjamini-hochberg | FDR-kontroll – Benjamini–Hochberg (és BY függőség esetén) | free | 0 | 66/94/84/71 | https://github.com/statsmodels/statsmodels
-m-multinomial-logit-benter | Feltételes/multinomiális logit versenyek és rangsorok előrejelzésére ( | free | 0 | 72/85/82/76 | https://doi.org/10.1287/mnsc.32.8.1040
-m-sprt-sequential | Szekvenciális valószínűségi hányados-teszt (Wald SPRT) és always-valid | free | 0 | 70/90/81/73 | https://doi.org/10.1214/aoms/1177731118
-cs-renaissance-medallion | Renaissance Technologies – Medallion Fund | institutional | ? | 78/78/78/78 | https://en.wikipedia.org/wiki/Renaissance_Technologies
-cs-gatev-pairs-trading | Párkereskedés – Gatev, Goetzmann, Rouwenhorst (NBER 1999 / RFS 2006) | free | 0 | 72/84/80/76 | https://doi.org/10.1093/rfs/hhj020
-m-reality-check-spa-stepm | White Reality Check, Hansen SPA, Romano–Wolf StepM | free | 0 | 64/93/84/70 | https://github.com/bashtage/arch
-m-calibration-proper-scoring | Valószínűségi kalibráció és helyes pontozási szabályok (Brier, log-los | free | 0 | 68/90/82/72 | https://pypi.org/project/scoringrules/
-m-extremized-aggregation | Előrejelzések aggregálása és extremizálása (GJP) | free | 0 | 69/88/82/74 | https://doi.org/10.1287/deca.2014.0293
-m-ou-half-life | Ornstein–Uhlenbeck modell és mean-reversion félidő | free | 0 | 70/86/80/74 | https://github.com/statsmodels/statsmodels
-m-bayesian-hierarchical | Bayes-i hierarchikus modellek és empirikus Bayes shrinkage (PyMC) | free | 0 | 68/88/83/73 | https://github.com/pymc-devs/pymc
-cs-fx-technical-rules-amh | FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009) | free | 0 | 66/89/82/72 | https://doi.org/10.1017/S0022109009090103
-cs-mclean-pontiff-decay | Publikálás utáni lecsengés – McLean & Pontiff (JF 2016) | free | 0 | 62/92/84/69 | https://doi.org/10.1111/jofi.12365
-m-pcmci-tigramite | PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite) | free | 0 | 70/84/80/76 | https://github.com/jakobrunge/tigramite
-m-hmm-regime | Rejtett Markov-modell (HMM) rezsimdetektálásra | free | 0 | 72/82/78/76 | https://github.com/hmmlearn/hmmlearn
-m-deflated-sharpe | Deflated Sharpe Ratio (Bailey & López de Prado 2014) | free | 0 | 64/92/82/70 | https://doi.org/10.3905/jpm.2014.40.5.094
-m-purged-cv-cpcv | Purged / embargoed k-fold és kombinatorikus purged CV | free | 0 | 66/89/82/72 | https://github.com/skfolio/skfolio
-m-concept-drift-adwin | Koncepció-drift detektálás és online tanulás (ADWIN, river) | free | 0 | 71/86/77/72 | https://github.com/online-ml/river
-m-factor-ic-alphalens | Faktor-értékelés: információs együttható (IC), kvantilis-hozamok, Fama | free | 0 | 67/87/82/73 | https://github.com/stefan-jansen/alphalens-reloaded
-cs-m4-competition | M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2019.04.014
-cs-m5-competition | M5 előrejelzési verseny (2020) – LightGBM dominancia | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2021.11.013
-cs-kaunitz-beat-the-bookies | Beating the bookies with their own numbers – Kaunitz, Zhong, Kreiner ( | free | 0 | 73/80/78/72 | https://arxiv.org/abs/1710.02824
-m-harvey-liu-zhu-t3 | Harvey–Liu–Zhu: t > 3 küszöb új faktorokra (RFS 2016) | free | 0 | 62/90/82/68 | https://doi.org/10.1093/rfs/hhv059
-m-dixon-coles | Dixon–Coles Poisson-modell futballeredményekre | free | 0 | 69/83/79/74 | https://github.com/martineastwood/penaltyblog
-cs-kaggle-g-research-crypto | Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, Li | free | 0 | 72/79/75/74 | https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/
-cs-smartodds-benham | Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC Midtj | free | 0 | 70/79/78/73 | https://en.wikipedia.org/wiki/Matthew_Benham
-cs-wald-survivorship | Abraham Wald – túlélési torzítás a bombázók páncélozásánál (SRG, II. v | free | 0 | 61/90/82/68 | https://doi.org/10.2307/2288257
-cs-technical-rules-data-snooping | Technikai szabályok és adat-szaglászás – Brock–Lakonishok–LeBaron (199 | free | 0 | 60/88/80/68 | https://doi.org/10.1111/0022-1082.00163
-cs-hou-xue-zhang-replicating | Replicating Anomalies – Hou, Xue, Zhang (RFS 2020) | free | 0 | 60/88/80/68 | https://doi.org/10.1093/rfs/hhy131
-cs-quant-quake-2007 | 2007 augusztusi 'quant quake' – Khandani & Lo (J. Financial Markets 20 | free | 0 | 63/86/78/68 | https://doi.org/10.1016/j.finmar.2010.07.005
-m-unit-root-adf-kpss | Egységgyök- és stacionaritás-tesztek (ADF, KPSS, Phillips–Perron) | free | 0 | 62/88/79/67 | https://github.com/bashtage/arch
-m-block-bootstrap | Blokk- és stacionárius bootstrap | free | 0 | 62/88/79/67 | https://github.com/bashtage/arch
-cs-m6-competition | M6 pénzügyi előrejelzési verseny (2022–23) | free | 0 | 62/84/78/69 | https://arxiv.org/abs/2310.13357
-cs-ltcm | Long-Term Capital Management (1994–1998) – korrelációs összeomlás és t | free | 0 | 58/89/80/64 | https://en.wikipedia.org/wiki/Long-Term_Capital_Management
-m-shap | SHAP – Shapley-alapú modellmagyarázat | free | 0 | 64/82/74/68 | https://github.com/shap/shap
-m-ledoit-wolf-shrinkage | Ledoit–Wolf kovariancia-shrinkage | free | 0 | 60/85/76/66 | https://pypi.org/project/scikit-learn/
-cs-netflix-prize | Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble | free | 0 | 60/82/76/68 | https://en.wikipedia.org/wiki/Netflix_Prize
-cs-bollen-twitter-mood | Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a m | free | 0 | 60/82/73/64 | https://doi.org/10.1016/j.jocs.2010.12.007
-cs-google-flu-trends | Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu' (L | free | 0 | 56/85/76/63 | https://doi.org/10.1126/science.1248506
-m-spurious-correlation-vigen | Hamis korrelációk – Tyler Vigen és Granger–Newbold (1974) spurious reg | free | 0 | 54/86/77/62 | https://www.tylervigen.com/spurious-correlations
-cs-gaussian-copula-2008 | A Gauss-kopula és a 2008-as CDO-válság (Li 2000; Salmon, Wired 2009) | free | 0 | 55/82/73/62 | https://doi.org/10.3905/jfi.2000.319253
-cs-zillow-offers | Zillow Offers (2018–2021) – algoritmikus lakásvásárlás kudarca | free | 0 | 55/82/73/62 | https://en.wikipedia.org/wiki/Zillow
-cs-cont-order-flow-imbalance | Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometri | free | 0 | 78/84/78/78 | https://doi.org/10.1093/jjfinec/nbt003
-m-cointegration-johansen | Kointegráció – Johansen-teszt (több változó) | free | 0 | 71/87/82/76 | https://github.com/statsmodels/statsmodels
-cs-jensen-kelly-pedersen-replication | Is There a Replication Crisis in Finance? – Jensen, Kelly, Pedersen (J | free | 0 | 66/90/84/74 | https://doi.org/10.1111/jofi.13249
-m-granger-causality | Granger-kauzalitás (VAR-alapú prediktív kauzalitás) | free | 0 | 70/87/80/74 | https://github.com/statsmodels/statsmodels
-m-markov-switching | Markov-váltó regresszió/autoregresszió (Hamilton 1989) | free | 0 | 68/86/80/72 | https://github.com/statsmodels/statsmodels
-m-variance-ratio | Varianciahányados-teszt (Lo–MacKinlay 1988) | free | 0 | 68/86/80/72 | https://github.com/bashtage/arch
-cs-aqr-value-momentum-everywhere | AQR – 'Value and Momentum Everywhere' (Asness–Moskowitz–Pedersen 2013) | free | 0 | 66/84/81/74 | https://doi.org/10.1111/jofi.12021
-cs-market-intraday-momentum | Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018) | free | 0 | 72/80/76/76 | https://doi.org/10.1016/j.jfineco.2018.05.009
-m-dynamic-factor-model | Dinamikus faktormodell (DFM) nowcastinghoz | free | 0 | 68/85/79/72 | https://github.com/statsmodels/statsmodels
-cs-renaissance-baum-hmm | Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén (Monemetrics | free | 0 | 70/80/76/74 | https://doi.org/10.1214/aoms/1177697196
-cs-fx-currency-momentum | Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012) | free | 0 | 66/83/80/74 | https://doi.org/10.1016/j.jfineco.2012.06.009
-m-mutual-information | Kölcsönös információ (KSG-becslő) | free | 0 | 67/84/78/71 | https://pypi.org/project/scikit-learn/
-m-permutation-importance | Permutációs fontosság (és MDA/klaszteres változat) | free | 0 | 65/86/78/70 | https://pypi.org/project/scikit-learn/
-m-bonferroni-holm | Bonferroni és Holm-korrekció (családi hiba, FWER) | free | 0 | 63/88/79/68 | https://github.com/statsmodels/statsmodels
-m-pca-statistical-factors | PCA statisztikai faktorok és eigenportfóliók | free | 0 | 67/84/78/71 | https://github.com/statsmodels/statsmodels
-cs-billion-prices-project | Billion Prices Project – online árak az infláció mérésére (Cavallo & R | free | 0 | 71/78/76/71 | https://doi.org/10.1257/jep.30.2.151
-cs-expected-goals-xg | Expected goals (xG) – lövés-minőség logisztikus modellje | free | 0 | 68/80/76/72 | https://en.wikipedia.org/wiki/Expected_goals
-cs-qlib-alpha158 | Microsoft Qlib – AI-orientált kvant platform és Alpha158/360 feature-k | free | 0 | 66/82/76/71 | https://arxiv.org/abs/2009.11189
-m-change-point-ruptures | Változáspont-detektálás (ruptures: PELT, Binseg, kernel) | free | 0 | 66/82/76/71 | https://github.com/deepcharles/ruptures
-m-bocpd | Bayes-i online változáspont-detektálás (BOCPD, Adams & MacKay 2007) | free | 0 | 71/79/72/74 | https://arxiv.org/abs/0710.3742
-cs-renaissance-berlekamp-1990 | Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése | free | 0 | 73/74/72/74 | https://en.wikipedia.org/wiki/Elwyn_Berlekamp
-cs-loughran-mcdonald-dictionary | Loughran–McDonald pénzügyi szótár (JF 2011) | free | 0 | 65/82/74/69 | https://doi.org/10.1111/j.1540-6261.2010.01625.x
-cs-ecmwf-quiet-revolution | A numerikus időjárás-előrejelzés 'csendes forradalma' (Bauer, Thorpe,  | free | 0 | 62/84/77/68 | https://doi.org/10.1038/nature14956
-m-conformal-prediction | Konform előrejelzés (eloszlásmentes előrejelzési intervallum) | free | 0 | 66/82/74/69 | https://github.com/scikit-learn-contrib/MAPIE
-m-forecast-combination | Előrejelzés-kombináció és statisztikai baseline-ok (statsforecast; M-v | free | 0 | 62/84/77/68 | https://github.com/Nixtla/statsforecast
-cs-jegadeesh-titman-momentum | Jegadeesh–Titman – keresztmetszeti momentum (1993) | free | 0 | 62/82/76/69 | https://doi.org/10.1111/j.1540-6261.1993.tb04702.x
-cs-chen-zimmermann-open-source-ap | Open Source Asset Pricing – Chen & Zimmermann (Critical Finance Review | free | 0 | 60/84/77/68 | https://doi.org/10.1561/104.00000112
-cs-cohen-frazzini-economic-links | Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító mo | free | 0 | 66/78/74/72 | https://doi.org/10.1111/j.1540-6261.2008.01379.x
-cs-lazy-prices | Lazy Prices – Cohen, Malloy, Nguyen (JF 2020) | free | 0 | 66/78/74/72 | https://doi.org/10.1111/jofi.12885
-cs-tetlock-media-pessimism | Média-pesszimizmus – Paul Tetlock (JF 2007) | free | 0 | 66/78/72/70 | https://doi.org/10.1111/j.1540-6261.2007.01232.x
-cs-kaggle-optiver-realized-vol | Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely: Neares | free | 0 | 72/74/69/74 | https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970
-cs-nate-silver-538 | Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és szim | free | 0 | 67/77/74/72 | https://en.wikipedia.org/wiki/Nate_Silver
-cs-atlanta-fed-gdpnow | Atlanta Fed GDPNow | free | 0 | 66/78/72/70 | https://www.atlantafed.org/cqer/research/gdpnow
-cs-alphagen-rl-alpha-mining | AlphaGen – szinergikus formulaikus alfák RL-lel (Yu et al., KDD 2023) | free | 0 | 68/76/73/72 | https://arxiv.org/abs/2306.12964
-m-econml-dml | EconML / DoubleML – double/debiased ML és causal forest | free | 0 | 62/81/76/69 | https://github.com/py-why/EconML
-m-copulas | Kopulák (t, Clayton, Gumbel, vine) | free | 0 | 64/80/75/70 | https://github.com/vinecopulib/pyvinecopulib
-m-genetic-programming-gplearn | Genetikus programozás alfa-bányászathoz (gplearn) | free | 0 | 68/76/73/72 | https://github.com/trevorstephens/gplearn
-cs-numerai | Numerai – titkosított adatokon tömegesen beküldött modellek + stake-el | free | 0 | 66/76/74/68 | https://numer.ai/
-cs-bing-ab-test | Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés (Kohavi & Thomke | free | 0 | 61/82/74/67 | https://hbr.org/2017/09/the-surprising-power-of-online-experiments
-m-automl | AutoML (AutoGluon, FLAML) | free | 0 | 63/79/74/68 | https://github.com/autogluon/autogluon
-m-pbo-cscv | Backtest-túlilleszkedés valószínűsége (PBO, CSCV) | free | 0 | 60/83/74/67 | https://github.com/esvhd/pypbo
-m-hrp | Hierarchical Risk Parity (López de Prado 2016) | free | 0 | 62/81/74/67 | https://github.com/robertmartin8/PyPortfolioOpt
-m-rating-systems | Erősség-rangsorolás: Elo, Glicko, TrueSkill, Bradley–Terry | free | 0 | 66/77/71/70 | https://github.com/sublee/trueskill
-m-tsfresh | Automatikus idősor-feature kinyerés hipotézistesztes szűréssel (tsfres | free | 0 | 64/78/72/70 | https://github.com/blue-yonder/tsfresh
-cs-lopez-lira-chatgpt | Can ChatGPT Forecast Stock Price Movements? – Lopez-Lira & Tang (2023– | free | 0 | 68/74/70/70 | https://arxiv.org/abs/2304.07619
-cs-iowa-electronic-markets | Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Ri | free | 0 | 64/77/72/67 | https://doi.org/10.1016/j.ijforecast.2008.03.007
-cs-german-tank-problem | A német tank-probléma – sorozatszámokból termelésbecslés (II. világháb | free | 0 | 60/80/75/66 | https://doi.org/10.1080/01621459.1947.10501915
-m-dowhy | DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás | free | 0 | 60/80/74/66 | https://github.com/py-why/dowhy
-m-correlation-network-mst | Korrelációs hálók és minimális feszítőfa (Mantegna 1999) | free | 0 | 60/80/74/66 | https://github.com/networkx/networkx
-cs-fama-french-factors | Fama–French háromfaktoros modell és Ken French adatkönyvtára | free | 0 | 57/80/74/65 | https://doi.org/10.1016/0304-405X(93)90023-5
-cs-moneyball-oakland | Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta) | free | 0 | 60/77/72/68 | https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game
-cs-benford-fraud | Benford-törvény a csalásfelderítésben (Nigrini; EU-s makróadatok – Rau | free | 0 | 62/78/70/66 | https://doi.org/10.1111/j.1468-0475.2011.00542.x
-m-pc-fci-causal-learn | PC és FCI kauzális felfedezés (causal-learn) | free | 0 | 60/77/72/68 | https://github.com/py-why/causal-learn
-m-symbolic-regression-pysr | Szimbolikus regresszió (PySR) | free | 0 | 62/76/72/67 | https://github.com/MilesCranmer/PySR
-m-rmt-denoising | Véletlenmátrix-elméleti korrelációs zajszűrés (Laloux et al. 1999) | free | 0 | 60/78/72/66 | https://github.com/skfolio/skfolio
-cs-thorp-princeton-newport | Thorp – Princeton/Newport Partners (warrant/konvertibilis arbitrázs, m | free | 0 | 64/70/70/68 | https://en.wikipedia.org/wiki/Princeton_Newport_Partners
-cs-fisher-rothamsted | R. A. Fisher – randomizált kísérletek (Rothamsted, 'lady tasting tea', | free | 0 | 54/82/74/62 | https://en.wikipedia.org/wiki/Lady_tasting_tea
-cs-doll-hill-smoking | Doll & Hill – dohányzás és tüdőrák (BMJ 1950) és a Bradford Hill-krité | free | 0 | 54/82/74/62 | https://doi.org/10.1136/bmj.2.4682.739
-cs-reinhart-rogoff-excel | Reinhart–Rogoff táblázathiba (Herndon, Ash, Pollin, CJE 2014) | free | 0 | 53/84/74/60 | https://doi.org/10.1093/cje/bet075
-cs-replication-crisis-psych | A pszichológia replikációs válsága (Open Science Collaboration, Scienc | free | 0 | 53/84/74/60 | https://doi.org/10.1126/science.aac4716
-m-diff-in-diff | Különbségek különbsége (DiD), szakaszos bevezetéssel | free | 0 | 58/78/72/64 | https://github.com/py-econometrics/pyfixest
-cs-yield-curve-recession | Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin (19 | free | 0 | 58/75/71/66 | https://doi.org/10.1162/003465398557320
-cs-leinweber-butter-bangladesh | 'Stupid Data Miner Tricks' – Leinweber (bangladesi vaj és az S&P 500) | free | 0 | 52/80/72/59 | https://doi.org/10.3905/joi.2007.681820
-m-synthetic-control | Szintetikus kontroll (Abadie) | free | 0 | 57/75/69/64 | https://github.com/sdfordham/pysyncon
-cs-kaggle-jane-street-2021 | Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised a | free | 0 | 62/69/64/66 | https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348
-cs-cash-winfall | Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012) – Selbee-házaspá | free | 0 | 62/66/64/67 | https://en.wikipedia.org/wiki/Massachusetts_Lottery
-cs-starlizard-tony-bloom | Starlizard / Tony Bloom – futball-fogadási szindikátus (Brighton & Hov | free | 0 | 60/60/60/60 | https://en.wikipedia.org/wiki/Tony_Bloom
-cs-preis-google-trends | Google Trends 'debt' stratégia – Preis, Moat, Stanley (Sci. Rep. 2013) | free | 0 | 56/65/60/60 | https://doi.org/10.1038/srep01684
-cs-pluribus | Pluribus – emberfeletti hatfős póker (Brown & Sandholm, Science 2019) | free | 0 | 60/82/74/67 | https://doi.org/10.1126/science.aay2400
-cs-vpin-controversy | VPIN – Easley, López de Prado, O'Hara (RFS 2012) és a vita (Andersen–B | free | 0 | 69/74/67/69 | https://doi.org/10.1093/rfs/hhs053
-cs-graphcast | GraphCast – ML középtávú időjárás-előrejelzés (Lam et al., Science 202 | free | 0 | 62/78/72/66 | https://doi.org/10.1126/science.adi2336
-cs-bayesian-search-af447 | Bayes-i keresés – Air France 447 roncsa (Stone et al., Statistical Sci | free | 0 | 58/82/74/66 | https://doi.org/10.1214/13-STS420
-cs-libratus | Libratus – emberfeletti heads-up no-limit póker (Brown & Sandholm, Sci | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aao1733
-cs-alphago-alphazero | AlphaGo (Nature 2016) és AlphaZero (Science 2018) – önjáték + MCTS + m | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aar6404
-m-entropy-measures | Entrópia-mértékek (permutációs, minta-, közelítő entrópia) | free | 0 | 64/78/70/68 | https://github.com/raphaelvallat/antropy
-cs-aqr-betting-against-beta | AQR – Betting Against Beta (Frazzini–Pedersen 2014) | free | 0 | 62/75/72/69 | https://doi.org/10.1016/j.jfineco.2013.10.005
-cs-budish-hft-arms-race | HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015) | free | 0 | 64/78/68/60 | https://doi.org/10.1093/qje/qjv027
-m-fractional-differencing | Frakcionális differenciálás (Hosking 1981; López de Prado 2018) | free | 0 | 64/75/70/70 | https://github.com/fracdiff/fracdiff
-m-diebold-yilmaz-connectedness | Diebold–Yilmaz összekapcsoltság és Granger-hálók (Billio et al. 2012) | free | 0 | 60/78/72/66 | https://github.com/statsmodels/statsmodels
-cs-pead-bernard-thomas | Post-earnings announcement drift – Bernard & Thomas (1989) | free | 0 | 60/76/70/67 | https://doi.org/10.2307/2491062
-m-wavelets | Wavelet-dekompozíció (multi-skála elemzés) | free | 0 | 60/76/70/65 | https://github.com/PyWavelets/pywt
-m-matrix-profile | Matrix profile – motívum- és anomália-keresés (STUMPY) | free | 0 | 60/76/70/65 | https://github.com/stumpy-dev/stumpy
-cs-baker-bloom-davis-epu | Gazdaságpolitikai bizonytalansági index (EPU) – Baker, Bloom, Davis (Q | free | 0 | 60/75/68/65 | https://doi.org/10.1093/qje/qjw024
-m-transfer-entropy | Transfer entropy (információáramlás) | free | 0 | 62/72/67/68 | https://github.com/pwollstadt/IDTxl
-m-ts-foundation-models | Idősor-alapmodellek (TimesFM, Chronos) mint ensemble-tag | free | 0 | 60/75/68/64 | https://github.com/google-research/timesfm
-cs-bayesian-search-scorpion | Bayes-i keresés – USS Scorpion (1968), Palomares H-bomba (1966) | free | 0 | 56/76/70/63 | https://en.wikipedia.org/wiki/Bayesian_search_theory
-cs-gosset-guinness | W. S. Gosset ('Student') – t-próba a Guinness sörfőzdében (1908) | free | 0 | 53/79/72/60 | https://doi.org/10.1093/biomet/6.1.1
-cs-halley-actuarial | Halley halandósági táblája (1693) és a hiteltelességelmélet – aktuáriu | free | 0 | 53/79/72/60 | https://doi.org/10.1098/rstl.1693.0007
-cs-fico-credit-scoring | FICO-hitelpontozás (1956 Fair Isaac; 1989 FICO score) | free | 0 | 53/79/72/60 | https://en.wikipedia.org/wiki/FICO
-m-lingam | LiNGAM – lineáris nem-Gauss kauzális modell | free | 0 | 60/72/68/66 | https://github.com/cdt15/lingam
-m-bayesian-networks | Bayes-hálók (pgmpy) | free | 0 | 58/74/68/64 | https://github.com/pgmpy/pgmpy
-m-hurst-exponent | Hurst-exponens (R/S) és DFA – hosszú memória | free | 0 | 60/73/66/65 | https://github.com/CSchoel/nolds
-cs-satellite-parking-lots | Műholdas parkolóhely-számlálás a kiskereskedők negyedéves eredményeire | paid | ? | 62/68/66/65 | https://doi.org/10.1017/s0022109023001448
-m-instrumental-variables | Instrumentális változók (2SLS, GMM) | free | 0 | 54/75/70/62 | https://github.com/bashtage/linearmodels
-m-mic-distance-correlation | MIC és távolság-korreláció (dCor) – általános függőségi mértékek | free | 0 | 58/73/66/64 | https://github.com/vnmabus/dcor
-m-dtw | Dynamic Time Warping (DTW) és alakzat-hasonlóság | free | 0 | 59/72/66/64 | https://github.com/wannesm/dtaidistance
-cs-aqr-quality-minus-junk | AQR – Quality Minus Junk (Asness–Frazzini–Pedersen 2018/2019) | free | 0 | 56/72/68/64 | https://doi.org/10.1007/s11142-018-9470-2
-cs-kaggle-optiver-close | Kaggle Optiver – Trading at the Close (2023–24) – 1. hely | free | 0 | 65/65/60/66 | https://www.kaggle.com/competitions/optiver-trading-at-the-close/discussion/487446
-cs-kaggle-rossmann-entity-embeddings | Kaggle Rossmann Store Sales (2015) – entitás-beágyazások (Guo & Berkha | free | 0 | 57/72/65/64 | https://arxiv.org/abs/1604.06737
-cs-john-snow-cholera | John Snow – Broad Street-i kolera (1854): térképes oksági következteté | free | 0 | 52/76/69/59 | https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak
-m-causalimpact-bsts | CausalImpact – Bayes-i strukturális idősor beavatkozás-hatásra | free | 0 | 56/72/66/63 | https://github.com/WillianFuks/tfcausalimpact
-cs-renaissance-research-team | Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown (beszé | free | 0 | 58/68/65/63 | https://en.wikipedia.org/wiki/Henry_Laufer
-m-benford-test | Benford-teszt adatminőségre és manipulációra | free | 0 | 56/72/63/62 | https://github.com/milcent/benford_py
-cs-de-shaw | D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–) | institutional | ? | 60/65/61/64 | https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.
-cs-kaggle-jane-street-2024 | Kaggle Jane Street Real-Time Market Data Forecasting (2024–25) | free | 0 | 59/66/60/63 | https://www.kaggle.com/competitions/jane-street-real-time-market-data-forecasting
-cs-kaggle-web-traffic | Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq ( | free | 0 | 56/68/62/62 | https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795
-cs-henderson-night-lights | Éjszakai fények a GDP mérésére – Henderson, Storeygard, Weil (AER 2012 | free | 0 | 54/70/64/60 | https://doi.org/10.1257/aer.102.2.994
-cs-sahm-rule | Sahm-szabály – munkanélküliségi recesszió-indikátor (2019) | free | 0 | 52/69/64/60 | https://en.wikipedia.org/wiki/Sahm_rule
-cs-moat-wikipedia-views | Wikipedia-oldalnézetek a tőzsdei mozgások előtt – Moat et al. (Sci. Re | free | 0 | 58/66/60/61 | https://doi.org/10.1038/srep01801
-cs-prediction-company | Prediction Company – Farmer és Packard (káoszelmélet → statisztikai ta | free | 0 | 57/63/60/62 | https://en.wikipedia.org/wiki/Prediction_Company
-cs-sabermetrics-bill-james | Sabermetrika – Bill James Baseball Abstracts (1977–) | free | 0 | 52/68/63/59 | https://en.wikipedia.org/wiki/Sabermetrics
-cs-voulgaris-nba | Haralabos Voulgaris – NBA-fogadás, majd Dallas Mavericks kvant-igazgat | free | 0 | 60/57/56/60 | https://en.wikipedia.org/wiki/Haralabos_Voulgaris
-cs-morey-rockets-analytics | Daryl Morey – analitika-alapú NBA (hárompontos és ziccer-preferencia) | free | 0 | 52/64/59/58 | https://en.wikipedia.org/wiki/Daryl_Morey
-cs-srivastava-scratch-ticket | Mohan Srivastava – a tic-tac-toe kaparós sorsjegy 'singleton' mintázat | free | 0 | 56/61/58/58 | https://www.wired.com/2011/01/ff-lottery/
-cs-oil-tank-shadows | Olajtartályok árnyék-alapú töltöttség-mérése (Orbital Insight GCI) | paid | ? | 54/58/56/57 | https://en.wikipedia.org/wiki/Orbital_Insight
-cs-two-sigma | Two Sigma – adattudomány-alapú befektetés és nyilvános Kaggle-versenye | institutional | ? | 50/60/55/57 | https://en.wikipedia.org/wiki/Two_Sigma
-cs-kaggle-two-sigma-news | Kaggle Two Sigma: Using News to Predict Stock Movements (2018–19) | free | 0 | 52/58/54/58 | https://www.kaggle.com/competitions/two-sigma-financial-news
-cs-kaggle-two-sigma-fin-modeling | Kaggle Two Sigma Financial Modeling Challenge (2016–17) | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/two-sigma-financial-modeling
-cs-kaggle-ubiquant | Kaggle Ubiquant Market Prediction (2022) – 1. hely: 'Our Betting Strat | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/ubiquant-market-prediction/discussion/338220
-cs-billy-walters-computer-group | Billy Walters és a Computer Group – számítógépes sportfogadás | free | 0 | 54/55/54/54 | https://en.wikipedia.org/wiki/Billy_Walters_(gambler)
-cs-mit-blackjack-team | MIT Blackjack Team (1979–2000-es évek eleje) | free | 0 | 51/57/56/52 | https://en.wikipedia.org/wiki/MIT_Blackjack_Team
-cs-card-spend-earnings | Kártyás költési panelek → negyedéves eredmény-meglepetés (Froot, Kang, | paid | ? | 54/55/53/54 | https://doi.org/10.1016/j.jfineco.2017.04.008
-cs-deepstack | DeepStack – mélytanulás + folytonos újramegoldás pókerben (Moravčík et | free | 0 | 54/74/66/61 | https://doi.org/10.1126/science.aam6960
-cs-cepheus | Cepheus – a heads-up limit hold'em 'megoldása' (Bowling et al., Scienc | free | 0 | 51/72/64/58 | https://doi.org/10.1126/science.1259433
-cs-edmans-sports-sentiment | Sporthangulat és tőzsde – Edmans, García, Norli (JF 2007) | free | 0 | 54/66/60/61 | https://doi.org/10.1111/j.1540-6261.2007.01262.x
-cs-td-gammon | TD-Gammon – temporális differencia tanulás (Tesauro, CACM 1995) | free | 0 | 50/70/62/58 | https://doi.org/10.1145/203330.203343
-m-convergent-cross-mapping | Konvergens keresztleképezés (CCM, empirikus dinamikus modellezés) | free | 0 | 53/67/62/60 | https://github.com/SugiharaLab/pyEDM
-cs-thorp-shannon-roulette | Thorp–Shannon hordható rulett-számítógép (1960–61) és az Eudaemonok | free | 0 | 50/49/46/44 | https://doi.org/10.1109/ISWC.1998.729523
+m-kalman-state-space | 0 | Kalman-szűrő és állapottér-modellek | Módszertár | free | 0 | 78/91/85/80 | https://github.com/rlabbe/filterpy | Kalman (1960).
+m-gradient-boosting | 0 | Gradiens boosting (LightGBM, XGBoost, CatBoost) | Módszertár | free | 0 | 76/92/88/80 | https://github.com/microsoft/LightGBM | XGBoost: Chen & Guestrin (KDD 2016). LightGBM 18 970★.
+cs-gjp-superforecasters | 0 | Good Judgment Project – Tetlock szuperelőrejelzői… | Esettanulmányok | free | 0 | 74/90/88/80 | https://doi.org/10.1177/0956797614524255 | goodjudgment.com (403 a mérésnél, de létező szolgáltatás).
+cs-benter-horse-racing | 0 | Bill Benter – számítógépes lóverseny-handicapping Hongkongban… | Esettanulmányok | paid | ? | 78/87/86/80 | https://doi.org/10.1142/9789812819192_0019 | A Bolton–Chapman 1986 (Management Science) cikk a módszertani alap. A 'piaci ár…
+m-stacking-ensembling | 0 | Ensemble és stacking (Netflix Prize, M4-tanulságok) | Módszertár | free | 0 | 74/92/88/78 | https://github.com/rasbt/mlxtend | Wolpert (1992); Breiman stacked regressions (1996)…
+cs-thorp-blackjack-kelly | 0 | Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés | Esettanulmányok | free | 0 | 74/89/86/78 | https://doi.org/10.1073/pnas.47.1.110 | Az állapotfüggő előny + Kelly-méretezés a teljes archívum egyik alapmintája.…
+cs-kalman-apollo | 0 | Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig | Esettanulmányok | free | 0 | 76/90/83/77 | https://doi.org/10.1115/1.3662552 | filterpy 3896★.
+m-cointegration-engle-granger | 0 | Kointegráció – Engle–Granger kétlépéses teszt | Módszertár | free | 0 | 74/90/85/78 | https://github.com/statsmodels/statsmodels | Engle & Granger (Econometrica 1987).
+m-garch-har-rv | 0 | GARCH és HAR-RV volatilitás-modellek | Módszertár | free | 0 | 73/92/86/76 | https://github.com/bashtage/arch | Corsi (J. Financial Econometrics 2009); Bollerslev GARCH (1986)…
+cs-aqr-time-series-momentum | 0 | Idősori momentum / trendkövetés… | Esettanulmányok | free | 0 | 73/88/86/79 | https://doi.org/10.1016/j.jfineco.2011.11.003 | Az egyik legrobusztusabb, sok piacon replikált jel – erős kandidátus a grid…
+m-kelly-criterion | 0 | Kelly-kritérium és frakcionált Kelly | Módszertár | free | 0 | 71/92/86/76 | https://doi.org/10.1109/TIT.1956.1056803 | Kelly (1956); Thorp összefoglalója (2011)…
+cs-avellaneda-lee-pca-statarb | 0 | Avellaneda–Lee – PCA/ETF-reziduál statisztikai arbitrázs (2010) | Esettanulmányok | free | 0 | 76/84/82/80 | https://doi.org/10.1080/14697680903124632 | SSRN-változat: 1153505.
+cs-gu-kelly-xiu-ml-asset-pricing | 0 | Gu–Kelly–Xiu – gépi tanulás az eszközárazásban (RFS 2020) | Esettanulmányok | free | 0 | 71/88/86/78 | https://doi.org/10.1093/rfs/hhaa009 | Az ML-az-árazásban 'benchmark' cikk.
+cs-fx-carry-lustig | 0 | FX carry kockázati faktor – Lustig, Roussanov, Verdelhan (RFS 2011) | Esettanulmányok | free | 0 | 71/88/86/78 | https://doi.org/10.1093/rfs/hhr068 | Retail CFD-nél a bróker swapja eltér a piaci forwardtól – mérni kell.
+cs-nyfed-staff-nowcast | 0 | NY Fed Staff Nowcast – dinamikus faktormodell… | Esettanulmányok | free | 0 | 74/87/82/78 | https://www.newyorkfed.org/research/policy/nowcast | Dinamikus faktormodell állapottér-formában, Kalman-szűrő/simító, EM-becslés…
+cs-turing-banburismus | 0 | Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park) | Esettanulmányok | free | 0 | 72/90/83/75 | https://doi.org/10.1093/biomet/66.2.393 | Szekvenciális Bayes-i frissítés log-likelihood arányokkal ('ban', 'deciban'); a…
+cs-worldquant-101-alphas | 0 | WorldQuant – '101 Formulaic Alphas' (Kakushadze 2016) | Esettanulmányok | free | 0 | 74/84/81/78 | https://arxiv.org/abs/1601.00991 | Nyílt implementáció: yli188/WorldQuant_alpha101_code (881★). A Qlib…
+m-fdr-benjamini-hochberg | 0 | FDR-kontroll – Benjamini–Hochberg (és BY függőség esetén) | Módszertár | free | 0 | 66/94/84/71 | https://github.com/statsmodels/statsmodels | BH (JRSS-B 1995); BY (Annals of Statistics 2001)…
+m-multinomial-logit-benter | 0 | Feltételes/multinomiális logit versenyek és rangsorok előrejelzésére… | Módszertár | free | 0 | 72/85/82/76 | https://doi.org/10.1287/mnsc.32.8.1040 | Bolton & Chapman (Management Science 1986); Benter (1994/2008).
+m-sprt-sequential | 0 | Szekvenciális valószínűségi hányados-teszt (Wald SPRT) és… | Módszertár | free | 0 | 70/90/81/73 | https://doi.org/10.1214/aoms/1177731118 | Wald (Annals of Mathematical Statistics 1945).
+cs-renaissance-medallion | 0 | Renaissance Technologies – Medallion Fund | Esettanulmányok | institutional | ? | 78/78/78/78 | https://en.wikipedia.org/wiki/Renaissance_Technologies | A M16 'csillagpontja'. A számok bulvár- és könyvforrásból…
+cs-gatev-pairs-trading | 0 | Párkereskedés – Gatev, Goetzmann, Rouwenhorst (NBER 1999 / RFS 2006) | Esettanulmányok | free | 0 | 72/84/80/76 | https://doi.org/10.1093/rfs/hhj020 | ArbitrageLab (Hudson & Thames) sok pár-módszert implementál…
+m-reality-check-spa-stepm | 0 | White Reality Check, Hansen SPA, Romano–Wolf StepM | Módszertár | free | 0 | 64/93/84/70 | https://github.com/bashtage/arch | SPA: https://doi.org/10.1198/073500105000000063; StepM…
+m-calibration-proper-scoring | 0 | Valószínűségi kalibráció és helyes pontozási szabályok… | Módszertár | free | 0 | 68/90/82/72 | https://pypi.org/project/scoringrules/ | Brier (Monthly Weather Review 1950) – DOI Crossrefen ellenőrizve; a GJP és az…
+m-extremized-aggregation | 0 | Előrejelzések aggregálása és extremizálása (GJP) | Módszertár | free | 0 | 69/88/82/74 | https://doi.org/10.1287/deca.2014.0293 | Baron, Mellers, Tetlock és mtsai (Decision Analysis 2014).
+m-ou-half-life | 0 | Ornstein–Uhlenbeck modell és mean-reversion félidő | Módszertár | free | 0 | 70/86/80/74 | https://github.com/statsmodels/statsmodels | Avellaneda–Lee (2010) s-score keretrendszere.
+m-bayesian-hierarchical | 0 | Bayes-i hierarchikus modellek és empirikus Bayes shrinkage (PyMC) | Módszertár | free | 0 | 68/88/83/73 | https://github.com/pymc-devs/pymc | Konvergencia-diagnosztika: Gelman & Rubin (Statistical Science 1992). JKP 2023…
+cs-fx-technical-rules-amh | 0 | FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009) | Esettanulmányok | free | 0 | 66/89/82/72 | https://doi.org/10.1017/S0022109009090103 | A Lo (2004) Adaptive Markets Hypothesis közvetlen empirikus példája.
+cs-mclean-pontiff-decay | 0 | Publikálás utáni lecsengés – McLean & Pontiff (JF 2016) | Esettanulmányok | free | 0 | 62/92/84/69 | https://doi.org/10.1111/jofi.12365 | Mintán belüli, mintán kívüli (publikálás előtti) és publikálás utáni hozamok…
+m-pcmci-tigramite | 0 | PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite) | Módszertár | free | 0 | 70/84/80/76 | https://github.com/jakobrunge/tigramite | Runge et al. (Science Advances 2019). 1737★.
+m-hmm-regime | 0 | Rejtett Markov-modell (HMM) rezsimdetektálásra | Módszertár | free | 0 | 72/82/78/76 | https://github.com/hmmlearn/hmmlearn | Baum et al. (1970), Rabiner tutorial (Proc. IEEE 1989)…
+m-deflated-sharpe | 0 | Deflated Sharpe Ratio (Bailey & López de Prado 2014) | Módszertár | free | 0 | 64/92/82/70 | https://doi.org/10.3905/jpm.2014.40.5.094 | Bailey & López de Prado (JPM 2014).
+m-purged-cv-cpcv | 0 | Purged / embargoed k-fold és kombinatorikus purged CV | Módszertár | free | 0 | 66/89/82/72 | https://github.com/skfolio/skfolio | López de Prado: Advances in Financial Machine Learning (2018) – könyv; mlfinlab…
+m-concept-drift-adwin | 0 | Koncepció-drift detektálás és online tanulás (ADWIN, river) | Módszertár | free | 0 | 71/86/77/72 | https://github.com/online-ml/river | Bifet & Gavaldà (SDM 2007).
+m-factor-ic-alphalens | 0 | Faktor-értékelés: információs együttható (IC), kvantilis-hozamok… | Módszertár | free | 0 | 67/87/82/73 | https://github.com/stefan-jansen/alphalens-reloaded | Fama & MacBeth (JPE 1973).
+cs-m4-competition | 0 | M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje | Esettanulmányok | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2019.04.014 | Repó: Mcompetitions/M4-methods (816★).
+cs-m5-competition | 0 | M5 előrejelzési verseny (2020) – LightGBM dominancia | Esettanulmányok | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2021.11.013 | 1. helyezett írás címe mért (discussion/163684).
+cs-kaunitz-beat-the-bookies | 0 | Beating the bookies with their own numbers – Kaunitz, Zhong, Kreiner… | Esettanulmányok | free | 0 | 73/80/78/72 | https://arxiv.org/abs/1710.02824 | Repó 666★.
+m-harvey-liu-zhu-t3 | 0 | Harvey–Liu–Zhu: t > 3 küszöb új faktorokra (RFS 2016) | Módszertár | free | 0 | 62/90/82/68 | https://doi.org/10.1093/rfs/hhv059 | NBER w20592 absztrakt (mért): az új faktornak t > 3,0 küszöböt kell átlépnie a…
+m-dixon-coles | 0 | Dixon–Coles Poisson-modell futballeredményekre | Módszertár | free | 0 | 69/83/79/74 | https://github.com/martineastwood/penaltyblog | Dixon & Coles (Applied Statistics 1997) – a Smartodds alapja (Wikipedia).
+cs-kaggle-g-research-crypto | 0 | Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital… | Esettanulmányok | free | 0 | 72/79/75/74 | https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/ | A 2. helyezett írás: Kaggle discussion/323098 (cím mért).
+cs-smartodds-benham | 0 | Smartodds / Matthew Benham – Dixon–Coles modell, Brentford és FC… | Esettanulmányok | free | 0 | 70/79/78/73 | https://en.wikipedia.org/wiki/Matthew_Benham | Wikipedia: Benham a Dixon és Coles (Lancaster) által fejlesztett statisztikai…
+cs-wald-survivorship | 0 | Abraham Wald – túlélési torzítás a bombázók páncélozásánál… | Esettanulmányok | free | 0 | 61/90/82/68 | https://doi.org/10.2307/2288257 | A hiányzó (le nem tért) gépek adatainak becslése: ahol a visszatért gépeken…
+cs-technical-rules-data-snooping | 0 | Technikai szabályok és adat-szaglászás – Brock–Lakonishok–LeBaron… | Esettanulmányok | free | 0 | 60/88/80/68 | https://doi.org/10.1111/0022-1082.00163 | BLL: mozgóátlag- és csatornaáttörés-szabályok bootstrap-tesztje. STW: White…
+cs-hou-xue-zhang-replicating | 0 | Replicating Anomalies – Hou, Xue, Zhang (RFS 2020) | Esettanulmányok | free | 0 | 60/88/80/68 | https://doi.org/10.1093/rfs/hhy131 | Ellenpont: Jensen–Kelly–Pedersen 2023.
+cs-quant-quake-2007 | 0 | 2007 augusztusi 'quant quake' – Khandani & Lo… | Esettanulmányok | free | 0 | 63/86/78/68 | https://doi.org/10.1016/j.finmar.2010.07.005 | Egyszerű kontrárius stratégia szimulációja napon belüli adatokon a krízis…
+m-unit-root-adf-kpss | 0 | Egységgyök- és stacionaritás-tesztek (ADF, KPSS, Phillips–Perron) | Módszertár | free | 0 | 62/88/79/67 | https://github.com/bashtage/arch | Dickey & Fuller (JASA 1979).
+m-block-bootstrap | 0 | Blokk- és stacionárius bootstrap | Módszertár | free | 0 | 62/88/79/67 | https://github.com/bashtage/arch | Politis & Romano (JASA 1994); Künsch (1989)…
+cs-m6-competition | 0 | M6 pénzügyi előrejelzési verseny (2022–23) | Esettanulmányok | free | 0 | 62/84/78/69 | https://arxiv.org/abs/2310.13357 | Rangsor-valószínűség előrejelzés (relatív teljesítmény) + befektetési döntés…
+cs-ltcm | 0 | Long-Term Capital Management (1994–1998) – korrelációs összeomlás és… | Esettanulmányok | free | 0 | 58/89/80/64 | https://en.wikipedia.org/wiki/Long-Term_Capital_Management | Relatív-érték (konvergencia) pozíciók, VaR-alapú kockázatkezelés, extrém…
+m-shap | 0 | SHAP – Shapley-alapú modellmagyarázat | Módszertár | free | 0 | 64/82/74/68 | https://github.com/shap/shap | Lundberg & Lee (NeurIPS 2017). 25 861★.
+m-ledoit-wolf-shrinkage | 0 | Ledoit–Wolf kovariancia-shrinkage | Módszertár | free | 0 | 60/85/76/66 | https://pypi.org/project/scikit-learn/ | Ledoit & Wolf (J. Multivariate Analysis 2004).
+cs-netflix-prize | 0 | Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble | Esettanulmányok | free | 0 | 60/82/76/68 | https://en.wikipedia.org/wiki/Netflix_Prize | Koren–Bell–Volinsky: IEEE Computer 2009.
+cs-bollen-twitter-mood | 0 | Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a… | Esettanulmányok | free | 0 | 60/82/73/64 | https://doi.org/10.1016/j.jocs.2010.12.007 | Az egyik legjobb dokumentált 'hamis felfedezés' a pénzügyi alt-adatban.
+cs-google-flu-trends | 0 | Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu'… | Esettanulmányok | free | 0 | 56/85/76/63 | https://doi.org/10.1126/science.1248506 | ~50 millió keresési kifejezésből a CDC-adatokhoz legjobban illeszkedők…
+m-spurious-correlation-vigen | 0 | Hamis korrelációk – Tyler Vigen és Granger–Newbold (1974) spurious… | Módszertár | free | 0 | 54/86/77/62 | https://www.tylervigen.com/spurious-correlations | Granger & Newbold (J. Econometrics 1974). Vigen weboldala (mért, 200).
+cs-gaussian-copula-2008 | 0 | A Gauss-kopula és a 2008-as CDO-válság (Li 2000; Salmon, Wired 2009) | Esettanulmányok | free | 0 | 55/82/73/62 | https://doi.org/10.3905/jfi.2000.319253 | Egyfaktoros Gauss-kopula a csődidőpontok együttes eloszlására; a CDO-tranche-ok…
+cs-zillow-offers | 0 | Zillow Offers (2018–2021) – algoritmikus lakásvásárlás kudarca | Esettanulmányok | free | 0 | 55/82/73/62 | https://en.wikipedia.org/wiki/Zillow | Algoritmikus árajánlat-adás és -vásárlás (iBuying) a Zestimate-re és piaci…
+cs-cont-order-flow-imbalance | 1 | Order flow imbalance – Cont, Kukanov, Stoikov… | Esettanulmányok | free | 0 | 78/84/78/78 | https://doi.org/10.1093/jjfinec/nbt003 | Az OFI (a legjobb bid/ask-szint változásainak nettója) lineáris regressziója a…
+m-cointegration-johansen | 1 | Kointegráció – Johansen-teszt (több változó) | Módszertár | free | 0 | 71/87/82/76 | https://github.com/statsmodels/statsmodels | Johansen (JEDC 1988).
+cs-jensen-kelly-pedersen-replication | 1 | Is There a Replication Crisis in Finance? – Jensen, Kelly, Pedersen… | Esettanulmányok | free | 0 | 66/90/84/74 | https://doi.org/10.1111/jofi.13249 | Bayes-i faktor-replikációs modell, 13 témába klaszterezve. Lektorált absztrakt…
+m-granger-causality | 1 | Granger-kauzalitás (VAR-alapú prediktív kauzalitás) | Módszertár | free | 0 | 70/87/80/74 | https://github.com/statsmodels/statsmodels | Granger (Econometrica 1969). A prediktív kauzalitás a kereskedésben elég, ha…
+m-markov-switching | 1 | Markov-váltó regresszió/autoregresszió (Hamilton 1989) | Módszertár | free | 0 | 68/86/80/72 | https://github.com/statsmodels/statsmodels | Hamilton (Econometrica 1989).
+m-variance-ratio | 1 | Varianciahányados-teszt (Lo–MacKinlay 1988) | Módszertár | free | 0 | 68/86/80/72 | https://github.com/bashtage/arch | Lo & MacKinlay (RFS 1988).
+cs-aqr-value-momentum-everywhere | 1 | AQR – 'Value and Momentum Everywhere' (Asness–Moskowitz–Pedersen 2013) | Esettanulmányok | free | 0 | 66/84/81/74 | https://doi.org/10.1111/jofi.12021 | Az AQR ingyenes faktor-adatsorai (aqr.com/Insights/Datasets) benchmarkként…
+cs-market-intraday-momentum | 1 | Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018) | Esettanulmányok | free | 0 | 72/80/76/76 | https://doi.org/10.1016/j.jfineco.2018.05.009 | Az első félóra (előző zárástól) hozama előre jelzi az utolsó félóra hozamát.…
+m-dynamic-factor-model | 1 | Dinamikus faktormodell (DFM) nowcastinghoz | Módszertár | free | 0 | 68/85/79/72 | https://github.com/statsmodels/statsmodels | Bańbura & Modugno (2014); Giannone–Reichlin–Small (2008). NY Fed MATLAB-kód…
+cs-renaissance-baum-hmm | 1 | Leonard Baum – Baum–Welch/HMM a devizakereskedés kezdetén… | Esettanulmányok | free | 0 | 70/80/76/74 | https://doi.org/10.1214/aoms/1177697196 | A Renaissance-legenda leggyakrabban idézett 'módszere'. Dokumentált: Baum–Welch…
+cs-fx-currency-momentum | 1 | Devizamomentum – Menkhoff, Sarno, Schmeling, Schrimpf (JFE 2012) | Esettanulmányok | free | 0 | 66/83/80/74 | https://doi.org/10.1016/j.jfineco.2012.06.009 | Keresztmetszeti momentum devizakosarakon (nyertes vs. vesztes devizák).…
+m-mutual-information | 1 | Kölcsönös információ (KSG-becslő) | Módszertár | free | 0 | 67/84/78/71 | https://pypi.org/project/scikit-learn/ | Kraskov–Stögbauer–Grassberger (PRE 2004); Shannon 1948…
+m-permutation-importance | 1 | Permutációs fontosság (és MDA/klaszteres változat) | Módszertár | free | 0 | 65/86/78/70 | https://pypi.org/project/scikit-learn/ | Breiman (Random Forests, 2001). López de Prado klaszteres MDA-ja a pénzügyi…
+m-bonferroni-holm | 1 | Bonferroni és Holm-korrekció (családi hiba, FWER) | Módszertár | free | 0 | 63/88/79/68 | https://github.com/statsmodels/statsmodels | Holm (Scand. J. Statistics 1979) – a JSTOR-oldal válaszolt (200), a tartalmat…
+m-pca-statistical-factors | 1 | PCA statisztikai faktorok és eigenportfóliók | Módszertár | free | 0 | 67/84/78/71 | https://github.com/statsmodels/statsmodels | Stock & Watson (JASA 2002) diffúziós indexek; Avellaneda–Lee (2010).
+cs-billion-prices-project | 1 | Billion Prices Project – online árak az infláció mérésére… | Esettanulmányok | free | 0 | 71/78/76/71 | https://doi.org/10.1257/jep.30.2.151 | Online árindexek építése, összevetés a hivatalos CPI-vel; árragadósság és az…
+cs-expected-goals-xg | 1 | Expected goals (xG) – lövés-minőség logisztikus modellje | Esettanulmányok | free | 0 | 68/80/76/72 | https://en.wikipedia.org/wiki/Expected_goals | Logisztikus regresszió (és ML) a lövés gól-valószínűségére; a csapat-xG összeg…
+cs-qlib-alpha158 | 1 | Microsoft Qlib – AI-orientált kvant platform és Alpha158/360… | Esettanulmányok | free | 0 | 66/82/76/71 | https://arxiv.org/abs/2009.11189 | Egységes adat → feature (Alpha158/360) → modell (GBM, LSTM, Transformer stb.) →…
+m-change-point-ruptures | 1 | Változáspont-detektálás (ruptures: PELT, Binseg, kernel) | Módszertár | free | 0 | 66/82/76/71 | https://github.com/deepcharles/ruptures | Truong, Oudre, Vayatis (Signal Processing 2020); PELT: Killick et al. JASA 2012…
+m-bocpd | 1 | Bayes-i online változáspont-detektálás (BOCPD, Adams & MacKay 2007) | Módszertár | free | 0 | 71/79/72/74 | https://arxiv.org/abs/0710.3742 | Adams & MacKay (arXiv 2007).
+cs-renaissance-berlekamp-1990 | 1 | Berlekamp, Straus, Laufer – a Medallion 1989–90-es újratervezése | Esettanulmányok | free | 0 | 73/74/72/74 | https://en.wikipedia.org/wiki/Elwyn_Berlekamp | Kapcsolódó: Kelly (Berlekamp a Bell Labsnál Kelly beosztottja volt – Wikipedia).
+cs-loughran-mcdonald-dictionary | 1 | Loughran–McDonald pénzügyi szótár (JF 2011) | Esettanulmányok | free | 0 | 65/82/74/69 | https://doi.org/10.1111/j.1540-6261.2010.01625.x | Pénzügy-specifikus pozitív/negatív/bizonytalansági szólisták; megmutatták, hogy…
+cs-ecmwf-quiet-revolution | 1 | A numerikus időjárás-előrejelzés 'csendes forradalma'… | Esettanulmányok | free | 0 | 62/84/77/68 | https://doi.org/10.1038/nature14956 | Fizikai modell + adatasszimiláció (4D-Var, ensemble Kalman) +…
+m-conformal-prediction | 1 | Konform előrejelzés (eloszlásmentes előrejelzési intervallum) | Módszertár | free | 0 | 66/82/74/69 | https://github.com/scikit-learn-contrib/MAPIE | Angelopoulos & Bates (2021) bevezető.
+m-forecast-combination | 1 | Előrejelzés-kombináció és statisztikai baseline-ok… | Módszertár | free | 0 | 62/84/77/68 | https://github.com/Nixtla/statsforecast | Makridakis et al. (IJF 2020).
+cs-jegadeesh-titman-momentum | 1 | Jegadeesh–Titman – keresztmetszeti momentum (1993) | Esettanulmányok | free | 0 | 62/82/76/69 | https://doi.org/10.1111/j.1540-6261.1993.tb04702.x | Nyertesek long, vesztesek short (formálási és tartási periódus). Lektorált…
+cs-chen-zimmermann-open-source-ap | 1 | Open Source Asset Pricing – Chen & Zimmermann… | Esettanulmányok | free | 0 | 60/84/77/68 | https://doi.org/10.1561/104.00000112 | Repó: 1081★.
+cs-cohen-frazzini-economic-links | 1 | Gazdasági kapcsolatok – Cohen & Frazzini (JF 2008): vevő–beszállító… | Esettanulmányok | free | 0 | 66/78/74/72 | https://doi.org/10.1111/j.1540-6261.2008.01379.x | A vevők hozama előre jelzi a beszállítók hozamát (korlátozott figyelem).…
+cs-lazy-prices | 1 | Lazy Prices – Cohen, Malloy, Nguyen (JF 2020) | Esettanulmányok | free | 0 | 66/78/74/72 | https://doi.org/10.1111/jofi.12885 | Szöveges hasonlósági mérőszámok (koszinusz, Jaccard stb.) az egymást követő…
+cs-tetlock-media-pessimism | 1 | Média-pesszimizmus – Paul Tetlock (JF 2007) | Esettanulmányok | free | 0 | 66/78/72/70 | https://doi.org/10.1111/j.1540-6261.2007.01232.x | Szótár-alapú pesszimizmus-index, VAR a Dow-hozamokra és volumenre. Lektorált: a…
+cs-kaggle-optiver-realized-vol | 1 | Kaggle Optiver Realized Volatility Prediction (2021) – 1. hely… | Esettanulmányok | free | 0 | 72/74/69/74 | https://www.kaggle.com/competitions/optiver-realized-volatility-prediction/discussion/274970 | Tanulság: a győztes trükkök gyakran az adat szerkezetének (szivárgásnak)…
+cs-nate-silver-538 | 1 | Nate Silver / FiveThirtyEight – közvélemény-kutatás aggregálás és… | Esettanulmányok | free | 0 | 67/77/74/72 | https://en.wikipedia.org/wiki/Nate_Silver | fivethirtyeight/data 17 501★ (archív).
+cs-atlanta-fed-gdpnow | 1 | Atlanta Fed GDPNow | Esettanulmányok | free | 0 | 66/78/72/70 | https://www.atlantafed.org/cqer/research/gdpnow | 'Bottom-up' nowcast: a GDP-komponenseket külön becsli, áthidaló egyenletekkel…
+cs-alphagen-rl-alpha-mining | 1 | AlphaGen – szinergikus formulaikus alfák RL-lel (Yu et al., KDD 2023) | Esettanulmányok | free | 0 | 68/76/73/72 | https://arxiv.org/abs/2306.12964 | Rokon: AutoAlpha (arXiv 2002.08245).
+m-econml-dml | 1 | EconML / DoubleML – double/debiased ML és causal forest | Módszertár | free | 0 | 62/81/76/69 | https://github.com/py-why/EconML | Causal forest: https://doi.org/10.1080/01621459.2017.1319839. EconML 4852★…
+m-copulas | 1 | Kopulák (t, Clayton, Gumbel, vine) | Módszertár | free | 0 | 64/80/75/70 | https://github.com/vinecopulib/pyvinecopulib | Patton (IER 2006) aszimmetrikus devizafüggés; Sklar (1959).
+m-genetic-programming-gplearn | 1 | Genetikus programozás alfa-bányászathoz (gplearn) | Módszertár | free | 0 | 68/76/73/72 | https://github.com/trevorstephens/gplearn | Alfa-specifikus: AutoAlpha (arXiv 2002.08245), AlphaGen RL (arXiv 2306.12964).…
+cs-numerai | 1 | Numerai – titkosított adatokon tömegesen beküldött modellek +… | Esettanulmányok | free | 0 | 66/76/74/68 | https://numer.ai/ | example-scripts 1203★.
+cs-bing-ab-test | 1 | Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés… | Esettanulmányok | free | 0 | 61/82/74/67 | https://hbr.org/2017/09/the-surprising-power-of-online-experiments | Randomizált A/B-teszt egy apró UI-változtatásra…
+m-automl | 1 | AutoML (AutoGluon, FLAML) | Módszertár | free | 0 | 63/79/74/68 | https://github.com/autogluon/autogluon | AutoGluon-Tabular (Erickson et al. 2020). 10 834★.
+m-pbo-cscv | 1 | Backtest-túlilleszkedés valószínűsége (PBO, CSCV) | Módszertár | free | 0 | 60/83/74/67 | https://github.com/esvhd/pypbo | Bailey, Borwein, López de Prado, Zhu (J. Computational Finance 2016).
+m-hrp | 1 | Hierarchical Risk Parity (López de Prado 2016) | Módszertár | free | 0 | 62/81/74/67 | https://github.com/robertmartin8/PyPortfolioOpt | López de Prado (JPM 2016).
+m-rating-systems | 1 | Erősség-rangsorolás: Elo, Glicko, TrueSkill, Bradley–Terry | Módszertár | free | 0 | 66/77/71/70 | https://github.com/sublee/trueskill | Glicko: Glickman (Applied Statistics 1999); Bradley–Terry (Biometrika 1952)…
+m-tsfresh | 1 | Automatikus idősor-feature kinyerés hipotézistesztes szűréssel… | Módszertár | free | 0 | 64/78/72/70 | https://github.com/blue-yonder/tsfresh | Christ et al. (Neurocomputing 2018).
+cs-lopez-lira-chatgpt | 1 | Can ChatGPT Forecast Stock Price Movements? – Lopez-Lira & Tang… | Esettanulmányok | free | 0 | 68/74/70/70 | https://arxiv.org/abs/2304.07619 | Preprint, nem lektorált végleges változat.
+cs-iowa-electronic-markets | 1 | Iowa Electronic Markets – predikciós piac pontossága… | Esettanulmányok | free | 0 | 64/77/72/67 | https://doi.org/10.1016/j.ijforecast.2008.03.007 | Piaci ár mint valószínűség/szavazatarány-becslés, összevetés a kutatásokkal az…
+cs-german-tank-problem | 1 | A német tank-probléma – sorozatszámokból termelésbecslés… | Esettanulmányok | free | 0 | 60/80/75/66 | https://doi.org/10.1080/01621459.1947.10501915 | A maximális megfigyelt sorozatszámból torzítatlan becslés (m + m/k − 1) a…
+m-dowhy | 1 | DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás | Módszertár | free | 0 | 60/80/74/66 | https://github.com/py-why/dowhy | Sharma & Kiciman (2020); 8402★. A Pearl-féle do-kalkulus gyakorlati…
+m-correlation-network-mst | 1 | Korrelációs hálók és minimális feszítőfa (Mantegna 1999) | Módszertár | free | 0 | 60/80/74/66 | https://github.com/networkx/networkx | Onnela et al. (PRE 2003) https://doi.org/10.1103/PhysRevE.68.056110.
+cs-fama-french-factors | 1 | Fama–French háromfaktoros modell és Ken French adatkönyvtára | Esettanulmányok | free | 0 | 57/80/74/65 | https://doi.org/10.1016/0304-405X(93)90023-5 | A Ken French Data Library URL-je a mérés idején időtúllépett…
+cs-moneyball-oakland | 1 | Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta) | Esettanulmányok | free | 0 | 60/77/72/68 | https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game | A győzelemhez vezető futásokkal jobban korreláló mutatók (OBP, SLG) használata…
+cs-benford-fraud | 1 | Benford-törvény a csalásfelderítésben… | Esettanulmányok | free | 0 | 62/78/70/66 | https://doi.org/10.1111/j.1468-0475.2011.00542.x | benford_py: 155★.
+m-pc-fci-causal-learn | 1 | PC és FCI kauzális felfedezés (causal-learn) | Módszertár | free | 0 | 60/77/72/68 | https://github.com/py-why/causal-learn | Spirtes–Glymour–Scheines PC/FCI; causal-learn (Zheng et al. 2023) 1716★. Társ…
+m-symbolic-regression-pysr | 1 | Szimbolikus regresszió (PySR) | Módszertár | free | 0 | 62/76/72/67 | https://github.com/MilesCranmer/PySR | Cranmer (2023). 4274★.
+m-rmt-denoising | 1 | Véletlenmátrix-elméleti korrelációs zajszűrés (Laloux et al. 1999) | Módszertár | free | 0 | 60/78/72/66 | https://github.com/skfolio/skfolio | Laloux, Cizeau, Bouchaud, Potters (PRL 1999).
+cs-thorp-princeton-newport | 1 | Thorp – Princeton/Newport Partners… | Esettanulmányok | free | 0 | 64/70/70/68 | https://en.wikipedia.org/wiki/Princeton_Newport_Partners | Az első piacsemleges fedezeti alap Thorp szerint. A tanulság: árazási modell +…
+cs-fisher-rothamsted | 1 | R. A. Fisher – randomizált kísérletek… | Esettanulmányok | free | 0 | 54/82/74/62 | https://en.wikipedia.org/wiki/Lady_tasting_tea | Randomizálás, nullhipotézis, permutációs (egzakt) teszt, blokkosítás…
+cs-doll-hill-smoking | 1 | Doll & Hill – dohányzás és tüdőrák (BMJ 1950) és a Bradford… | Esettanulmányok | free | 0 | 54/82/74/62 | https://doi.org/10.1136/bmj.2.4682.739 | Eset-kontroll és kohorsz-vizsgálat, dózis-hatás; később a Hill-kritériumok…
+cs-reinhart-rogoff-excel | 1 | Reinhart–Rogoff táblázathiba (Herndon, Ash, Pollin, CJE 2014) | Esettanulmányok | free | 0 | 53/84/74/60 | https://doi.org/10.1093/cje/bet075 | Adósság-küszöb (90%) feletti átlagos növekedés; az újraszámolás kódolási…
+cs-replication-crisis-psych | 1 | A pszichológia replikációs válsága… | Esettanulmányok | free | 0 | 53/84/74/60 | https://doi.org/10.1126/science.aac4716 | Előre regisztrált, nagy erejű replikációk. Lektorált (Science 2015): a…
+m-diff-in-diff | 1 | Különbségek különbsége (DiD), szakaszos bevezetéssel | Módszertár | free | 0 | 58/78/72/64 | https://github.com/py-econometrics/pyfixest | Goodman-Bacon: https://doi.org/10.1016/j.jeconom.2021.03.014; Card–Krueger…
+cs-yield-curve-recession | 1 | Hozamgörbe-inverzió mint recesszió-előrejelző – Estrella & Mishkin… | Esettanulmányok | free | 0 | 58/75/71/66 | https://doi.org/10.1162/003465398557320 | Probit-modell a recesszió valószínűségére 1–8 negyedéves horizonton. Lektorált…
+cs-leinweber-butter-bangladesh | 1 | 'Stupid Data Miner Tricks' – Leinweber (bangladesi vaj és az S&P 500) | Esettanulmányok | free | 0 | 52/80/72/59 | https://doi.org/10.3905/joi.2007.681820 | Szándékos adatbányászat: a legjobban illeszkedő idősorok kiválasztása…
+m-synthetic-control | 1 | Szintetikus kontroll (Abadie) | Módszertár | free | 0 | 57/75/69/64 | https://github.com/sdfordham/pysyncon | Abadie, Diamond, Hainmueller…
+cs-kaggle-jane-street-2021 | 1 | Kaggle Jane Street Market Prediction (2020–21) – 1. hely: supervised… | Esettanulmányok | free | 0 | 62/69/64/66 | https://www.kaggle.com/competitions/jane-street-market-prediction/discussion/224348 | Kaggle-diszkusszió tartalma JS-sel töltődik, csak a cím ellenőrizhető.
+cs-cash-winfall | 1 | Cash WinFall lottó-kiskapu (Massachusetts, 2005–2012)… | Esettanulmányok | free | 0 | 62/66/64/67 | https://en.wikipedia.org/wiki/Massachusetts_Lottery | A Wikipedia-oldal a 'Cash WinFall' átirányításon keresztül a Massachusetts…
+cs-starlizard-tony-bloom | 1 | Starlizard / Tony Bloom – futball-fogadási szindikátus… | Esettanulmányok | free | 0 | 60/60/60/60 | https://en.wikipedia.org/wiki/Tony_Bloom | Statisztikai futballmodellek az ázsiai hendikep piacokon…
+cs-preis-google-trends | 1 | Google Trends 'debt' stratégia – Preis, Moat, Stanley… | Esettanulmányok | free | 0 | 56/65/60/60 | https://doi.org/10.1038/srep01684 | Ha a 'debt' keresés nő az előző 3 hét átlagához képest → short, ellenkező…
+cs-pluribus | 2 | Pluribus – emberfeletti hatfős póker (Brown & Sandholm, Science 2019) | Esettanulmányok | free | 0 | 60/82/74/67 | https://doi.org/10.1126/science.aay2400
+cs-vpin-controversy | 2 | VPIN – Easley, López de Prado, O'Hara (RFS 2012) és a vita… | Esettanulmányok | free | 0 | 69/74/67/69 | https://doi.org/10.1093/rfs/hhs053
+cs-graphcast | 2 | GraphCast – ML középtávú időjárás-előrejelzés… | Esettanulmányok | free | 0 | 62/78/72/66 | https://doi.org/10.1126/science.adi2336
+cs-bayesian-search-af447 | 2 | Bayes-i keresés – Air France 447 roncsa… | Esettanulmányok | free | 0 | 58/82/74/66 | https://doi.org/10.1214/13-STS420
+cs-libratus | 2 | Libratus – emberfeletti heads-up no-limit póker… | Esettanulmányok | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aao1733
+cs-alphago-alphazero | 2 | AlphaGo (Nature 2016) és AlphaZero (Science 2018) – önjáték + MCTS +… | Esettanulmányok | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aar6404
+m-entropy-measures | 2 | Entrópia-mértékek (permutációs, minta-, közelítő entrópia) | Módszertár | free | 0 | 64/78/70/68 | https://github.com/raphaelvallat/antropy
+cs-aqr-betting-against-beta | 2 | AQR – Betting Against Beta (Frazzini–Pedersen 2014) | Esettanulmányok | free | 0 | 62/75/72/69 | https://doi.org/10.1016/j.jfineco.2013.10.005
+cs-budish-hft-arms-race | 2 | HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015) | Esettanulmányok | free | 0 | 64/78/68/60 | https://doi.org/10.1093/qje/qjv027
+m-fractional-differencing | 2 | Frakcionális differenciálás (Hosking 1981; López de Prado 2018) | Módszertár | free | 0 | 64/75/70/70 | https://github.com/fracdiff/fracdiff
+m-diebold-yilmaz-connectedness | 2 | Diebold–Yilmaz összekapcsoltság és Granger-hálók (Billio et al. 2012) | Módszertár | free | 0 | 60/78/72/66 | https://github.com/statsmodels/statsmodels
+cs-pead-bernard-thomas | 2 | Post-earnings announcement drift – Bernard & Thomas (1989) | Esettanulmányok | free | 0 | 60/76/70/67 | https://doi.org/10.2307/2491062
+m-wavelets | 2 | Wavelet-dekompozíció (multi-skála elemzés) | Módszertár | free | 0 | 60/76/70/65 | https://github.com/PyWavelets/pywt
+m-matrix-profile | 2 | Matrix profile – motívum- és anomália-keresés (STUMPY) | Módszertár | free | 0 | 60/76/70/65 | https://github.com/stumpy-dev/stumpy
+cs-baker-bloom-davis-epu | 2 | Gazdaságpolitikai bizonytalansági index (EPU) – Baker, Bloom, Davis… | Esettanulmányok | free | 0 | 60/75/68/65 | https://doi.org/10.1093/qje/qjw024
+m-transfer-entropy | 2 | Transfer entropy (információáramlás) | Módszertár | free | 0 | 62/72/67/68 | https://github.com/pwollstadt/IDTxl
+m-ts-foundation-models | 2 | Idősor-alapmodellek (TimesFM, Chronos) mint ensemble-tag | Módszertár | free | 0 | 60/75/68/64 | https://github.com/google-research/timesfm
+cs-bayesian-search-scorpion | 2 | Bayes-i keresés – USS Scorpion (1968), Palomares H-bomba (1966) | Esettanulmányok | free | 0 | 56/76/70/63 | https://en.wikipedia.org/wiki/Bayesian_search_theory
+cs-gosset-guinness | 2 | W. S. Gosset ('Student') – t-próba a Guinness sörfőzdében (1908) | Esettanulmányok | free | 0 | 53/79/72/60 | https://doi.org/10.1093/biomet/6.1.1
+cs-halley-actuarial | 2 | Halley halandósági táblája (1693) és a hiteltelességelmélet… | Esettanulmányok | free | 0 | 53/79/72/60 | https://doi.org/10.1098/rstl.1693.0007
+cs-fico-credit-scoring | 2 | FICO-hitelpontozás (1956 Fair Isaac; 1989 FICO score) | Esettanulmányok | free | 0 | 53/79/72/60 | https://en.wikipedia.org/wiki/FICO
+m-lingam | 2 | LiNGAM – lineáris nem-Gauss kauzális modell | Módszertár | free | 0 | 60/72/68/66 | https://github.com/cdt15/lingam
+m-bayesian-networks | 2 | Bayes-hálók (pgmpy) | Módszertár | free | 0 | 58/74/68/64 | https://github.com/pgmpy/pgmpy
+m-hurst-exponent | 2 | Hurst-exponens (R/S) és DFA – hosszú memória | Módszertár | free | 0 | 60/73/66/65 | https://github.com/CSchoel/nolds
+cs-satellite-parking-lots | 2 | Műholdas parkolóhely-számlálás a kiskereskedők negyedéves… | Esettanulmányok | paid | ? | 62/68/66/65 | https://doi.org/10.1017/s0022109023001448
+m-instrumental-variables | 2 | Instrumentális változók (2SLS, GMM) | Módszertár | free | 0 | 54/75/70/62 | https://github.com/bashtage/linearmodels
+m-mic-distance-correlation | 2 | MIC és távolság-korreláció (dCor) – általános függőségi mértékek | Módszertár | free | 0 | 58/73/66/64 | https://github.com/vnmabus/dcor
+m-dtw | 2 | Dynamic Time Warping (DTW) és alakzat-hasonlóság | Módszertár | free | 0 | 59/72/66/64 | https://github.com/wannesm/dtaidistance
+cs-aqr-quality-minus-junk | 2 | AQR – Quality Minus Junk (Asness–Frazzini–Pedersen 2018/2019) | Esettanulmányok | free | 0 | 56/72/68/64 | https://doi.org/10.1007/s11142-018-9470-2
+cs-kaggle-optiver-close | 2 | Kaggle Optiver – Trading at the Close (2023–24) – 1. hely | Esettanulmányok | free | 0 | 65/65/60/66 | https://www.kaggle.com/competitions/optiver-trading-at-the-close/discussion/487446
+cs-kaggle-rossmann-entity-embeddings | 2 | Kaggle Rossmann Store Sales (2015) – entitás-beágyazások… | Esettanulmányok | free | 0 | 57/72/65/64 | https://arxiv.org/abs/1604.06737
+cs-john-snow-cholera | 2 | John Snow – Broad Street-i kolera (1854): térképes oksági… | Esettanulmányok | free | 0 | 52/76/69/59 | https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak
+m-causalimpact-bsts | 2 | CausalImpact – Bayes-i strukturális idősor beavatkozás-hatásra | Módszertár | free | 0 | 56/72/66/63 | https://github.com/WillianFuks/tfcausalimpact
+cs-renaissance-research-team | 2 | Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown… | Esettanulmányok | free | 0 | 58/68/65/63 | https://en.wikipedia.org/wiki/Henry_Laufer
+m-benford-test | 2 | Benford-teszt adatminőségre és manipulációra | Módszertár | free | 0 | 56/72/63/62 | https://github.com/milcent/benford_py
+cs-de-shaw | 2 | D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–) | Esettanulmányok | institutional | ? | 60/65/61/64 | https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.
+cs-kaggle-jane-street-2024 | 2 | Kaggle Jane Street Real-Time Market Data Forecasting (2024–25) | Esettanulmányok | free | 0 | 59/66/60/63 | https://www.kaggle.com/competitions/jane-street-real-time-market-data-forecasting
+cs-kaggle-web-traffic | 2 | Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq… | Esettanulmányok | free | 0 | 56/68/62/62 | https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795
+cs-henderson-night-lights | 2 | Éjszakai fények a GDP mérésére – Henderson, Storeygard, Weil… | Esettanulmányok | free | 0 | 54/70/64/60 | https://doi.org/10.1257/aer.102.2.994
+cs-sahm-rule | 2 | Sahm-szabály – munkanélküliségi recesszió-indikátor (2019) | Esettanulmányok | free | 0 | 52/69/64/60 | https://en.wikipedia.org/wiki/Sahm_rule
+cs-moat-wikipedia-views | 2 | Wikipedia-oldalnézetek a tőzsdei mozgások előtt – Moat et al.… | Esettanulmányok | free | 0 | 58/66/60/61 | https://doi.org/10.1038/srep01801
+cs-prediction-company | 2 | Prediction Company – Farmer és Packard… | Esettanulmányok | free | 0 | 57/63/60/62 | https://en.wikipedia.org/wiki/Prediction_Company
+cs-sabermetrics-bill-james | 2 | Sabermetrika – Bill James Baseball Abstracts (1977–) | Esettanulmányok | free | 0 | 52/68/63/59 | https://en.wikipedia.org/wiki/Sabermetrics
+cs-voulgaris-nba | 2 | Haralabos Voulgaris – NBA-fogadás, majd Dallas Mavericks… | Esettanulmányok | free | 0 | 60/57/56/60 | https://en.wikipedia.org/wiki/Haralabos_Voulgaris
+cs-morey-rockets-analytics | 2 | Daryl Morey – analitika-alapú NBA (hárompontos és ziccer-preferencia) | Esettanulmányok | free | 0 | 52/64/59/58 | https://en.wikipedia.org/wiki/Daryl_Morey
+cs-srivastava-scratch-ticket | 2 | Mohan Srivastava – a tic-tac-toe kaparós sorsjegy 'singleton'… | Esettanulmányok | free | 0 | 56/61/58/58 | https://www.wired.com/2011/01/ff-lottery/
+cs-oil-tank-shadows | 2 | Olajtartályok árnyék-alapú töltöttség-mérése (Orbital Insight GCI) | Esettanulmányok | paid | ? | 54/58/56/57 | https://en.wikipedia.org/wiki/Orbital_Insight
+cs-two-sigma | 2 | Two Sigma – adattudomány-alapú befektetés és nyilvános… | Esettanulmányok | institutional | ? | 50/60/55/57 | https://en.wikipedia.org/wiki/Two_Sigma
+cs-kaggle-two-sigma-news | 2 | Kaggle Two Sigma: Using News to Predict Stock Movements (2018–19) | Esettanulmányok | free | 0 | 52/58/54/58 | https://www.kaggle.com/competitions/two-sigma-financial-news
+cs-kaggle-two-sigma-fin-modeling | 2 | Kaggle Two Sigma Financial Modeling Challenge (2016–17) | Esettanulmányok | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/two-sigma-financial-modeling
+cs-kaggle-ubiquant | 2 | Kaggle Ubiquant Market Prediction (2022) – 1. hely: 'Our Betting… | Esettanulmányok | free | 0 | 50/58/54/57 | https://www.kaggle.com/competitions/ubiquant-market-prediction/discussion/338220
+cs-billy-walters-computer-group | 2 | Billy Walters és a Computer Group – számítógépes sportfogadás | Esettanulmányok | free | 0 | 54/55/54/54 | https://en.wikipedia.org/wiki/Billy_Walters_(gambler)
+cs-mit-blackjack-team | 2 | MIT Blackjack Team (1979–2000-es évek eleje) | Esettanulmányok | free | 0 | 51/57/56/52 | https://en.wikipedia.org/wiki/MIT_Blackjack_Team
+cs-card-spend-earnings | 2 | Kártyás költési panelek → negyedéves eredmény-meglepetés… | Esettanulmányok | paid | ? | 54/55/53/54 | https://doi.org/10.1016/j.jfineco.2017.04.008
+cs-deepstack | 3 | DeepStack – mélytanulás + folytonos újramegoldás pókerben… | Esettanulmányok | free | 0 | 54/74/66/61 | https://doi.org/10.1126/science.aam6960
+cs-cepheus | 3 | Cepheus – a heads-up limit hold'em 'megoldása'… | Esettanulmányok | free | 0 | 51/72/64/58 | https://doi.org/10.1126/science.1259433
+cs-edmans-sports-sentiment | 3 | Sporthangulat és tőzsde – Edmans, García, Norli (JF 2007) | Esettanulmányok | free | 0 | 54/66/60/61 | https://doi.org/10.1111/j.1540-6261.2007.01262.x
+cs-td-gammon | 3 | TD-Gammon – temporális differencia tanulás (Tesauro, CACM 1995) | Esettanulmányok | free | 0 | 50/70/62/58 | https://doi.org/10.1145/203330.203343
+m-convergent-cross-mapping | 3 | Konvergens keresztleképezés (CCM, empirikus dinamikus modellezés) | Módszertár | free | 0 | 53/67/62/60 | https://github.com/SugiharaLab/pyEDM
+cs-thorp-shannon-roulette | 3 | Thorp–Shannon hordható rulett-számítógép (1960–61) és az Eudaemonok | Esettanulmányok | free | 0 | 50/49/46/44 | https://doi.org/10.1109/ISWC.1998.729523
 
 ## Stratégiák
 Aritmetikus (fix lépésközű) grid | MT5 8/10 | Szintek: L_k = P0 ± k·Δ, k=1..N. Minden szinten azonos lot q. Ár P-nél a nyitott pozíció n(P)=floor(\|P−P0\|/Δ)·q, a lebegő veszteség ≈ q·Δ·n(n+1)/2 (pontban) →

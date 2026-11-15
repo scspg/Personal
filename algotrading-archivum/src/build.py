@@ -163,6 +163,8 @@ def prof_score(sc, w):
     return round(num / den * 10, 1) if den else 0.0     # 0–100
 
 
+ASSET_MAP = {"fixed income": "rates", "bonds": "rates", "bond": "rates", "stocks": "equity", "forex": "fx"}
+REGION_MAP = {"ch": "eu", "europe": "eu", "usa": "us", "world": "global"}
 ALIAS = {}   # eredeti/eldobott id → megtartott id (a specifikáció hivatkozásaihoz)
 
 
@@ -179,7 +181,14 @@ def collect():
             if not url:
                 stats[name]["no_url"] += 1
             nu = norm_url(url)
-            url_dup = nu and nu in seen_url and len(nu) > 12 and name != "a10_methods"   # esettanulmány/módszer: saját mezői miatt link-egyezésnél is marad
+            for k in ("docs_url", "info_url", "granularity", "latency", "license", "price", "history_from", "provider"):   # üres → null
+                if o.get(k) == "":
+                    o[k] = None
+            o["assets"] = sorted({ASSET_MAP.get(a, a) for a in (o.get("assets") or []) if isinstance(a, str)})
+            o["regions"] = sorted({REGION_MAP.get(r, r) for r in (o.get("regions") or []) if isinstance(r, str)})
+            if not o.get("notes_hu"):
+                o["notes_hu"] = " ".join(x for x in (o.get("method_hu"), o.get("result_hu")) if x)[:400] or None
+            url_dup = nu and nu in seen_url and name != "a10_methods"   # esettanulmány/módszer nem forrástétel: ugyanarra a cikkre hivatkozhat
             if iid in seen_id or url_dup:
                 stats[name]["dup"] += 1
                 prev = seen_id.get(iid) or seen_url.get(nu)
@@ -188,6 +197,10 @@ def collect():
                 for k in ("notes_hu", "pitfalls_hu"):   # összefésülés: a hosszabb leírás marad
                     if len(str(o.get(k) or "")) > len(str(prev.get(k) or "")):
                         prev[k] = o.get(k)
+                for k, v in o.items():                   # a kidobott rekord többletmezői átkerülnek (pl. A11 mátrixpont, belépő jogalany)
+                    if k not in prev or prev.get(k) in (None, "", [], {}):
+                        prev[k] = v
+                prev.setdefault("also_in", []).append(name)
                 continue
             if str(o.get("id")) != iid:
                 ALIAS[str(o.get("id"))] = iid
@@ -218,6 +231,17 @@ def load_plain(name):
 def read(name):
     p = os.path.join(RES, name)
     return open(p, encoding="utf-8").read().strip() if os.path.exists(p) else ""
+
+
+def cut(s, n):
+    """szóhatáron vágás, nyitott zárójel nélkül"""
+    s = esc(s)
+    if len(s) <= n:
+        return s
+    t = s[:n].rsplit(" ", 1)[0].rstrip(" ,;:–-(")
+    if t.count("(") > t.count(")"):
+        t = t[:t.rfind("(")].rstrip()
+    return t + "…"
 
 
 def esc(s):
@@ -459,12 +483,14 @@ def main():
             km += [f"## {title}", ""] + [f"- {link(o)} – {ACCESS[o['access']]}, {price(o)}; {esc(o.get('notes_hu'))[:180]}" for o in L] + [""]
     open(os.path.join(ROOT, "ALGOTRADING-kompakt.md"), "w", encoding="utf-8").write("\n".join(km) + "\n")
     # chat: LLM-be tölthető tömör változat
-    ch = [f"# ALGOTRADING – chat-változat (LLM-kontextusba). Kutatás: {DATE}", "", "Formátum: id | név | hozzáférés | ár | profilpontok gyors/kockázat/kutatás/predikció | url", ""]
+    ch = [f"# ALGOTRADING – chat-változat (LLM-kontextusba). Kutatás: {DATE}", "",
+          "Formátum: id | szint | név | kategória | hozzáférés | ár | profilpontok gyors/kockázat/kutatás/predikció | url | lényeg. "
+          "A fejlesztői specifikáció külön: FEJLESZTOI-SPEC.md (12. fejezet: platformfüggetlenség). Gépi teljes adat: katalogus.jsonl, strategiak.jsonl, otletek.jsonl.", ""]
     for name, title in SOURCES:
         L = sorted(by_src.get(name, []), key=lambda o: (o["tier"], -o["prof"]["kiegyensulyozott"]))
         if L:
-            ch += [f"## {title}"] + [f"{o['id']} | {esc(o['name'])[:70]} | {o['access']} | {price(o)[:40]} | "
-                                      f"{o['prof']['gyors_mt5']:.0f}/{o['prof']['kockazat']:.0f}/{o['prof']['kutatas']:.0f}/{o['prof']['predikcio']:.0f} | {o.get('url')}" for o in L] + [""]
+            ch += [f"## {title}"] + [f"{o['id']} | {o['tier']} | {cut(o['name'], 70)} | {CAT_HU.get(o.get('cat'), o.get('cat'))} | {o['access']} | {cut(price(o), 40)} | "
+                                      f"{o['prof']['gyors_mt5']:.0f}/{o['prof']['kockazat']:.0f}/{o['prof']['kutatas']:.0f}/{o['prof']['predikcio']:.0f} | {o.get('url')}" + (f" | {cut(o.get('notes_hu'), 80)}" if o['tier'] <= 1 else "") for o in L] + [""]
     if strategies:
         ch += ["## Stratégiák"] + [f"{esc(s.get('name'))} | MT5 {s.get('mt5_fit', '?')}/10 | {esc(s.get('formula_hu'))[:160]}" for s in strategies] + [""]
     if ideas:
@@ -476,6 +502,10 @@ def main():
             f.write(json.dumps({k: v for k, v in o.items() if not k.startswith("_")} | {"src": o["_src"]}, ensure_ascii=False) + "\n")
     if spec:
         open(os.path.join(ROOT, "FEJLESZTOI-SPEC.md"), "w", encoding="utf-8").write(spec + "\n")
+    for fn, L in (("strategiak.jsonl", strategies), ("otletek.jsonl", ideas)):
+        with open(os.path.join(ROOT, fn), "w", encoding="utf-8") as f:
+            for o in L:
+                f.write(json.dumps({k: v for k, v in o.items() if not k.startswith("_")}, ensure_ascii=False) + "\n")
     write_dl(items)
     json.dump({"items": len(items), "strategies": len(strategies), "ideas": len(ideas), "stats": stats},
               open(os.path.join(HERE, "build_stats.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -489,7 +519,7 @@ def write_dl(items):
          "set -u", 'DEST=${DEST:-}', 'case "$DEST" in /*) ;; *) echo "DEST abszolút út kell (pl. DEST=/mnt/algo)" >&2; exit 2;; esac',
          'DEST=$(realpath -m -- "$DEST")', 'case "$DEST" in /|/bin|/boot|/dev|/etc|/home|/lib*|/proc|/root|/run|/sbin|/sys|/usr|/var|/private|/System) echo "Tiltott DEST: $DEST" >&2; exit 2;; esac',
          'mkdir -p "$DEST" && LOG="$DEST/_letoltes.log"', 'ok(){ echo "OK   $1" | tee -a "$LOG"; }; fail(){ echo "FAIL $1" | tee -a "$LOG"; }', ""]
-    n = 0
+    n, seen_repo = 0, set()
     for o in sorted(items, key=lambda o: (o["tier"], o["id"])):
         if o["access"] != "free":
             continue
@@ -499,13 +529,25 @@ def write_dl(items):
         q = lambda s: "'" + str(s).replace("'", "'\\''") + "'"
         if d.get("method") == "git" or (gh and re.match(r"^[\w.-]+/[\w.-]+$", gh)):
             url = d.get("url") if d.get("method") == "git" and d.get("url") else f"https://github.com/{gh}.git"
-            L.append(f'[ -d {sub}/.git ] && git -C {sub} pull -q --ff-only || git clone -q --depth 1 {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}')
+            if not re.match(r"^https://(github\.com|gitlab\.com|codeberg\.org|bitbucket\.org)/[\w.-]+/[\w.-]+(\.git)?/?$", url):
+                continue                                   # nem repó-URL (pl. nyers fájl) → kihagyva
+            key = url.lower().rstrip("/").removesuffix(".git")
+            if key in seen_repo:
+                continue                                   # ugyanaz a repó több tételben → egyszer klónozzuk
+            seen_repo.add(key)
+            L.append(f'if [ -d {sub}/.git ]; then git -C {sub} pull -q --ff-only && ok {o["id"]} || fail {o["id"]}; '
+                     f'else git clone -q --depth 1 --filter=blob:limit=50m {q(url)} {sub} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
         elif d.get("method") == "http" and re.search(r"\.(zip|gz|tgz|bz2|xz|7z|tar|csv|tsv|parquet|feather|json|jsonl|txt|xlsx?|pdf|h5|nc|zst)(\?|$)", str(d.get("url", "")), re.I):
-            L.append(f'mkdir -p {sub} && curl -fsSL --retry 3 -C - -o {sub}/{q(os.path.basename(d["url"].split("?")[0]) or "file")} {q(d["url"])} && ok {o["id"]} || fail {o["id"]}')
+            fn = os.path.basename(d["url"].split("?")[0]) or "file"
+            L.append(f'mkdir -p {sub} && if [ -s {sub}/{q(fn)} ]; then ok {o["id"]}; else curl -fsSL --retry 3 -o {sub}/{q(fn)}.part {q(d["url"])} && mv {sub}/{q(fn)}.part {sub}/{q(fn)} && ok {o["id"]} || fail {o["id"]}; fi')
             n += 1
         elif d.get("method") == "hf" and d.get("url"):
-            L.append(f'if command -v hf >/dev/null; then hf download {q(d["url"])} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf: {o["id"]}"; fi')
+            m = re.match(r"^(?:https?://huggingface\.co/)?(datasets/|spaces/)?([\w.-]+/[\w.-]+)", str(d["url"]))
+            if not m:
+                continue
+            rt = {"datasets/": " --repo-type dataset", "spaces/": " --repo-type space"}.get(m.group(1) or "", "")
+            L.append(f'if command -v hf >/dev/null; then hf download {q(m.group(2))}{rt} --local-dir {sub} && ok {o["id"]} || fail {o["id"]}; else echo "TODO hf (pip install -U huggingface_hub): {o["id"]}"; fi')
             n += 1
     L += ["", 'echo "Kész. Napló: $LOG"']
     p = os.path.join(ROOT, "letolto.sh")
