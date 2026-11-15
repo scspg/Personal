@@ -1422,9 +1422,16 @@ cs-benter-horse-racing | Bill Benter – számítógépes lóverseny-handicappin
 m-stacking-ensembling | Ensemble és stacking (Netflix Prize, M4-tanulságok) | free | 0 | 74/92/88/78 | https://github.com/rasbt/mlxtend
 cs-thorp-blackjack-kelly | Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés | free | 0 | 74/89/86/78 | https://doi.org/10.1073/pnas.47.1.110
 cs-kalman-apollo | Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig | free | 0 | 76/90/83/77 | https://doi.org/10.1115/1.3662552
+m-kelly-criterion | Kelly-kritérium és frakcionált Kelly | free | 0 | 71/92/86/76 | https://doi.org/10.1109/TIT.1956.1056803
 cs-turing-banburismus | Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park) | free | 0 | 72/90/83/75 | https://doi.org/10.1093/biomet/66.2.393
+m-multinomial-logit-benter | Feltételes/multinomiális logit versenyek és rangsorok előrejelzésére ( | free | 0 | 72/85/82/76 | https://doi.org/10.1287/mnsc.32.8.1040
+m-sprt-sequential | Szekvenciális valószínűségi hányados-teszt (Wald SPRT) és always-valid | free | 0 | 70/90/81/73 | https://doi.org/10.1214/aoms/1177731118
+m-calibration-proper-scoring | Valószínűségi kalibráció és helyes pontozási szabályok (Brier, log-los | free | 0 | 68/90/82/72 | https://pypi.org/project/scoringrules/
+m-extremized-aggregation | Előrejelzések aggregálása és extremizálása (GJP) | free | 0 | 69/88/82/74 | https://doi.org/10.1287/deca.2014.0293
+m-bayesian-hierarchical | Bayes-i hierarchikus modellek és empirikus Bayes shrinkage (PyMC) | free | 0 | 68/88/83/73 | https://github.com/pymc-devs/pymc
 cs-fx-technical-rules-amh | FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009) | free | 0 | 66/89/82/72 | https://doi.org/10.1017/S0022109009090103
 m-pcmci-tigramite | PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite) | free | 0 | 70/84/80/76 | https://github.com/jakobrunge/tigramite
+m-deflated-sharpe | Deflated Sharpe Ratio (Bailey & López de Prado 2014) | free | 0 | 64/92/82/70 | https://doi.org/10.3905/jpm.2014.40.5.094
 cs-m4-competition | M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2019.04.014
 cs-m5-competition | M5 előrejelzési verseny (2020) – LightGBM dominancia | free | 0 | 64/87/82/72 | https://doi.org/10.1016/j.ijforecast.2021.11.013
 cs-kaggle-g-research-crypto | Kaggle G-Research Crypto Forecasting (2021–22) – Meme Lord Capital, Li | free | 0 | 72/79/75/74 | https://www.gresearch.com/news/wrapping-up-the-g-research-crypto-forecasting-competition/
@@ -1437,6 +1444,7 @@ m-shap | SHAP – Shapley-alapú modellmagyarázat | free | 0 | 64/82/74/68 | ht
 cs-netflix-prize | Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble | free | 0 | 60/82/76/68 | https://en.wikipedia.org/wiki/Netflix_Prize
 cs-bollen-twitter-mood | Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a m | free | 0 | 60/82/73/64 | https://doi.org/10.1016/j.jocs.2010.12.007
 cs-google-flu-trends | Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu' (L | free | 0 | 56/85/76/63 | https://doi.org/10.1126/science.1248506
+m-spurious-correlation-vigen | Hamis korrelációk – Tyler Vigen és Granger–Newbold (1974) spurious reg | free | 0 | 54/86/77/62 | https://www.tylervigen.com/spurious-correlations
 cs-gaussian-copula-2008 | A Gauss-kopula és a 2008-as CDO-válság (Li 2000; Salmon, Wired 2009) | free | 0 | 55/82/73/62 | https://doi.org/10.3905/jfi.2000.319253
 cs-zillow-offers | Zillow Offers (2018–2021) – algoritmikus lakásvásárlás kudarca | free | 0 | 55/82/73/62 | https://en.wikipedia.org/wiki/Zillow
 cs-cont-order-flow-imbalance | Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometri | free | 0 | 78/84/78/78 | https://doi.org/10.1093/jjfinec/nbt003
@@ -1462,9 +1470,11 @@ m-genetic-programming-gplearn | Genetikus programozás alfa-bányászathoz (gple
 cs-numerai | Numerai – titkosított adatokon tömegesen beküldött modellek + stake-el | free | 0 | 66/76/74/68 | https://numer.ai/
 cs-bing-ab-test | Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés (Kohavi & Thomke | free | 0 | 61/82/74/67 | https://hbr.org/2017/09/the-surprising-power-of-online-experiments
 m-automl | AutoML (AutoGluon, FLAML) | free | 0 | 63/79/74/68 | https://github.com/autogluon/autogluon
+m-rating-systems | Erősség-rangsorolás: Elo, Glicko, TrueSkill, Bradley–Terry | free | 0 | 66/77/71/70 | https://github.com/sublee/trueskill
 cs-iowa-electronic-markets | Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Ri | free | 0 | 64/77/72/67 | https://doi.org/10.1016/j.ijforecast.2008.03.007
 cs-german-tank-problem | A német tank-probléma – sorozatszámokból termelésbecslés (II. világháb | free | 0 | 60/80/75/66 | https://doi.org/10.1080/01621459.1947.10501915
 m-dowhy | DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás | free | 0 | 60/80/74/66 | https://github.com/py-why/dowhy
+m-correlation-network-mst | Korrelációs hálók és minimális feszítőfa (Mantegna 1999) | free | 0 | 60/80/74/66 | https://github.com/networkx/networkx
 cs-moneyball-oakland | Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta) | free | 0 | 60/77/72/68 | https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game
 cs-benford-fraud | Benford-törvény a csalásfelderítésben (Nigrini; EU-s makróadatok – Rau | free | 0 | 62/78/70/66 | https://doi.org/10.1111/j.1468-0475.2011.00542.x
 m-pc-fci-causal-learn | PC és FCI kauzális felfedezés (causal-learn) | free | 0 | 60/77/72/68 | https://github.com/py-why/causal-learn
@@ -1487,8 +1497,12 @@ cs-graphcast | GraphCast – ML középtávú időjárás-előrejelzés (Lam et 
 cs-bayesian-search-af447 | Bayes-i keresés – Air France 447 roncsa (Stone et al., Statistical Sci | free | 0 | 58/82/74/66 | https://doi.org/10.1214/13-STS420
 cs-libratus | Libratus – emberfeletti heads-up no-limit póker (Brown & Sandholm, Sci | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aao1733
 cs-alphago-alphazero | AlphaGo (Nature 2016) és AlphaZero (Science 2018) – önjáték + MCTS + m | free | 0 | 60/81/74/66 | https://doi.org/10.1126/science.aar6404
+m-entropy-measures | Entrópia-mértékek (permutációs, minta-, közelítő entrópia) | free | 0 | 64/78/70/68 | https://github.com/raphaelvallat/antropy
 cs-budish-hft-arms-race | HFT fegyverkezési verseny – Budish, Cramton, Shim (QJE 2015) | free | 0 | 64/78/68/60 | https://doi.org/10.1093/qje/qjv027
+m-fractional-differencing | Frakcionális differenciálás (Hosking 1981; López de Prado 2018) | free | 0 | 64/75/70/70 | https://github.com/fracdiff/fracdiff
 cs-pead-bernard-thomas | Post-earnings announcement drift – Bernard & Thomas (1989) | free | 0 | 60/76/70/67 | https://doi.org/10.2307/2491062
+m-wavelets | Wavelet-dekompozíció (multi-skála elemzés) | free | 0 | 60/76/70/65 | https://github.com/PyWavelets/pywt
+m-matrix-profile | Matrix profile – motívum- és anomália-keresés (STUMPY) | free | 0 | 60/76/70/65 | https://github.com/stumpy-dev/stumpy
 cs-baker-bloom-davis-epu | Gazdaságpolitikai bizonytalansági index (EPU) – Baker, Bloom, Davis (Q | free | 0 | 60/75/68/65 | https://doi.org/10.1093/qje/qjw024
 m-transfer-entropy | Transfer entropy (információáramlás) | free | 0 | 62/72/67/68 | https://github.com/pwollstadt/IDTxl
 cs-bayesian-search-scorpion | Bayes-i keresés – USS Scorpion (1968), Palomares H-bomba (1966) | free | 0 | 56/76/70/63 | https://en.wikipedia.org/wiki/Bayesian_search_theory
@@ -1496,6 +1510,8 @@ cs-gosset-guinness | W. S. Gosset ('Student') – t-próba a Guinness sörfőzd�
 cs-halley-actuarial | Halley halandósági táblája (1693) és a hiteltelességelmélet – aktuáriu | free | 0 | 53/79/72/60 | https://doi.org/10.1098/rstl.1693.0007
 cs-fico-credit-scoring | FICO-hitelpontozás (1956 Fair Isaac; 1989 FICO score) | free | 0 | 53/79/72/60 | https://en.wikipedia.org/wiki/FICO
 m-lingam | LiNGAM – lineáris nem-Gauss kauzális modell | free | 0 | 60/72/68/66 | https://github.com/cdt15/lingam
+m-bayesian-networks | Bayes-hálók (pgmpy) | free | 0 | 58/74/68/64 | https://github.com/pgmpy/pgmpy
+m-hurst-exponent | Hurst-exponens (R/S) és DFA – hosszú memória | free | 0 | 60/73/66/65 | https://github.com/CSchoel/nolds
 cs-satellite-parking-lots | Műholdas parkolóhely-számlálás a kiskereskedők negyedéves eredményeire | paid | ? | 62/68/66/65 | https://doi.org/10.1017/s0022109023001448
 m-mic-distance-correlation | MIC és távolság-korreláció (dCor) – általános függőségi mértékek | free | 0 | 58/73/66/64 | https://github.com/vnmabus/dcor
 m-dtw | Dynamic Time Warping (DTW) és alakzat-hasonlóság | free | 0 | 59/72/66/64 | https://github.com/wannesm/dtaidistance
@@ -1505,6 +1521,7 @@ cs-kaggle-rossmann-entity-embeddings | Kaggle Rossmann Store Sales (2015) – en
 cs-john-snow-cholera | John Snow – Broad Street-i kolera (1854): térképes oksági következteté | free | 0 | 52/76/69/59 | https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak
 m-causalimpact-bsts | CausalImpact – Bayes-i strukturális idősor beavatkozás-hatásra | free | 0 | 56/72/66/63 | https://github.com/WillianFuks/tfcausalimpact
 cs-renaissance-research-team | Renaissance kutatói modell – Laufer, Patterson, Mercer és Brown (beszé | free | 0 | 58/68/65/63 | https://en.wikipedia.org/wiki/Henry_Laufer
+m-benford-test | Benford-teszt adatminőségre és manipulációra | free | 0 | 56/72/63/62 | https://github.com/milcent/benford_py
 cs-de-shaw | D. E. Shaw & Co. – számítástechnikai statisztikai arbitrázs (1988–) | institutional | ? | 60/65/61/64 | https://en.wikipedia.org/wiki/D._E._Shaw_%26_Co.
 cs-kaggle-web-traffic | Kaggle Web Traffic Time Series Forecasting (2017) – 1. hely: seq2seq ( | free | 0 | 56/68/62/62 | https://www.kaggle.com/competitions/web-traffic-time-series-forecasting/discussion/43795
 cs-henderson-night-lights | Éjszakai fények a GDP mérésére – Henderson, Storeygard, Weil (AER 2012 | free | 0 | 54/70/64/60 | https://doi.org/10.1257/aer.102.2.994

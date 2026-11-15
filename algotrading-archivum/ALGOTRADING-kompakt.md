@@ -1,4 +1,4 @@
-# ALGOTRADING – kompakt (1510 tételből a 0–1. szint)
+# ALGOTRADING – kompakt (1527 tételből a 0–1. szint)
 
 ## Piaci adat (FX, CFD, részvény, opció, határidős) és végrehajtás, brókerek, MetaTrader
 
@@ -310,7 +310,7 @@
 - [LightGBM](https://github.com/microsoft/LightGBM) – ingyenes, ingyenes (nyílt forrás); Gyors gradient boosting – táblás pénzügyi feature-ökön a de facto alapmodell.
 - [QuestDB](https://github.com/questdb/questdb) – ingyenes, ingyenes (nyílt forrás); Nagy írási sebességű idősor-adatbázis SQL-lel, ASOF JOIN-nal, InfluxDB line protocollal – tick- és spread-napló élő gyűjtésére.
 - [DuckDB](https://github.com/duckdb/duckdb) – ingyenes, ingyenes (nyílt forrás); Beágyazott analitikus SQL motor Parquet/Arrow/CSV/Iceberg fölött – a kutatógép 'adattó-lekérdező' rétege.
-- [statsmodels](https://github.com/statsmodels/statsmodels) – ingyenes, ingyenes (nyílt forrás); Statisztikai modellek, idősor (ARIMA, VAR, Markov-switching, kointegráció – Johansen, Engle–Granger), tesztek.
+- [statsmodels](https://github.com/statsmodels/statsmodels) – ingyenes, ingyenes (nyílt forrás); Bańbura & Modugno (2014); Giannone–Reichlin–Small (2008). NY Fed MATLAB-kód: FRBNY-TimeSeriesAnalysis/Nowcasting.
 - [Prometheus](https://github.com/prometheus/prometheus) – ingyenes, ingyenes (nyílt forrás); Metrika-gyűjtés és riasztás (Alertmanager) – a spec szerinti megfigyelési réteg (latency, slippage, margin level, EA heartbeat).
 - [arch](https://github.com/bashtage/arch) – ingyenes, ingyenes (nyílt forrás); GARCH-családok, egységgyök-tesztek, és bootstrap (stationary, circular block) + Hansen SPA (az 'upper' p-érték White Reality Check-jellegű), StepM, Model Confidence Set – a többes 
 - [TA-Lib (Python wrapper)](https://github.com/TA-Lib/ta-lib-python) – ingyenes, ingyenes (nyílt forrás); 150+ technikai indikátor C-ben, Python wrapperrel (PyPI TA-Lib 0.8.3); MT5 indikátorok paritás-ellenőrzéséhez is.
@@ -696,10 +696,17 @@
 - [Ensemble és stacking (Netflix Prize, M4-tanulságok)](https://github.com/rasbt/mlxtend) – ingyenes, 0; Wolpert (1992); Breiman stacked regressions (1996) https://doi.org/10.1007/BF00117832.
 - [Edward Thorp – blackjack kártyaszámolás és Kelly-tétméretezés](https://doi.org/10.1073/pnas.47.1.110) – ingyenes, 0; Az állapotfüggő előny + Kelly-méretezés a teljes archívum egyik alapmintája. Thorp Kelly-összefoglalója: World Scientific 2011 (DOI 10.1142/9789814293501_0054).
 - [Kalman-szűrő – a navigációtól (Apollo) a pénzügyekig](https://doi.org/10.1115/1.3662552) – ingyenes, 0; filterpy 3896★.
+- [Kelly-kritérium és frakcionált Kelly](https://doi.org/10.1109/TIT.1956.1056803) – ingyenes, 0; Kelly (1956); Thorp összefoglalója (2011) https://doi.org/10.1142/9789814293501_0054
 - [Order flow imbalance – Cont, Kukanov, Stoikov (J. Financial Econometrics 2014)](https://doi.org/10.1093/jjfinec/nbt003) – ingyenes, 0; 
 - [Turing – Banburismus és a 'ban' mint bizonyítéksúly (Bletchley Park)](https://doi.org/10.1093/biomet/66.2.393) – ingyenes, 0; 
+- [Feltételes/multinomiális logit versenyek és rangsorok előrejelzésére (Bolton–Chapman; Benter)](https://doi.org/10.1287/mnsc.32.8.1040) – ingyenes, 0; Bolton & Chapman (Management Science 1986); Benter (1994/2008).
+- [Szekvenciális valószínűségi hányados-teszt (Wald SPRT) és always-valid tesztek](https://doi.org/10.1214/aoms/1177731118) – ingyenes, 0; Wald (Annals of Mathematical Statistics 1945).
+- [Valószínűségi kalibráció és helyes pontozási szabályok (Brier, log-loss, CRPS)](https://pypi.org/project/scoringrules/) – ingyenes, 0; Brier (Monthly Weather Review 1950) – DOI Crossrefen ellenőrizve; a GJP és az időjárás-előrejelzés alapmérője.
+- [Előrejelzések aggregálása és extremizálása (GJP)](https://doi.org/10.1287/deca.2014.0293) – ingyenes, 0; Baron, Mellers, Tetlock és mtsai (Decision Analysis 2014).
+- [Bayes-i hierarchikus modellek és empirikus Bayes shrinkage (PyMC)](https://github.com/pymc-devs/pymc) – ingyenes, 0; Konvergencia-diagnosztika: Gelman & Rubin (Statistical Science 1992). JKP 2023 a faktor-replikációban is ezt használja.
 - [FX technikai szabályok kihalása – Neely, Weller, Ulrich (JFQA 2009)](https://doi.org/10.1017/S0022109009090103) – ingyenes, 0; A Lo (2004) Adaptive Markets Hypothesis közvetlen empirikus példája.
 - [PCMCI / PCMCI+ – kauzális felfedezés idősorokon (Tigramite)](https://github.com/jakobrunge/tigramite) – ingyenes, 0; Runge et al. (Science Advances 2019). 1737★.
+- [Deflated Sharpe Ratio (Bailey & López de Prado 2014)](https://doi.org/10.3905/jpm.2014.40.5.094) – ingyenes, 0; Bailey & López de Prado (JPM 2014).
 - [Napon belüli momentum – Gao, Han, Li, Zhou (JFE 2018)](https://doi.org/10.1016/j.jfineco.2018.05.009) – ingyenes, 0; 
 - [M4 előrejelzési verseny (2018) – kombinációk és Smyl ES-RNN hibridje](https://doi.org/10.1016/j.ijforecast.2019.04.014) – ingyenes, 0; Repó: Mcompetitions/M4-methods (816★).
 - [M5 előrejelzési verseny (2020) – LightGBM dominancia](https://doi.org/10.1016/j.ijforecast.2021.11.013) – ingyenes, 0; 1. helyezett írás címe mért (discussion/163684).
@@ -732,11 +739,14 @@
 - [Netflix Prize (2006–2009) – BellKor's Pragmatic Chaos, ensemble](https://en.wikipedia.org/wiki/Netflix_Prize) – ingyenes, 0; Koren–Bell–Volinsky: IEEE Computer 2009.
 - [Bing hirdetés-címsor A/B-teszt – 12% bevételnövekedés (Kohavi & Thomke, HBR 2017)](https://hbr.org/2017/09/the-surprising-power-of-online-experiments) – ingyenes, 0; 
 - [AutoML (AutoGluon, FLAML)](https://github.com/autogluon/autogluon) – ingyenes, 0; AutoGluon-Tabular (Erickson et al. 2020). 10 834★.
+- [Erősség-rangsorolás: Elo, Glicko, TrueSkill, Bradley–Terry](https://github.com/sublee/trueskill) – ingyenes, 0; Glicko: Glickman (Applied Statistics 1999); Bradley–Terry (Biometrika 1952) https://doi.org/10.2307/2334029; 538 Elo-adatok: fivethirtyeight/nfl-elo-game.
 - [Iowa Electronic Markets – predikciós piac pontossága (Berg, Nelson, Rietz 2008)](https://doi.org/10.1016/j.ijforecast.2008.03.007) – ingyenes, 0; 
 - [Twitter-hangulat előrejelzi a Dow-t? – Bollen, Mao, Zeng (2011) és a megismétlés (Lachanski & Pav 2017)](https://doi.org/10.1016/j.jocs.2010.12.007) – ingyenes, 0; Az egyik legjobb dokumentált 'hamis felfedezés' a pénzügyi alt-adatban.
 - [A német tank-probléma – sorozatszámokból termelésbecslés (II. világháború)](https://doi.org/10.1080/01621459.1947.10501915) – ingyenes, 0; 
 - [Google Flu Trends kudarca (2008–2015) – 'The Parable of Google Flu' (Lazer et al. 2014)](https://doi.org/10.1126/science.1248506) – ingyenes, 0; 
 - [DoWhy – explicit kauzális modell, azonosítás, becslés, cáfolás](https://github.com/py-why/dowhy) – ingyenes, 0; Sharma & Kiciman (2020); 8402★. A Pearl-féle do-kalkulus gyakorlati keretrendszere (Pearl, Biometrika 1995).
+- [Hamis korrelációk – Tyler Vigen és Granger–Newbold (1974) spurious regression](https://www.tylervigen.com/spurious-correlations) – ingyenes, 0; Granger & Newbold (J. Econometrics 1974). Vigen weboldala (mért, 200).
+- [Korrelációs hálók és minimális feszítőfa (Mantegna 1999)](https://github.com/networkx/networkx) – ingyenes, 0; Onnela et al. (PRE 2003) https://doi.org/10.1103/PhysRevE.68.056110.
 - [Moneyball – Oakland Athletics 2002 (Billy Beane, Paul DePodesta)](https://en.wikipedia.org/wiki/Moneyball:_The_Art_of_Winning_an_Unfair_Game) – ingyenes, 0; 
 - [Benford-törvény a csalásfelderítésben (Nigrini; EU-s makróadatok – Rauch et al. 2011)](https://doi.org/10.1111/j.1468-0475.2011.00542.x) – ingyenes, 0; benford_py: 155★.
 - [PC és FCI kauzális felfedezés (causal-learn)](https://github.com/py-why/causal-learn) – ingyenes, 0; Spirtes–Glymour–Scheines PC/FCI; causal-learn (Zheng et al. 2023) 1716★. Társ: lingam (lingam (PyPI 1.13.0, ellenőrizve 2026-11-15)), gcastle, cdt.

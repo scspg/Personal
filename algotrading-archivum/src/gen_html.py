@@ -72,7 +72,7 @@ def main():
                   "a": o.get("access"), "p": o.get("price") or "", "e": o.get("price_eur_month"), "t": o.get("tier"),
                   "g": (o.get("prof") or {}).get("gyors_mt5"), "k": (o.get("prof") or {}).get("kockazat"),
                   "r": (o.get("prof") or {}).get("kutatas"), "d": (o.get("prof") or {}).get("predikcio"),
-                  "h": (o.get("notes_hu") or "")[:400], "b": (o.get("pitfalls_hu") or "")[:250], "v": o.get("verified")} for o in items]
+                  "h": (o.get("notes_hu") or " · ".join(x for x in (o.get("method_hu"), o.get("result_hu"), o.get("improve_hu")) if x) or "")[:500], "b": (o.get("pitfalls_hu") or "")[:250], "v": o.get("verified")} for o in items]
     st = [{"n": s.get("name"), "u": s.get("url"), "f": (s.get("formula_hu") or "")[:400], "w": (s.get("works_when_hu") or "")[:250],
            "x": (s.get("dies_when_hu") or "")[:250], "m": s.get("mt5_fit")} for s in strat]
     idz = [{"n": s.get("title_hu"), "m": (s.get("mechanism_hu") or "")[:400], "t": (s.get("test_hu") or "")[:300],
@@ -151,7 +151,7 @@ const D=__DATA__;const $=s=>document.querySelector(s);const E=s=>String(s??"").r
 const fmt=(x,d=2)=>Number(x).toLocaleString("hu-HU",{maximumFractionDigits:d,minimumFractionDigits:0});
 const AH={free:"ingyenes",registration:"regisztrációs",freemium:"freemium",paid:"fizetős",institutional:"intézményi"};
 const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
-const SRC={a1_market_exec:"Piac, végrehajtás",a2_crypto:"Kripto",a3_predict_sports:"Predikció, sport",a4_macro_news_alt:"Makró, hírek, alt. adat",a5_oss:"Nyílt szoftver",a6_ai_research:"AI-kutatás, irodalom",a8_infra_legal:"Infra, adó, jog",a9_platform:"Platform"};
+const SRC={a1_market_exec:"Piac, végrehajtás",a2_crypto:"Kripto",a3_predict_sports:"Predikció, sport",a4_macro_news_alt:"Makró, hírek, alt. adat",a5_oss:"Nyílt szoftver",a6_ai_research:"AI-kutatás, irodalom",a8_infra_legal:"Infra, adó, jog",a9_platform:"Platform",a10_methods:"Bevált módszerek, esettanulmányok",a11_platforms:"Platform- és bróker-összehasonlítás"};
 for(const [k,v] of Object.entries(SRC)){if(D.items.some(o=>o.s===k)){const o=document.createElement("option");o.value=k;o.textContent=v;$("#fs").append(o)}}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.removeAttribute("aria-current"));b.setAttribute("aria-current","page");document.querySelectorAll("main>section").forEach(s=>s.hidden=s.id!==b.dataset.t);try{history.replaceState(null,"","#"+b.dataset.t)}catch(e){}});
 if(location.hash){const b=document.querySelector(`#nav button[data-t="${location.hash.slice(1)}"]`);if(b)b.click()}

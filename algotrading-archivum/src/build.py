@@ -197,6 +197,27 @@ def table(rows, prof="kiegyensulyozott"):
     return md
 
 
+def m16_table(rows):
+    """M16: esettanulmány / módszer – saját mezőkkel (ki, adat, módszer, eredmény + ellenőrzés, miért működött, mikor halt meg, jobb változat, platform)"""
+    if rows and rows[0].get("cat") == "method":
+        md = ["| Módszer | Mikor jó / mire | Mikor csal (buktató) | Könyvtár, cikk | Platform-felhasználás |", "|---|---|---|---|---|"]
+        for o in rows:
+            cu = o.get("code_urls") or []
+            cu = cu if isinstance(cu, list) else [cu]
+            refs = " · ".join(f"[{k + 1}]({u})" for k, u in enumerate(cu[:4]) if isinstance(u, str) and u.startswith("http"))
+            md.append(f"| {link(o)} | {esc(o.get('method_hu') or o.get('notes_hu'))[:350]} | {esc(o.get('pitfalls_hu'))[:250]} | {refs} | {esc(o.get('platform_use_hu'))[:250]} |")
+        return md
+    md = ["| Eset | Ki, adat | Módszer | Eredmény (ellenőrzés) | Miért működött / mikor halt meg | Hogyan jobban | Platform | Kód, cikk |", "|---|---|---|---|---|---|---|---|"]
+    for o in rows:
+        cu = o.get("code_urls") or []
+        cu = cu if isinstance(cu, list) else [cu]
+        refs = " · ".join(f"[{k + 1}]({u})" for k, u in enumerate(cu[:4]) if isinstance(u, str) and u.startswith("http"))
+        md.append(f"| {link(o)} | {esc(o.get('who'))[:80]}; {esc(o.get('data_hu'))[:160]} | {esc(o.get('method_hu'))[:260]} | "
+                  f"{esc(o.get('result_hu'))[:220]} ({esc(o.get('result_verified') or o['verified'])}) | {esc(o.get('why_worked_hu'))[:180]} / {esc(o.get('died_hu'))[:160]} | "
+                  f"{esc(o.get('improve_hu'))[:220]} | {esc(o.get('platform_use_hu'))[:200]} | {refs} |")
+    return md
+
+
 def budget_section(items):
     tiers = [("Ingyenes indulócsomag (0 €/hó)", lambda o: o["access"] in ("free", "registration")),
              ("Kis költségvetés (≤ 100 €/hó tételenként)", lambda o: isinstance(o.get("price_eur_month"), (int, float)) and 0 < o["price_eur_month"] <= 100),
@@ -241,7 +262,7 @@ def main():
             cats[k.split(" – ")[0] + " – egyéb"] += cats.pop(k)
         for j, (c, CL) in enumerate(sorted(cats.items(), key=lambda kv: (-len(kv[1]), kv[0])), 1):
             CL.sort(key=lambda o: (o["tier"], -o["prof"]["kiegyensulyozott"]))
-            body += [f"### {n}.{j}. {c} ({len(CL)})", ""] + table(CL) + [""]
+            body += [f"### {n}.{j}. {c} ({len(CL)})", ""] + (m16_table(CL) if name == "a10_methods" else table(CL)) + [""]
         n += 1
     # stratégiák
     if strategies:
